@@ -1,0 +1,22 @@
+{
+    "name": "ebenefuenf/conia",
+    "description": "Conia CMS/CMF",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ebene fünf GmbH",
+            "email": "info@ebenefuenf.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ebenefuenf/chuck": "@dev"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../chuck"
+        }
+    ]
+}
