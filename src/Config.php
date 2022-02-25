@@ -17,7 +17,7 @@ class Config extends BaseConfig
             ],
         ];
 
-        parent::construct(array_replace_recursive(
+        parent::__construct(array_replace_recursive(
             $cmsConfig,
             $config,
         ));
