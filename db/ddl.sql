@@ -19,9 +19,9 @@ CREATE TABLE conia.migrations (
 );
 
 
-CREATE TABLE conia.roles (
-    urole text NOT NULL,
-    CONSTRAINT pk_roles PRIMARY KEY (urole)
+CREATE TABLE conia.userroles (
+    userrole text NOT NULL,
+    CONSTRAINT pk_userroles PRIMARY KEY (userrole)
 );
 
 
@@ -32,7 +32,7 @@ CREATE TABLE conia.users (
     email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5),
     display text,
     pwhash text NOT NULL,
-    urole text NOT NULL,
+    userrole text NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
@@ -42,8 +42,8 @@ CREATE TABLE conia.users (
     CONSTRAINT uc_users_uid UNIQUE (uid),
     CONSTRAINT fk_users_users_creator FOREIGN KEY (creator)
         REFERENCES conia.users (usr),
-    CONSTRAINT fk_users_roles FOREIGN KEY (urole)
-        REFERENCES conia.roles (urole) ON UPDATE CASCADE,
+    CONSTRAINT fk_users_userroles FOREIGN KEY (userrole)
+        REFERENCES conia.userroles (userrole) ON UPDATE CASCADE,
     CONSTRAINT fk_users_users_editor FOREIGN KEY (editor)
         REFERENCES conia.users (usr)
 );
@@ -270,14 +270,14 @@ CREATE TABLE conia.menuitems (
 );
 
 
-CREATE TABLE conia.menupages (
+CREATE TABLE conia.linkedpages (
     item integer NOT NULL,
     page integer NOT NULL,
     type text NOT NULL CHECK (type = 'page'),
     CONSTRAINT pk_menupages PRIMARY KEY (item),
-    CONSTRAINT fk_pages_menuitems_menuitems FOREIGN KEY (item, type)
+    CONSTRAINT fk_linkedpages_menuitems FOREIGN KEY (item, type)
         REFERENCES conia.menuitems (item, type) ON UPDATE CASCADE,
-    CONSTRAINT fk_pages_menuitems_pages FOREIGN KEY (page)
+    CONSTRAINT fk_linkedpages_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
 
@@ -293,9 +293,9 @@ CREATE TABLE conia.pagetags (
     page integer NOT NULL,
     tag text NOT NULL,
     CONSTRAINT pk_pagetags PRIMARY KEY (page, tag),
-    CONSTRAINT fk_tags_pages_pages FOREIGN KEY (page)
+    CONSTRAINT fk_pagetags_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page),
-    CONSTRAINT fk_tags_pages_tags FOREIGN KEY (tag)
+    CONSTRAINT fk_pagetags_tags FOREIGN KEY (tag)
         REFERENCES conia.tags (tag)
 );
 
@@ -317,36 +317,38 @@ CREATE TABLE audit.pages (
 
 
 CREATE TABLE audit.contents (
-  page integer NOT NULL,
-  lang text NOT NULL CHECK (char_length(lang) <= 32),
-  changed timestamp with time zone NOT NULL,
-  title text NOT NULL,
-  slug text NOT NULL,
-  deleted timestamp with time zone,
-  content jsonb NOT NULL,
-  CONSTRAINT pk_contents PRIMARY KEY (page, lang, changed),
-  CONSTRAINT fk_contents_contents FOREIGN KEY (page, lang)
-    REFERENCES conia.contents (page, lang) ON UPDATE CASCADE
+    page integer NOT NULL,
+    lang text NOT NULL CHECK (char_length(lang) <= 32),
+    changed timestamp with time zone NOT NULL,
+    title text NOT NULL,
+    slug text NOT NULL,
+    deleted timestamp with time zone,
+    content jsonb NOT NULL,
+    CONSTRAINT pk_contents PRIMARY KEY (page, lang, changed),
+    CONSTRAINT fk_audit_contents FOREIGN KEY (page, lang)
+        REFERENCES conia.contents (page, lang) ON UPDATE CASCADE
 );
 
 
 CREATE TABLE audit.drafts (
-  page integer NOT NULL,
-  changed timestamp with time zone NOT NULL,
-  editor integer NOT NULL,
-  content jsonb NOT NULL,
-  CONSTRAINT pk_drafts PRIMARY KEY (page, changed),
-  CONSTRAINT fk_drafts_drafts FOREIGN KEY (page) REFERENCES conia.drafts (page)
+    page integer NOT NULL,
+    changed timestamp with time zone NOT NULL,
+    editor integer NOT NULL,
+    content jsonb NOT NULL,
+    CONSTRAINT pk_drafts PRIMARY KEY (page, changed),
+    CONSTRAINT fk_audit_drafts FOREIGN KEY (page)
+        REFERENCES conia.drafts (page)
 );
 
 
 CREATE TABLE audit.draftcontents (
-  page integer NOT NULL,
-  changed timestamp with time zone NOT NULL,
-  lang text not null check (char_length(lang) <= 32),
-  title text NOT NULL,
-  slug text not null check (char_length(slug) <= 512),
-  content jsonb NOT NULL,
-  CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang),
-  CONSTRAINT fk_draftcontents_draftcontents FOREIGN KEY (page, lang) REFERENCES conia.draftcontents (page, lang)
+    page integer NOT NULL,
+    changed timestamp with time zone NOT NULL,
+    lang text not null check (char_length(lang) <= 32),
+    title text NOT NULL,
+    slug text not null check (char_length(slug) <= 512),
+    content jsonb NOT NULL,
+    CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang),
+    CONSTRAINT fk_audit_draftcontents FOREIGN KEY (page, lang)
+        REFERENCES conia.draftcontents (page, lang)
 );
