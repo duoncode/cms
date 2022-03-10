@@ -1,14 +1,14 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { defineConfig } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [svelte()],
     server: {
         port: 2009,
-        portStrict: true,
+        strictPort: true,
         proxy: {
-            '/conia' : 'http://localhost:1983',
-        }
-    }
-})
+            '/conia':  'http://localhost:1983',
+        },
+    },
+});
