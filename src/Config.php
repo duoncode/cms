@@ -11,7 +11,9 @@ class Config extends BaseConfig
 {
     public function __construct(array $config)
     {
-        $coniaConfig = [];
+        $coniaConfig = [
+            'conia.panelurl' => 'panel',
+        ];
 
         parent::__construct(array_replace_recursive(
             $coniaConfig,
