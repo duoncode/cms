@@ -12,7 +12,8 @@ class Config extends BaseConfig
     public function __construct(array $config)
     {
         $coniaConfig = [
-            'conia.panelurl' => 'panel',
+            'panel.slug' => 'panel',
+            'panel.theme' => null,
         ];
 
         parent::__construct(array_replace_recursive(
