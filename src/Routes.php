@@ -8,7 +8,7 @@ use Chuck\Routing\{Group, Route};
 use Chuck\Middleware\Session;
 use Conia\App;
 use Conia\Config;
-use Conia\Viev\{Index, System};
+use Conia\View\{System};
 
 
 class Routes
@@ -16,43 +16,45 @@ class Routes
     protected string $panelUrl;
     protected string $apiUrl;
 
-    public function __construct(protected App $app, Config $config)
+    public function __construct(protected Config $config)
     {
-        $this->panelUrl = rtrim($config->get('conia.panelurl'), '/');
+        $this->panelUrl = rtrim($config->get('panel.slug'), '/');
         $this->apiUrl = $this->panelUrl . '/api';
-        $this->addIndex();
-        $this->addApi();
     }
 
-    protected function addIndex(): void
+    protected function addIndex(App $app): void
     {
-        $this->app->add(Route::get(
+        $app->add(Route::get(
             'conia.index',
             $this->panelUrl,
-            '\Conia\View\Index',
-        ));
+            fn () => '<h1>Panel not found in public directory</h1>',
+        )->render('text', contentType: 'text/html'));
     }
 
-    protected function addApi(): void
+    protected function addApi(Group $api): void
     {
-        $this->app->group((new Group(
-            'conia.system.',
-            $this->apiUrl,
-            $this->systemRoutes(...)
-        ))->middleware(new Session()));
+        $this->addSettings($api);
     }
 
-    protected function systemRoutes(Group $group): void
+    protected function addSettings(Group $api): void
     {
-        $group->add(Route::get(
+        $api->add(Route::get(
             'settings',
             '/settings',
             [System::class, 'settings'],
         )->render('json'));
     }
 
-    public static function addCatchall(App $app): void
+    public function add(App $app): void
     {
-        $app->add(new Route('conia:catchall', '/...slug', 'Page::catchall'));
+        $this->addIndex($app);
+
+        $app->group((new Group(
+            'conia.api.',
+            $this->apiUrl,
+            $this->addApi(...)
+        ))->middleware(new Session()));
+
+        $app->add(new Route('conia:catchall', '/...slug', [Page::class, 'catchall']));
     }
 }
