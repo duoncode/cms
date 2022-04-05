@@ -1,5 +1,6 @@
 @import 'normalize.css';
 @import './vars.css';
+@import './util.css';
 
 body {
     font-family: var(--font);
