@@ -9,10 +9,10 @@ use Conia\Request;
 use Conia\Response;
 
 
-class System extends Controller
+class Page extends Controller
 {
-    public function settings(): array
+    public function catchall(Request $request): Response
     {
-        return ['hans' => 'franz'];
+        return $request->getResponse();
     }
 }
