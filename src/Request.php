@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Conia;
+
 use Chuck\Request as BaseRequest;
 
 

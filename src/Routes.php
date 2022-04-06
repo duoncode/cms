@@ -8,7 +8,7 @@ use Chuck\Routing\{Group, Route};
 use Chuck\Middleware\Session;
 use Chuck\ConfigInterface;
 use Conia\App;
-use Conia\View\{System};
+use Conia\View\{System, Page};
 
 
 class Routes
