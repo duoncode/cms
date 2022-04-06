@@ -6,8 +6,8 @@ namespace Conia;
 
 use Chuck\Routing\{Group, Route};
 use Chuck\Middleware\Session;
+use Chuck\ConfigInterface;
 use Conia\App;
-use Conia\Config;
 use Conia\View\{System};
 
 
@@ -16,7 +16,7 @@ class Routes
     protected string $panelUrl;
     protected string $apiUrl;
 
-    public function __construct(protected Config $config)
+    public function __construct(protected ConfigInterface $config)
     {
         $this->panelUrl = rtrim($config->get('panel.slug'), '/');
         $this->apiUrl = $this->panelUrl . '/api';

@@ -7,7 +7,6 @@ namespace Conia;
 
 
 use Chuck\App as BaseApp;
-use Chuck\Response;
 use Chuck\RequestInterface;
 use Chuck\ConfigInterface;
 use Conia\Config;
@@ -22,10 +21,10 @@ class App extends BaseApp
     {
         parent::__construct($request);
 
-        $this->routes = new Routes($this, $request->getConfig());
+        $this->routes = new Routes($request->getConfig());
     }
 
-    public static function create(array|ConfigInterface $options): self
+    public static function create(array|ConfigInterface $options): static
     {
         if ($options instanceof ConfigInterface) {
             $config = $options;
@@ -33,16 +32,11 @@ class App extends BaseApp
             $config = new Config($options);
         }
 
-        $app = parent::create($config);
-
-        return $app;
+        return parent::create($config);
     }
 
-    public function run(): Response
+    public function addSystemRoutes(): void
     {
-        // Register the global catchall as last step
-        $this->routes->addCatchall($this);
-
-        return parent::run();
+        $this->routes->add($this);
     }
 }
