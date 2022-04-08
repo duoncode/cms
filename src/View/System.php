@@ -13,6 +13,12 @@ class System extends Controller
 {
     public function settings(): array
     {
-        return ['hans' => 'franz'];
+        $config = $this->config;
+
+        return [
+            'panelUrl' => $config->get('panel.url'),
+            'locales' => $config->get('locales.list'),
+            'locale' => 'de',
+        ];
     }
 }
