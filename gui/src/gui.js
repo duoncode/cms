@@ -1,6 +1,6 @@
 // import '../../lib/unload';
 import './styles/main.css';
-import App from './App.svelte'
+import Gui from './Gui.svelte'
 
 // import { fetchPermissions } from '../../lib/stores/permissions';
 // import { loadPlugins } from '../../lib/plugins';
@@ -12,11 +12,11 @@ async function startApp() {
     // await fetchPermissions();
     // await loadPlugins();
 
-    const app = new App({
-        target: document.getElementById('app')
+    const gui = new Gui({
+        target: document.getElementById('panel')
     })
 
-    return app;
+    return gui;
 }
 
 startApp();
