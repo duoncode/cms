@@ -34,8 +34,6 @@ function error(message) {
 export {
     pristine,
     dirty,
-    isPristine,
-    isDirty,
     setDirty,
     setPristine,
     success,
