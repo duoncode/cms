@@ -1,0 +1,15 @@
+input {
+    appearance: none;
+    display: block;
+    width: 100%;
+    padding: var(--sz-2) var(--sz-3);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    font-size: var(--text-sm);
+
+    /* placeholder-gray-400 */
+    /* focus:outline-none */
+    /* focus:ring-indigo-500 */
+    /* focus:border-indigo-500 */
+}

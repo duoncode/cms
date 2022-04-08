@@ -1,6 +1,8 @@
 @import 'normalize.css';
+@import './color.css';
 @import './vars.css';
 @import './util.css';
+@import './form.css';
 
 body {
     font-family: var(--font);
