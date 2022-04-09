@@ -36,6 +36,7 @@ CREATE TABLE conia.users (
     display text,
     pwhash text NOT NULL,
     userrole text NOT NULL,
+    active boolean NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
@@ -60,10 +61,10 @@ BEGIN
     IF (TG_OP = 'UPDATE') THEN
         INSERT INTO audit.users (
             usr, username, email, display, pwhash,
-            userrole, editor, changed, deleted
+            userrole, active, editor, changed, deleted
         ) VALUES (
             OLD.usr, OLD.username, OLD.email, OLD.display, OLD.pwhash,
-            OLD.userrole, OLD.editor, OLD.changed, OLD.deleted
+            OLD.userrole, OLD.active, OLD.editor, OLD.changed, OLD.deleted
         );
         RETURN OLD;
     END IF;
