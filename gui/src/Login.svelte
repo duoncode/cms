@@ -11,22 +11,27 @@
     .logo {
         img {
             display: block;
-            height: var(--admin-logo-login-height, var(--sz-12));
+            height: var(--admin-logo-login-height, var(--sz-20));
             width: auto;
             margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: var(--text-3xl);
-            margin-top: var(--sz-6);
         }
     }
 
     .fields {
         background: var(--white);
+        margin-top: var(--sz-6);
         padding: var(--sz-8) var(--sz-4);
         box-shadow: var(--shadow);
+    }
+
+    .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        a {
+            font-size: var(--text-sm);
+        }
     }
 
     @media (--sm) {
@@ -55,49 +60,43 @@
     <div class="form">
         <div class="logo sm:mx-auto sm:w-full sm:max-w-md">
             <img src="/logo.svg" alt="Logo" />
-            <h1>Sign in to your account</h1>
         </div>
         <div class="fields">
             <form action="#" method="POST">
-                <div>
+                <div class="control">
                     <label for="email"> Email address </label>
-                    <div>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            autocomplete="email"
-                            required />
-                    </div>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="hans"
+                        required />
                 </div>
 
-                <div>
+                <div class="control">
                     <label for="password"> Password </label>
-                    <div>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            autocomplete="current-password"
-                            required />
-                    </div>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        required />
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                <div class="control remember-forgot">
+                    <div class="checkbox">
                         <input
                             id="rememberme"
                             name="rememberme"
                             type="checkbox" />
-                        <label for="remember-me"> Remember me </label>
+                        <label for="rememberme"> Remember me </label>
                     </div>
 
-                    <div class="text-sm">
-                        <a href="/forgot"> Forgot your password? </a>
-                    </div>
+                    <a href="/forgot"> Forgot your password? </a>
                 </div>
 
-                <div>
+                <div class="control">
                     <button type="submit">Sign in</button>
                 </div>
             </form>

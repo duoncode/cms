@@ -5,5 +5,16 @@
 @import './form.css';
 
 body {
+    background-color: var(--gray-100);
     font-family: var(--font);
+}
+
+a, a:visited, a:focus {
+    text-decoration: underline;
+    color: var(--high);
+}
+
+a:visited {
+    text-decoration: underline;
+    color: var(--high-dark);
 }
