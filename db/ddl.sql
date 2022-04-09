@@ -1,3 +1,6 @@
+CREATE EXTENSION btree_gist;
+CREATE EXTENSION unaccent;
+
 CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
@@ -27,7 +30,7 @@ CREATE TABLE conia.userroles (
 
 CREATE TABLE conia.users (
     usr integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL,
+    uid text NOT NULL CHECK (char_length(uid) = 13),
     username text CHECK (username NOT SIMILAR TO '%@%' AND char_length(username) > 0),
     email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5),
     display text,
