@@ -6,10 +6,10 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
     plugins: [
         postcssImport(),
-        postcssNested(),
         postcssCustomMedia({
             importFrom: 'src/styles/vars.css',
         }),
+        postcssNested,
         autoprefixer(),
     ],
 };
