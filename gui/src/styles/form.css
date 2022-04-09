@@ -8,7 +8,6 @@ label {
 input {
     appearance: none;
     display: block;
-    color-adjust: exact;
     padding: var(--sz-2) var(--sz-3);
     border: 1px solid var(--gray-300);
     border-radius: var(--radius-md);
@@ -36,21 +35,27 @@ input[type="checkbox"], input[type="radio"] {
     color: #2563eb;
     background-color: #fff;
     border-width: 1px;
+
+	&:checked {
+		background-color: var(--high);
+		border-color: var(--high);
+	}
 }
 
 input[type="checkbox"] {
     border-radius: var(--radius);
 
 	&:checked {
-		background-color: #000;
-		border-color: var(--high);
-		color: var(--white);
 		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7' /%3e%3c/svg%3e");
 	}
 }
 
 input[type="radio"] {
     border-radius: var(--radius-full);
+
+	&:checked {
+		background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+	}
 }
 
 ::placeholder {
@@ -64,6 +69,11 @@ input[type="radio"] {
     label {
         margin-left: var(--sz-2);
     }
+}
+
+.radio + .radio,
+.checkbox + .checkbox {
+    margin-top: var(--sz-2);
 }
 
 .control {
