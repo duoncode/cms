@@ -54,8 +54,31 @@ CREATE UNIQUE INDEX uix_users_username ON conia.users
     USING btree (lower(username)) WHERE (deleted IS NULL AND username IS NOT NULL);
 CREATE UNIQUE INDEX uix_users_email ON conia.users
     USING btree (lower(email)) WHERE (deleted IS NULL AND email IS NOT NULL);
-CREATE TRIGGER update_users_changed_trigger BEFORE UPDATE ON conia.users
+CREATE OR REPLACE FUNCTION conia.process_users_audit()
+    RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'UPDATE') THEN
+        INSERT INTO audit.users (
+            usr, username, email, display, pwhash,
+            userrole, editor, changed, deleted
+        ) VALUES (
+            OLD.usr, OLD.username, OLD.email, OLD.display, OLD.pwhash,
+            OLD.userrole, OLD.editor, OLD.changed, OLD.deleted
+        );
+        RETURN OLD;
+    END IF;
+
+    RETURN NULL;
+EXCEPTION WHEN unique_violation THEN
+    RAISE WARNING 'duplicate users audit row skipped. user: %, changed: %', OLD.usr, OLD.changed;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER update_users_01_changed_trigger BEFORE UPDATE ON conia.users
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
+CREATE TRIGGER update_users_02_audit_trigger AFTER UPDATE
+    ON conia.users FOR EACH ROW EXECUTE PROCEDURE
+    conia.process_users_audit();
 
 
 CREATE TABLE conia.pages (
@@ -346,12 +369,28 @@ CREATE TABLE audit.drafts (
 
 CREATE TABLE audit.draftcontents (
     page integer NOT NULL,
-    changed timestamp with time zone NOT NULL,
     lang text not null check (char_length(lang) <= 32),
+    changed timestamp with time zone NOT NULL,
     title text NOT NULL,
     slug text not null check (char_length(slug) <= 512),
     content jsonb NOT NULL,
-    CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang),
+    CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang, changed),
     CONSTRAINT fk_audit_draftcontents FOREIGN KEY (page, lang)
         REFERENCES conia.draftcontents (page, lang)
+);
+
+
+CREATE TABLE audit.users (
+    usr integer NOT NULL,
+    username text,
+    email text,
+    display text,
+    pwhash text NOT NULL,
+    userrole text NOT NULL,
+    editor integer NOT NULL,
+    changed timestamp with time zone NOT NULL DEFAULT now(),
+    deleted timestamp with time zone,
+    CONSTRAINT pk_users PRIMARY KEY (usr, changed),
+    CONSTRAINT fk_audit_users FOREIGN KEY (usr)
+        REFERENCES conia.users (usr)
 );
