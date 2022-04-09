@@ -34,6 +34,16 @@
         }
     }
 
+    .button-bar {
+        text-align: right;
+        margin-top: 1.5rem;
+
+        button {
+            padding-left: var(--sz-6);
+            padding-right: var(--sz-6);
+        }
+    }
+
     @media (--sm) {
         .form {
             margin-top: calc(var(--sz-32) * -1);
@@ -58,7 +68,7 @@
 
 <div class="login">
     <div class="form">
-        <div class="logo sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="logo">
             <img src="/logo.svg" alt="Logo" />
         </div>
         <div class="fields">
@@ -96,7 +106,7 @@
                     <a href="/forgot"> Forgot your password? </a>
                 </div>
 
-                <div class="control">
+                <div class="button-bar">
                     <button type="submit">Sign in</button>
                 </div>
             </form>

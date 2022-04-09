@@ -3,6 +3,7 @@
 @import './vars.css';
 @import './util.css';
 @import './form.css';
+@import './button.css';
 
 body {
     background-color: var(--gray-100);
