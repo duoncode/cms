@@ -40,12 +40,12 @@ class Permissions
     {
     }
 
-    public function addPermission(string $role, string $permission)
+    public function add(string $role, string $permission)
     {
         $this->permissions[$role][] = $permission;
     }
 
-    public function hasPermission(string $role, string $permission): bool
+    public function has(string $role, string $permission): bool
     {
         return in_array($permission, $this->permissions[$role] ?? []);
     }
