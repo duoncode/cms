@@ -12,7 +12,7 @@ class Config extends BaseConfig
     public function __construct(array $config)
     {
         $coniaConfig = [
-            'panel.slug' => 'panel',
+            'panel.path' => 'panel',
             'panel.theme' => null,
         ];
 
