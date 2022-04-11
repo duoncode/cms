@@ -7,6 +7,9 @@ namespace Conia;
 use Chuck\Request as BaseRequest;
 
 
+/**
+ * @method session
+ */
 class Request extends BaseRequest
 {
     public function isXHR(): bool
