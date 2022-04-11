@@ -9,7 +9,7 @@ use Conia\Request;
 use Conia\Response;
 
 
-class Page extends Controller
+class Page
 {
     public function catchall(Request $request): Response
     {
