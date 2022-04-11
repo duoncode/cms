@@ -20,10 +20,12 @@ INNER JOIN
     conia.users e ON
         u.editor = e.usr
 WHERE
-    (u.email = :user OR u.username = :user)
+    (u.email = :login OR u.username = :login)
     AND u.userrole != 'system'
-<?php if ($active) : ?>
-    AND u.active = true
+<?php if (!isset($deletedAlso) || $deletedAlso === false) : ?>
     AND u.deleted IS NULL
+<?php endif ?>
+<?php if (!isset($inactiveAlso) || $inactiveAlso === false) : ?>
+    AND u.active = true
 <?php endif ?>
 
