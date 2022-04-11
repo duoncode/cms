@@ -27,14 +27,14 @@ class Auth
     protected Config $config;
     protected Session $session;
     protected Users $users;
+    protected DatabaseInterface $db;
 
     public function __construct(
-        protected DatabaseInterface $db,
         protected Request $request,
     ) {
         $this->config = $request->getConfig();
         $this->session = $request->session();
-        $this->user = new Users($db, $request);
+        $this->users = new Users($request);
     }
 
     protected function remember(string $userId): RememberDetails
@@ -42,7 +42,7 @@ class Auth
         $token = new Token($this->config->get('secret'));
         $expires = time() + $this->config->get('session')['expire'];
 
-        $remembered = ($this->user->remember)([
+        $remembered = ($this->users->remember)([
             'hash' => $token->hash(),
             'user' => $userId,
             'expires' => Time::toIsoDateTime($expires),
@@ -93,7 +93,7 @@ class Auth
         bool $remember,
         bool $initSession,
     ): ?string {
-        $user = $this->user->byLogin($login);
+        $user = $this->users->byLogin($login);
 
         if (!$user) {
             return null;
@@ -135,13 +135,13 @@ class Auth
         $userId = self::$request->session->authenticatedUserId();
 
         if ($userId) {
-            $user = $this->user->byId($userId);
+            $user = $this->users->byId($userId);
             return $user;
         }
 
         $hash = $this->getTokenHash();
         if ($hash) {
-            $user = $this->user->byLoginSession($hash);
+            $user = $this->users->byLoginSession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
                 $this->login($user['usr'], false);
@@ -156,7 +156,7 @@ class Auth
     public function permissions(): array
     {
         $permissions = new Permissions($this->config);
-        $user = $this->user();
+        $user = $this->users();
 
         if ($user === null) {
             return [];
