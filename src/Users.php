@@ -4,21 +4,30 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\RequestInterface;
+use Chuck\Request;
 use Chuck\Database\DatabaseInterface;
+
 
 class Users
 {
-    public function __construct(
-        protected DatabaseInterface $db,
-        protected RequestInterface $request
-    ) {
+    protected DatabaseInterface $db;
+
+    public function __construct(protected Request $request)
+    {
+        $this->db = $request->db();
     }
 
     public function byLogin(string $login): ?array
     {
-        return ($this->db->users->byLogin)([
+        return ($this->db->users->get)([
             'login' => $login,
+        ])->one();
+    }
+
+    public function byId(string $uid): ?array
+    {
+        return ($this->db->users->get)([
+            'uid' => $uid,
         ])->one();
     }
 }

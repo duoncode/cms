@@ -4,7 +4,7 @@ SELECT
     u.email,
     u.display,
     u.pwhash,
-    u.userrole,
+    u.userrole AS role,
     u.active,
     COALESCE(c.display, COALESCE(c.username, c.email)) AS creator,
     COALESCE(e.display, COALESCE(e.username, e.email)) AS editor,
@@ -20,11 +20,18 @@ INNER JOIN
     conia.users e ON
         u.editor = e.usr
 WHERE
+<?php if (isset($login)) : ?>
     (u.email = :login OR u.username = :login)
+<?php else: ?>
+    u.uid = :uid
+<?php endif ?>
+
     AND u.userrole != 'system'
+
 <?php if (!isset($deletedAlso) || $deletedAlso === false) : ?>
     AND u.deleted IS NULL
 <?php endif ?>
+
 <?php if (!isset($inactiveAlso) || $inactiveAlso === false) : ?>
     AND u.active = true
 <?php endif ?>
