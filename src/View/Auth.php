@@ -9,6 +9,9 @@ class Auth
 {
     public function user()
     {
+        return [
+            'name' => 'Hans Karl'
+        ];
     }
 
     public function login()

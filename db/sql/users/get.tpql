@@ -35,4 +35,3 @@ WHERE
 <?php if (!isset($inactiveAlso) || $inactiveAlso === false) : ?>
     AND u.active = true
 <?php endif ?>
-

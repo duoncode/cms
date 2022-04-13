@@ -23,7 +23,7 @@ class Request extends BaseRequest
 
     public function db(
         string $connection = Config::DEFAULT,
-        string $sql = 'conia'
+        string $sql = Config::DEFAULT,
     ): DatabaseInterface {
         if ($this->dbs[$connection] ?? null) {
             return $this->dbs[$connection];

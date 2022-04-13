@@ -10,10 +10,12 @@ use Chuck\RequestInterface;
 use Chuck\ResponseInterface;
 use Chuck\Registry;
 use Chuck\RegistryInterface;
+use Chuck\SessionInterface;
 use Conia\Config;
 use Conia\Request;
 use Conia\Response;
 use Conia\Routes;
+use Conia\Session;
 
 
 class App extends BaseApp
@@ -30,6 +32,7 @@ class App extends BaseApp
             $config = new Config($options);
         }
 
+        $registry->add(SessionInterface::class, Session::class);
         $registry->add(RequestInterface::class, Request::class);
         $registry->add(ResponseInterface::class, Response::class);
 

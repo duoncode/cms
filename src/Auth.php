@@ -78,7 +78,7 @@ class Auth
 
     public function logout(): void
     {
-        $session = $this->request->session;
+        $session = $this->session;
         $session->forget();
 
         $hash = $this->getTokenHash();
@@ -113,7 +113,7 @@ class Auth
 
     protected function getTokenHash(): ?string
     {
-        $token = $this->request->session->getAuthToken();
+        $token = $this->session->getAuthToken();
 
         if ($token) {
             $hash = (new Token($this->config->get('secret'), $token))->hash();
@@ -132,7 +132,7 @@ class Auth
         }
 
         // verify if user is logged in via cookie session
-        $userId = self::$request->session->authenticatedUserId();
+        $userId = $this->session->authenticatedUserId();
 
         if ($userId) {
             $user = $this->users->byId($userId);
