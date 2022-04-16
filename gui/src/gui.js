@@ -2,15 +2,11 @@
 import './styles/main.css';
 import Gui from './Gui.svelte'
 
-// import { fetchPermissions } from '../../lib/stores/permissions';
-// import { loadPlugins } from '../../lib/plugins';
-// import { initGettext } from './locale';
+import { loadSettings } from './lib/settings';
 
 
 async function startApp() {
-    // await initGettext();
-    // await fetchPermissions();
-    // await loadPlugins();
+    await loadSettings();
 
     const gui = new Gui({
         target: document.getElementById('panel')
