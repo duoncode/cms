@@ -1,3 +1,7 @@
+<script>
+    import { _ } from './lib/locale';
+</script>
+
 <style lang="postcss">
     .login {
         display: flex;
@@ -64,23 +68,22 @@
 <div class="login">
     <div class="form">
         <div class="logo">
-            <img src="/logo.svg" alt="Logo" />
+            <img src="logo.svg" alt="Logo" />
         </div>
         <div class="fields">
             <form action="#" method="POST">
                 <div class="control">
-                    <label for="email"> Email address </label>
+                    <label for="email">{_('Email address')}</label>
                     <input
                         id="email"
                         name="email"
                         type="email"
                         autocomplete="email"
-                        placeholder="hans"
                         required />
                 </div>
 
                 <div class="control">
-                    <label for="password"> Password </label>
+                    <label for="password">{_('Password')}</label>
                     <input
                         id="password"
                         name="password"
@@ -95,10 +98,10 @@
                             id="rememberme"
                             name="rememberme"
                             type="checkbox" />
-                        <label for="rememberme"> Remember me </label>
+                        <label for="rememberme">{_('Remember me')}</label>
                     </div>
 
-                    <a href="/forgot"> Forgot your password? </a>
+                    <a href="/forgot">{_('Forgot your password?')}</a>
                 </div>
 
                 <div class="button-bar">
@@ -114,7 +117,7 @@
                                 stroke-linejoin="round"
                                 d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
-                        Sign in
+                        {_('Sign in')}
                     </button>
                 </div>
             </form>
