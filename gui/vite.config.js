@@ -3,11 +3,12 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 export default defineConfig({
     plugins: [svelte()],
+    base: '', // use relative paths
     server: {
         port: 2009,
         strictPort: true,
         proxy: {
-            '/conia': 'http://localhost:1983',
+            '/panel/api': 'http://localhost:1983',
         },
     },
 });
