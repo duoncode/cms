@@ -1,7 +1,9 @@
 import { readable } from 'svelte/store';
-import i18n from 'gettext.js/lib';
-import { settings } from './settings';
+import I18N from './gettext';
+import { getSettings } from './settings';
 
+const i18n = new I18N();
+const settings = getSettings();
 const locale = readable(settings.locale);
 const locales = readable(settings.locales);
 
@@ -16,11 +18,11 @@ const ngettext = (msg, nmsg, number, ...args) => {
 };
 
 async function initGettext() {
-    let response = await fetch(`/locale/${settings.locale}/messages.json`);
+    let response = await fetch(`/locale/${locale}/messages.json`);
     let appMessages = await response.json();
     let themeMessages = {};
 
-    response = await fetch(`/theme/locale/${settings.locale}/messages.json`);
+    response = await fetch(`/theme/locale/${locale}/messages.json`);
 
     if (response.ok) {
         themeMessages = await response.json();
@@ -29,11 +31,11 @@ async function initGettext() {
     let messages = Object.assign(appMessages, themeMessages);
 
     i18n.loadJSON(messages);
-    i18n.setLocale(settings.locale);
+    i18n.setLocale(locale);
 }
 
 function getLocales() {
-    return [...settings.locales];
+    return [...locales];
 }
 
 export { _, ngettext, initGettext, locale, locales, getLocales };
