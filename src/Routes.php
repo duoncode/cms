@@ -19,8 +19,8 @@ class Routes
 
     public function __construct(protected ConfigInterface $config)
     {
-        $this->panelUrl = rtrim($config->get('panel.path'), '/');
-        $this->apiUrl = $this->panelUrl . '/api';
+        $this->panelUrl = $config->debug ? '/panel' : '/' . trim($config->get('panel.path'), '/');
+        $this->panelApi = $this->panelUrl . '/api';
     }
 
     protected function addIndex(App $app, Session $session): void
@@ -53,19 +53,20 @@ class Routes
         $api->add(Route::put('user.save', 'user/{uid}', [User::class, 'save'])->middleware($permission));
     }
 
-    protected function addApi(Group $api): void
+    protected function addSettings(Group $api): void
     {
-        $this->addAuth($api);
-        $this->addUser($api);
-    }
-
-    protected function addSettings(App $app): void
-    {
-        $app->add(Route::get(
+        $api->add(Route::get(
             'conia.settings',
-            $this->panelUrl . '/settings',
+            '/settings',
             [System::class, 'settings'],
         )->render('json'));
+    }
+
+    protected function addPanelApi(Group $api): void
+    {
+        $this->addSettings($api);
+        $this->addAuth($api);
+        $this->addUser($api);
     }
 
     public function add(App $app): void
@@ -73,13 +74,12 @@ class Routes
         $session = new Session();
 
         $this->addIndex($app, $session);
-        $this->addSettings($app);
 
         // All API routes
         $app->group((new Group(
-            'conia.api.',
-            $this->apiUrl,
-            $this->addApi(...)
+            'conia.panel.',
+            $this->panelApi,
+            $this->addPanelApi(...)
         ))->middleware($session)->render('json'));
 
         // Add catchall for page urls. Must be the last one
