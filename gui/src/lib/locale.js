@@ -1,43 +1,39 @@
 import { readable } from 'svelte/store';
-import I18N from '../vendor/gettext.esm.js';
+import i18n from 'gettext.js/lib';
+import { settings } from './settings';
 
-const locales = readable(window.GLOBAL_SETTINGS.locales);
-const locale = window.GLOBAL_SETTINGS.locale;
+const locale = readable(settings.locale);
+const locales = readable(settings.locales);
 
-window._GLOBAL_I18N_ = null;
 
 // to avoid xgettext parsing problems define function as const
 const _ = (msg, ...args) => {
-    return window._GLOBAL_I18N_.gettext(msg, ...args);
+    return i18n.gettext(msg, ...args);
 };
 
 const ngettext = (msg, nmsg, number, ...args) => {
-    return window._GLOBAL_I18N_.ngettext(msg, nmsg, number, ...args);
+    return i18n.ngettext(msg, nmsg, number, ...args);
 };
 
 async function initGettext() {
-    if (window._GLOBAL_I18N_ === null) {
-        window._GLOBAL_I18N_ = new I18N();
+    let response = await fetch(`/locale/${settings.locale}/messages.json`);
+    let appMessages = await response.json();
+    let themeMessages = {};
 
-        let response = await fetch(`/locale/${locale}/messages.json`);
-        let appMessages = await response.json();
-        let themeMessages = {};
+    response = await fetch(`/theme/locale/${settings.locale}/messages.json`);
 
-        response = await fetch(`/theme/locale/${locale}/messages.json`);
-
-        if (response.ok) {
-            themeMessages = await response.json();
-        }
-
-        let messages = Object.assign(appMessages, themeMessages);
-
-        window._GLOBAL_I18N_.loadJSON(messages);
-        window._GLOBAL_I18N_.setLocale(locale);
+    if (response.ok) {
+        themeMessages = await response.json();
     }
+
+    let messages = Object.assign(appMessages, themeMessages);
+
+    i18n.loadJSON(messages);
+    i18n.setLocale(settings.locale);
 }
 
 function getLocales() {
-    return [...window.GLOBAL_SETTINGS.locales];
+    return [...settings.locales];
 }
 
 export { _, ngettext, initGettext, locale, locales, getLocales };
