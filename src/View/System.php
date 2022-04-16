@@ -19,14 +19,13 @@ class System
 
     public function settings(): array
     {
-        $config = $this->config;
-
-        error_log('hinna');
-
         return [
-            'panelPath' => $config->get('panel.path'),
-            'locales' => $config->get('locales.list'),
+            'panelPath' => $this->config->get('panel.path'),
+            'locales' => $this->config->get('locales.list'),
             'locale' => 'de',
+            'debug' => $this->request->debug,
+            'env' => $this->request->env,
+            'csrfToken' => 'TOKEN' // TODO: real token
         ];
     }
 }

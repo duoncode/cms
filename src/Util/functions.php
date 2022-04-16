@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 if (!function_exists('env')) {
     function env(string $key, bool|string|null $default = null): mixed
     {
