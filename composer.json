@@ -27,7 +27,10 @@
     "autoload": {
         "psr-4": {
             "Conia\\": "src"
-        }
+        },
+        "files": [
+            "src/Util/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
