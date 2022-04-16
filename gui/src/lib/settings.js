@@ -7,7 +7,11 @@ let settings = writable({});
 async function loadSettings() {
     let response = await req.get('/settings');
 
-    settings = response.json();
+    if (response.ok) {
+        settings = response.data;
+    } else {
+        throw new Error('Fatal error while requesting settings');
+    }
 }
 
 function getSettings() {

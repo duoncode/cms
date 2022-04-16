@@ -9,10 +9,9 @@ const domain = `${window.location.protocol}//${window.location.host}`;
 const panelPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
 const panelApi = panelPath === '' ? '/panel/api' : `${panelPath}/api`;
 
-
-class FetchError extends Error {
-    constructor(data) {
-        super('Fetch Error');
+class Response {
+    constructor(ok, data) {
+        this.ok = ok;
         this.data = data;
     }
 }
@@ -65,11 +64,6 @@ async function fetchit(path, params, options) {
     if (response.status >= 400 && response.status < 800) {
         let message;
 
-        // Unauthorized access, user needs to log in
-        if (response.status === 401) {
-            window.location.replace('/login');
-        }
-
         try {
             message = await response.json();
 
@@ -84,10 +78,11 @@ async function fetchit(path, params, options) {
         } catch {
             message = { error: 'Fatal error occured' };
         }
-        throw new FetchError(message);
+
+        return new Response(false, message);
     }
 
-    return response;
+    return new Response(true, response.json());
 }
 
 async function get(url, params) {
@@ -114,67 +109,9 @@ async function del(url) {
     return fetchit(url, {}, options);
 }
 
-async function save(url, data, callback) {
-    try {
-        let response = await put(url, data);
-        let json = await response.json();
-
-        success(json);
-
-        if (callback) {
-            callback(json);
-        }
-    } catch (e) {
-        if (e instanceof FetchError) {
-            error(e.data);
-        } else {
-            throw e;
-        }
-    }
-}
-
-async function create(url, data, callback) {
-    try {
-        let response = await post(url, data);
-        let json = await response.json();
-
-        success(json);
-        response = await get(`${url}/${json.uid}`);
-        callback(await response.json());
-    } catch (e) {
-        if (e instanceof FetchError) {
-            error(e.data);
-        } else {
-            throw e;
-        }
-    }
-}
-
-async function remove(url, callback) {
-    try {
-        let response = await del(url);
-        let json = await response.json();
-        success(json.message);
-
-        if (callback) {
-            callback(json);
-        }
-    } catch (e) {
-        if (e instanceof FetchError) {
-            error(e.data);
-        } else {
-            throw e;
-        }
-    }
-}
-
 export default {
     post,
     get,
     put,
     del,
-    save,
-    create,
-    remove,
-    FetchError,
 };
