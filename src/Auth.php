@@ -92,11 +92,11 @@ class Auth
         string $password,
         bool $remember,
         bool $initSession,
-    ): ?string {
+    ): array|false {
         $user = $this->users->byLogin($login);
 
         if (!$user) {
-            return null;
+            return false;
         }
 
         if (password_verify($password, $user['pwhash'])) {
@@ -104,9 +104,11 @@ class Auth
                 $this->login($user['uid'], $remember);
             }
 
-            return $user['uid'];
+            unset($user['pwhash']);
+
+            return $user;
         } else {
-            return null;
+            return false;
         }
     }
 
@@ -141,7 +143,7 @@ class Auth
 
         $hash = $this->getTokenHash();
         if ($hash) {
-            $user = $this->users->byLoginSession($hash);
+            $user = $this->users->bySession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
                 $this->login($user['usr'], false);

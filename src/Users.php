@@ -24,6 +24,13 @@ class Users
         ])->one();
     }
 
+    public function bySession(string $hash): ?array
+    {
+        return ($this->db->users->get)([
+            'sessionhash' => $hash,
+        ])->one();
+    }
+
     public function byId(string $uid): ?array
     {
         return ($this->db->users->get)([

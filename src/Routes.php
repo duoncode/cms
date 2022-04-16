@@ -9,7 +9,7 @@ use Chuck\Middleware\Session;
 use Chuck\ConfigInterface;
 use Conia\App;
 use Conia\Middleware\Permission;
-use Conia\View\{System, Page};
+use Conia\View\{Auth, System, Page};
 
 
 class Routes

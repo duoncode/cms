@@ -14,6 +14,7 @@ class Config extends BaseConfig
         $coniaConfig = [
             'panel.path' => 'panel',
             'panel.theme' => null,
+            'sql.conia' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'sql',
         ];
 
         parent::__construct(array_replace_recursive(

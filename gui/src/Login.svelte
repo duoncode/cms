@@ -1,5 +1,28 @@
 <script>
+    import req from './lib/req';
     import { _ } from './lib/locale';
+
+    let message = null;
+    let data = {
+        login: null,
+        password: null,
+        rememberme: false,
+    };
+
+    async function login() {
+        if (data.login === null || data.password === null) {
+            message = _('Please provide username and password');
+            return;
+        }
+
+        let resp = await req.post('/login', data);
+
+        if (resp.ok) {
+            message = null;
+        } else {
+            message = resp.data.error;
+        }
+    }
 </script>
 
 <style lang="postcss">
@@ -43,6 +66,15 @@
         margin-top: 1.5rem;
     }
 
+    .message {
+        margin-top: var(--sz-6);
+        text-align: center;
+        padding: var(--sz-6);
+        border: 1px solid black;
+        background-color: var(--white);
+        border-radius: var(--radius-md);
+    }
+
     @media (--sm) {
         .form {
             margin-top: calc(var(--sz-32) * -1);
@@ -70,16 +102,20 @@
         <div class="logo">
             <img src="logo.svg" alt="Logo" />
         </div>
+        {#if message}
+            <div class="message">{message}</div>
+        {/if}
         <div class="fields">
-            <form action="#" method="POST">
+            <form>
                 <div class="control">
-                    <label for="email">{_('Email address')}</label>
+                    <label for="login">{_('Username or email')}</label>
                     <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autocomplete="email"
-                        required />
+                        id="login"
+                        name="login"
+                        type="text"
+                        autocomplete="username"
+                        required
+                        bind:value={data.login} />
                 </div>
 
                 <div class="control">
@@ -89,7 +125,8 @@
                         name="password"
                         type="password"
                         autocomplete="current-password"
-                        required />
+                        required
+                        bind:value={data.password} />
                 </div>
 
                 <div class="control remember-forgot">
@@ -97,7 +134,8 @@
                         <input
                             id="rememberme"
                             name="rememberme"
-                            type="checkbox" />
+                            type="checkbox"
+                            bind:checked={data.rememberme} />
                         <label for="rememberme">{_('Remember me')}</label>
                     </div>
 
@@ -105,7 +143,7 @@
                 </div>
 
                 <div class="button-bar">
-                    <button type="submit">
+                    <button type="button" on:click={login}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
