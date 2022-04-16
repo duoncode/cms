@@ -1,6 +1,14 @@
-import { settings } from './settings';
 import { success, error } from './state';
-import { _ } from './locale';
+import { settings } from './settings';
+
+
+const domain = `${window.location.protocol}//${window.location.host}`;
+
+// During development the pathname should be emtpy.
+// On the PHP side we use /panel in debug mode so we need to use it here as well.
+const panelPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+const panelApi = panelPath === '' ? '/panel/api' : `${panelPath}/api`;
+
 
 class FetchError extends Error {
     constructor(data) {
@@ -10,14 +18,19 @@ class FetchError extends Error {
 }
 
 function getDefaultOptions() {
+    const headers = {
+        'X-Requested-With': 'xmlhttprequest',
+    };
+
+    if (settings) {
+        headers['X-CSRF-Token'] = settings.csrfToken;
+    }
+
     return {
+        headers,
         mode: 'cors',
         cache: 'no-cache',
         credentials: 'same-origin',
-        headers: {
-            'X-Requested-With': 'xmlhttprequest',
-            'X-CSRF-Token': csrfToken,
-        },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
     };
@@ -39,10 +52,8 @@ function getBodyOptions(method, data) {
 }
 
 async function fetchit(path, params, options) {
-    let url = new URL(
-        path,
-        `${window.location.protocol}//${window.location.host}`,
-    );
+    let url = new URL(`${panelApi}${path}`, domain);
+
     if (params) {
         // dynamically append GET params when value is set
         Object.keys(params).forEach((key) => {
@@ -71,7 +82,7 @@ async function fetchit(path, params, options) {
                 window.location.reload();
             }
         } catch {
-            message = { error: _('Fatal error occured') };
+            message = { error: 'Fatal error occured' };
         }
         throw new FetchError(message);
     }
