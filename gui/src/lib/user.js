@@ -1,10 +1,10 @@
 import { writable, get } from 'svelte/store';
-import { replace, location } from "svelte-spa-router";
+import { replace } from "svelte-spa-router";
 import req from './req';
 
 const authenticated = writable(false);
 const user = writable(null);
-let rememberedRoute = '/';
+const rememberedRoute = writable('/');
 
 
 async function loginUser(login, password, rememberme) {
@@ -12,7 +12,7 @@ async function loginUser(login, password, rememberme) {
 
     if (resp.ok) {
         await loadUser();
-        replace(rememberedRoute);
+        replace(get(rememberedRoute));
 
         return true;
     } else {
@@ -26,8 +26,6 @@ async function logoutUser() {
     if (resp.ok) {
         authenticated.set(false);
         user.set(null);
-        rememberedRoute = get(location);
-        console.log(rememberedRoute);
         replace('/login');
     } else {
         throw 'Error while logging out';
@@ -50,5 +48,6 @@ export {
     logoutUser,
     loadUser,
     authenticated,
+    rememberedRoute,
     user,
 };

@@ -19,8 +19,6 @@ export default class Router {
     }
 
     get() {
-        let plugins = new Map();
-
-        return new Map([...this.routes, ...plugins]);
+        return this.routes;
     }
 }

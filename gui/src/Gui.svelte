@@ -1,30 +1,32 @@
 <script>
     import Router from 'svelte-spa-router';
-    import { replace } from 'svelte-spa-router';
+    import { replace, location } from 'svelte-spa-router';
     import { wrap } from 'svelte-spa-router/wrap';
 
-    import { authenticated } from './lib/user';
+    import { authenticated, rememberedRoute } from './lib/user';
     import Panel from './Panel.svelte';
     import Login from './Login.svelte';
 
     function redirect() {
         if ($authenticated) {
-            replace('/');
+            replace($rememberedRoute);
+            $rememberedRoute = '/';
         } else {
             replace('/login');
+            $rememberedRoute = $location;
         }
     }
 </script>
 
 <Router
     routes={{
-        '/': wrap({
-            component: Panel,
-            conditions: [() => $authenticated],
-        }),
         '/login': wrap({
             component: Login,
             conditions: [() => !$authenticated],
+        }),
+        '*': wrap({
+            component: Panel,
+            conditions: [() => $authenticated],
         }),
     }}
     on:conditionsFailed={redirect} />
