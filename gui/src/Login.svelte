@@ -1,26 +1,22 @@
 <script>
-    import req from './lib/req';
     import { _ } from './lib/locale';
+    import { loginUser } from './lib/user';
 
     let message = null;
-    let data = {
-        login: null,
-        password: null,
-        rememberme: false,
-    };
+    let login = null;
+    let password = null;
+    let rememberme = false;
 
-    async function login() {
-        if (data.login === null || data.password === null) {
+    async function doLogin() {
+        if (login === null || password === null) {
             message = _('Please provide username and password');
             return;
         }
 
-        let resp = await req.post('/login', data);
+        let result = await loginUser(login, password, rememberme);
 
-        if (resp.ok) {
-            message = null;
-        } else {
-            message = resp.data.error;
+        if (result !== true) {
+            message = result;
         }
     }
 </script>
@@ -115,7 +111,7 @@
                         type="text"
                         autocomplete="username"
                         required
-                        bind:value={data.login} />
+                        bind:value={login} />
                 </div>
 
                 <div class="control">
@@ -126,7 +122,7 @@
                         type="password"
                         autocomplete="current-password"
                         required
-                        bind:value={data.password} />
+                        bind:value={password} />
                 </div>
 
                 <div class="control remember-forgot">
@@ -135,7 +131,7 @@
                             id="rememberme"
                             name="rememberme"
                             type="checkbox"
-                            bind:checked={data.rememberme} />
+                            bind:checked={rememberme} />
                         <label for="rememberme">{_('Remember me')}</label>
                     </div>
 
@@ -143,7 +139,7 @@
                 </div>
 
                 <div class="button-bar">
-                    <button type="button" on:click={login}>
+                    <button type="button" on:click={doLogin}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

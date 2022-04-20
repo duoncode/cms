@@ -15,7 +15,7 @@ class Config extends BaseConfig
             'panel.path' => 'panel',
             'panel.theme' => null,
             'sql.conia' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'sql',
-            'session.expire' => 60 * 60 * 24,
+            'session.expires' => 60 * 60 * 24,
             'session.authcookie' => $config['app'] . '_auth',
         ];
 

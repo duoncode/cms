@@ -40,7 +40,7 @@ class Auth
     protected function remember(string $userId): RememberDetails
     {
         $token = new Token($this->config->get('secret'));
-        $expires = time() + $this->config->get('session')['expire'];
+        $expires = time() + $this->config->get('session.expires');
 
         $remembered = $this->users->remember(
             $token->hash(),
@@ -146,7 +146,7 @@ class Auth
             $user = $this->users->bySession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
-                $this->login($user['usr'], false);
+                $this->login($user['uid'], false);
                 return $user;
             }
         }

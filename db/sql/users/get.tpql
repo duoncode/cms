@@ -8,6 +8,9 @@ SELECT
     u.active,
     COALESCE(c.display, COALESCE(c.username, c.email)) AS creator,
     COALESCE(e.display, COALESCE(e.username, e.email)) AS editor,
+<?php if (isset($sessionhash)) : ?>
+    s.expires,
+<?php endif ?>
     u.created,
     u.changed,
     u.deleted
@@ -23,7 +26,7 @@ INNER JOIN
 <?php if (isset($sessionhash)) : ?>
 INNER JOIN
     conia.loginsessions s ON
-        s.usr = u.usr
+        s.uid = u.uid
 <?php endif ?>
 
 WHERE

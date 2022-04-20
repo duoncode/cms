@@ -27,12 +27,12 @@ class Session extends BaseSession
         return $_SESSION['user_id'] ?? null;
     }
 
-    public function remember(Token $token, int $expire): void
+    public function remember(Token $token, int $expires): void
     {
         setcookie(
             $this->authCookie,
             $token->get(),
-            $expire,
+            $expires,
             '/'
         );
     }
