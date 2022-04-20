@@ -69,7 +69,11 @@ class Auth
         return $response;
     }
 
-    public function logout()
+    public function logout(Request $request): array
     {
+        $auth = new \Conia\Auth($request);
+        $auth->logout();
+
+        return ['ok' => true];
     }
 }

@@ -39,8 +39,8 @@ class Routes
             '/currentuser',
             [Auth::class, 'user']
         )->middleware(new Permission('authenticated')));
-        $api->add(Route::post('auth.login', '/login', [Auth::class, 'login'],));
-        $api->add(Route::get('auth.logout', '/logout', [Auth::class, 'logout'],));
+        $api->add(Route::post('auth.login', '/login', [Auth::class, 'login']));
+        $api->add(Route::post('auth.logout', '/logout', [Auth::class, 'logout'])->render('json'));
     }
 
     protected function addUser(Group $api): void

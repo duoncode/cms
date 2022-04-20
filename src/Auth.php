@@ -80,8 +80,8 @@ class Auth
     {
         $session = $this->session;
         $session->forget();
-
         $hash = $this->getTokenHash();
+
         if ($hash) {
             $session->forgetRemembered();
         }
@@ -158,7 +158,7 @@ class Auth
     public function permissions(): array
     {
         $permissions = new Permissions($this->config);
-        $user = $this->users();
+        $user = $this->user();
 
         if ($user === null) {
             return [];
