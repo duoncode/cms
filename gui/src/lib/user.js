@@ -11,7 +11,9 @@ async function loginUser(login, password, rememberme) {
     let resp = await req.post('/login', { login, password, rememberme });
 
     if (resp.ok) {
+        await loadUser();
         replace(rememberedRoute);
+
         return true;
     } else {
         return resp.data.error;

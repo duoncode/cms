@@ -46,4 +46,11 @@ class Users
             'expires' => $expires,
         ])->run();
     }
+
+    public function forget(string $hash): bool
+    {
+        return $this->db->users->forget([
+            'hash' => $hash,
+        ])->run();
+    }
 }

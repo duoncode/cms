@@ -59,7 +59,7 @@ class Auth
     {
         $session = $this->session;
 
-        // regenerate the session id before setting the user id
+        // Regenerate the session id before setting the user id
         // to mitigate session fixation attack.
         $session->regenerate();
         $session->setUser($userId);
@@ -73,6 +73,15 @@ class Auth
                     $details->expires
                 );
             };
+        } else {
+            // Remove the user entry from loginsessions table as the user
+            // has not checked "remember me". In that case the session is
+            // only valid as long as the browser is not closed.
+            $token = $session->getAuthToken();
+
+            if ($token !== null) {
+                $this->users->forget($userId);
+            }
         }
     }
 
@@ -83,6 +92,7 @@ class Auth
         $hash = $this->getTokenHash();
 
         if ($hash) {
+            $this->users->forget($hash);
             $session->forgetRemembered();
         }
     }
@@ -142,6 +152,7 @@ class Auth
         }
 
         $hash = $this->getTokenHash();
+
         if ($hash) {
             $user = $this->users->bySession($hash);
 

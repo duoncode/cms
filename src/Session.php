@@ -48,6 +48,6 @@ class Session extends BaseSession
 
     public function getAuthToken(): ?string
     {
-        return $_COOKIE[$this->name . '_auth'] ?? null;
+        return $_COOKIE[$this->authCookie] ?? null;
     }
 }
