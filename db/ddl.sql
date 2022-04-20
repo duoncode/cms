@@ -82,13 +82,14 @@ CREATE TRIGGER update_users_02_audit_trigger AFTER UPDATE
     conia.process_users_audit();
 
 
-CREATE TABLE conia.sessions (
+CREATE TABLE conia.loginsessions (
     hash text NOT NULL,
-    usr integer NOT NULL,
+    uid text NOT NULL CHECK (char_length(uid) = 13),
     expires timestamp with time zone NOT NULL,
-    CONSTRAINT pk_sessions PRIMARY KEY (hash),
-    CONSTRAINT fk_sessions_users FOREIGN KEY (usr) REFERENCES conia.users(usr),
-    CONSTRAINT ck_sessions_hash CHECK (char_length(hash) <= 254)
+    CONSTRAINT pk_loginsessions PRIMARY KEY (hash),
+    CONSTRAINT uc_loginsessions_uid UNIQUE (uid),
+    CONSTRAINT fk_loginsessions_users FOREIGN KEY (uid) REFERENCES conia.users(uid),
+    CONSTRAINT ck_loginsessions_hash CHECK (char_length(hash) <= 254)
 );
 
 

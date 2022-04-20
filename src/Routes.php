@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Conia;
 
 use Chuck\Routing\{Group, Route};
-use Chuck\Middleware\Session;
 use Chuck\ConfigInterface;
 use Conia\App;
 use Conia\Middleware\Permission;
+use Conia\Middleware\Session;
 use Conia\View\{Auth, System, Page};
 
 

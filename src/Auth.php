@@ -42,11 +42,11 @@ class Auth
         $token = new Token($this->config->get('secret'));
         $expires = time() + $this->config->get('session')['expire'];
 
-        $remembered = ($this->users->remember)([
-            'hash' => $token->hash(),
-            'user' => $userId,
-            'expires' => Time::toIsoDateTime($expires),
-        ])->run();
+        $remembered = $this->users->remember(
+            $token->hash(),
+            $userId,
+            Time::toIsoDateTime($expires),
+        );
 
         if ($remembered) {
             return new RememberDetails($token, $expires);

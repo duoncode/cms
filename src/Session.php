@@ -9,6 +9,14 @@ use Chuck\Session as BaseSession;
 
 class Session extends BaseSession
 {
+    public function __construct(
+        protected string $name,
+        protected string $authCookie,
+        protected string $flashMessagesKey = 'flash_messages',
+        protected string $rememberedUriKey = 'remembered_uri',
+    ) {
+    }
+
     public function setUser(string $userId): void
     {
         $_SESSION['user_id'] = $userId;
@@ -22,7 +30,7 @@ class Session extends BaseSession
     public function remember(Token $token, int $expire): void
     {
         setcookie(
-            $this->config->get('session.authcookie', $this->name . '_auth'),
+            $this->authCookie,
             $token->get(),
             $expire,
             '/'
@@ -32,7 +40,7 @@ class Session extends BaseSession
     public function forgetRemembered(): void
     {
         setcookie(
-            $this->config->get('session.authcookie', $this->name . '_auth'),
+            $this->authCookie,
             '',
             time() - 60 * 60 * 24
         );

@@ -7,8 +7,12 @@
     import Panel from './Panel.svelte';
     import Login from './Login.svelte';
 
-    function unauthorized() {
-        replace('/login');
+    function redirect() {
+        if ($authenticated) {
+            replace('/');
+        } else {
+            replace('/login');
+        }
     }
 </script>
 
@@ -18,6 +22,9 @@
             component: Panel,
             conditions: [() => $authenticated],
         }),
-        '/login': Login,
+        '/login': wrap({
+            component: Login,
+            conditions: [() => !$authenticated],
+        }),
     }}
-    on:conditionsFailed={unauthorized} />
+    on:conditionsFailed={redirect} />

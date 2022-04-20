@@ -19,11 +19,23 @@ INNER JOIN
 INNER JOIN
     conia.users e ON
         u.editor = e.usr
+
+<?php if (isset($sessionhash)) : ?>
+INNER JOIN
+    conia.loginsessions s ON
+        s.usr = u.usr
+<?php endif ?>
+
 WHERE
+
 <?php if (isset($login)) : ?>
     (u.email = :login OR u.username = :login)
 <?php else: ?>
+    <?php if (isset($sessionhash)) : ?>
+    s.hash = :sessionhash
+    <?php else: ?>
     u.uid = :uid
+    <?php endif ?>
 <?php endif ?>
 
     AND u.userrole != 'system'
