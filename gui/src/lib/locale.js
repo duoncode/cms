@@ -1,6 +1,6 @@
 import { readable } from 'svelte/store';
 import I18N from './gettext';
-import { getSettings } from './settings';
+import { getSettings } from './boot';
 
 const i18n = new I18N();
 const settings = getSettings();

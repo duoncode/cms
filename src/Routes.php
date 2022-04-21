@@ -9,7 +9,7 @@ use Chuck\ConfigInterface;
 use Conia\App;
 use Conia\Middleware\Permission;
 use Conia\Middleware\Session;
-use Conia\View\{Auth, System, Page};
+use Conia\View\{Auth, Panel, Page};
 
 
 class Routes
@@ -45,21 +45,23 @@ class Routes
 
     protected function addUser(Group $api): void
     {
-        $permission = new Permission('edit-users');
+        $editUsers = new Permission('edit-users');
 
-        $api->add(Route::get('users', 'users', [User::class, 'list'])->middleware($permission));
-        $api->add(Route::get('user.get', 'user/{uid}', [User::class, 'get'])->middleware($permission));
-        $api->add(Route::post('user.create', 'user', [User::class, 'create'])->middleware($permission));
-        $api->add(Route::put('user.save', 'user/{uid}', [User::class, 'save'])->middleware($permission));
+        $api->add(Route::get('users', 'users', [User::class, 'list'])->middleware($editUsers));
+        $api->add(Route::get('user.get', 'user/{uid}', [User::class, 'get'])->middleware($editUsers));
+        $api->add(Route::post('user.create', 'user', [User::class, 'create'])->middleware($editUsers));
+        $api->add(Route::put('user.save', 'user/{uid}', [User::class, 'save'])->middleware($editUsers));
     }
 
     protected function addSettings(Group $api): void
     {
-        $api->add(Route::get(
-            'conia.settings',
-            '/settings',
-            [System::class, 'settings'],
-        )->render('json'));
+        $api->add(Route::get('conia.settings', '/settings', [Panel::class, 'settings']));
+    }
+
+    protected function addSystem(Group $api): void
+    {
+        $panel = new Permission('panel');
+        $api->add(Route::get('conia.boot', '/boot', [Panel::class, 'boot'])->middleware($panel));
     }
 
     protected function addPanelApi(Group $api): void
@@ -67,6 +69,7 @@ class Routes
         $this->addSettings($api);
         $this->addAuth($api);
         $this->addUser($api);
+        $this->addSystem($api);
     }
 
     public function add(App $app): void

@@ -2,7 +2,7 @@
 import './styles/main.css';
 import Gui from './Gui.svelte'
 
-import { loadSettings } from './lib/settings';
+import { loadSettings } from './lib/boot';
 import { loadUser } from './lib/user';
 
 

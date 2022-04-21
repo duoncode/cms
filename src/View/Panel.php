@@ -8,7 +8,7 @@ use Conia\Request;
 use Conia\Config;
 
 
-class System
+class Panel
 {
     protected Config $config;
 
@@ -26,6 +26,13 @@ class System
             'debug' => $this->request->debug,
             'env' => $this->request->env,
             'csrfToken' => 'TOKEN' // TODO: real token
+        ];
+    }
+
+    public function boot(): array
+    {
+        return [
+            'sections' => []
         ];
     }
 }

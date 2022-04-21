@@ -1,5 +1,5 @@
 import { success, error } from './state';
-import { settings } from './settings';
+import { settings } from './boot';
 
 
 const domain = `${window.location.protocol}//${window.location.host}`;
@@ -82,7 +82,7 @@ async function fetchit(path, params, options) {
         return new Response(false, message);
     }
 
-    return new Response(true, response.json());
+    return new Response(true, await response.json());
 }
 
 async function get(url, params) {
