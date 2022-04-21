@@ -9,6 +9,8 @@ use Chuck\Config as BaseConfig;
 
 class Config extends BaseConfig
 {
+    protected array $layouts = [];
+
     public function __construct(array $config)
     {
         $coniaConfig = [
@@ -23,5 +25,15 @@ class Config extends BaseConfig
             $coniaConfig,
             $config,
         ));
+    }
+
+    public function addLayouts(array $layouts): void
+    {
+        $this->layouts = array_merge($this->layouts, $layouts);
+    }
+
+    public function layouts(): array
+    {
+        return $this->layouts;
     }
 }

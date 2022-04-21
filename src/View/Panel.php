@@ -31,7 +31,10 @@ class Panel
 
     public function boot(): array
     {
+        $config = $this->config;
+
         return [
+            'layouts' => $config->layouts(),
             'sections' => []
         ];
     }

@@ -26,7 +26,7 @@ class App extends BaseApp
         array|ConfigInterface $options,
         RegistryInterface $registry = new Registry(),
     ): static {
-        if ($options instanceof ConfigInterface) {
+        if ($options instanceof Config) {
             $config = $options;
         } else {
             $config = new Config($options);
@@ -42,5 +42,10 @@ class App extends BaseApp
     public function addSystemRoutes(): void
     {
         (new Routes($this->request->getConfig()))->add($this);
+    }
+
+    public function addLayouts(array $layouts): void
+    {
+        $this->config->addLayouts($layouts);
     }
 }
