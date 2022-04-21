@@ -33,7 +33,7 @@ async function logoutUser() {
 }
 
 async function loadUser() {
-    let resp = await req.get('/currentuser');
+    let resp = await req.get('/me');
 
     if (resp.ok) {
         authenticated.set(true);

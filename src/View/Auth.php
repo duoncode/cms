@@ -22,10 +22,11 @@ class LoginSchema extends Schema
 
 class Auth
 {
-    public function user()
+    public function me()
     {
         return [
-            'name' => 'Hans Karl'
+            'name' => 'User',
+            'permissions' => [],
         ];
     }
 

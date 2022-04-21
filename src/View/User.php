@@ -11,7 +11,7 @@ class User
     {
     }
 
-    public function get(string $uid)
+    public function me(string $uid)
     {
     }
 

@@ -36,8 +36,8 @@ class Routes
     {
         $api->add(Route::get(
             'auth.user',
-            '/currentuser',
-            [Auth::class, 'user']
+            '/me',
+            [Auth::class, 'me']
         )->middleware(new Permission('authenticated')));
         $api->add(Route::post('auth.login', '/login', [Auth::class, 'login']));
         $api->add(Route::post('auth.logout', '/logout', [Auth::class, 'logout'])->render('json'));
