@@ -12,8 +12,8 @@ abstract class Field
     public function __construct(
         protected string $name,
         protected string|array $label,
-        protected bool $multilang = false,
         protected bool $required = false,
+        protected bool $multilang = false,
         protected string|array $description = '',
         protected int $width = 100,
     ) {
