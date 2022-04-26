@@ -25,4 +25,9 @@ abstract class Field
             throw new Exception('$width must be >= 10 and <= 100');
         }
     }
+
+    public function validate(): bool
+    {
+        return true;
+    }
 }
