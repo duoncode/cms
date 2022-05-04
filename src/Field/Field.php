@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Conia\Field;
 
 use \Exception;
+use Conia\Data;
 
 
-abstract class Field
+abstract class Field implements Data
 {
     public readonly string $type;
 

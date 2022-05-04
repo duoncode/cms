@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Generator;
-use Conia\Field\Field;
-use Conia\Block;
+use Conia\Data;
 
 
 abstract class Type
@@ -30,12 +29,8 @@ abstract class Type
     public function get(): Generator
     {
         foreach ($this as $field => $object) {
-            if (is_subclass_of($object, Block::class)) {
-                (yield $field => ['type' => 'block', 'value' => $object]);
-            } else {
-                if (is_subclass_of($object, Field::class)) {
-                    (yield $field => $object->meta());
-                }
+            if ($object instanceof Data) {
+                (yield $field => $object->meta());
             }
         }
     }
