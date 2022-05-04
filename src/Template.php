@@ -4,40 +4,29 @@ declare(strict_types=1);
 
 namespace Conia;
 
+use \Generator;
 use Conia\Field\Field;
+use Conia\Block;
 
 
-class Page
+class Template
 {
-    protected array $fields;
-    protected array $blocks;
-
     public function __construct(
-        protected string $name,
-        protected string|array $label,
-        protected bool $singleton = false,
-        protected bool $extensible = true,
+        public readonly string|array $label,
         protected array $permissions = [],
     ) {
     }
 
-    public function addField(Field $field)
+    public function get(): Generator
     {
-        $this->fields[] = $field;
-    }
-
-    public function getFields(): array
-    {
-        return $this->fields;
-    }
-
-    public function addBlock(string $name)
-    {
-        $this->block[] = $name;
-    }
-
-    public function getBlocks(): array
-    {
-        return $this->blocks;
+        foreach ($this as $field => $object) {
+            if (is_subclass_of(Block::class, $object)) {
+                (yield $field => $object);
+            } else {
+                if (is_subclass_of(Field::class, $object)) {
+                    (yield $field => $object);
+                }
+            }
+        }
     }
 }
