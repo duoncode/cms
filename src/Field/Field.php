@@ -10,7 +10,6 @@ use \Exception;
 abstract class Field
 {
     public function __construct(
-        protected string $name,
         protected string|array $label,
         protected bool $required = false,
         protected bool $multilang = false,
