@@ -43,9 +43,9 @@ class App
         $this->app = ChuckApp::create($config, $registry);
     }
 
-    public function template(Template $template): void
+    public function type(Type $type): void
     {
-        $this->config->addTemplate($template);
+        $this->config->addType($type);
     }
 
     public function add(RouteInterface $route): void

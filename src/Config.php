@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Conia;
 
+use \Exception;
 use Chuck\Config as BaseConfig;
 
 
 class Config extends BaseConfig
 {
-    protected array $templates = [];
+    protected array $types = [];
 
     public function __construct(array $config)
     {
@@ -27,19 +28,26 @@ class Config extends BaseConfig
         ));
     }
 
-    public function addTemplate(Template $template): void
+    public function addType(Type $type): void
     {
-        $this->templates[$template::class] = $template;
+        $name = $type->name();
+
+        if (array_key_exists($name, $this->types)) {
+            $class = $type::class;
+            throw new Exception("Type '$name' already exists. Instance of '$class'");
+        }
+
+        $this->types[$name] = $type;
     }
 
-    public function templates(): array
+    public function types(): array
     {
         $result = [];
 
-        foreach ($this->templates as $key => $template) {
+        foreach ($this->types as $key => $type) {
             $result[] = [
                 'value' => $key,
-                'label' => $template->label,
+                'label' => $type->label,
             ];
         }
 

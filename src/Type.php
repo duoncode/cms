@@ -9,12 +9,20 @@ use Conia\Field\Field;
 use Conia\Block;
 
 
-class Template
+class Type
 {
+    protected string $name;
+    protected string $template;
+
     public function __construct(
         public readonly string|array $label,
         protected array $permissions = [],
+        ?string $name = null,
+        ?string $template = null,
     ) {
+        $class = basename(str_replace('\\', '/', strtolower($this::class)));
+        $this->name = $name ?: $class;
+        $this->template = $template ?:  $class . '.php';
     }
 
     public function get(): Generator
@@ -28,5 +36,15 @@ class Template
                 }
             }
         }
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function template(): string
+    {
+        return $this->template;
     }
 }

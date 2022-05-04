@@ -34,7 +34,7 @@ class Panel
         $config = $this->config;
 
         return [
-            'templates' => $config->templates(),
+            'types' => $config->types(),
         ];
     }
 }
