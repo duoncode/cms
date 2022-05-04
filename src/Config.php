@@ -9,7 +9,7 @@ use Chuck\Config as BaseConfig;
 
 class Config extends BaseConfig
 {
-    protected array $layouts = [];
+    protected array $templates = [];
 
     public function __construct(array $config)
     {
@@ -27,13 +27,22 @@ class Config extends BaseConfig
         ));
     }
 
-    public function addLayouts(array $layouts): void
+    public function addTemplate(Template $template): void
     {
-        $this->layouts = array_merge($this->layouts, $layouts);
+        $this->templates[$template::class] = $template;
     }
 
-    public function layouts(): array
+    public function templates(): array
     {
-        return $this->layouts;
+        $result = [];
+
+        foreach ($this->templates as $key => $template) {
+            $result[] = [
+                'value' => $key,
+                'label' => $template->label,
+            ];
+        }
+
+        return $result;
     }
 }
