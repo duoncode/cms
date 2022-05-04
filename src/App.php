@@ -43,14 +43,9 @@ class App
         $this->app = ChuckApp::create($config, $registry);
     }
 
-    public function addSystemRoutes(): void
+    public function template(Template $template): void
     {
-        (new Routes($this->config))->add($this);
-    }
-
-    public function addLayouts(array $layouts): void
-    {
-        $this->config->addLayouts($layouts);
+        $this->config->addTemplate($template);
     }
 
     public function add(RouteInterface $route): void
@@ -78,6 +73,9 @@ class App
 
     public function run(): ResponseInterface
     {
+        // Add the system routes as last step
+        (new Routes($this->config))->add($this);
+
         return $this->app->run();
     }
 }
