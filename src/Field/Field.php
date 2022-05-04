@@ -29,4 +29,15 @@ abstract class Field
     {
         return true;
     }
+
+    public function meta(): array
+    {
+        return [
+            'type' => $this->type,
+            'required' => $this->required,
+            'width' => $this->width,
+            'multilang' => $this->multilang,
+            'description' => $this->description,
+        ];
+    }
 }

@@ -34,7 +34,7 @@ abstract class Type
                 (yield $field => ['type' => 'block', 'value' => $object]);
             } else {
                 if (is_subclass_of($object, Field::class)) {
-                    (yield $field => ['type' => $object->type, 'value' => $object]);
+                    (yield $field => $object->meta());
                 }
             }
         }
@@ -49,10 +49,7 @@ abstract class Type
         $result = [];
 
         foreach ($this->get() as $key => $value) {
-            $result[] = [
-                'name' => $key,
-                'type' => $value['type'],
-            ];
+            $result[] = array_merge(['name' => $key], $value);
         }
 
         return $result;
