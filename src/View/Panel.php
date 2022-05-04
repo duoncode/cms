@@ -37,4 +37,9 @@ class Panel
             'types' => $config->types(),
         ];
     }
+
+    public function type(string $name): array
+    {
+        return ($this->config->type($name))->structure();
+    }
 }

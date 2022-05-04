@@ -9,6 +9,8 @@ use \Exception;
 
 abstract class Field
 {
+    public readonly string $type;
+
     public function __construct(
         protected string|array $label,
         protected bool $required = false,
@@ -16,13 +18,11 @@ abstract class Field
         protected string|array $description = '',
         protected int $width = 100,
     ) {
-        if (empty($name)) {
-            throw new Exception('$name must not be emtpy');
-        }
-
         if ($width > 100 || $width < 10) {
             throw new Exception('$width must be >= 10 and <= 100');
         }
+
+        $this->type = basename(str_replace('\\', '/', strtolower($this::class)));
     }
 
     public function validate(): bool

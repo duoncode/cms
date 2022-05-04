@@ -30,7 +30,7 @@ class Config extends BaseConfig
 
     public function addType(Type $type): void
     {
-        $name = $type->name();
+        $name = $type->name;
 
         if (array_key_exists($name, $this->types)) {
             $class = $type::class;
@@ -52,5 +52,10 @@ class Config extends BaseConfig
         }
 
         return $result;
+    }
+
+    public function type(string $name): Type
+    {
+        return $this->types[$name];
     }
 }

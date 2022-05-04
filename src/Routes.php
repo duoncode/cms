@@ -62,6 +62,7 @@ class Routes
     {
         $panel = new Permission('panel');
         $api->add(Route::get('conia.boot', '/boot', [Panel::class, 'boot'])->middleware($panel));
+        $api->add(Route::get('conia.type', '/type/{name}', [Panel::class, 'type'])->middleware($panel));
     }
 
     protected function addPanelApi(Group $api): void
