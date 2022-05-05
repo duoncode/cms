@@ -1,6 +1,7 @@
 <script>
     import { _ } from './lib/locale';
     import { loginUser } from './lib/user';
+    import Logo from './shell/Logo.svelte';
 
     let message = null;
     let login = null;
@@ -33,7 +34,7 @@
     }
 
     .logo {
-        img {
+        :global(svg) {
             display: block;
             height: var(--admin-logo-login-height, var(--s-20));
             width: auto;
@@ -97,7 +98,7 @@
 <div class="login">
     <div class="form">
         <div class="logo">
-            <img src="logo.svg" alt="Logo" />
+            <Logo />
         </div>
         {#if message}
             <div class="message">{message}</div>

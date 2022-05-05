@@ -1,11 +1,16 @@
+<script>
+    import Logo from './Logo.svelte';
+</script>
+
 <style type="postcss">
     .logo {
         display: flex;
         align-items: center;
         margin-top: 19px;
 
-        img {
+        :global(svg) {
             height: var(--s-6);
+            width: var(--s-6);
             margin-left: -10px;
         }
 
@@ -21,6 +26,6 @@
 </style>
 
 <div class="logo">
-    <img src="logo.svg" alt="Logo" />
+    <Logo width />
     <span>CONIA</span>
 </div>
