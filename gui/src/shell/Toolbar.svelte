@@ -5,6 +5,6 @@
 <style type="postcss">
 </style>
 
-<div id="toolbar" class="header-bar">
+<div id="toolbar" class="headerbar">
     <NavToggle />
 </div>

@@ -4,8 +4,9 @@
 
 <style>
     button.nav {
+        position: absolute;
+        left: var(--sz-2);
         padding: var(--sz-2);
-        margin-left: var(--sz-2);
 
         background-color: var(--white);
         border: 0;
