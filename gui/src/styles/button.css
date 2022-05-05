@@ -4,7 +4,7 @@ button {
     align-items: center;
 
     user-select: none;
-    padding: var(--sz-2) var(--sz-4);
+    padding: var(--s-2) var(--s-4);
 
     border-radius: var(--radius);
     border: 1px solid var(--gray-300);
@@ -26,6 +26,6 @@ button {
 
     svg {
         height: 1.15rem;
-        margin-right: var(--sz-2);
+        margin-right: var(--s-2);
     }
 }

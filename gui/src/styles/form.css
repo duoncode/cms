@@ -8,7 +8,7 @@ label {
 input {
     appearance: none;
     display: block;
-    padding: var(--sz-2) var(--sz-3);
+    padding: var(--s-2) var(--s-3);
     border: 1px solid var(--gray-300);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
@@ -73,16 +73,16 @@ input[type="radio"] {
 
 .radio + .radio,
 .checkbox + .checkbox {
-    margin-top: var(--sz-2);
+    margin-top: var(--s-2);
 }
 
 .control {
     textarea, [type="text"], [type="password"], [type="number"], [type="email"] {
         width: 100%;
-        margin-top: var(--sz-1);
+        margin-top: var(--s-1);
     }
 }
 
 .control + .control {
-    margin-top: var(--sz-4);
+    margin-top: var(--s-4);
 }

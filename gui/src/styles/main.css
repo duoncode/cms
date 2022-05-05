@@ -28,7 +28,7 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: var(--sz-16);
+    height: var(--s-16);
 
     background-color: var(--white);
     border-bottom: var(--border);

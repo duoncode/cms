@@ -10,12 +10,12 @@
     #nav {
         position: fixed;
         display: flex;
-        width: var(--w-64);
+        width: var(--s-64);
         flex-direction: column;
         height: 100vh;
         background-color: var(--white);
         border: var(--border);
-        padding: var(--sz-6);
+        padding: var(--s-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
 
@@ -24,7 +24,7 @@
         }
 
         &.close {
-            margin-left: calc(var(--w-64) * -1);
+            margin-left: calc(var(--s-64) * -1);
         }
     }
 

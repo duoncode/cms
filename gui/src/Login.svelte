@@ -27,7 +27,7 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 0 var(--sz-6);
+        padding: 0 var(--s-6);
         height: 100vh;
         width: 100%;
     }
@@ -35,7 +35,7 @@
     .logo {
         img {
             display: block;
-            height: var(--admin-logo-login-height, var(--sz-20));
+            height: var(--admin-logo-login-height, var(--s-20));
             width: auto;
             margin: 0 auto;
         }
@@ -43,8 +43,8 @@
 
     .fields {
         background: var(--white);
-        margin-top: var(--sz-6);
-        padding: var(--sz-8) var(--sz-4);
+        margin-top: var(--s-6);
+        padding: var(--s-8) var(--s-4);
         box-shadow: var(--shadow);
     }
 
@@ -66,7 +66,7 @@
     .message {
         margin-top: var(--sz-6);
         text-align: center;
-        padding: var(--sz-6);
+        padding: var(--s-6);
         border: 1px solid black;
         background-color: var(--white);
         border-radius: var(--radius-md);
@@ -74,22 +74,22 @@
 
     @media (--sm) {
         .form {
-            margin-top: calc(var(--sz-32) * -1);
+            margin-top: calc(var(--s-32) * -1);
             width: 100%;
-            max-width: var(--w-md);
+            max-width: var(--s-md);
         }
 
         .fields {
             border-radius: var(--radius-lg);
-            padding-left: var(--sz-10);
-            padding-right: var(--sz-10);
+            padding-left: var(--s-10);
+            padding-right: var(--s-10);
         }
     }
 
     @media (--lg) {
         .form {
-            padding-left: var(--sz-8);
-            padding-right: var(--sz-8);
+            padding-left: var(--s-8);
+            padding-right: var(--s-8);
         }
     }
 </style>

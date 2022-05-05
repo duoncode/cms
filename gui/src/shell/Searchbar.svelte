@@ -11,8 +11,8 @@
     .controls {
         display: flex;
         width: 100%;
-        max-width: var(--w-6xl);
-        margin: 0 var(--w-4) 0 var(--w-14);
+        max-width: var(--s-6xl);
+        margin: 0 var(--s-4) 0 var(--s-14);
 
         & > div {
             display: flex;
@@ -23,15 +23,15 @@
             border-radius: var(--radius-full);
 
             svg {
-                height: var(--sz-5);
-                width: var(--sz-5);
-                margin-left: var(--sz-3);
+                height: var(--s-5);
+                width: var(--s-5);
+                margin-left: var(--s-3);
                 color: var(--gray-400);
             }
 
             input {
                 flex-grow: 1;
-                height: var(--sz-10);
+                height: var(--s-10);
                 box-shadow: none;
                 border: 0;
                 border-radius: 0 var(--radius-full) var(--radius-full) 0;
@@ -46,10 +46,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: var(--sz-10);
-            width: var(--sz-10);
+            height: var(--s-10);
+            width: var(--s-10);
             padding: 0;
-            margin-left: var(--sz-2);
+            margin-left: var(--s-2);
 
             border-radius: var(--radius-full);
 
@@ -62,7 +62,7 @@
 
     @media (--lg) {
         .controls {
-            margin: 0 var(--w-16);
+            margin: 0 var(--s-16);
         }
     }
 </style>

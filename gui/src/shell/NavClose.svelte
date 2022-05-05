@@ -6,9 +6,9 @@
     button.close {
         position: absolute;
         top: 10px;
-        right: calc(-1 * var(--w-8));
-        width: var(--w-8);
-        height: var(--w-8);
+        right: calc(-1 * var(--s-8));
+        width: var(--s-8);
+        height: var(--s-8);
         padding: 0;
 
         background: white;

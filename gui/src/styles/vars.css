@@ -13,86 +13,53 @@
         Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
     /* Sizes */
-    --sz-px:  1px;
-    --sz-0-5: 0.125rem; /* 2px */
-    --sz-1:   0.25rem;  /* 4px */
-    --sz-2:   0.5rem;   /* 8px */
-    --sz-3:   0.75rem;  /* 12px */
-    --sz-4:   1rem;     /* 16px */
-    --sz-5:   1.25rem;  /* 20px */
-    --sz-6:   1.5rem;   /* 24px */
-    --sz-7:   1.75rem;  /* 28px */
-    --sz-8:   2rem;     /* 32px */
-    --sz-9:   2.25rem;  /* 36px */
-    --sz-10:  2.5rem;   /* 40px */
-    --sz-11:  2.75rem;  /* 44px */
-    --sz-12:  3rem;     /* 48px */
-    --sz-14:  3.5rem;   /* 56px */
-    --sz-16:  4rem;     /* 64px */
-    --sz-20:  5rem;     /* 80px */
-    --sz-24:  6rem;     /* 96px */
-    --sz-28:  7rem;     /* 112px */
-    --sz-32:  8rem;     /* 128px */
-    --sz-36:  9rem;     /* 144px */
-    --sz-40:  10rem;    /* 160px */
-    --sz-44:  11rem;    /* 176px */
-    --sz-48:  12rem;    /* 192px */
-    --sz-52:  13rem;    /* 208px */
-    --sz-56:  14rem;    /* 224px */
-    --sz-60:  15rem;    /* 240px */
-    --sz-64:  16rem;    /* 256px */
-    --sz-72:  18rem;    /* 288px */
-    --sz-80:  20rem;    /* 320px */
-    --sz-96:  24rem;    /* 384px */
+    --s-0: 0px;
+    --s-px: 1px;
+    --s-0-5: 0.125rem;  /* 2px */
+    --s-1: 0.25rem;     /* 4px */
+    --s-1-5: 0.375rem;  /* 6px */
+    --s-2: 0.5rem;      /* 8px */
+    --s-2-5: 0.625rem;  /* 10px */
+    --s-3: 0.75rem;     /* 12px */
+    --s-3-5: 0.875rem;  /* 14px */
+    --s-4: 1rem;        /* 16px */
+    --s-5: 1.25rem;     /* 20px */
+    --s-6: 1.5rem;      /* 24px */
+    --s-7: 1.75rem;     /* 28px */
+    --s-8: 2rem;        /* 32px */
+    --s-9: 2.25rem;     /* 36px */
+    --s-10: 2.5rem;     /* 40px */
+    --s-11: 2.75rem;    /* 44px */
+    --s-12: 3rem;       /* 48px */
+    --s-14: 3.5rem;     /* 56px */
+    --s-16: 4rem;       /* 64px */
+    --s-20: 5rem;       /* 80px */
+    --s-24: 6rem;       /* 96px */
+    --s-28: 7rem;       /* 112px */
+    --s-32: 8rem;       /* 128px */
+    --s-36: 9rem;       /* 144px */
+    --s-40: 10rem;      /* 160px */
+    --s-44: 11rem;      /* 176px */
+    --s-48: 12rem;      /* 192px */
+    --s-52: 13rem;      /* 208px */
+    --s-56: 14rem;      /* 224px */
+    --s-60: 15rem;      /* 240px */
+    --s-64: 16rem;      /* 256px */
+    --s-72: 18rem;      /* 288px */
+    --s-80: 20rem;      /* 320px */
+    --s-96: 24rem;      /* 384px */
 
-    /* Widths */
-    --w-0: 0px;
-    --w-px: 1px;
-    --w-0-5: 0.125rem;  /* 2px */
-    --w-1: 0.25rem;     /* 4px */
-    --w-1-5: 0.375rem;  /* 6px */
-    --w-2: 0.5rem;      /* 8px */
-    --w-2-5: 0.625rem;  /* 10px */
-    --w-3: 0.75rem;     /* 12px */
-    --w-3-5: 0.875rem;  /* 14px */
-    --w-4: 1rem;        /* 16px */
-    --w-5: 1.25rem;     /* 20px */
-    --w-6: 1.5rem;      /* 24px */
-    --w-7: 1.75rem;     /* 28px */
-    --w-8: 2rem;        /* 32px */
-    --w-9: 2.25rem;     /* 36px */
-    --w-10: 2.5rem;     /* 40px */
-    --w-11: 2.75rem;    /* 44px */
-    --w-12: 3rem;       /* 48px */
-    --w-14: 3.5rem;     /* 56px */
-    --w-16: 4rem;       /* 64px */
-    --w-20: 5rem;       /* 80px */
-    --w-24: 6rem;       /* 96px */
-    --w-28: 7rem;       /* 112px */
-    --w-32: 8rem;       /* 128px */
-    --w-36: 9rem;       /* 144px */
-    --w-40: 10rem;      /* 160px */
-    --w-44: 11rem;      /* 176px */
-    --w-48: 12rem;      /* 192px */
-    --w-52: 13rem;      /* 208px */
-    --w-56: 14rem;      /* 224px */
-    --w-60: 15rem;      /* 240px */
-    --w-64: 16rem;      /* 256px */
-    --w-72: 18rem;      /* 288px */
-    --w-80: 20rem;      /* 320px */
-    --w-96: 24rem;      /* 384px */
-
-    --w-xs: 20rem;      /* 320px */
-    --w-sm: 24rem;      /* 384px */
-    --w-md: 28rem;      /* 448px */
-    --w-lg: 32rem;      /* 512px */
-    --w-xl: 36rem;      /* 576px */
-    --w-2xl: 42rem;     /* 672px */
-    --w-3xl: 48rem;     /* 768px */
-    --w-4xl: 56rem;     /* 896px */
-    --w-5xl: 64rem;     /* 1024px */
-    --w-6xl: 72rem;     /* 1152px */
-    --w-7xl: 80rem;     /* 1280px */
+    --s-xs: 20rem;      /* 320px */
+    --s-sm: 24rem;      /* 384px */
+    --s-md: 28rem;      /* 448px */
+    --s-lg: 32rem;      /* 512px */
+    --s-xl: 36rem;      /* 576px */
+    --s-2xl: 42rem;     /* 672px */
+    --s-3xl: 48rem;     /* 768px */
+    --s-4xl: 56rem;     /* 896px */
+    --s-5xl: 64rem;     /* 1024px */
+    --s-6xl: 72rem;     /* 1152px */
+    --s-7xl: 80rem;     /* 1280px */
 
     /* Text sizes */
     --text-xs: 0.75rem;  /* 12px */
