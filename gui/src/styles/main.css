@@ -17,6 +17,20 @@ body {
     display: flex;
     flex-direction: row;
     overflow: hidden;
+
+    main {
+        flex-grow: 1;
+    }
+}
+
+.header-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: var(--sz-16);
+
+    background-color: var(--white);
+    border-bottom: var(--border);
 }
 
 a, a:visited, a:focus {
