@@ -40,6 +40,12 @@ class Panel
 
     public function type(string $name): array
     {
-        return ($this->config->type($name))->structure();
+        $type = $this->config->type($name);
+
+        return [
+            'name' => $name,
+            'label' => $type->label,
+            'structure' => $type->structure(),
+        ];
     }
 }
