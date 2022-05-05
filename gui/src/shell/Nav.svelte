@@ -1,9 +1,9 @@
 <script>
-    import { fade } from 'svelte/transition';
     import { link } from 'svelte-spa-router';
     import { system } from '../lib/boot';
     import { logoutUser } from '../lib/user';
     import { navVisible } from '../lib/ui';
+    import Backdrop from './Backdrop.svelte';
     import NavClose from './NavClose.svelte';
 </script>
 
@@ -27,13 +27,6 @@
         &.close {
             margin-left: calc(var(--s-64) * -1);
         }
-    }
-
-    #backdrop {
-        position: fixed;
-        width: 100%;
-        height: 100vh;
-        background-color: rgb(75 85 99 / 0.75);
     }
 
     .logo {
@@ -61,16 +54,10 @@
             position: relative;
             margin-left: 0;
         }
-
-        #backdrop {
-            display: none;
-        }
     }
 </style>
 
-{#if $navVisible}
-    <div id="backdrop" in:fade out:fade />
-{/if}
+<Backdrop />
 <div id="nav" class:open={$navVisible} class:close={!$navVisible}>
     <NavClose />
     <div class="logo">
