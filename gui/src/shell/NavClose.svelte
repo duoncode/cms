@@ -5,7 +5,7 @@
 <style type="postcss">
     button.close {
         position: absolute;
-        top: 10px;
+        top: 15px;
         right: calc(-1 * var(--s-8));
         width: var(--s-8);
         height: var(--s-8);

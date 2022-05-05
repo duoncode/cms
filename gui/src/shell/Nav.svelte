@@ -1,4 +1,5 @@
 <script>
+    import { fade } from 'svelte/transition';
     import { link } from 'svelte-spa-router';
     import { system } from '../lib/boot';
     import { logoutUser } from '../lib/user';
@@ -28,14 +29,28 @@
         }
     }
 
+    #backdrop {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background-color: rgb(75 85 99 / 0.75);
+    }
+
     @media (--lg) {
         #nav {
             position: relative;
             margin-left: 0;
         }
+
+        #backdrop {
+            display: none;
+        }
     }
 </style>
 
+{#if $navVisible}
+    <div id="backdrop" in:fade out:fade />
+{/if}
 <div id="nav" class:open={$navVisible} class:close={!$navVisible}>
     <NavClose />
     {#each $system.sections as section}
