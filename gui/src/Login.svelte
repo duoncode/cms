@@ -29,6 +29,7 @@
         align-items: center;
         padding: 0 var(--sz-6);
         height: 100vh;
+        width: 100%;
     }
 
     .logo {
