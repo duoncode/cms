@@ -21,13 +21,14 @@ async function loginUser(login, password, rememberme) {
 }
 
 async function logoutUser() {
+    authenticated.set(false);
     let resp = await req.post('/logout');
 
     if (resp.ok) {
-        authenticated.set(false);
         user.set(null);
         replace('/login');
     } else {
+        authenticated.set(true);
         throw 'Error while logging out';
     }
 }
