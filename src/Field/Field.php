@@ -13,10 +13,10 @@ abstract class Field implements Data
     public readonly string $type;
 
     public function __construct(
-        protected string|array $label,
+        protected string $label,
         protected bool $required = false,
         protected bool $multilang = false,
-        protected string|array $description = '',
+        protected ?string $description = null,
         protected int $width = 100,
     ) {
         if ($width > 100 || $width < 10) {
