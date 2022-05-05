@@ -94,13 +94,6 @@
     --w-6xl: 72rem;     /* 1152px */
     --w-7xl: 80rem;     /* 1280px */
 
-    /* Screen sizes */
-    --screen-sm: 640px;
-    --screen-md: 768px;
-    --screen-lg: 1024px;
-    --screen-xl: 1280px;
-    --screen-2xl: 1536px;
-
     /* Text sizes */
     --text-xs: 0.75rem;  /* 12px */
     --text-sm: 0.875rem; /* 14px */
