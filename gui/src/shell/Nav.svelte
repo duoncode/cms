@@ -3,17 +3,18 @@
     import { system } from '../lib/boot';
     import { logoutUser } from '../lib/user';
     import { navVisible } from '../lib/ui';
+    import NavClose from './NavClose.svelte';
 </script>
 
 <style type="postcss">
-    .nav {
+    #nav {
         position: fixed;
         display: flex;
         width: var(--w-64);
         flex-direction: column;
         height: 100vh;
         background-color: var(--white);
-        border: 1px solid var(--gray-300);
+        border: var(--border);
         padding: var(--sz-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
@@ -28,14 +29,15 @@
     }
 
     @media (--lg) {
-        .nav {
+        #nav {
             position: relative;
             margin-left: 0;
         }
     }
 </style>
 
-<div class="nav" class:open={$navVisible} class:close={!$navVisible}>
+<div id="nav" class:open={$navVisible} class:close={!$navVisible}>
+    <NavClose />
     {#each $system.sections as section}
         <h2>{section.title}</h2>
     {/each}

@@ -1,6 +1,6 @@
 <script>
-    import Toolbar from '../shell/Toolbar.svelte';
+    import Searchbar from '../shell/Searchbar.svelte';
 </script>
 
-<Toolbar />
+<Searchbar />
 <h1>Pages</h1>
