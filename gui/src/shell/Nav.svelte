@@ -16,7 +16,7 @@
         height: 100vh;
         background-color: var(--white);
         border: var(--border);
-        padding: var(--s-6);
+        padding: var(--s-5) var(--s-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
 
@@ -36,6 +36,23 @@
         background-color: rgb(75 85 99 / 0.75);
     }
 
+    .logo {
+        display: flex;
+        align-items: center;
+
+        img {
+            height: var(--s-6);
+            margin-left: -10px;
+        }
+
+        span {
+            margin-left: var(--s-3);
+            font-size: var(--s-5);
+            font-weight: 300;
+            letter-spacing: var(--s-3);
+        }
+    }
+
     @media (--lg) {
         #nav {
             position: relative;
@@ -53,6 +70,10 @@
 {/if}
 <div id="nav" class:open={$navVisible} class:close={!$navVisible}>
     <NavClose />
+    <div class="logo">
+        <img src="logo.svg" alt="Logo" />
+        <span>CONIA</span>
+    </div>
     {#each $system.sections as section}
         <h2>{section.title}</h2>
     {/each}
