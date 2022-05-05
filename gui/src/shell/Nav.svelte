@@ -15,8 +15,8 @@
         flex-direction: column;
         height: 100vh;
         background-color: var(--white);
-        border: var(--border);
-        padding: var(--s-5) var(--s-6);
+        border-right: var(--border);
+        padding: 0 var(--s-6) var(--s-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
 
@@ -39,6 +39,7 @@
     .logo {
         display: flex;
         align-items: center;
+        margin-top: 19px;
 
         img {
             height: var(--s-6);
@@ -46,6 +47,8 @@
         }
 
         span {
+            display: inline-block;
+            margin-top: -1px;
             margin-left: var(--s-3);
             font-size: var(--s-5);
             font-weight: 300;
