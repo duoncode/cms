@@ -22,8 +22,6 @@ abstract class Type
         $class = basename(str_replace('\\', '/', strtolower($this::class)));
         $this->name = $name ?: $class;
         $this->template = $template ?:  $class . '.php';
-
-        $this->init();
     }
 
     public function get(): Generator
@@ -35,9 +33,8 @@ abstract class Type
         }
     }
 
-    protected function init(): void
-    {
-    }
+    abstract public function init(): void;
+    abstract public function title(): string;
 
     public function structure(): array
     {
