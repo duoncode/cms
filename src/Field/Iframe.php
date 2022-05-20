@@ -7,9 +7,6 @@ namespace Conia\Field;
 use Conia\Field;
 
 
-class Image extends Field
+class Iframe extends Field
 {
-    public function width()
-    {
-    }
 }

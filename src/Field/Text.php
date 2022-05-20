@@ -9,5 +9,4 @@ use Conia\Field;
 
 class Text extends Field
 {
-    use TextValue;
 }

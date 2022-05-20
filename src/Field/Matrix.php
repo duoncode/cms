@@ -7,9 +7,6 @@ namespace Conia\Field;
 use Conia\Field;
 
 
-class Image extends Field
+class Matrix extends Field
 {
-    public function width()
-    {
-    }
 }
