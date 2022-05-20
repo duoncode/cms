@@ -5,7 +5,7 @@ declare(strict_types=1);
 #[Attribute]
 class TypeMeta
 {
-    use Meta;
+    use MetaAttribute;
 
     public function __construct(
         public readonly ?string $name = null,

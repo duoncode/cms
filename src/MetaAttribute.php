@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-trait Meta
+trait MetaAttribute
 {
     public readonly ?string $description;
 

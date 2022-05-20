@@ -5,7 +5,7 @@ declare(strict_types=1);
 #[Attribute]
 class BlockMeta
 {
-    use Meta;
+    use MetaAttribute;
 
     public readonly ?string $label;
 
