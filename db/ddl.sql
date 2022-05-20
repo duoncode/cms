@@ -99,13 +99,14 @@ CREATE TABLE conia.pages (
     published boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
     locked boolean DEFAULT false NOT NULL,
-    template text NOT NULL,
+    pagetype text NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
     changed timestamp with time zone NOT NULL DEFAULT now(),
     deleted timestamp with time zone,
     content jsonb NOT NULL,
+    tsv tsvector GENERATED ALWAYS AS (jsonb_to_tsvector('simple', content, '["string"]')) STORED,
     CONSTRAINT pk_pages PRIMARY KEY (page),
     CONSTRAINT uc_pages_uid UNIQUE (uid),
     CONSTRAINT fk_pages_users_creator FOREIGN KEY (creator)
@@ -113,6 +114,7 @@ CREATE TABLE conia.pages (
     CONSTRAINT fk_pages_users_editor FOREIGN KEY (editor)
         REFERENCES conia.users (usr)
 );
+CREATE INDEX ix_pages_tsv ON conia.pages USING GIN(tsv);
 CREATE OR REPLACE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
@@ -140,82 +142,27 @@ CREATE TRIGGER update_pages_02_audit_trigger AFTER UPDATE
     conia.process_pages_audit();
 
 
-CREATE TABLE conia.contents (
+CREATE TABLE conia.slugs (
     page integer NOT NULL,
     lang text NOT NULL CHECK (char_length(lang) <= 32),
-    title text NOT NULL,
     slug text NOT NULL CHECK (char_length(slug) <= 512),
-    fulltextlang text NOT NULL CHECK (char_length(lang) <= 32),
-    deleted timestamp with time zone,
-    content jsonb NOT NULL,
-    tsv tsvector NOT NULL,
-    CONSTRAINT pk_contents PRIMARY KEY (page, lang),
-    CONSTRAINT fk_contents_pages FOREIGN KEY (page)
+    inactive timestamp with time zone,
+    CONSTRAINT pk_slugs PRIMARY KEY (page, lang, slug),
+    CONSTRAINT fk_slugs_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
-CREATE UNIQUE INDEX uix_contents_slug ON conia.contents
-    USING btree (lang, lower(slug)) WHERE (deleted IS NULL);
-CREATE INDEX ix_contents_tsv ON conia.contents USING GIN(tsv);
-CREATE OR REPLACE FUNCTION conia.update_contents_fulltext() RETURNS
-TRIGGER AS $$
-BEGIN
-    NEW.tsv :=
-        to_tsvector(fulltextlang, NEW.title) ||
-        to_tsvector(fulltextlang, NEW.content);
+CREATE UNIQUE INDEX uix_slugs_slug ON conia.slugs
+    USING btree (lang, lower(slug)) WHERE (inactive IS NULL);
 
-    RETURN NEW;
-END
-$$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION conia.process_contents_audit()
-    RETURNS TRIGGER AS $$
-DECLARE
-    page_changed integer;
-BEGIN
-    -- IF (TG_OP = 'UPDATE') THEN
-    -- Get changed date from conia.pages as
-    -- conia.contents has no changed column
-
-    -- TODO: Check if editor is system then cancel
-
-    SELECT cp.changed
-    INTO page_changed
-    FROM (
-        SELECT p.changed
-        FROM conia.pages p
-        WHERE p.page = OLD.page
-    ) cp;
-
-    INSERT INTO audit.contents (
-        page, changed, lang, title,
-        slug, deleted, content
-    ) VALUES (
-        OLD.page, page_changed, OLD.lang, OLD.title,
-        OLD.slug, OLD.deleted, OLD.content
-    );
-    RETURN OLD;
-    -- END IF;
-EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'duplicate contents audit row skipped. content: %, changed: %', OLD.content, OLD.changed;
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-CREATE TRIGGER update_contents_01_changed_trigger BEFORE UPDATE ON conia.contents
-    FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
-CREATE TRIGGER update_contents_02_fulltext_trigger BEFORE INSERT OR UPDATE
-    ON conia.contents FOR EACH ROW EXECUTE PROCEDURE
-    conia.update_contents_fulltext();
-CREATE TRIGGER update_contents_03_audit_trigger AFTER UPDATE
-    ON conia.contents FOR EACH ROW EXECUTE PROCEDURE
-    conia.process_contents_audit();
 
 
 CREATE TABLE conia.drafts (
-  page integer NOT NULL,
-  changed timestamp with time zone NOT NULL,
-  editor integer NOT NULL,
-  content jsonb NOT NULL,
-  CONSTRAINT pk_drafts PRIMARY KEY (page),
-  CONSTRAINT fk_drafts_pages FOREIGN KEY (page) REFERENCES conia.pages (page)
+    page integer NOT NULL,
+    changed timestamp with time zone NOT NULL,
+    editor integer NOT NULL,
+    content jsonb NOT NULL,
+    CONSTRAINT pk_drafts PRIMARY KEY (page),
+    CONSTRAINT fk_drafts_pages FOREIGN KEY (page) REFERENCES conia.pages (page)
 );
 CREATE OR REPLACE FUNCTION conia.process_drafts_audit()
     RETURNS TRIGGER AS $$
@@ -235,45 +182,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_drafts_01_audit_trigger AFTER UPDATE
     ON conia.drafts FOR EACH ROW EXECUTE PROCEDURE
     conia.process_drafts_audit();
-
-
-CREATE TABLE conia.draftcontents (
-  page integer NOT NULL,
-  lang text not null check (char_length(lang) <= 32),
-  title text NOT NULL,
-  slug text not null check (char_length(slug) <= 512),
-  content jsonb NOT NULL,
-  CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang),
-  CONSTRAINT fk_draftcontents_drafts FOREIGN KEY (page) REFERENCES conia.drafts (page)
-);
-CREATE OR REPLACE FUNCTION conia.process_draftcontents_audit()
-    RETURNS TRIGGER AS $$
-DECLARE
-    draft_changed integer;
-BEGIN
-    SELECT cp.changed
-    INTO draft_changed
-    FROM (
-        SELECT d.changed
-        FROM conia.drafts d
-        WHERE d.page = OLD.page
-    ) cd;
-
-    INSERT INTO audit.draftcontents (
-        page, changed, lang, title, slug, content
-    ) VALUES (
-        OLD.page, draft_changed, OLD.lang, OLD.title, OLD.slug, OLD.content
-    );
-    RETURN OLD;
-    -- END IF;
-EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'duplicate draftcontents audit row skipped. draft: %, changed: %', OLD.page, OLD.changed;
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-CREATE TRIGGER update_draftcontents_01_audit_trigger AFTER UPDATE
-    ON conia.draftcontents FOR EACH ROW EXECUTE PROCEDURE
-    conia.process_draftcontents_audit();
 
 
 
@@ -354,20 +262,6 @@ CREATE TABLE audit.pages (
 );
 
 
-CREATE TABLE audit.contents (
-    page integer NOT NULL,
-    lang text NOT NULL CHECK (char_length(lang) <= 32),
-    changed timestamp with time zone NOT NULL,
-    title text NOT NULL,
-    slug text NOT NULL,
-    deleted timestamp with time zone,
-    content jsonb NOT NULL,
-    CONSTRAINT pk_contents PRIMARY KEY (page, lang, changed),
-    CONSTRAINT fk_audit_contents FOREIGN KEY (page, lang)
-        REFERENCES conia.contents (page, lang) ON UPDATE CASCADE
-);
-
-
 CREATE TABLE audit.drafts (
     page integer NOT NULL,
     changed timestamp with time zone NOT NULL,
@@ -376,19 +270,6 @@ CREATE TABLE audit.drafts (
     CONSTRAINT pk_drafts PRIMARY KEY (page, changed),
     CONSTRAINT fk_audit_drafts FOREIGN KEY (page)
         REFERENCES conia.drafts (page)
-);
-
-
-CREATE TABLE audit.draftcontents (
-    page integer NOT NULL,
-    lang text not null check (char_length(lang) <= 32),
-    changed timestamp with time zone NOT NULL,
-    title text NOT NULL,
-    slug text not null check (char_length(slug) <= 512),
-    content jsonb NOT NULL,
-    CONSTRAINT pk_draftcontents PRIMARY KEY (page, lang, changed),
-    CONSTRAINT fk_audit_draftcontents FOREIGN KEY (page, lang)
-        REFERENCES conia.draftcontents (page, lang)
 );
 
 
