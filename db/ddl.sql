@@ -93,6 +93,12 @@ CREATE TABLE conia.loginsessions (
 );
 
 
+CREATE TABLE conia.pagetypes (
+    pagetype text NOT NULL CHECK (char_length(pagetype) = 64),
+    CONSTRAINT pk_pagetypes PRIMARY KEY (pagetype)
+);
+
+
 CREATE TABLE conia.pages (
     page integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) = 13),
@@ -106,13 +112,15 @@ CREATE TABLE conia.pages (
     changed timestamp with time zone NOT NULL DEFAULT now(),
     deleted timestamp with time zone,
     content jsonb NOT NULL,
-    tsv tsvector GENERATED ALWAYS AS (jsonb_to_tsvector('simple', content, '["string"]')) STORED,
+    tsv tsvector NOT NULL GENERATED ALWAYS AS (jsonb_to_tsvector('simple', content, '["string"]')) STORED,
     CONSTRAINT pk_pages PRIMARY KEY (page),
     CONSTRAINT uc_pages_uid UNIQUE (uid),
     CONSTRAINT fk_pages_users_creator FOREIGN KEY (creator)
         REFERENCES conia.users (usr),
     CONSTRAINT fk_pages_users_editor FOREIGN KEY (editor)
-        REFERENCES conia.users (usr)
+        REFERENCES conia.users (usr),
+    CONSTRAINT fk_pages_pagetypes FOREIGN KEY (pagetype)
+        REFERENCES conia.pagetypes (pagetype) ON UPDATE CASCADE ON DELETE NO ACTION
 );
 CREATE INDEX ix_pages_tsv ON conia.pages USING GIN(tsv);
 CREATE OR REPLACE FUNCTION conia.process_pages_audit()
@@ -121,10 +129,10 @@ BEGIN
     IF (TG_OP = 'UPDATE') THEN
         INSERT INTO audit.pages (
             page, changed, published, hidden, locked,
-            template, editor, deleted, content
+            pagetype, editor, deleted, content
         ) VALUES (
             OLD.page, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
-            OLD.template, OLD.editor, OLD.deleted, OLD.content
+            OLD.pagetype, OLD.editor, OLD.deleted, OLD.content
         );
         RETURN OLD;
     END IF;
@@ -252,7 +260,7 @@ CREATE TABLE audit.pages (
     published boolean NOT NULL,
     hidden boolean NOT NULL,
     locked boolean NOT NULL,
-    template text NOT NULL,
+    pagetype text NOT NULL,
     editor integer NOT NULL,
     deleted timestamp with time zone,
     content jsonb NOT NULL,
