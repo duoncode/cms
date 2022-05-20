@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia;
 
 use \Exception;
 use \RuntimeException;
-use Conia\Data;
 
 
 abstract class Field implements Data
@@ -20,12 +19,9 @@ abstract class Field implements Data
         protected bool $required = false,
         protected bool $multilang = false,
         protected ?string $description = null,
-        protected int $width = 100,
+        public readonly ?int $width = null,
+        public readonly ?int $height = null,
     ) {
-        if ($width > 100 || $width < 10) {
-            throw new Exception('$width must be >= 10 and <= 100');
-        }
-
         $this->type = basename(str_replace('\\', '/', strtolower($this::class)));
     }
 
