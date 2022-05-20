@@ -4,49 +4,39 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \Generator;
-use Conia\Field;
+use \ReflectionClass;
 
 abstract class Block implements Data
 {
+    use Meta;
+
     protected array $list = [];
     protected array $fields = [];
 
-    public function __construct(
+    public final function __construct(
         public readonly bool $repeatable = false,
     ) {
+        $reflector = new ReflectionClass($this::class);
+        $this->setMeta($reflector);
     }
 
     abstract public function init(): void;
 
-    public function get(): Generator
+    protected function layout(): array
     {
-        foreach ($this as $field => $object) {
-            if ($object instanceof Field) {
-                (yield $field => $object->meta());
-            }
-        }
+        return [];
     }
 
-    public function structure(): array
+    protected function form(): array
     {
-        $result = [];
+        $this->init();
 
-        foreach ($this->get() as $key => $value) {
-            $result[] = array_merge(['name' => $key], $value);
-        }
-
-        return $result;
-    }
-
-    public function meta(): array
-    {
         return [
             'type' => 'block',
             'label' => $this->label,
             'repeatable' => $this->repeatable,
             'description' => $this->description,
-            'structure' => $this->structure(),
+            'layout' => $this->layout(),
         ];
     }
 

@@ -7,17 +7,14 @@ namespace Conia;
 use \Generator;
 use \ReflectionClass;
 use Conia\Authorized;
-use Conia\Data;
 use Conia\Field;
 use Conia\TypeMeta;
 
 
 abstract class Type
 {
-    public readonly string $name;
-    public readonly ?string $description;
-    public readonly ?string $template;
-    public readonly int $columns;
+    use Meta;
+
     public readonly array $permissions;
 
     protected array $list = [];
@@ -26,20 +23,7 @@ abstract class Type
     public final function __construct()
     {
         $reflector = new ReflectionClass($this::class);
-        $meta = $reflector->getAttributes(TypeMeta::class)[0] ?? null;
-
-        if ($meta) {
-            $m = $meta->newInstance();
-            $this->name = $m->name ?: $this->getClassName();
-            $this->description = $m->desc ?: null;
-            $this->template = $m->template ?: null;
-            $this->columns = $m->columns ?: 12;
-        } else {
-            $this->name = $this->getClassName();
-            $this->description = null;
-            $this->template = null;
-            $this->columns = 12;
-        }
+        $this->setMeta($reflector);
 
         $permissions = $reflector->getAttributes(Authorized::class)[0] ?? null;
 
