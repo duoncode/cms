@@ -8,22 +8,23 @@ use \Generator;
 use \ReflectionClass;
 use Conia\Authorized;
 use Conia\Field;
-use Conia\TypeMeta;
 
 
 abstract class Type
 {
-    use Meta;
+    use SetsMeta;
+    use SetsInfo;
 
     public readonly array $permissions;
 
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct()
+    public final function __construct(string $label, ?string $description = null)
     {
         $reflector = new ReflectionClass($this::class);
         $this->setMeta($reflector);
+        $this->setInfo($label, $description);
 
         $permissions = $reflector->getAttributes(Authorized::class)[0] ?? null;
 

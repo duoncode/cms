@@ -2,32 +2,42 @@
 
 declare(strict_types=1);
 
-namespace Conia;
-
-use \ReflectionClass;
-
-trait Meta
+#[Attribute]
+class Meta
 {
-    public readonly string $name;
-    public readonly ?string $description;
-    public readonly ?string $template;
-    public readonly int $columns;
+    public function __construct(
+        public readonly ?string $name = null,
+        public readonly ?string $template = null,
+        public readonly int $columns = 12,
+    ) {
+        $this->validate();
+    }
 
-    protected function setMeta(ReflectionClass $reflector)
+    protected function validate(): void
     {
-        $meta = $reflector->getAttributes(TypeMeta::class)[0] ?? null;
+        $namePattern = '/^[a-zA-Z][a-zA-Z0-9_]{1,63}$/';
 
-        if ($meta) {
-            $m = $meta->newInstance();
-            $this->name = $m->name ?: $this->getClassName();
-            $this->description = $m->desc ?: null;
-            $this->template = $m->template ?: null;
-            $this->columns = $m->columns ?: 12;
-        } else {
-            $this->name = $this->getClassName();
-            $this->description = null;
-            $this->template = null;
-            $this->columns = 12;
+        if (isset($this->name) && !preg_match($namePattern, $this->name)) {
+            throw new ValueError("The value of \$name must adhere to this pattern: $namePattern");
         }
+
+        $templatePattern = '/^[a-z][a-z0-9_]{1,64}$/';
+
+        if (isset($this->template) && !preg_match($templatePattern, $this->template)) {
+            throw new ValueError("The value of \$template must adhere to this pattern: $templatePattern");
+        }
+
+        if ($this->columns < 12 || $this->columns > 25) {
+            throw new ValueError('The value of $columns must be >= 12 and <= 25');
+        }
+    }
+
+    protected function sanitize(?string $value): ?string
+    {
+        if (isset($value)) {
+            return htmlspecialchars(trim($value)) ?: null;
+        }
+
+        return null;
     }
 }
