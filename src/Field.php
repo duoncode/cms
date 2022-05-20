@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \RuntimeException;
+use \ValueError;
 
 
-abstract class Field implements Data
+abstract class Field
 {
     public readonly string $type;
     public readonly string $component; // The handle for the component used in the admin
@@ -20,7 +20,7 @@ abstract class Field implements Data
         public readonly ?int $width = null,
         public readonly ?int $height = null,
     ) {
-        $this->type = basename(str_replace('\\', '/', strtolower($this::class)));
+        $this->type = basename(str_replace('\\', '/', $this::class));
     }
 
     public function validate(): bool
@@ -28,17 +28,22 @@ abstract class Field implements Data
         return true;
     }
 
-    public function meta(): array
+    public function meta(Type|Block $doc): array
     {
+        if ($doc->columns < $this->width) {
+            throw new ValueError('Field width larger than number of columns');
+        }
+
         return [
+            'label' => $this->label,
+            'description' => $this->description,
             'type' => $this->type,
             'required' => $this->required,
             'width' => $this->width,
-            'height' => $this->width,
+            'height' => $this->height,
             'multilang' => $this->multilang,
-            'description' => $this->description,
         ];
     }
 
-    abstract public function __toString(): string
+    abstract public function __toString(): string;
 }
