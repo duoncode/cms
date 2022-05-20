@@ -14,6 +14,7 @@ abstract class Block implements Data
         protected readonly ?string $label = null,
         protected readonly bool $repeatable = false,
         protected readonly ?string $description = null,
+        protected readonly ?string $template = null,
     ) {
         $this->init();
     }
@@ -51,5 +52,10 @@ abstract class Block implements Data
             'description' => $this->description,
             'structure' => $this->structure(),
         ];
+    }
+
+    public function render(): string
+    {
+        return '';
     }
 }
