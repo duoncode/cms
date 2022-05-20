@@ -9,4 +9,9 @@ use Conia\Field;
 
 class Checkbox extends Field
 {
+
+    public function __toString(): string
+    {
+        return '';
+    }
 }

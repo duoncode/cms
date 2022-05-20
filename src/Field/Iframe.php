@@ -9,4 +9,8 @@ use Conia\Field;
 
 class Iframe extends Field
 {
+    public function __toString(): string
+    {
+        return '';
+    }
 }

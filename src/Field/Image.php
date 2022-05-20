@@ -12,4 +12,9 @@ class Image extends Field
     public function width()
     {
     }
+
+    public function __toString(): string
+    {
+        return '';
+    }
 }

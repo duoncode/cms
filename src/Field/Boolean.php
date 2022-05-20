@@ -13,4 +13,9 @@ class Boolean extends Field
     {
         return $this->value === $value;
     }
+
+    public function __toString(): string
+    {
+        return '';
+    }
 }

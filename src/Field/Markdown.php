@@ -9,4 +9,8 @@ use Conia\Field;
 
 class Markdown extends Field
 {
+    public function __toString(): string
+    {
+        return '';
+    }
 }

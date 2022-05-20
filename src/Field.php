@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \Exception;
 use \RuntimeException;
 
 
 abstract class Field implements Data
 {
     public readonly string $type;
-    public string $defaultl;
-    public string $value;
+    public readonly string $component; // The handle for the component used in the admin
 
     public function __construct(
         protected string $label,
@@ -36,36 +34,11 @@ abstract class Field implements Data
             'type' => $this->type,
             'required' => $this->required,
             'width' => $this->width,
+            'height' => $this->width,
             'multilang' => $this->multilang,
             'description' => $this->description,
         ];
     }
 
-    public function __toString(): string
-    {
-        return $this->getValue();
-    }
-
-    public function getValue(): string
-    {
-        if (isset($this->value)) {
-            return $this->value;
-        }
-
-        if (isset($this->default)) {
-            return $this->default;
-        }
-
-        throw new RuntimeException('No value available');
-    }
-
-    public function setValue(string $value): void
-    {
-        $this->default = $value;
-    }
-
-    public function setDefault(string|array $value): void
-    {
-        $this->default = $value;
-    }
+    abstract public function __toString(): string
 }
