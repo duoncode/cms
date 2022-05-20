@@ -5,23 +5,19 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Generator;
-use Conia\Field\Field;
-
+use Conia\Field;
 
 abstract class Block implements Data
 {
+    protected array $list = [];
+    protected array $fields = [];
+
     public function __construct(
-        protected readonly ?string $label = null,
-        protected readonly bool $repeatable = false,
-        protected readonly ?string $description = null,
-        protected readonly ?string $template = null,
+        public readonly bool $repeatable = false,
     ) {
-        $this->init();
     }
 
-    protected function init(): void
-    {
-    }
+    abstract public function init(): void;
 
     public function get(): Generator
     {
