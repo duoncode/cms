@@ -5,66 +5,82 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Generator;
-use \ValueError;
+use \ReflectionClass;
+use Conia\Authorized;
 use Conia\Data;
+use Conia\Field;
+use Conia\TypeMeta;
 
 
 abstract class Type
 {
-    protected static $name = null;
+    public readonly string $name;
+    public readonly ?string $description;
+    public readonly ?string $template;
+    public readonly int $columns;
+    public readonly array $permissions;
 
-    public function __construct(
-        public readonly string|array $label,
-        public readonly array $permissions = [],
-        public readonly int $columns = 12,
-    ) {
-        if ($columns < 12 || $columns > 25) {
-            throw new ValueError('The value of $columns must be >= 12 and <= 25');
+    protected array $list = [];
+    protected array $fields = [];
+
+    public final function __construct()
+    {
+        $reflector = new ReflectionClass($this::class);
+        $meta = $reflector->getAttributes(TypeMeta::class)[0] ?? null;
+
+        if ($meta) {
+            $m = $meta->newInstance();
+            $this->name = $m->name ?: $this->getClassName();
+            $this->description = $m->desc ?: null;
+            $this->template = $m->template ?: null;
+            $this->columns = $m->columns ?: 12;
+        } else {
+            $this->name = $this->getClassName();
+            $this->description = null;
+            $this->template = null;
+            $this->columns = 12;
+        }
+
+        $permissions = $reflector->getAttributes(Authorized::class)[0] ?? null;
+
+        if ($permissions) {
+            $p = $permissions->newInstance();
+            $this->permissions = $p->get();
+        } else {
+            $this->permissions = [];
         }
     }
 
-    public static function fromUid(string $uid): self
+    public final function __get(string $name): Field
     {
+        return $this->fields[$name];
     }
 
-    public static function fromSlug(string $uid): self
+    public final function __set(string $name, Field $field): void
     {
+        $this->list[] = $name;
+        $this->fields[$name] = $field;
     }
 
-    public function name(): string
+    public function form(): Generator
     {
-        return static::$name ?: basename(str_replace('\\', '/', strtolower($this::class)));
-    }
-
-    public function template(): string
-    {
-        return $this->name() . '.php';
-    }
-
-    public function get(): Generator
-    {
-        foreach ($this as $field => $object) {
-            if ($object instanceof Data) {
-                (yield $field => $object->meta());
-            }
+        foreach ($this->list as $field) {
+            yield $this->fields[$field];
         }
     }
 
     abstract public function init(): void;
     abstract public function title(): string;
 
-    public function structure(): array
+    public function render(): string
     {
-        $result = [];
+        $template = $this->template ?: strtolower($this->getClassName()) . '.php';
 
-        foreach ($this->get() as $key => $value) {
-            $result[] = array_merge(['name' => $key], $value);
-        }
-
-        return $result;
+        return $template;
     }
 
-    public function renameField(string $current, string $new): void
+    protected function getClassName(): string
     {
+        return basename(str_replace('\\', '/', $this::class));
     }
 }
