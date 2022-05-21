@@ -78,4 +78,9 @@ class App
 
         return $this->app->run();
     }
+
+    public function baseApp(): ChuckApp
+    {
+        return $this->app;
+    }
 }

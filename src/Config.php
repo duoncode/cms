@@ -10,7 +10,7 @@ use Chuck\Config as BaseConfig;
 
 class Config extends BaseConfig
 {
-    protected array $types = [];
+    const TYPES = 'types';
 
     public function __construct(array $config)
     {
@@ -18,9 +18,12 @@ class Config extends BaseConfig
             'panel.path' => 'panel',
             'panel.theme' => null,
             'sql.conia' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'sql',
+            'migrations.conia' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'migrations',
+            'scripts.conia' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'bin',
             'session.expires' => 60 * 60 * 24,
             'session.authcookie' => $config['app'] . '_auth',
         ];
+        $coniaConfig[self::TYPES] = [];
 
         parent::__construct(array_replace_recursive(
             $coniaConfig,
@@ -32,19 +35,19 @@ class Config extends BaseConfig
     {
         $name = $type->name;
 
-        if (array_key_exists($name, $this->types)) {
+        if (array_key_exists($name, $this->settings[self::TYPES])) {
             $class = $type::class;
             throw new Exception("Type '$name' already exists. Instance of '$class'");
         }
 
-        $this->types[$name] = $type;
+        $this->settings[self::TYPES][$name] = $type;
     }
 
     public function types(): array
     {
         $result = [];
 
-        foreach ($this->types as $key => $type) {
+        foreach ($this->settings[self::TYPES] as $key => $type) {
             $result[] = [
                 'value' => $key,
                 'label' => $type->label,
@@ -56,6 +59,6 @@ class Config extends BaseConfig
 
     public function type(string $name): Type
     {
-        return $this->types[$name];
+        return $this->settings[self::TYPES][$name];
     }
 }
