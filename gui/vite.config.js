@@ -8,7 +8,10 @@ export default defineConfig({
         port: 2009,
         strictPort: true,
         proxy: {
-            '/panel/api': 'http://localhost:1983',
+            '/panel/api': {
+                target: 'http://localhost:1983',
+                secure: false,
+            }
         },
     },
 });
