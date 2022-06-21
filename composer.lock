@@ -4,25 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1496b9a119a2931b1d7acdbc85cbdb6",
+    "content-hash": "f8e6a11673e7f7f1d74d62e27ebb8ad4",
     "packages": [
         {
             "name": "conia/chuck",
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "git@github.com:coniadev/chuck.git",
-                "reference": "6b64b794a5d8719a6e5019c3e2dd3bbfaef2f7dd"
+                "url": "https://github.com/coniadev/chuck.git",
+                "reference": "218e3df564511013f220aa89492968f093e6b827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coniadev/chuck/zipball/6b64b794a5d8719a6e5019c3e2dd3bbfaef2f7dd",
-                "reference": "6b64b794a5d8719a6e5019c3e2dd3bbfaef2f7dd",
+                "url": "https://api.github.com/repos/coniadev/chuck/zipball/218e3df564511013f220aa89492968f093e6b827",
+                "reference": "218e3df564511013f220aa89492968f093e6b827",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
-                "psr/container": "^2.0",
                 "psr/log": "^3.0",
                 "tgalopin/html-sanitizer": "^1.5"
             },
@@ -34,25 +33,28 @@
                 "vimeo/psalm": "^5.0.0-beta1"
             },
             "default-branch": true,
-            "type": "project",
+            "type": "library",
             "autoload": {
                 "psr-4": {
                     "Chuck\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Chuck\\Tests\\": "tests"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
+            "description": "A lightweight PHP framework",
+            "keywords": [
+                "api",
+                "framework",
+                "micro",
+                "router"
+            ],
             "support": {
-                "source": "https://github.com/coniadev/chuck/tree/main",
-                "issues": "https://github.com/coniadev/chuck/issues"
+                "issues": "https://github.com/coniadev/chuck/issues",
+                "source": "https://github.com/coniadev/chuck/tree/main"
             },
-            "time": "2022-06-21T12:59:55+00:00"
+            "time": "2022-06-21T16:30:14+00:00"
         },
         {
             "name": "hidehalo/nanoid-php",
@@ -305,60 +307,6 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2022-06-19T18:08:39+00:00"
-        },
-        {
-            "name": "psr/container",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/container.git",
-                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963",
-                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Container\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common Container Interface (PHP FIG PSR-11)",
-            "homepage": "https://github.com/php-fig/container",
-            "keywords": [
-                "PSR-11",
-                "container",
-                "container-interface",
-                "container-interop",
-                "psr"
-            ],
-            "support": {
-                "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/2.0.2"
-            },
-            "time": "2021-11-05T16:47:00+00:00"
         },
         {
             "name": "psr/log",
@@ -651,6 +599,60 @@
                 }
             ],
             "time": "2021-12-13T23:19:03+00:00"
+        },
+        {
+            "name": "psr/container",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/2.0.2"
+            },
+            "time": "2021-11-05T16:47:00+00:00"
         },
         {
             "name": "psy/psysh",
