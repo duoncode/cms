@@ -1,8 +1,8 @@
 {
-    "name": "ebenefuenf/conia",
+    "name": "conia/conia",
     "description": "Conia CMS/CMF",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "ebene fünf GmbH",
@@ -11,15 +11,9 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "ebenefuenf/chuck": "@dev",
+        "conia/chuck": "dev-main",
         "hidehalo/nanoid-php": "^1.1"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../chuck"
-        }
-    ],
     "require-dev": {
         "vlucas/phpdotenv": "5.4.x-dev",
         "psy/psysh": "0.11.x-dev"
