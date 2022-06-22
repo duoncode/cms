@@ -4,66 +4,56 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\App as ChuckApp;
+use \RuntimeException;
+use Chuck\App as BaseApp;
+use Chuck\ConfigInterface;
 use Chuck\RequestInterface;
-use Chuck\ResponseInterface;
-use Chuck\Registry;
-use Chuck\RegistryInterface;
-use Chuck\SessionInterface;
-use Chuck\Routing\GroupInterface;
-use Chuck\Routing\RouteInterface;
+use Chuck\Response\ResponseInterface;
+use Chuck\Routing\RouterInterface;
+use Chuck\Routing\Router;
+use Chuck\Error\Handler;
 use Conia\Config;
 use Conia\Request;
 use Conia\Response;
 use Conia\Routes;
-use Conia\Session;
+use Conia\Middleware\Session;
 
 
-class App
+class App extends BaseApp
 {
-    protected Routes $routes;
-    protected ChuckApp $app;
-    protected Config $config;
-
     public function __construct(
-        array|Config $options,
-        RegistryInterface $registry = new Registry(),
+        private Request $request,
+        private Config $config,
+        private RouterInterface $router,
     ) {
-        if ($options instanceof Config) {
-            $config = $options;
-        } else {
-            $config = new Config($options);
-        }
+        parent::__construct($request, $config, $router);
+    }
 
-        $registry->add(SessionInterface::class, Session::class);
-        $registry->add(RequestInterface::class, Request::class);
-        $registry->add(ResponseInterface::class, Response::class);
+    public static function create(
+        ConfigInterface $config,
+    ): static {
+        throw new RuntimeException('Use \Conia\App::new');
+    }
 
-        $this->config = $config;
-        $this->app = ChuckApp::create($config, $registry);
+    public static function new(
+        Config $config,
+    ): static {
+        $router = new Router();
+        $router->addMiddleware(new Session());
+
+        $request = new Request($config, $router);
+
+        $errorHandler = new Handler($request);
+        $errorHandler->setup();
+
+        $app = new self($request, $config, $router);
+
+        return $app;
     }
 
     public function type(Type $type): void
     {
         $this->config->addType($type);
-    }
-
-    public function add(RouteInterface $route): void
-    {
-        $this->app->add($route);
-    }
-
-    public function group(GroupInterface $group): void
-    {
-        $this->app->group($group);
-    }
-
-    public function static(
-        string $name,
-        string $prefix,
-        string $path,
-    ): void {
-        $this->app->static($name, $prefix, $path);
     }
 
     public function middleware(callable ...$middlewares): void
@@ -76,11 +66,6 @@ class App
         // Add the system routes as last step
         (new Routes($this->config))->add($this);
 
-        return $this->app->run();
-    }
-
-    public function baseApp(): ChuckApp
-    {
-        return $this->app;
+        return parent::run();
     }
 }
