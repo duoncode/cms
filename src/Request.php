@@ -22,14 +22,13 @@ class Request extends BaseRequest
     }
 
     public function db(
-        string $sql = 'conia',
         string $connection = Config::DEFAULT,
     ): DatabaseInterface {
         if ($this->dbs[$connection] ?? null) {
             return $this->dbs[$connection];
         }
 
-        $db = $this->dbs[$connection] = new Database($this->config->db($connection, $sql));
+        $db = $this->dbs[$connection] = new Database($this->config->connection($connection));
 
         return $db;
     }

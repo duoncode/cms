@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Conia\View;
 
 use Chuck\Schema;
-use Chuck\Body\Json;
+use Chuck\Response\Response;
 use Conia\Request;
-use Conia\Response;
 
 
 class LoginSchema extends Schema
@@ -33,8 +32,7 @@ class Auth
     public function login(Request $request): Response
     {
         $schema = new LoginSchema();
-        $response = $request->response;
-        $response->header('Content-Type', 'application/json');
+        $response = $request->response();
 
         if ($schema->validate($request->json())) {
             $values = $schema->values();
@@ -47,24 +45,21 @@ class Auth
             );
 
             if ($user === false) {
-                $response->statusCode(401);
-                $response->body(new Json(
-                    array_merge(
-                        ['error' => _('Incorrect username or password.')],
-                        $schema->pristineValues()
-                    )
-                ));
+                return $response->json(array_merge(
+                    ['error' => _('Incorrect username or password.')],
+                    $schema->pristineValues()
+                ), 401);
             } else {
-                $response->body(new Json($user));
+                return $response->json($user);
             }
         } else {
-            $response->statusCode(400);
-            $response->body(new Json(
+            $response->json(
                 array_merge(
                     ['error' => _('Please provide username and password.')],
                     $schema->pristineValues()
-                )
-            ));
+                ),
+                400
+            );
         }
 
         return $response;

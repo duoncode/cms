@@ -14,17 +14,17 @@ class Panel
 
     public function __construct(protected Request $request)
     {
-        $this->config = $request->getConfig();
+        $this->config = $request->config();
     }
 
     public function settings(): array
     {
         return [
-            'panelPath' => $this->config->get('panel.path'),
-            'locales' => $this->config->get('locales.list'),
-            'locale' => 'de',
-            'debug' => $this->request->debug,
-            'env' => $this->request->env,
+            'panelPath' => $this->config->panelUrl(),
+            // 'locales' => $this->config->get('locales.list'),
+            // 'locale' => 'de',
+            'debug' => $this->request->config()->debug(),
+            'env' => $this->request->config()->env(),
             'csrfToken' => 'TOKEN' // TODO: real token
         ];
     }

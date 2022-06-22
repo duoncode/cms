@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/coniadev/chuck.git",
-                "reference": "218e3df564511013f220aa89492968f093e6b827"
+                "reference": "1a3ad17e93cf17690b1a04989f10dbd9b3647e65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coniadev/chuck/zipball/218e3df564511013f220aa89492968f093e6b827",
-                "reference": "218e3df564511013f220aa89492968f093e6b827",
+                "url": "https://api.github.com/repos/coniadev/chuck/zipball/1a3ad17e93cf17690b1a04989f10dbd9b3647e65",
+                "reference": "1a3ad17e93cf17690b1a04989f10dbd9b3647e65",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/coniadev/chuck/issues",
                 "source": "https://github.com/coniadev/chuck/tree/main"
             },
-            "time": "2022-06-21T16:30:14+00:00"
+            "time": "2022-06-22T17:27:50+00:00"
         },
         {
             "name": "hidehalo/nanoid-php",

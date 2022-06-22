@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Request;
+use Conia\Request;
 use Chuck\Database\DatabaseInterface;
 
 
@@ -14,7 +14,7 @@ class Users
 
     public function __construct(protected Request $request)
     {
-        $this->db = $request->db();
+        $this->db = $request->db('conia');
     }
 
     public function byLogin(string $login): ?array

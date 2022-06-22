@@ -6,10 +6,10 @@ namespace Conia;
 
 use \RuntimeException;
 use Chuck\Database\DatabaseInterface;
-use Chuck\Util\Time;
 use Conia\Config;
 use Conia\Request;
 use Conia\Permissions;
+use Conia\Util\Time;
 
 
 class RememberDetails
@@ -32,7 +32,7 @@ class Auth
     public function __construct(
         protected Request $request,
     ) {
-        $this->config = $request->getConfig();
+        $this->config = $request->config();
         $this->session = $request->session();
         $this->users = new Users($request);
     }
