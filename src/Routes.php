@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Routing\{Group, Route};
-use Chuck\ConfigInterface;
+use Chuck\Routing\Group;
 use Conia\App;
 use Conia\Middleware\Permission;
-use Conia\Middleware\Session;
 use Conia\View\{Auth, Panel, Page};
 
 
@@ -17,52 +15,47 @@ class Routes
     protected string $panelUrl;
     protected string $apiUrl;
 
-    public function __construct(protected ConfigInterface $config)
+    public function __construct(protected Config $config)
     {
-        $this->panelUrl = $config->debug ? '/panel' : '/' . trim($config->get('panel.path'), '/');
+        $this->panelUrl = $config->panelUrl();
         $this->panelApi = $this->panelUrl . '/api';
     }
 
-    protected function addIndex(App $app, Session $session): void
+    protected function addIndex(App $app): void
     {
-        $app->add(Route::get(
-            'conia.index',
-            $this->panelUrl,
-            fn () => '<h1>Panel not found in public directory</h1>',
-        )->render('text', contentType: 'text/html')->middleware($session));
+        $app->get($this->panelUrl, fn () => '<h1>Panel not found in public directory</h1>')
+            ->render('text', contentType: 'text/html');
     }
 
     protected function addAuth(Group $api): void
     {
-        $api->add(Route::get(
-            'auth.user',
-            '/me',
-            [Auth::class, 'me']
-        )->middleware(new Permission('authenticated')));
-        $api->add(Route::post('auth.login', '/login', [Auth::class, 'login']));
-        $api->add(Route::post('auth.logout', '/logout', [Auth::class, 'logout'])->render('json'));
+        $api->get('/me', [Auth::class, 'me'], 'auth.user')
+            ->middleware(new Permission('authenticated'));
+        $api->post('/login', [Auth::class, 'login'], 'auth.login');
+        $api->post('/logout', [Auth::class, 'logout'], 'auth.logout')->render('json');
     }
 
     protected function addUser(Group $api): void
     {
         $editUsers = new Permission('edit-users');
 
-        $api->add(Route::get('users', 'users', [User::class, 'list'])->middleware($editUsers));
-        $api->add(Route::get('user.get', 'user/{uid}', [User::class, 'get'])->middleware($editUsers));
-        $api->add(Route::post('user.create', 'user', [User::class, 'create'])->middleware($editUsers));
-        $api->add(Route::put('user.save', 'user/{uid}', [User::class, 'save'])->middleware($editUsers));
+        $api->get('users', [User::class, 'list'], 'users')->middleware($editUsers);
+        $api->get('user/{uid}', [User::class, 'get'], 'user.get')->middleware($editUsers);
+        $api->post('user', [User::class, 'create'], 'user.create')->middleware($editUsers);
+        $api->put('user/{uid}', [User::class, 'save'], 'user.save')->middleware($editUsers);
     }
 
     protected function addSettings(Group $api): void
     {
-        $api->add(Route::get('conia.settings', '/settings', [Panel::class, 'settings']));
+        $api->get('/settings', [Panel::class, 'settings'], 'conia.settings');
     }
 
     protected function addSystem(Group $api): void
     {
         $panel = new Permission('panel');
-        $api->add(Route::get('conia.boot', '/boot', [Panel::class, 'boot'])->middleware($panel));
-        $api->add(Route::get('conia.type', '/type/{name}', [Panel::class, 'type'])->middleware($panel));
+
+        $api->get('/boot', [Panel::class, 'boot'], 'conia.boot')->middleware($panel);
+        $api->get('/type/{name}', [Panel::class, 'type'], 'conia.type')->middleware($panel);
     }
 
     protected function addPanelApi(Group $api): void
@@ -75,22 +68,20 @@ class Routes
 
     public function add(App $app): void
     {
-        $session = new Session();
-
-        $this->addIndex($app, $session);
+        $this->addIndex($app);
 
         // All API routes
-        $app->group((new Group(
-            'conia.panel.',
+        $app->group(
             $this->panelApi,
-            $this->addPanelApi(...)
-        ))->middleware($session)->render('json'));
+            $this->addPanelApi(...),
+            'conia.panel.',
+        )->render('json');
 
         // Add catchall for page urls. Must be the last one
-        $app->add(Route::get(
-            'conia:catchall',
+        $app->get(
             '/...slug',
-            [Page::class, 'catchall']
-        )->middleware($session));
+            [Page::class, 'catchall'],
+            'conia:catchall',
+        );
     }
 }
