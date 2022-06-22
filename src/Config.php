@@ -14,7 +14,8 @@ class Config extends BaseConfig
 {
     protected string $panelPath = 'panel';
     protected string $theme = null;
-    protected array $tpyes = [];
+    /** @var array<string, Type> */
+    protected array $types = [];
 
     public function __construct(
         string $app,
@@ -55,30 +56,20 @@ class Config extends BaseConfig
     {
         $name = $type->name;
 
-        if (array_key_exists($name, $this->settings[self::TYPES])) {
-            $class = $type::class;
-            throw new Exception("Type '$name' already exists. Instance of '$class'");
+        if (array_key_exists($name, $this->types)) {
+            throw new Exception("Type '$name' already exists. Instance of '{$type::class}'");
         }
 
-        $this->settings[self::TYPES][$name] = $type;
+        $this->types[$name] = $type;
     }
 
     public function types(): array
     {
-        $result = [];
-
-        foreach ($this->settings[self::TYPES] as $key => $type) {
-            $result[] = [
-                'value' => $key,
-                'label' => $type->label,
-            ];
-        }
-
-        return $result;
+        return $this->types;
     }
 
     public function type(string $name): Type
     {
-        return $this->settings[self::TYPES][$name];
+        return $this->types[$name];
     }
 }
