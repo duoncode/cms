@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Exception;
+use \PDO;
 use \ValueError;
 use Chuck\Config as BaseConfig;
 use Chuck\Config\Connection;
@@ -12,38 +13,57 @@ use Chuck\Config\Connection;
 
 class Config extends BaseConfig
 {
-    protected string $panelPath = 'panel';
-    protected string $theme = null;
+    protected string $panelUrl = 'panel';
+    protected ?string $panelTheme = null;
     /** @var array<string, Type> */
     protected array $types = [];
+    private readonly string $root;
+    private bool $debugPanel = false;
 
     public function __construct(
         string $app,
-        string $dsn,
         bool $debug = false,
         string $env = ''
     ) {
         parent::__construct($app, $debug, $env);
-        $root = dirname(__DIR__);
 
-        $this->addConnection(new Connection(
-            $dsn,
-            $root . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'sql',
-            $root . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'migrations',
-        ), 'conia');
-
-        $this->set('panel.path', 'panel');
-        $this->set('panel.theme', null);
+        $this->root = dirname(__DIR__);
         $this->set('session.expires', 60 * 60 * 24);
         $this->set('session.authcookie', $app . '_auth');
 
-        $this->scripts()->add($root . DIRECTORY_SEPARATOR . 'bin');
+        $this->scripts()->add($this->root . DIRECTORY_SEPARATOR . 'bin');
     }
 
-    public function setPanelPath(string $url): void
+    public function debugPanel(bool $debug = true): bool
+    {
+        if (func_num_args() > 0) {
+            $this->debugPanel = $debug;
+        }
+
+        return $this->debugPanel;
+    }
+
+    public function setDsn(string $dsn, bool $print = false): void
+    {
+
+        $this->addConnection(new Connection(
+            $dsn,
+            $this->root . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'sql',
+            $this->root . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'migrations',
+            fetchMode: PDO::FETCH_ASSOC,
+            print: $print,
+        ), 'conia');
+    }
+
+    public function setSecret(string $secret): void
+    {
+        $this->set('secret', $secret);
+    }
+
+    public function setPanelUrl(string $url): void
     {
         if (preg_match('/^[A-Za-z0-9]{1,32}$/', $url)) {
-            $this->panelPath = $url;
+            $this->panelUrl = $url;
         } else {
             throw new ValueError(
                 'The panel url prefix be a nonempty string which consist only of letters' .
@@ -52,12 +72,24 @@ class Config extends BaseConfig
         }
     }
 
+    public function panelUrl(): string
+    {
+        return $this->debugPanel ? '/panel' : '/' . $this->panelUrl;
+    }
+
+    public function setPanelTheme(string $url): void
+    {
+        $this->panelTheme = $url;
+    }
+
     public function addType(Type $type): void
     {
         $name = $type->name;
 
         if (array_key_exists($name, $this->types)) {
-            throw new Exception("Type '$name' already exists. Instance of '{$type::class}'");
+            $class = $type::class;
+
+            throw new Exception("Type '$name' already exists. Instance of '$class'");
         }
 
         $this->types[$name] = $type;
