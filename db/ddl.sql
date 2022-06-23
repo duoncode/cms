@@ -15,13 +15,6 @@ END;
 $$;
 
 
-CREATE TABLE conia.migrations (
-    migration text NOT NULL CHECK (char_length(migration) <= 512),
-    executed timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT pk_migrations PRIMARY KEY (migration)
-);
-
-
 CREATE TABLE conia.userroles (
     userrole text NOT NULL,
     CONSTRAINT pk_userroles PRIMARY KEY (userrole)
