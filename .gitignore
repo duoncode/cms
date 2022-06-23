@@ -1,6 +1,8 @@
-/data/
-/gui/node_modules/
-/gui/dist/
-/vendor/
 *.log
 .env
+composer.lock
+/run
+/data/
+/gui/dist/
+/gui/node_modules/
+/vendor/
