@@ -14,10 +14,6 @@
         "conia/chuck": "dev-main",
         "hidehalo/nanoid-php": "^1.1"
     },
-    "require-dev": {
-        "vlucas/phpdotenv": "5.4.x-dev",
-        "psy/psysh": "0.11.x-dev"
-    },
     "autoload": {
         "psr-4": {
             "Conia\\": "src"
