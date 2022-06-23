@@ -52,7 +52,7 @@ class Config extends BaseConfig
             $this->root . DIRECTORY_SEPARATOR . 'db' . DIRECTORY_SEPARATOR . 'migrations',
             fetchMode: PDO::FETCH_ASSOC,
             print: $print,
-        ), 'conia');
+        ));
     }
 
     public function setSecret(string $secret): void
