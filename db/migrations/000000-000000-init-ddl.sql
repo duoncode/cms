@@ -87,8 +87,10 @@ CREATE TABLE conia.loginsessions (
 
 
 CREATE TABLE conia.pagetypes (
-    pagetype text NOT NULL CHECK (char_length(pagetype) = 64),
-    CONSTRAINT pk_pagetypes PRIMARY KEY (pagetype)
+    pagetype integer GENERATED ALWAYS AS IDENTITY,
+    classname text NOT NULL CHECK (char_length(classname) <= 256),
+    CONSTRAINT pk_pagetypes PRIMARY KEY (pagetype),
+    CONSTRAINT uc_pagestypes_classname UNIQUE (classname)
 );
 
 
@@ -98,7 +100,7 @@ CREATE TABLE conia.pages (
     published boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
     locked boolean DEFAULT false NOT NULL,
-    pagetype text NOT NULL,
+    pagetype integer NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
@@ -143,17 +145,17 @@ CREATE TRIGGER update_pages_02_audit_trigger AFTER UPDATE
     conia.process_pages_audit();
 
 
-CREATE TABLE conia.slugs (
+CREATE TABLE conia.urls (
     page integer NOT NULL,
     lang text NOT NULL CHECK (char_length(lang) <= 32),
-    slug text NOT NULL CHECK (char_length(slug) <= 512),
+    url text NOT NULL CHECK (char_length(url) <= 512),
     inactive timestamp with time zone,
-    CONSTRAINT pk_slugs PRIMARY KEY (page, lang, slug),
-    CONSTRAINT fk_slugs_pages FOREIGN KEY (page)
+    CONSTRAINT pk_urls PRIMARY KEY (page, lang, url),
+    CONSTRAINT fk_urls_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
-CREATE UNIQUE INDEX uix_slugs_slug ON conia.slugs
-    USING btree (lang, lower(slug)) WHERE (inactive IS NULL);
+CREATE UNIQUE INDEX uix_urls_url ON conia.urls
+    USING btree (lang, lower(url)) WHERE (inactive IS NULL);
 
 
 
@@ -194,9 +196,7 @@ CREATE TABLE conia.itemtypes (
 
 CREATE TABLE conia.menues (
     menu text NOT NULL CHECK (char_length(menu) <= 32),
-    title text NOT NULL,
-    CONSTRAINT pk_menues PRIMARY KEY (menu),
-    CONSTRAINT uc_menues_uid UNIQUE (title)
+    CONSTRAINT pk_menues PRIMARY KEY (menu)
 );
 
 
@@ -229,16 +229,32 @@ CREATE TABLE conia.linkedpages (
 );
 
 
+CREATE TABLE conia.topics (
+    topic integer GENERATED ALWAYS AS IDENTITY,
+    uid text NOT NULL CHECK (char_length(uid) = 13),
+    name jsonb NOT NULL,
+    color text NOT NULL CHECK (char_length(color) <= 128),
+    CONSTRAINT pk_topics PRIMARY KEY (topic),
+    CONSTRAINT uc_topics_uid UNIQUE (uid)
+);
+
+
 CREATE TABLE conia.tags (
-    tag text NOT NULL,
-    descritption text NOT NULL,
-    CONSTRAINT pk_tags PRIMARY KEY (tag)
+    tag integer GENERATED ALWAYS AS IDENTITY,
+    uid text NOT NULL CHECK (char_length(uid) = 13),
+    name jsonb NOT NULL,
+    topic integer NOT NULL,
+    CONSTRAINT pk_tags PRIMARY KEY (tag),
+    CONSTRAINT uc_tags_uid UNIQUE (uid),
+    CONSTRAINT fk_tags_topics FOREIGN KEY (topic)
+        REFERENCES conia.topics (topic)
 );
 
 
 CREATE TABLE conia.pagetags (
     page integer NOT NULL,
-    tag text NOT NULL,
+    tag integer NOT NULL,
+    sort smallint NOT NULL DEFAULT 0,
     CONSTRAINT pk_pagetags PRIMARY KEY (page, tag),
     CONSTRAINT fk_pagetags_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page),

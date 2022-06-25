@@ -21,3 +21,7 @@ INSERT INTO conia.users (
     1,
     1
 );
+
+INSERT INTO conia.itemtypes (type) VALUES
+('link'),
+('external');
