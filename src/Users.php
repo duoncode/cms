@@ -8,48 +8,43 @@ use Conia\Request;
 use Chuck\Database\DatabaseInterface;
 
 
-class Users
+class Users extends Model
 {
     protected DatabaseInterface $db;
 
-    public function __construct(protected Request $request)
+    public static function byLogin(string $login): ?array
     {
-        $this->db = $request->db('conia');
-    }
-
-    public function byLogin(string $login): ?array
-    {
-        return $this->db->users->get([
+        return self::db()->users->get([
             'login' => $login,
         ])->one();
     }
 
-    public function bySession(string $hash): ?array
+    public static function bySession(string $hash): ?array
     {
-        return $this->db->users->get([
+        return self::db()->users->get([
             'sessionhash' => $hash,
         ])->one();
     }
 
-    public function byId(string $uid): ?array
+    public static function byId(string $uid): ?array
     {
-        return $this->db->users->get([
+        return self::db()->users->get([
             'uid' => $uid,
         ])->one();
     }
 
-    public function remember(string $hash, string $userId, string $expires): bool
+    public static function remember(string $hash, string $userId, string $expires): bool
     {
-        return $this->db->users->remember([
+        return self::db()->users->remember([
             'hash' => $hash,
             'user' => $userId,
             'expires' => $expires,
         ])->run();
     }
 
-    public function forget(string $hash): bool
+    public static function forget(string $hash): bool
     {
-        return $this->db->users->forget([
+        return self::db()->users->forget([
             'hash' => $hash,
         ])->run();
     }

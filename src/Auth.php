@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Conia;
 
 use \RuntimeException;
-use Chuck\Database\DatabaseInterface;
 use Conia\Config;
 use Conia\Request;
 use Conia\Permissions;
@@ -26,15 +25,12 @@ class Auth
 {
     protected Config $config;
     protected Session $session;
-    protected Users $users;
-    protected DatabaseInterface $db;
 
     public function __construct(
         protected Request $request,
     ) {
         $this->config = $request->config();
         $this->session = $request->session();
-        $this->users = new Users($request);
     }
 
     protected function remember(string $userId): RememberDetails
@@ -42,7 +38,7 @@ class Auth
         $token = new Token($this->config->get('secret'));
         $expires = time() + $this->config->get('session.expires');
 
-        $remembered = $this->users->remember(
+        $remembered = Users::remember(
             $token->hash(),
             $userId,
             Time::toIsoDateTime($expires),
@@ -80,7 +76,7 @@ class Auth
             $token = $session->getAuthToken();
 
             if ($token !== null) {
-                $this->users->forget($userId);
+                Users::forget($userId);
             }
         }
     }
@@ -92,7 +88,7 @@ class Auth
         $hash = $this->getTokenHash();
 
         if ($hash) {
-            $this->users->forget($hash);
+            Users::forget($hash);
             $session->forgetRemembered();
         }
     }
@@ -103,7 +99,7 @@ class Auth
         bool $remember,
         bool $initSession,
     ): array|false {
-        $user = $this->users->byLogin($login);
+        $user = Users::byLogin($login);
 
         if (!$user) {
             return false;
@@ -147,14 +143,14 @@ class Auth
         $userId = $this->session->authenticatedUserId();
 
         if ($userId) {
-            $user = $this->users->byId($userId);
+            $user = Users::byId($userId);
             return $user;
         }
 
         $hash = $this->getTokenHash();
 
         if ($hash) {
-            $user = $this->users->bySession($hash);
+            $user = Users::bySession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
                 $this->login($user['uid'], false);
