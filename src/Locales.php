@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Closure;
+use \RuntimeException;
 use \ValueError;
 
 
@@ -14,11 +15,6 @@ class Locales
     protected array $locales = [];
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
-
-    public function areUsed(): bool
-    {
-        return count($this->locales) > 0;
-    }
 
     public function add(
         string $id,
@@ -72,7 +68,7 @@ class Locales
         return false;
     }
 
-    public function getLocale(Request $request): ?Locale
+    public function getLocale(Request $request): Locale
     {
         // TODO: from domain
         // TODO: from urlprefix
@@ -97,8 +93,12 @@ class Locales
         return null;
     }
 
-    public function negotiate(Request $request): ?Locale
+    public function negotiate(Request $request): Locale
     {
+        if (count($this->locales) === 0) {
+            throw new RuntimeException('No locales available. Add at least your default language.');
+        }
+
         if ($this->negotiator) {
             return ($this->negotiator)($request);
         }

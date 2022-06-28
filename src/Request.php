@@ -14,6 +14,8 @@ use Chuck\Routing\RouterInterface;
  */
 class Request extends BaseRequest
 {
+    protected ?Locale $locale = null;
+
     public function __construct(
         Config $config,
         RouterInterface $router,
@@ -36,8 +38,12 @@ class Request extends BaseRequest
         return $this->session;
     }
 
-    public function locale(): ?Locale
+    public function locale(): Locale
     {
-        return $this->config->locales->negotiate($this);
+        if (!$this->locale) {
+            $this->locale = $this->config->locales->negotiate($this);
+        }
+
+        return $this->locale;
     }
 }
