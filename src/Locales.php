@@ -80,7 +80,13 @@ class Locales
             }
         }
 
-        // TODO: from urlprefix
+        // From URL path prefix. e. g. http://example.com/en_EN/path/to/page
+        $prefix = explode('/', trim(parse_url($_SERVER['REQUEST_URI'])['path'], '/'))[0];
+        foreach ($this->locales as $locale) {
+            if ($prefix === $locale->urlPrefix) {
+                return $locale;
+            }
+        }
 
         // From session
         $locale = $request->session()->get('locale', false);
