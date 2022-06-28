@@ -9,12 +9,15 @@ use Chuck\Session as BaseSession;
 
 class Session extends BaseSession
 {
+    protected string $authCookie;
+
     public function __construct(
         protected string $name,
-        protected string $authCookie,
+        ?string $authCookie = null,
         protected string $flashMessagesKey = 'flash_messages',
         protected string $rememberedUriKey = 'remembered_uri',
     ) {
+        $this->authCookie = $authCookie ?: $name . '_auth';
     }
 
     public function setUser(string $userId): void
