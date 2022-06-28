@@ -21,13 +21,13 @@ class Locales
     }
 
     public function add(
-        string $locale,
+        string $id,
         string $title,
         ?string $fallback = null,
         string|array|null $domain = null,
         ?string $urlPrefix = null,
     ) {
-        $this->locales[$locale] =  new Locale($locale, $title, $fallback, $domain, $urlPrefix);
+        $this->locales[$id] =  new Locale($id, $title, $fallback, $domain, $urlPrefix);
     }
 
     public function setDefault(string $locale): void
