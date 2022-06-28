@@ -71,7 +71,7 @@ class Locales
     public function getLocale(Request $request): Locale
     {
         // By domain
-        $host = strtolower(explode(':', $_SERVER['HTTP_HOST'])[0]);
+        $host = strtolower(explode(':', $request->host())[0]);
         foreach ($this->locales as $locale) {
             foreach ($locale->domains as $domain) {
                 if ($host === $domain) {
@@ -81,7 +81,7 @@ class Locales
         }
 
         // From URL path prefix. e. g. http://example.com/en_EN/path/to/page
-        $prefix = explode('/', trim(parse_url($_SERVER['REQUEST_URI'])['path'], '/'))[0];
+        $prefix = explode('/', trim(parse_url($request->url())['path'], '/'))[0];
         foreach ($this->locales as $locale) {
             if ($prefix === $locale->urlPrefix) {
                 return $locale;
