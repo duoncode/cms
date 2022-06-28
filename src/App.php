@@ -7,16 +7,13 @@ namespace Conia;
 use \RuntimeException;
 use Chuck\App as BaseApp;
 use Chuck\ConfigInterface;
-use Chuck\RequestInterface;
 use Chuck\Response\ResponseInterface;
 use Chuck\Routing\RouterInterface;
 use Chuck\Routing\Router;
 use Chuck\Error\Handler;
 use Conia\Config;
 use Conia\Request;
-use Conia\Response;
 use Conia\Routes;
-use Conia\Middleware\Session;
 
 
 class App extends BaseApp
@@ -39,9 +36,7 @@ class App extends BaseApp
         Config $config,
     ): static {
         $router = new Router();
-        $router->addMiddleware(new Session());
-
-        $request = new Request($config, $router);
+        $request = new Request($config, $router, new Session($config->app()));
 
         Model::init($request);
 
