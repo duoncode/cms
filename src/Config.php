@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia;
 
+use \Closure;
 use \Exception;
 use \PDO;
 use \ValueError;
@@ -13,10 +14,13 @@ use Chuck\Config\Connection;
 
 class Config extends BaseConfig
 {
+    public readonly Locales $locales;
+
     protected string $panelUrl = 'panel';
     protected ?string $panelTheme = null;
     /** @var array<string, Type> */
     protected array $types = [];
+    protected Closure $languageNegotiator;
     private readonly string $root;
     private bool $debugPanel = false;
 
@@ -32,6 +36,7 @@ class Config extends BaseConfig
         $this->set('session.authcookie', $app . '_auth');
 
         $this->scripts()->add($this->root . DIRECTORY_SEPARATOR . 'bin');
+        $this->locales = new Locales();
     }
 
     public function debugPanel(bool $debug = true): bool
@@ -103,5 +108,25 @@ class Config extends BaseConfig
     public function type(string $name): Type
     {
         return $this->types[$name];
+    }
+
+    public function setLocaleNegotiator(Closure $func): void
+    {
+        $this->locales->setNegotiator = $func;
+    }
+
+    public function addLocale(
+        string $id,
+        string $title,
+        ?string $fallback = null,
+        string|array|null $domain = null,
+        ?string $urlPrefix = null,
+    ) {
+        $this->locales->add($id, $title, $fallback, $domain, $urlPrefix);
+    }
+
+    public function setDefaultLocale(string $locale): void
+    {
+        $this->locales->setDefault($locale);
     }
 }
