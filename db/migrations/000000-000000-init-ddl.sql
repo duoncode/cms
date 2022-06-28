@@ -147,16 +147,14 @@ CREATE TRIGGER update_pages_02_audit_trigger AFTER UPDATE
 
 CREATE TABLE conia.urls (
     page integer NOT NULL,
-    lang text NOT NULL CHECK (char_length(lang) <= 32),
     url text NOT NULL CHECK (char_length(url) <= 512),
+    lang text NOT NULL CHECK (char_length(lang) <= 32),
     inactive timestamp with time zone,
     CONSTRAINT pk_urls PRIMARY KEY (page, lang, url),
+    CONSTRAINT uc_urls_url UNIQUE (url),
     CONSTRAINT fk_urls_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
-CREATE UNIQUE INDEX uix_urls_url ON conia.urls
-    USING btree (lang, lower(url)) WHERE (inactive IS NULL);
-
 
 
 CREATE TABLE conia.drafts (
