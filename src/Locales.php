@@ -70,16 +70,25 @@ class Locales
 
     public function getLocale(Request $request): Locale
     {
-        // TODO: from domain
+        // By domain
+        $host = strtolower(explode(':', $_SERVER['HTTP_HOST'])[0]);
+        foreach ($this->locales as $locale) {
+            foreach ($locale->domains as $domain) {
+                if ($host === $domain) {
+                    return $locale;
+                }
+            }
+        }
+
         // TODO: from urlprefix
 
-        // from session
+        // From session
         $locale = $request->session()->get('locale', false);
         if ($locale && $this->exists($locale)) {
             return $this->locales[$locale];
         }
 
-        // from the locales the browser says the user accepts
+        // From the locales the browser says the user accepts
         $locale =  $this->fromBrowser();
         if ($locale && $this->exists($locale)) {
             return $this->locales[$locale];
