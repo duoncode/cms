@@ -11,12 +11,12 @@ abstract class Field
 {
     public readonly string $type;
     public readonly string $component; // The handle for the component used in the admin
+    public ?string $description = null;
+    public bool $multilang = false;
 
     public function __construct(
         protected string $label,
         protected bool $required = false,
-        protected bool $multilang = false,
-        protected ?string $description = null,
         public readonly ?int $width = null,
         public readonly ?int $height = null,
     ) {
@@ -26,6 +26,20 @@ abstract class Field
     public function validate(): bool
     {
         return true;
+    }
+
+    public function description(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function multilang(bool $multilang): static
+    {
+        $this->multilang = $multilang;
+
+        return $this;
     }
 
     public function meta(Type|Block $doc): array
