@@ -5,36 +5,33 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Generator;
-use \ReflectionClass;
-use Conia\Authorized;
+use \ValueError;
+use Chuck\Renderer\Config as RendererConfig;
 use Conia\Field;
 
 
 abstract class Type
 {
-    use SetsMeta;
     use SetsInfo;
 
-    public readonly array $permissions;
+    public array $authorized = [];
+    public int $columns = 12;
 
+    protected ?RendererConfig $renderer = null;
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct(string $label, ?string $description = null)
-    {
-        $reflector = new ReflectionClass($this::class);
-        $this->setMeta($reflector);
-        $this->setInfo($label, $description);
-
-        $permissions = $reflector->getAttributes(Authorized::class)[0] ?? null;
-
-        if ($permissions) {
-            $p = $permissions->newInstance();
-            $this->permissions = $p->get();
-        } else {
-            $this->permissions = [];
-        }
+    public final function __construct(
+        ?string $label = null,
+        ?string $name = null,
+        ?string $description = null
+    ) {
+        $this->setInfo($name, $label, $description);
+        $this->init();
     }
+
+    abstract public function init(): void;
+    abstract public function title(): string;
 
     public final function __get(string $name): Field
     {
@@ -54,18 +51,28 @@ abstract class Type
         }
     }
 
-    abstract public function init(): void;
-    abstract public function title(): string;
-
-    public function render(): string
+    public function columns(int $columns): static
     {
-        $template = $this->template ?: strtolower($this->getClassName()) . '.php';
+        if ($columns < 12 || $columns > 25) {
+            throw new ValueError('The value of $columns must be >= 12 and <= 25');
+        }
 
-        return $template;
+        $this->columns = $columns;
+
+        return $this;
     }
 
-    protected function getClassName(): string
+    public function authorize(string ...$permissions): static
     {
-        return basename(str_replace('\\', '/', $this::class));
+        $this->authorized = array_merge($this->authorize, $permissions);
+
+        return $this;
+    }
+
+    public function render(string $renderer, mixed ...$args): static
+    {
+        $this->renderer = new RendererConfig($renderer, $args);
+
+        return $this;
     }
 }

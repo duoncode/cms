@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \ReflectionClass;
 
-abstract class Block implements Data
+abstract class Block
 {
-    use SetsMeta;
     use SetsInfo;
 
     protected array $list = [];
     protected array $fields = [];
 
     public final function __construct(
-        string $label,
+        ?string $label,
+        ?string $name,
         ?string $description = null,
         public readonly bool $repeatable = false,
     ) {
-        $reflector = new ReflectionClass($this::class);
-        $this->setMeta($reflector);
-        $this->setInfo($label, $description);
+        $this->setInfo($label, $name, $description);
     }
 
     abstract public function init(): void;
