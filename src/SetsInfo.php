@@ -9,18 +9,23 @@ use \ValueError;
 
 trait SetsInfo
 {
+    public readonly string $name;
     public readonly string $label;
     public readonly ?string $description;
 
-    protected function setInfo(string $label, ?string $description)
+    protected function setInfo(?string $label, ?string $name, ?string $description)
     {
-        $label = $this->sanitize($label);
-
-        if (!$label) {
-            throw new ValueError('Label must not be empty');
+        if ($name) {
+            $namePattern = '/^[a-zA-Z][a-zA-Z0-9_-]{1,63}$/';
+            if (!preg_match($namePattern, $name)) {
+                throw new ValueError("The value of \$name must adhere to this pattern: $namePattern");
+            }
+            $this->name = $name;
+        } else {
+            $this->name = $this->getNameFromClass();
         }
 
-        $this->label = $label;
+        $this->label = $this->sanitize($label) ?: $this->getNameFromClass();
         $this->description = $this->sanitize($description);
     }
 
@@ -31,5 +36,10 @@ trait SetsInfo
         }
 
         return null;
+    }
+
+    protected function getNameFromClass(): string
+    {
+        return basename(str_replace('\\', '/', $this::class));
     }
 }
