@@ -88,9 +88,10 @@ CREATE TABLE conia.loginsessions (
 
 CREATE TABLE conia.pagetypes (
     pagetype integer GENERATED ALWAYS AS IDENTITY,
+    name text NOT NULL CHECK (char_length(classname) <= 64),
     classname text NOT NULL CHECK (char_length(classname) <= 256),
     CONSTRAINT pk_pagetypes PRIMARY KEY (pagetype),
-    CONSTRAINT uc_pagestypes_classname UNIQUE (classname)
+    CONSTRAINT uc_pagestypes_name UNIQUE (name)
 );
 
 
