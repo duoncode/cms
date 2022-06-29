@@ -26,7 +26,7 @@ abstract class Type
         ?string $name = null,
         ?string $description = null
     ) {
-        $this->setInfo($name, $label, $description);
+        $this->setInfo($label, $name, $description);
         $this->init();
     }
 
