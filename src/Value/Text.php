@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use Conia\Value;
-
 
 class Text extends Value
 {

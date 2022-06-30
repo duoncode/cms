@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Conia\Value;
 
 use Conia\Locale;
-use Conia\Value;
 
 
 class Number extends Value

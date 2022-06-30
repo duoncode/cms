@@ -6,7 +6,6 @@ namespace Conia\Value;
 
 use \NumberFormatter;
 use Conia\Locale;
-use Conia\Value;
 
 
 class Decimal extends Value

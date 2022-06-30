@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Value;
+
+use Conia\Locale;
 
 
 abstract class Value
