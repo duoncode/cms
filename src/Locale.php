@@ -11,6 +11,7 @@ class Locale
     public readonly array $domains;
 
     public function __construct(
+        protected readonly Locales $locales,
         public readonly string $id,
         public readonly string $title,
         public readonly ?string $fallback = null,
@@ -26,5 +27,10 @@ class Locale
         }
 
         $this->urlPrefix = $urlPrefix ?: $id;
+    }
+
+    public function fallback(): ?Locale
+    {
+        return $this->fallback ? $this->locales->get($this->fallback) : null;
     }
 }

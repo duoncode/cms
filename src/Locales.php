@@ -23,7 +23,7 @@ class Locales
         string|array|null $domain = null,
         ?string $urlPrefix = null,
     ) {
-        $this->locales[$id] =  new Locale($id, $title, $fallback, $domain, $urlPrefix);
+        $this->locales[$id] =  new Locale($this, $id, $title, $fallback, $domain, $urlPrefix);
     }
 
     public function setDefault(string $locale): void
@@ -41,9 +41,14 @@ class Locales
         $this->negotiator = $func;
     }
 
-    protected function exists(string $locale): bool
+    protected function exists(string $id): bool
     {
-        return array_key_exists($locale, $this->locales);
+        return array_key_exists($id, $this->locales);
+    }
+
+    public function get(string $id): Locale
+    {
+        return $this->locales[$id];
     }
 
     protected function fromBrowser(): string|false
@@ -68,7 +73,7 @@ class Locales
         return false;
     }
 
-    public function getLocale(Request $request): Locale
+    public function fromRequest(Request $request): Locale
     {
         // By domain
         $host = strtolower(explode(':', $request->host())[0]);
@@ -118,6 +123,6 @@ class Locales
             return ($this->negotiator)($request);
         }
 
-        return  $this->getLocale($request);
+        return  $this->fromRequest($request);
     }
 }
