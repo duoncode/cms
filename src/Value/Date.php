@@ -11,7 +11,6 @@ class Date extends DateTime
 {
     const FORMAT = 'Y-m-d';
 
-
     public function localize(
         ?string $locale = null,
         int $dateFormat = IntlDateFormatter::MEDIUM,

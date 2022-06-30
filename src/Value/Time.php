@@ -11,7 +11,6 @@ class Time extends DateTime
 {
     const FORMAT = 'H:i:s';
 
-
     public function localize(
         ?string $locale = null,
         int $dateFormat = IntlDateFormatter::NONE,
