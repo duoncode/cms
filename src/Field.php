@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia;
 
 use \ValueError;
+use Conia\Value\Value;
 
 
 abstract class Field
@@ -59,6 +60,5 @@ abstract class Field
         ];
     }
 
-    abstract public function __toString(): string;
-    // abstract public function value(): Value;
+    abstract public function value(array $data, Locale $locale): Value;
 }

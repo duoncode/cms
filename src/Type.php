@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Conia;
 
 use \Generator;
+use \RuntimeException;
 use \ValueError;
 use Conia\Field;
+use Conia\Value\Value;
 
 
 abstract class Type
@@ -21,16 +23,25 @@ abstract class Type
 
     public final function __construct(
         protected readonly array $data,
-        protected readonly string $locale,
+        protected readonly Locale $locale,
     ) {
+        $this->init();
     }
 
     abstract public function init(): void;
     abstract public function title(): string;
 
-    public final function __get(string $name): Field
+    public final function __get(string $name): Value
     {
-        return $this->fields[$name]->value($this->data[$name]);
+        if (!array_key_exists($name, $this->fields)) {
+            $type = $this::class;
+            throw new RuntimeException("Type $type has no field '$name'.");
+        }
+
+        $field = $this->fields[$name];
+        $content = $this->data['content'][$name] ?? [];
+
+        return $field->value($content, $this->locale);
     }
 
     public final function __set(string $name, Field $field): void
@@ -55,6 +66,11 @@ abstract class Type
         return static::$columns;
     }
 
+    public static function className(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
+    }
+
     public static function name(): ?string
     {
         if (!empty(static::$name)) {
@@ -73,13 +89,27 @@ abstract class Type
         return static::className();
     }
 
-    public static function className(): string
+    protected function getJsonContent(): array
     {
-        return basename(str_replace('\\', '/', static::class));
+        $result = [];
+
+        foreach ($this->list as $field) {
+            $result[$field] = $this->__get($field)->json();
+        }
+
+        return $result;
     }
 
     public function json(): array
     {
-        return $this->data;
+        $data = $this->data;
+
+        unset($data['classname']);
+
+        $content = [
+            'content' => $this->getJsonContent(),
+        ];
+
+        return array_merge($data, $content);
     }
 }

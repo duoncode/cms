@@ -20,7 +20,7 @@ class Page
             throw new HttpNotFound();
         }
 
-        $page = new ($data['classname'])($data, $request->locale()->id);
+        $page = new ($data['classname'])($data, $request->locale());
 
         return $request->response()->json($page->json());
     }

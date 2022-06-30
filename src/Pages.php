@@ -14,7 +14,7 @@ class Pages extends Model
         ])->one();
 
         if ($page) {
-            $page['content'] = json_decode($page['content']);
+            $page['content'] = json_decode($page['content'], true);
         }
 
         return $page;

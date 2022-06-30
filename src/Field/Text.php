@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Conia\Field;
 
 use Conia\Field;
-use Conia\Field\Value\TextValue;
+use Conia\Locale;
+use Conia\Value\{Value, Text as TextValue};
 
 
 class Text extends Field
 {
-    use TextValue;
-
-    public function __toString()
+    public function value(array $data, Locale $locale): Value
     {
-        return '';
+        return new TextValue($data, $locale);
     }
 }
