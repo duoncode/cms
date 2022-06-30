@@ -7,7 +7,6 @@ namespace Conia\Util;
 use Hidehalo\Nanoid\Client;
 
 if (!function_exists('Conia\Util\nanoid')) {
-
     function nanoid()
     {
         $client = new Client();
