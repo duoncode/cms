@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
+use Conia\Locale;
 use Conia\Value;
 
 
@@ -13,7 +14,7 @@ class Number extends Value
 
     public function __construct(
         array $data,
-        string $locale
+        Locale $locale
     ) {
         parent::__construct($data, $locale);
 

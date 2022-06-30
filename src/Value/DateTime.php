@@ -7,6 +7,7 @@ namespace Conia\Value;
 use \DateTimeImmutable;
 use \DateTimeZone;
 use \IntlDateFormatter;
+use Conia\Locale;
 use Conia\Value;
 
 
@@ -19,7 +20,7 @@ class DateTime extends Value
 
     public function __construct(
         array $data,
-        string $locale
+        Locale $locale
     ) {
         parent::__construct($data, $locale);
 
@@ -56,7 +57,7 @@ class DateTime extends Value
     ): string {
         if ($this->datetime) {
             $formatter = new IntlDateFormatter(
-                $locale ?: $this->locale,
+                $locale ?: $this->locale->id,
                 $dateFormat,
                 $timeFormat,
                 $this->timezone
