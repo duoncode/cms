@@ -73,4 +73,9 @@ class DateTime extends Value
     {
         return $this->format(static::FORMAT);
     }
+
+    public function json(): mixed
+    {
+        return $this->__toString();
+    }
 }

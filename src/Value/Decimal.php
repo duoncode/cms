@@ -64,4 +64,9 @@ class Decimal extends Value
 
         return '';
     }
+
+    public function json(): mixed
+    {
+        return $this->value;
+    }
 }

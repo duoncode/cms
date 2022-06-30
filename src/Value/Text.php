@@ -28,4 +28,9 @@ class Text extends Value
     {
         return htmlspecialchars($this->data[$this->locale]);
     }
+
+    public function json(): mixed
+    {
+        return $this->raw();
+    }
 }

@@ -33,4 +33,9 @@ class Number extends Value
 
         return (string)$this->value;
     }
+
+    public function json(): mixed
+    {
+        return $this->value;
+    }
 }
