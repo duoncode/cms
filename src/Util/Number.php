@@ -7,11 +7,12 @@ namespace Conia\Util;
 class Number
 {
     /**
-     * Parses a string to a float
+     * Parses a number string to a computer processible string
+     * which works with floatval
      *
      * This works for any kind of input, American or European style.
      */
-    public static function parseFloat(string $value): float
+    public static function parseDecimal(string $value): string
     {
         $value = preg_replace('/\s/', '', $value);
 
@@ -19,9 +20,7 @@ class Number
             $value = str_replace(',', '.', $value);
 
             // remove all dots but the last one
-            $value = preg_replace('/\.(?=.*\.)/', '', $value);
-
-            return floatval($value);
+            return preg_replace('/\.(?=.*\.)/', '', $value);
         }
 
         throw new \Exception(_('This is not a valid number'));
