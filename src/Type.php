@@ -19,8 +19,10 @@ abstract class Type
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct(protected readonly array $data)
-    {
+    public final function __construct(
+        protected readonly array $data,
+        protected readonly string $locale,
+    ) {
     }
 
     abstract public function init(): void;
@@ -74,5 +76,10 @@ abstract class Type
     public static function className(): string
     {
         return basename(str_replace('\\', '/', static::class));
+    }
+
+    public function json(): array
+    {
+        return $this->data;
     }
 }

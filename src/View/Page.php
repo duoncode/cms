@@ -14,12 +14,14 @@ class Page
 {
     public function catchall(Request $request): Response
     {
-        $page = Pages::byUrl($request->url(stripQuery: true));
+        $data = Pages::byUrl($request->url(stripQuery: true));
 
-        if (!$page) {
+        if (!$data) {
             throw new HttpNotFound();
         }
 
-        return $request->response()->json($page);
+        $page = new ($data['classname'])($data, $request->locale()->id);
+
+        return $request->response()->json($page->json());
     }
 }
