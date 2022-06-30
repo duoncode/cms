@@ -9,7 +9,7 @@ use Conia\Locale;
 
 abstract class Value
 {
-    final public function __construct(
+    public function __construct(
         public readonly array $data,
         protected readonly Locale $locale
     ) {
