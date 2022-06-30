@@ -15,11 +15,10 @@ use Chuck\Config\Connection;
 class Config extends BaseConfig
 {
     public readonly Locales $locales;
+    public readonly Types $types;
 
     protected string $panelUrl = 'panel';
     protected ?string $panelTheme = null;
-    /** @var array<string, Type> */
-    protected array $types = [];
     protected Closure $languageNegotiator;
     private readonly string $root;
     private bool $debugPanel = false;
@@ -37,6 +36,7 @@ class Config extends BaseConfig
 
         $this->scripts()->add($this->root . DIRECTORY_SEPARATOR . 'bin');
         $this->locales = new Locales();
+        $this->types = new Types();
     }
 
     public function debugPanel(bool $debug = true): bool
@@ -85,29 +85,6 @@ class Config extends BaseConfig
     public function setPanelTheme(string $url): void
     {
         $this->panelTheme = $url;
-    }
-
-    public function addType(Type $type): void
-    {
-        $name = $type->name;
-
-        if (array_key_exists($name, $this->types)) {
-            $class = $type::class;
-
-            throw new Exception("Type '$name' already exists. Instance of '$class'");
-        }
-
-        $this->types[$name] = $type;
-    }
-
-    public function types(): array
-    {
-        return $this->types;
-    }
-
-    public function type(string $name): Type
-    {
-        return $this->types[$name];
     }
 
     public function setLocaleNegotiator(Closure $func): void

@@ -48,9 +48,9 @@ class App extends BaseApp
         return $app;
     }
 
-    public function type(Type $type): void
+    public function type(string $class, string $label = null, string $description = null): void
     {
-        $this->config->addType($type);
+        $this->config->types->add($class, $label, $description);
     }
 
     public function middleware(callable ...$middlewares): void

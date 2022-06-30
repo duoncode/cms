@@ -60,4 +60,5 @@ abstract class Field
     }
 
     abstract public function __toString(): string;
+    // abstract public function value(): Value;
 }

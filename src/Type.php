@@ -6,28 +6,21 @@ namespace Conia;
 
 use \Generator;
 use \ValueError;
-use Chuck\Renderer\Config as RendererConfig;
 use Conia\Field;
 
 
 abstract class Type
 {
-    use SetsInfo;
+    static protected string $name = '';
+    static protected string $template = '';
+    static protected array $permissions = [];
+    static protected int $columns = 12;
 
-    public array $authorized = [];
-    public int $columns = 12;
-
-    protected ?RendererConfig $renderer = null;
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct(
-        ?string $label = null,
-        ?string $name = null,
-        ?string $description = null
-    ) {
-        $this->setInfo($label, $name, $description);
-        $this->init();
+    public final function __construct(protected readonly array $data)
+    {
     }
 
     abstract public function init(): void;
@@ -35,7 +28,7 @@ abstract class Type
 
     public final function __get(string $name): Field
     {
-        return $this->fields[$name];
+        return $this->fields[$name]->value($this->data[$name]);
     }
 
     public final function __set(string $name, Field $field): void
@@ -51,28 +44,35 @@ abstract class Type
         }
     }
 
-    public function columns(int $columns): static
+    public static function columns(): int
     {
-        if ($columns < 12 || $columns > 25) {
+        if (static::$columns < 12 || static::$columns > 25) {
             throw new ValueError('The value of $columns must be >= 12 and <= 25');
         }
 
-        $this->columns = $columns;
-
-        return $this;
+        return static::$columns;
     }
 
-    public function authorize(string ...$permissions): static
+    public static function name(): ?string
     {
-        $this->authorized = array_merge($this->authorize, $permissions);
+        if (!empty(static::$name)) {
+            return static::$name;
+        }
 
-        return $this;
+        return static::className();
     }
 
-    public function render(string $renderer, mixed ...$args): static
+    public static function template(): ?string
     {
-        $this->renderer = new RendererConfig($renderer, $args);
+        if (!empty(static::$template)) {
+            return static::$template;
+        }
 
-        return $this;
+        return static::className();
+    }
+
+    public static function className(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
     }
 }
