@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
+use Conia\Locale;
 
-class Text extends Value
+
+class File
 {
-    public function raw(): string
+    public function __construct(
+        protected readonly array $file,
+        protected readonly Locale $locale
+    ) {
+    }
+
+    public function title(): string
     {
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data[$this->locale->id];
+            $value = $this->file[$this->locale->id];
 
             if ($value) return $value;
 
@@ -24,11 +32,11 @@ class Text extends Value
 
     public function __toString(): string
     {
-        return htmlspecialchars($this->raw());
+        return htmlspecialchars($this->file['file']);
     }
 
     public function json(): mixed
     {
-        return $this->raw();
+        return [];
     }
 }
