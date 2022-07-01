@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
+use Conia\Request;
 
-use Conia\Locale;
 
 class Boolean extends Value
 {
     public readonly bool $value;
 
-    public function __construct(
-        array $data,
-        Locale $locale
-    ) {
-        parent::__construct($data, $locale);
+    public function __construct(Request $request, array $data)
+    {
+        parent::__construct($request, $data);
 
         if (is_bool($data['value'] ?? null)) {
             $this->value = $data['value'];

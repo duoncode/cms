@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use Conia\Locale;
+use Conia\Request;
 
 
 class Matrix extends Value
@@ -12,9 +12,9 @@ class Matrix extends Value
     protected readonly string $type;
     protected readonly array $localizedData;
 
-    public function __construct(array $data, Locale $locale)
+    public function __construct(Request $request, array $data)
     {
-        parent::__construct($data, $locale);
+        parent::__construct($request, $data);
 
         $this->localizedData = match ($data['i18n']) {
             'separate' => $this->getSeparate($data),

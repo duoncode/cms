@@ -7,7 +7,7 @@ namespace Conia\Value;
 use \DateTimeImmutable;
 use \DateTimeZone;
 use \IntlDateFormatter;
-use Conia\Locale;
+use Conia\Request;
 
 
 class DateTime extends Value
@@ -17,11 +17,9 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(
-        array $data,
-        Locale $locale
-    ) {
-        parent::__construct($data, $locale);
+    public function __construct(Request $request, array $data)
+    {
+        parent::__construct($request, $data);
 
         if ($data['timezone'] ?? null) {
             $this->timezone = new DateTimeZone($data['timezone']);

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Locale;
+use Conia\Request;
 use Conia\Value\Text as TextValue;
 
 
 class Text extends Field
 {
-    public function value(array $data, Locale $locale): TextValue
+    public function value(Request $request, array $data): TextValue
     {
-        return new TextValue($data, $locale);
+        return new TextValue($request, $data);
     }
 }

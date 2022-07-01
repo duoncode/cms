@@ -20,13 +20,11 @@ abstract class Type
 
     protected array $list = [];
     protected array $fields = [];
-    protected readonly Locale $locale;
 
     public final function __construct(
         protected readonly Request $request,
         protected readonly array $data,
     ) {
-        $this->locale = $request->locale();
         $this->init();
     }
 
@@ -43,7 +41,7 @@ abstract class Type
         $field = $this->fields[$name];
         $content = $this->data['content'][$name] ?? [];
 
-        return $field->value($content, $this->locale);
+        return $field->value($this->request, $content);
     }
 
     public final function __set(string $name, Field $field): void

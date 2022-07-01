@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Locale;
+use Conia\Request;
 use Conia\Value\Any;
 
 
@@ -13,8 +13,8 @@ use Conia\Value\Any;
  */
 class Hidden extends Field
 {
-    public function value(array $data, Locale $locale): Any
+    public function value(Request $request, array $data): Any
     {
-        return new Any($data, $locale);
+        return new Any($request, $data);
     }
 }

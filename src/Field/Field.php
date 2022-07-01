@@ -6,7 +6,7 @@ namespace Conia\Field;
 
 use \ValueError;
 use Conia\Block;
-use Conia\Locale;
+use Conia\Request;
 use Conia\Type;
 use Conia\Value\Value;
 
@@ -90,5 +90,5 @@ abstract class Field
         ];
     }
 
-    abstract public function value(array $data, Locale $locale): Value;
+    abstract public function value(Request $request, array $data): Value;
 }

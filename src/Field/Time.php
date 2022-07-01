@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Locale;
-use Conia\Value\Time as TimeValue;
+use Conia\Request;
+
+use  Conia\Value\Time  as  TimeValue;
 
 
-class Time extends Field
+class  Time  extends  Field
+
 {
-    public function value(array $data, Locale $locale): TimeValue
-    {
-        return new TimeValue($data, $locale);
-    }
+     public  function  value(reque st $req uest, a rray $data ): TimeValue
+       {
+           retu rn n ew TimeValue($req uest, $data);
+     
+ 
+}
 }

@@ -6,7 +6,7 @@ namespace Conia\Field;
 
 use \ValueError;
 use Conia\Field\Field;
-use Conia\Locale;
+use Conia\Request;
 use Conia\Value\{Value, Matrix as MatrixValue};
 
 
@@ -30,8 +30,8 @@ class Matrix extends Field
         return $this;
     }
 
-    public function value(array $data, Locale $locale): Value
+    public function value(Request $request, array $data): Value
     {
-        return new MatrixValue($data, $locale);
+        return new MatrixValue($request, $data);
     }
 }

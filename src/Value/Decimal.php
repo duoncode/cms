@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Conia\Value;
 
 use \NumberFormatter;
-use Conia\Locale;
+use Conia\Request;
 
 
 class Decimal extends Value
 {
     public readonly ?float $value;
 
-    public function __construct(
-        array $data,
-        Locale $locale
-    ) {
-        parent::__construct($data, $locale);
+    public function __construct(Request $request, array $data)
+    {
+        parent::__construct($request, $data);
 
         if (is_numeric($data['value'] ?? null)) {
             $this->value = floatval($data['value']);
