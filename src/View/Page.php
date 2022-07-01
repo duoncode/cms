@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Chuck\Error\{HttpNotFound, HttpBadRequest};
+use Chuck\Error\{HttpNotFound, HttpBadRequest, TemplateNotFound};
 use Chuck\Response\Response;
 use Conia\Request;
 use Conia\Pages;
@@ -41,11 +41,15 @@ class Page
                 return $request->response()->json($page->json());
             }
 
-            // Render the template
-            $renderer = $request->renderer('template', $page::template());
-            return $renderer->response([
-                'page' => $page,
-            ]);
+            try {
+                // Render the template
+                $renderer = $request->renderer('template', $page::template());
+                return $renderer->response([
+                    'page' => $page,
+                ]);
+            } catch (TemplateNotFound) {
+                return $request->response()->json($page->json());
+            }
         }
 
         throw new HttpBadRequest();
