@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Field;
+use Conia\Locale;
+use Conia\Value\Date as DateValue;
 
 
 class Date extends Field
 {
-
-    public function __toString(): string
+    public function value(array $data, Locale $locale): DateValue
     {
-        return '';
+        return new DateValue($data, $locale);
     }
 }

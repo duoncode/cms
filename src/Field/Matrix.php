@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Field;
 
 use \ValueError;
-use Conia\Field;
+use Conia\Field\Field;
 use Conia\Locale;
 use Conia\Value\{Value, Matrix as MatrixValue};
 

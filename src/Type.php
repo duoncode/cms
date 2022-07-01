@@ -7,7 +7,7 @@ namespace Conia;
 use \Generator;
 use \RuntimeException;
 use \ValueError;
-use Conia\Field;
+use Conia\Field\Field;
 use Conia\Value\Value;
 
 

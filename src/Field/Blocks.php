@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Field;
+use Conia\Locale;
+use Conia\Value\Text;
 
 
 class Blocks extends Field
 {
-
-    public function __toString(): string
+    public function value(array $data, Locale $locale): Text
     {
-        return '';
+        //TODO: use the correct value
+        return new Text($data, $locale);
     }
 }

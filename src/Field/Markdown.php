@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Field;
+use Conia\Locale;
+use Conia\Value\Html;
 
 
 class Markdown extends Field
 {
-    public function __toString(): string
+    public function value(array $data, Locale $locale): Html
     {
-        return '';
+        return new Html($data, $locale);
     }
 }

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Field;
+use Conia\Field\Field;
+use Conia\Locale;
+use Conia\Value\Options as OptionsValue;
 
 
-class Option extends Field
+class Options extends Field
 {
-    public function __toString(): string
+    public function value(array $data, Locale $locale): OptionsValue
     {
-        return '';
+        return new OptionsValue($data, $locale);
     }
 }

@@ -2,26 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Field;
 
 use \ValueError;
+use Conia\Block;
+use Conia\Locale;
+use Conia\Type;
 use Conia\Value\Value;
 
 
 abstract class Field
 {
     public readonly string $type;
-    public readonly string $component; // The handle for the component used in the admin
     public ?string $description = null;
     public bool $multilang = false;
+    public bool $required = false;
+    public ?int $width = null;
+    public ?int $height = null;
+    protected array $args;
 
-    public function __construct(
-        protected string $label,
-        protected bool $required = false,
-        public readonly ?int $width = null,
-        public readonly ?int $height = null,
-    ) {
+
+    public function __construct(protected string $label, mixed ...$args)
+    {
         $this->type = basename(str_replace('\\', '/', $this::class));
+        $this->args = $args;
+    }
+
+    public static function new(string $label, mixed ...$args): static
+    {
+        return new static($label, ...$args);
     }
 
     public function validate(): bool
@@ -36,9 +45,30 @@ abstract class Field
         return $this;
     }
 
+    public function required(bool $required = true): static
+    {
+        $this->required = $required;
+
+        return $this;
+    }
+
     public function multilang(bool $multilang): static
     {
         $this->multilang = $multilang;
+
+        return $this;
+    }
+
+    public function width(int $width): static
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function height(int $height): static
+    {
+        $this->height = $height;
 
         return $this;
     }

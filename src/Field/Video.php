@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use Conia\Field;
 
-
-class Video extends Field
+class Video extends File
 {
-    public function __toString(): string
-    {
-        return '';
-    }
 }
