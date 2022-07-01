@@ -15,7 +15,17 @@ class Page
 {
     public function catchall(Request $request): Response
     {
-        $data = Pages::byUrl($request->url(stripQuery: true));
+        $parts = pathinfo($request->url(stripQuery: true));
+        $extension = $parts['extension'] ?? null;
+
+        // Remove the extension from the url
+        if (empty($parts['filename'])) {
+            $url = $parts['dirname'];
+        } else {
+            $url = $parts['dirname'] . '/' . $parts['filename'];
+        }
+
+        $data = Pages::byUrl($url);
 
         if (!$data) {
             throw new HttpNotFound();
@@ -26,7 +36,16 @@ class Page
         if (is_subclass_of($classname, Type::class)) {
             $page = new $classname($request, $data);
 
-            return $request->response()->json($page->json());
+            // Create a JSON response if the URL ends with .json
+            if (strtolower($extension ?? '') === 'json') {
+                return $request->response()->json($page->json());
+            }
+
+            // Render the template
+            $renderer = $request->renderer('template', $page::template());
+            return $renderer->response([
+                'page' => $page,
+            ]);
         }
 
         throw new HttpBadRequest();
