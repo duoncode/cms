@@ -20,11 +20,13 @@ abstract class Type
 
     protected array $list = [];
     protected array $fields = [];
+    protected readonly Locale $locale;
 
     public final function __construct(
+        protected readonly Request $request,
         protected readonly array $data,
-        protected readonly Locale $locale,
     ) {
+        $this->locale = $request->locale();
         $this->init();
     }
 
