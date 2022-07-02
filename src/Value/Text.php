@@ -12,7 +12,7 @@ class Text extends Value
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data[$this->locale->id];
+            $value = $this->data[$this->locale->id] ?? null;
 
             if ($value) return $value;
 

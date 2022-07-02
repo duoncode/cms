@@ -16,9 +16,10 @@ class Matrix extends Value
     {
         parent::__construct($request, $data);
 
-        $this->localizedData = match ($data['i18n']) {
+        $this->localizedData = match ($data['i18n'] ?? null) {
             'separate' => $this->getSeparate($data),
             'mixed' => $this->getMixed($data),
+            default => [],
         };
     }
 
@@ -50,7 +51,7 @@ class Matrix extends Value
     public function json(): mixed
     {
         return [
-            'columns' => $this->data['columns'],
+            'columns' => $this->data['columns'] ?? null,
             'data' => $this->localizedData,
         ];
     }
