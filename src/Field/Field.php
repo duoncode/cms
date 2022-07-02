@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use \ValueError;
-use Conia\Block;
 use Conia\Request;
-use Conia\Type;
 use Conia\Value\Value;
 
 
 abstract class Field
 {
     public readonly string $type;
-    public ?string $description = null;
-    public bool $multilang = false;
-    public bool $required = false;
-    public ?int $width = null;
-    public ?int $height = null;
-    protected array $args;
+    public readonly array $args;
+    protected ?string $description = null;
+    protected bool $multilang = false;
+    protected bool $required = false;
+    protected ?int $width = null;
+    protected ?int $height = null;
 
 
     public function __construct(protected string $label, mixed ...$args)
@@ -45,11 +42,21 @@ abstract class Field
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
     public function required(bool $required = true): static
     {
         $this->required = $required;
 
         return $this;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->required;
     }
 
     public function multilang(bool $multilang): static
@@ -59,11 +66,21 @@ abstract class Field
         return $this;
     }
 
+    public function isMultilang(): bool
+    {
+        return $this->multilang;
+    }
+
     public function width(int $width): static
     {
         $this->width = $width;
 
         return $this;
+    }
+
+    public function getWidth(): int
+    {
+        return $this->width;
     }
 
     public function height(int $height): static
@@ -73,21 +90,9 @@ abstract class Field
         return $this;
     }
 
-    public function meta(Type|Block $doc): array
+    public function getHeight(): int
     {
-        if ($doc->columns < $this->width) {
-            throw new ValueError('Field width larger than number of columns');
-        }
-
-        return [
-            'label' => $this->label,
-            'description' => $this->description,
-            'type' => $this->type,
-            'required' => $this->required,
-            'width' => $this->width,
-            'height' => $this->height,
-            'multilang' => $this->multilang,
-        ];
+        return $this->height;
     }
 
     abstract public function value(Request $request, array $data): Value;
