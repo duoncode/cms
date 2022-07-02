@@ -10,6 +10,7 @@ use \PDO;
 use \ValueError;
 use Chuck\Config as BaseConfig;
 use Chuck\Config\Connection;
+use Chuck\Template\Engine;
 
 
 class Config extends BaseConfig
@@ -105,5 +106,12 @@ class Config extends BaseConfig
     public function setDefaultLocale(string $locale): void
     {
         $this->locales->setDefault($locale);
+    }
+
+    public function templateEngine(array $defaults = []): Engine
+    {
+        return new Engine([$this->root . DIRECTORY_SEPARATOR . 'views'], array_merge([
+            'config' => $this,
+        ], $defaults));
     }
 }

@@ -11,6 +11,7 @@ class Matrix extends Value
 {
     protected readonly string $type;
     protected readonly array $localizedData;
+    protected string $prefix = 'conia-';
 
     public function __construct(Request $request, array $data)
     {
@@ -43,9 +44,35 @@ class Matrix extends Value
         return [];
     }
 
+    public function render(?string $type = null, mixed ...$args)
+    {
+        $context = array_merge([
+            'prefix' => $this->prefix,
+            'columns' => $this->data['columns'] ?? 12,
+            'fields' => $this->localizedData
+        ]);
+
+        error_log(print_r($this->localizedData, true));
+
+        if ($type) {
+            return $this->request->renderer($type, ...$args)->render($context);
+        }
+
+        $config = $this->request->config();
+        $engine = $config->templateEngine();
+
+        return $engine->render('matrix', array_merge(
+            [
+                'request' => $this->request,
+                'config' => $config,
+            ],
+            $context,
+        ));
+    }
+
     public function __toString(): string
     {
-        return 'Matrix Field';
+        return $this->render();
     }
 
     public function json(): mixed
@@ -54,5 +81,12 @@ class Matrix extends Value
             'columns' => $this->data['columns'] ?? null,
             'data' => $this->localizedData,
         ];
+    }
+
+    public function prefix(string $prefix): static
+    {
+        $this->prefix = $prefix;
+
+        return $this;
     }
 }

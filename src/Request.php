@@ -46,4 +46,9 @@ class Request extends BaseRequest
 
         return $this->locale;
     }
+
+    public function config(): Config
+    {
+        return $this->config;
+    }
 }
