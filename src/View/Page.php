@@ -22,7 +22,11 @@ class Page
         if (empty($parts['filename'])) {
             $url = $parts['dirname'];
         } else {
-            $url = $parts['dirname'] . '/' . $parts['filename'];
+            if (trim($parts['dirname']) === '/') {
+                $url = '/' . $parts['filename'];
+            } else {
+                $url = $parts['dirname'] . '/' . $parts['filename'];
+            }
         }
 
         $data = Pages::byUrl($url);
