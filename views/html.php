@@ -1,3 +1,3 @@
-<div class="<?= $this->insert('cssClasses') ?>">
-    <?= $field ?>
+<div class="<?= $this->insert('cssclasses') ?>">
+    <?= $field->raw() ?>
 </div>

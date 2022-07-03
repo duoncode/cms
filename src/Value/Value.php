@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Value;
 
 use \ReflectionClass;
+use Chuck\Error\NoSuchProperty;
 use Conia\Locale;
 use Conia\Request;
 
@@ -22,6 +23,15 @@ abstract class Value
         $this->locale = $request->locale();
         $this->fieldType = $data['type'];
         $this->valueType = (new ReflectionClass($this))->getShortName();
+    }
+
+    public function __get(string $name): mixed
+    {
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        }
+
+        throw new NoSuchProperty("The field doesn't have the property '$name'");
     }
 
     abstract public function __toString(): string;

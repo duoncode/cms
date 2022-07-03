@@ -54,7 +54,7 @@ class Matrix extends Value
         $context = array_merge([
             'prefix' => $this->prefix,
             'columns' => $this->data['columns'] ?? 12,
-            'fields' => $this->localizedData
+            'fields' => $this->localizedData,
         ]);
 
         if ($type) {
