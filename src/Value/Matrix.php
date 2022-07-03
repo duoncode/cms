@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Value;
 
 use \Generator;
+use \ValueError;
 use Conia\Request;
 
 
@@ -20,7 +21,7 @@ class Matrix extends Value
         $this->localizedData = match ($data['i18n'] ?? null) {
             'separate' => $this->getSeparate($data),
             'mixed' => $this->getMixed($data),
-            default => [],
+            default => throw new ValueError('Unknown i18n setting of Matrix field'),
         };
     }
 
@@ -34,7 +35,9 @@ class Matrix extends Value
 
     protected function getMixed(array $data): Generator
     {
-        yield $data;
+        foreach ($data['fields'] as $field) {
+            yield $this->getField($field);
+        }
     }
 
     protected function getSeparate(array $data): Generator
