@@ -24,6 +24,14 @@ class Matrix extends Value
         };
     }
 
+    protected function getField(array $field): Value
+    {
+        return match ($field['type']) {
+            'wysiwyg' => new Html($this->request, $field),
+            'image' => new Images($this->request, $field),
+        };
+    }
+
     protected function getMixed(array $data): Generator
     {
         yield $data;
@@ -38,10 +46,7 @@ class Matrix extends Value
 
             if ($fields) {
                 foreach ($fields as $field) {
-                    yield match ($field['type']) {
-                        'wysiwyg' => new Html($this->request, $field),
-                        'image' => new Images($this->request, $field),
-                    };
+                    yield $this->getField($field);
                 }
             };
 
