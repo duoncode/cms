@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
+use \Generator;
 use Conia\Request;
 
 
 class Matrix extends Value
 {
-    protected readonly string $type;
-    protected readonly array $localizedData;
+    protected readonly Generator $localizedData;
     protected string $prefix = 'conia-';
 
     public function __construct(Request $request, array $data)
@@ -24,24 +24,29 @@ class Matrix extends Value
         };
     }
 
-    protected function getMixed(array $data): array
+    protected function getMixed(array $data): Generator
     {
-        return $data;
+        yield $data;
     }
 
-    protected function getSeparate(array $data): array
+    protected function getSeparate(array $data): Generator
     {
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $data[$this->locale->id] ?? null;
+            $fields = $data[$this->locale->id] ?? null;
 
-            if ($value) return $value;
+            if ($fields) {
+                foreach ($fields as $field) {
+                    yield match ($field['type']) {
+                        'wysiwyg' => new Html($this->request, $field),
+                        'image' => new Images($this->request, $field),
+                    };
+                }
+            };
 
             $locale = $this->locale->fallback();
         }
-
-        return [];
     }
 
     public function render(?string $type = null, mixed ...$args)
@@ -51,8 +56,6 @@ class Matrix extends Value
             'columns' => $this->data['columns'] ?? 12,
             'fields' => $this->localizedData
         ]);
-
-        error_log(print_r($this->localizedData, true));
 
         if ($type) {
             return $this->request->renderer($type, ...$args)->render($context);

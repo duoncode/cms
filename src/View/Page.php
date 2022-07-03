@@ -45,15 +45,15 @@ class Page
                 return $request->response()->json($page->json());
             }
 
-            try {
-                // Render the template
-                $renderer = $request->renderer('template', $page::template());
-                return $renderer->response([
-                    'page' => $page,
-                ]);
-            } catch (TemplateNotFound) {
-                return $request->response()->json($page->json());
-            }
+            // try {
+            // Render the template
+            $renderer = $request->renderer('template', $page::template());
+            return $renderer->response([
+                'page' => $page,
+            ]);
+            // } catch (TemplateNotFound) {
+            // return $request->response()->json($page->json());
+            // }
         }
 
         throw new HttpBadRequest();
