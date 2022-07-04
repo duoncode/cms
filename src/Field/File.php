@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace Conia\Field;
 
 use Conia\Request;
+use Conia\Value\Files;
 
-use  Conia\Value\Files;
 
-
-class  File  extends  Field
-
+class File extends Field
 {
-     public  function  value(reque st $req uest, a rray $data ): Files
-       {
-           retu rn n ew Files($req uest, $data);
-     
- 
-}
+    protected bool $single = false;
+
+    public function value(request $request, array $data): Files
+    {
+        return new Files($request, $data);
+    }
+
+    public function single(bool $single = true): static
+    {
+        $this->single = $single;
+
+        return $this;
+    }
 }
