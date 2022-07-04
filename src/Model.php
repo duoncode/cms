@@ -9,8 +9,8 @@ use Chuck\Database\Database;
 
 abstract class Model
 {
-    protected static Request $request;
-    protected static Config $config;
+    private static Request $request;
+    private static Config $config;
 
 
     public static function initialize(Request $request): void
