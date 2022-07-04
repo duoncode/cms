@@ -6,17 +6,13 @@ namespace Conia\Field;
 
 use Conia\Field\Field;
 use Conia\Request;
+use Conia\Value\Number as NumberValue;
 
-use  Conia\Value\Number  as  NumberValue;
 
-
-class  Number  extends  Field
-
+class Number extends Field
 {
-     public  function  value(reque st $req uest, a rray $data ): NumberValue
-       {
-           retu rn n ew NumberValue($req uest, $data);
-     
- 
-}
+    public function value(Request $request, array $data): NumberValue
+    {
+        return new NumberValue($request, $data);
+    }
 }
