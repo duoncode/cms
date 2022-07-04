@@ -11,7 +11,7 @@ use Conia\Field\Field;
 use Conia\Value\Value;
 
 
-abstract class Type
+abstract class Type extends Model
 {
     static protected string $name = '';
     static protected string $template = '';

@@ -38,7 +38,7 @@ class App extends BaseApp
         $router = new Router();
         $request = new Request($config, $router, new Session($config->app()));
 
-        Model::init($request);
+        Model::initialize($request);
 
         $errorHandler = new Handler($request);
         $errorHandler->setup();

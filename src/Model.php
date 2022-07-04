@@ -13,7 +13,7 @@ abstract class Model
     protected static Config $config;
 
 
-    public static function init(Request $request): void
+    public static function initialize(Request $request): void
     {
         self::$request = $request;
         self::$config = $request->config();
