@@ -1,5 +1,5 @@
-Conia Framework
-===============
+Conia CMS/CMF Core
+==================
 
 
 Settings 
