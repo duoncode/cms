@@ -1,6 +1,6 @@
 {
-    "name": "conia/conia",
-    "description": "Conia CMS/CMF",
+    "name": "conia/core",
+    "description": "Conia CMS/CMF Core Library",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "conia/boiler": "dev-main",
         "conia/chuck": "dev-main",
+        "conia/cli": "dev-main",
+        "conia/i18n": "dev-main",
+        "conia/puma": "dev-main",
+        "conia/sire": "dev-main",
         "hidehalo/nanoid-php": "^1.1"
     },
     "autoload": {
