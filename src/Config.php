@@ -31,9 +31,6 @@ class Config extends BaseConfig
         parent::__construct($app, $debug, $env);
 
         $this->root = dirname(__DIR__);
-        $this->public = $this->root . DIRECTORY_SEPARATOR . 'public';
-        $this->assets = $this->public . DIRECTORY_SEPARATOR . 'assets';
-        $this->cache = $this->public . DIRECTORY_SEPARATOR . 'cache';
 
         $this->set('session.expires', 60 * 60 * 24);
         $this->set('session.authcookie', $app . '_auth');
