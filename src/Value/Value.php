@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use \ReflectionClass;
-use Chuck\Error\NoSuchProperty;
+use ReflectionClass;
+use Conia\Chuck\Error\NoSuchProperty;
 use Conia\Locale;
 use Conia\Request;
 

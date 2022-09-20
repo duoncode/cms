@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Conia;
 
 use \RuntimeException;
-use Chuck\App as BaseApp;
-use Chuck\ConfigInterface;
-use Chuck\Response\ResponseInterface;
-use Chuck\Routing\RouterInterface;
-use Chuck\Routing\Router;
-use Chuck\Error\Handler;
+use Conia\Chuck\App as BaseApp;
+use Conia\Chuck\ConfigInterface;
+use Conia\Chuck\Response\ResponseInterface;
+use Conia\Chuck\Routing\RouterInterface;
+use Conia\Chuck\Routing\Router;
+use Conia\Chuck\Error\Handler;
 use Conia\Config;
 use Conia\Request;
 use Conia\Routes;

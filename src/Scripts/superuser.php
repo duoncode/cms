@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-class Superuser extends Chuck\Cli\Command
+use Conia\Cli\Command;
+
+class Superuser extends Command
 {
     public static string $group = 'General';
     public static string $title = 'Add superuser';
 
-    public function run(Chuck\ConfigInterface $config, string ...$args): void
+    public function run(): void
     {
         $class = $config->di('Router');
         $router = new $class();

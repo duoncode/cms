@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Database\Database;
+use Conia\Puma\Database;
 
 
 abstract class Model

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Middleware;
 
-use Chuck\RequestInterface;
-use Chuck\Response\ResponseInterface;
+use Conia\Chuck\RequestInterface;
+use Conia\Chuck\Response\ResponseInterface;
 
 
 class Session

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \ValueError;
-use \RuntimeException;
-use Chuck\SchemaInterface;
+use ValueError;
+use RuntimeException;
+use Conia\Sire\Schema;
+use Conia\Sire\SchemaInterface;
 
 
 abstract class SchemaI18N implements SchemaInterface
@@ -67,7 +68,7 @@ abstract class SchemaI18N implements SchemaInterface
                 keepUnknown: $this->keepUnknown,
                 langs: $this->langs,
                 title: $this->title,
-            ) extends \Chuck\Schema
+            ) extends Schema
             {
                 public static array $staticRules = [];
 

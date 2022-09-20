@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \Closure;
-use \Exception;
-use \PDO;
-use \ValueError;
-use Chuck\Config as BaseConfig;
-use Chuck\Config\Connection;
-use Chuck\Template\Engine;
+use Closure;
+use PDO;
+use ValueError;
+use Conia\Chuck\Config as BaseConfig;
+use Conia\Puma\Connection;
+use Conia\Boiler\Engine;
 
 
 class Config extends BaseConfig
@@ -39,7 +38,6 @@ class Config extends BaseConfig
         $this->set('session.expires', 60 * 60 * 24);
         $this->set('session.authcookie', $app . '_auth');
 
-        $this->scripts()->add($this->root . DIRECTORY_SEPARATOR . 'bin');
         $this->locales = new Locales();
         $this->types = new Types();
     }
@@ -117,5 +115,19 @@ class Config extends BaseConfig
         return new Engine([$this->root . DIRECTORY_SEPARATOR . 'views'], array_merge([
             'config' => $this,
         ], $defaults));
+    }
+
+    public function addConnection(Connection $conn, string $name = self::DEFAULT): void
+    {
+        if (!isset($this->connections[$name])) {
+            $this->connections[$name] = $conn;
+        } else {
+            throw new ValueError("A connection with the name '$name' already exists");
+        }
+    }
+
+    public function connection(string $name = self::DEFAULT): Connection
+    {
+        return $this->connections[$name];
     }
 }

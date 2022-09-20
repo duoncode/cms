@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Middleware;
 
-use Chuck\RequestInterface;
-use Chuck\Response\ResponseInterface;
-use Chuck\Error\{HttpUnauthorized, HttpForbidden};
+use Conia\Chuck\RequestInterface;
+use Conia\Chuck\Response\ResponseInterface;
+use Conia\Chuck\Error\{HttpUnauthorized, HttpForbidden};
 use Conia\Request;
 use Conia\Auth;
 use Conia\Permissions;

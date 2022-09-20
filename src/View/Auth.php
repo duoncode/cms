@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Chuck\Schema;
-use Chuck\Response\Response;
+use Conia\Sire\Schema;
+use Conia\Chuck\Response\Response;
 use Conia\Request;
 
 

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Chuck\Error\{HttpNotFound, HttpBadRequest, TemplateNotFound};
-use Chuck\Response\Response;
+use Conia\Chuck\Error\{
+    HttpNotFound,
+    HttpBadRequest,
+    TemplateNotFound
+};
+use Conia\Chuck\Response\Response;
 use Conia\Request;
 use Conia\Pages;
 use Conia\Type;

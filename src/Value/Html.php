@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Value;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
-use Chuck\Util\Html as Sanitizer;
+use Conia\Chuck\Util\Html as Sanitizer;
 
 
 class Html extends Text

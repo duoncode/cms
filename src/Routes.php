@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Routing\Group;
 use Conia\App;
+use Conia\Chuck\Routing\Group;
 use Conia\Middleware\Permission;
 use Conia\View\{Auth, Panel, Page};
 

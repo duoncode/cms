@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Session as BaseSession;
+use Conia\Chuck\Session as BaseSession;
 
 
 class Session extends BaseSession

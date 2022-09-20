@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Chuck\Request as BaseRequest;
-use Chuck\ResponseFactory;
-use Chuck\Routing\RouterInterface;
+use Conia\Chuck\Request as BaseRequest;
+use Conia\Chuck\ResponseFactory;
+use Conia\Chuck\Routing\RouterInterface;
 
 
 /**

@@ -80,6 +80,11 @@ abstract class Type extends Model
         return static::className();
     }
 
+    public function uid(): string
+    {
+        return $this->data['uid'];
+    }
+
     public static function template(): ?string
     {
         if (!empty(static::$template)) {

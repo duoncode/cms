@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Conia\Request;
-use Chuck\Database\DatabaseInterface;
+use Conia\Puma\Database;
 
 
 class Users extends Model
 {
-    protected DatabaseInterface $db;
+    protected Database $db;
 
     public static function byLogin(string $login): ?array
     {
