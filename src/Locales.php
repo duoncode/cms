@@ -54,18 +54,31 @@ class Locales
     protected function fromBrowser(): string|false
     {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $accepted = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            preg_match_all(
+                '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
+                $_SERVER['HTTP_ACCEPT_LANGUAGE'],
+                $matches
+            );
 
-            if ($accepted !== false) {
-                if ($this->exists($accepted)) {
-                    return $accepted;
-                } else {
-                    // e. g. 'en_US' -> 'en'
-                    $short = strtok($accepted, '_');
+            if (count($matches[1])) {
+                $langs = array_combine($matches[1], $matches[4]);
 
-                    if ($this->exists($short)) {
-                        return $short;
+                foreach ($langs as $lang => $val) {
+                    if ($val === '') {
+                        $langs[$lang] = 1;
                     }
+                }
+
+                arsort($langs, SORT_NUMERIC);
+
+                foreach ($langs as $lang => $val) {
+                    if ($this->exists($lang)) return $lang;
+
+                    $lang = str_replace('-', '_', $lang);
+                    if ($this->exists($lang))  return $lang;
+
+                    $lang = strtok($lang, '_');
+                    if ($this->exists($lang))  return $lang;
                 }
             }
         }
