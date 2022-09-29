@@ -1,5 +1,5 @@
 import { readable } from 'svelte/store';
-import I18N from './gettext';
+import I18N from 'gettext.js';
 import { getSettings } from './boot';
 
 const i18n = new I18N();
@@ -9,13 +9,10 @@ const locales = readable(settings.locales);
 
 
 // to avoid xgettext parsing problems define function as const
-const _ = (msg, ...args) => {
-    return i18n.gettext(msg, ...args);
-};
-
-const ngettext = (msg, nmsg, number, ...args) => {
-    return i18n.ngettext(msg, nmsg, number, ...args);
-};
+const __ = i18n.gettext;
+const _n = i18n.ngettext;
+const _d = (domain, msgid) => i18n.dcnpgettext(domain, undefined, msgid);
+const _dn = (domain, msgid, msgIdPlural, n) => i18n.dcnpgettext(domain, undefined, msgid, msgIdPlural, n);
 
 async function initGettext() {
     let response = await fetch(`/locale/${locale}/messages.json`);
@@ -38,4 +35,6 @@ function getLocales() {
     return [...locales];
 }
 
-export { _, ngettext, initGettext, locale, locales, getLocales };
+export {
+    __, _n, _d, _dn, initGettext, locale, locales, getLocales
+};
