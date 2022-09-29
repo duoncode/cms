@@ -1,0 +1,27 @@
+name: Create Release
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: cd gui && npm install
+
+      - name: Compile assets
+        run: cd gui && npm run build
+
+      - name: Create zip
+        run: cd gui && tar -czvf panel.tar.gz dist
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: gui/panel.tar.gz
