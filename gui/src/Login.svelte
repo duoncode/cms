@@ -1,5 +1,5 @@
 <script>
-    import { _ } from './lib/locale';
+    import { __ } from './lib/locale';
     import { loginUser } from './lib/user';
     import Logo from './shell/Logo.svelte';
 
@@ -10,7 +10,7 @@
 
     async function doLogin() {
         if (login === null || password === null) {
-            message = _('Please provide username and password');
+            message = __('Please provide username and password');
             return;
         }
 
@@ -106,7 +106,7 @@
         <div class="fields">
             <form>
                 <div class="control">
-                    <label for="login">{_('Username or email')}</label>
+                    <label for="login">{__('Username or email')}</label>
                     <input
                         id="login"
                         name="login"
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="control">
-                    <label for="password">{_('Password')}</label>
+                    <label for="password">{__('Password')}</label>
                     <input
                         id="password"
                         name="password"
@@ -134,10 +134,10 @@
                             name="rememberme"
                             type="checkbox"
                             bind:checked={rememberme} />
-                        <label for="rememberme">{_('Remember me')}</label>
+                        <label for="rememberme">{__('Remember me')}</label>
                     </div>
 
-                    <a href="/forgot">{_('Forgot your password?')}</a>
+                    <a href="/forgot">{__('Forgot your password?')}</a>
                 </div>
 
                 <div class="button-bar">
@@ -153,7 +153,7 @@
                                 stroke-linejoin="round"
                                 d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
-                        {_('Sign in')}
+                        {__('Sign in, HANS!')}
                     </button>
                 </div>
             </form>
