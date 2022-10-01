@@ -1,8 +1,8 @@
-const sveltePreprocess = require('svelte-preprocess');
+import sveltePreprocess from 'svelte-preprocess'
 
 const prod = process.env.BUILD_ENV === 'production';
 
-module.exports = {
+export default {
     preprocess: [
         sveltePreprocess({
             sourceMap: !prod,
