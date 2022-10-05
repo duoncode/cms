@@ -14,7 +14,7 @@ export default class Router {
 
     settings(options: Component) {
         if ('component' in options || 'asyncComponent' in options) {
-            return wrap(options);
+            return wrap(options as WrappedComponent);
         }
 
         return options;
