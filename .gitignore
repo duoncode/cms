@@ -1,8 +1,10 @@
 *.log
+*.mo
 .env
 composer.lock
 /run
 /data/
 /gui/dist/
+/gui/src/locale/
 /gui/node_modules/
 /vendor/
