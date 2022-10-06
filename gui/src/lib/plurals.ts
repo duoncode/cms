@@ -1,3 +1,8 @@
+// See:
+// - https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html
+// - http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
+// - https://udn.realityripple.com/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+
 type Plural = {
     nplurals: 1 | 2 | 3 | 4 | 5 | 6,
     fn: (n: number) => boolean | 0 | 1 | 2 | 3 | 4 | 5,
@@ -130,4 +135,10 @@ const plurals: Plurals = {
         fn: (n: number) => n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5,
         text: 'nplurals = 6; plural = (n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5)',
     }),
+};
+
+export {
+    type Plural,
+    type Plurals,
+    plurals,
 };
