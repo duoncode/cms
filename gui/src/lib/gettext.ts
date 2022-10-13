@@ -24,6 +24,18 @@ export default class Gettext {
         this.contextDelimiter = options.contextDelimiter || String.fromCharCode(4); // \u0004
     }
 
+    expandLocale(locale: string): string[] {
+        let locales = [locale];
+        let i = locale.lastIndexOf('-');
+
+        while (i > 0) {
+            locale = locale.slice(0, i);
+            locales.push(locale);
+            i = locale.lastIndexOf('-');
+        }
+        return locales;
+    }
+
     // loadJson() {
     // if (!_.isObject(jsonData))
     // jsonData = JSON.parse(jsonData);
