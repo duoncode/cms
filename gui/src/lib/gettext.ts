@@ -7,11 +7,10 @@ type GettextOptions = {
 };
 
 interface Language {
-    '': {
+    [id: string]: string | string[] | {
         language: string,
         "plural-forms"?: string,
-    } | undefined;
-    [id: string]: string | string[];
+    };
 }
 
 export default class Gettext {
