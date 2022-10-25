@@ -6,11 +6,13 @@ type GettextOptions = {
     contextDelimiter?: string,
 };
 
+type LanguageHeader = {
+    language: string,
+    "plural-forms"?: string,
+};
+
 interface Language {
-    [id: string]: string | string[] | {
-        language: string,
-        "plural-forms"?: string,
-    };
+    [id: string]: string | string[] | LanguageHeader;
 }
 
 export default class Gettext {
@@ -91,18 +93,21 @@ export default class Gettext {
         return t.apply(this, [exist ? translation : [msgid, msgidPlural], n, options].concat(Array.prototype.slice.call(arguments, 5)));
     }
 
-    // loadJson() {
-    // if (!_.isObject(jsonData))
-    // jsonData = JSON.parse(jsonData);
-    //
-    // if (!jsonData[''] || !jsonData['']['language'] || !jsonData['']['plural-forms'])
-    // throw new Error('Wrong JSON, it must have an empty key ("") with "language" and "plural-forms" information');
-    //
-    // var headers = jsonData[''];
-    // delete jsonData[''];
-    //
-    // return this.setMessages(domain || defaults.domain, headers['language'], jsonData, headers['plural-forms']);
-    // }
+    loadJson(url: string) {
+        let response = await fetch(`/locale/${locale}/messages.json`);
+        let appMessages = await response.json();
 
+        let jsonData: Language = JSON.parse(data);
 
+        if (!jsonData[''] || !jsonData['']['language'] || !jsonData['']['plural-forms']) {
+            throw new Error('Wrong JSON, it must have an empty key ("") with "language" and "plural-forms" information');
+        }
+
+        let headers: LanguageHeader = jsonData[''];
+        delete jsonData[''];
+
+        return this.setMessages(domain || defaults.domain, headers['language'], jsonData, headers['plural-forms']);
+    }
+
+    setMessages(language
 }
