@@ -20,10 +20,10 @@ class Locales
         string $id,
         string $title,
         ?string $fallback = null,
-        string|array|null $domain = null,
+        ?array $domains = null,
         ?string $urlPrefix = null,
     ) {
-        $this->locales[$id] =  new Locale($this, $id, $title, $fallback, $domain, $urlPrefix);
+        $this->locales[$id] =  new Locale($this, $id, $title, $fallback, $domains, $urlPrefix);
     }
 
     public function setDefault(string $locale): void
