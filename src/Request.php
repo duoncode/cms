@@ -14,7 +14,7 @@ use Conia\Chuck\Routing\RouterInterface;
  */
 class Request extends BaseRequest
 {
-    protected ?Locale $locale = null;
+    protected Locale $locale;
 
     public function __construct(
         Config $config,
@@ -40,7 +40,7 @@ class Request extends BaseRequest
 
     public function locale(): Locale
     {
-        if (!$this->locale) {
+        if (!($this->locale ?? null)) {
             $this->locale = $this->config->locales->negotiate($this);
         }
 

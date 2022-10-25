@@ -123,7 +123,7 @@ class Locales
             return $this->locales[$this->default];
         }
 
-        return null;
+        throw new RuntimeException('Default locale is not set');
     }
 
     public function negotiate(Request $request): Locale
