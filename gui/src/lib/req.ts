@@ -1,5 +1,5 @@
 import { success, error } from './state';
-import { settings } from './boot';
+import sys from './sys';
 
 
 const domain = `${window.location.protocol}//${window.location.host}`;
@@ -10,19 +10,24 @@ const panelPath = window.location.pathname.substring(0, window.location.pathname
 const panelApi = panelPath === '' ? '/panel/api' : `${panelPath}/api`;
 
 class Response {
-    constructor(ok, data) {
-        this.ok = ok;
-        this.data = data;
+    constructor(public ok: boolean, public data: any) {
     }
 }
 
-function getDefaultOptions() {
-    const headers = {
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type Headers = {
+    'X-Requested-With': 'xmlhttprequest',
+    'X-CSRF-Token'?: string
+};
+
+
+function getDefaultOptions(): RequestInit {
+    const headers: Headers = {
         'X-Requested-With': 'xmlhttprequest',
     };
 
-    if (settings) {
-        headers['X-CSRF-Token'] = settings.csrfToken;
+    if (sys.settings) {
+        headers['X-CSRF-Token'] = sys.settings.csrfToken;
     }
 
     return {
@@ -35,7 +40,7 @@ function getDefaultOptions() {
     };
 }
 
-function getBodyOptions(method, data) {
+function getBodyOptions(method: Method, data?: any) {
     let options = Object.assign(getDefaultOptions(), { method });
 
     if (data) {
@@ -50,7 +55,7 @@ function getBodyOptions(method, data) {
     return options;
 }
 
-async function fetchit(path, params, options) {
+async function fetchit(path: string, params: Record<string, string>, options: RequestInit) {
     let url = new URL(`${panelApi}${path}`, domain);
 
     if (params) {
@@ -59,10 +64,10 @@ async function fetchit(path, params, options) {
             if (params[key]) url.searchParams.append(key, params[key]);
         });
     }
-    let response = await fetch(url, options);
+    let response = await fetch(url.href, options);
 
     if (response.status >= 400 && response.status < 800) {
-        let message;
+        let message: any;
 
         try {
             message = await response.json();
@@ -85,25 +90,25 @@ async function fetchit(path, params, options) {
     return new Response(true, await response.json());
 }
 
-async function get(url, params) {
+async function get(url: string, params: Record<string, string>) {
     const options = getBodyOptions('GET');
 
     return fetchit(url, params, options);
 }
 
-async function post(url, data = {}) {
+async function post(url: string, data = {}) {
     const options = getBodyOptions('POST', data);
 
     return fetchit(url, {}, options);
 }
 
-async function put(url, data = {}) {
+async function put(url: string, data = {}) {
     const options = getBodyOptions('PUT', data);
 
     return fetchit(url, {}, options);
 }
 
-async function del(url) {
+async function del(url: string) {
     const options = getBodyOptions('DELETE');
 
     return fetchit(url, {}, options);
