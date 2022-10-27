@@ -1,9 +1,21 @@
 import type { SvelteComponent } from 'svelte';
-import type { WrappedComponent } from 'svelte-spa-router';
 import { wrap } from 'svelte-spa-router/wrap';
+import type { AsyncSvelteComponent, RoutePrecondition, WrappedComponent } from 'svelte-spa-router'
 
-type Component = SvelteComponent | WrappedComponent;
+/* Duplicated from svelte-spa-router as it is not exported there */
+interface WrapOptions {
+    component?: typeof SvelteComponent
+    asyncComponent?: AsyncSvelteComponent
+    loadingComponent?: typeof SvelteComponent
+    loadingParams?: object
+    userData?: object
+    props?: object
+    conditions?: RoutePrecondition[] | RoutePrecondition
+}
+type Target = typeof SvelteComponent | WrapOptions;
+type Component = typeof SvelteComponent | WrappedComponent;
 type RouteMap = Map<string, Component>;
+
 
 export default class Router {
     protected routes: RouteMap;
@@ -12,16 +24,16 @@ export default class Router {
         this.routes = new Map();
     }
 
-    settings(options: Component) {
-        if ('component' in options || 'asyncComponent' in options) {
-            return wrap(options as WrappedComponent);
+    wrap(target: Target): Component {
+        if ('component' in target || 'asyncComponent' in target) {
+            return wrap(target);
         }
 
-        return options;
+        return target as typeof SvelteComponent;
     }
 
-    add(pattern: string, options: SvelteComponent) {
-        this.routes.set(pattern, this.settings(options));
+    add(pattern: string, target: Target) {
+        this.routes.set(pattern, this.wrap(target));
     }
 
     get(): RouteMap {
