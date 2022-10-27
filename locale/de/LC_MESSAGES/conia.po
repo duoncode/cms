@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: conia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-06 17:41+0200\n"
+"POT-Creation-Date: 2022-10-27 12:10+0200\n"
 "PO-Revision-Date: 2022-10-06 17:45+0200\n"
 "Last-Translator:  <ernst@adriana.localdomain>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -43,12 +43,4 @@ msgstr ""
 
 #: /home/ernst/Workspace/conia/core/gui/src/shell/Searchbar.svelte:83
 msgid "Search"
-msgstr ""
-
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:156
-msgid "Sign in, HANS"
-msgstr ""
-
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:156
-msgid "Sign in, HANSE"
 msgstr ""
