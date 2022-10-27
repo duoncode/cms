@@ -31,4 +31,9 @@ class Types
             'description' => $description,
         ];
     }
+
+    public function get(string $name): Type
+    {
+        return $this->types[$name];
+    }
 }

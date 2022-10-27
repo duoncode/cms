@@ -20,7 +20,6 @@ class Panel
     public function settings(): array
     {
         return [
-            'panelPath' => $this->config->panelUrl(),
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
             'debug' => $this->request->config()->debug(),
@@ -34,18 +33,18 @@ class Panel
         $config = $this->config;
 
         return [
-            'types' => $config->types(),
+            'panelPath' => $config->panelUrl(),
+            'types' => $config->types,
         ];
     }
 
     public function type(string $name): array
     {
-        $type = $this->config->type($name);
+        $type = $this->config->types->get($name);
 
         return [
             'name' => $name,
             'label' => $type->label,
-            'structure' => $type->structure(),
         ];
     }
 }
