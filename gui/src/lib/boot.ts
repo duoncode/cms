@@ -1,7 +1,14 @@
 import { writable, get } from 'svelte/store';
 import req from './req';
 
-type Settings = Record<string, any>;
+type Settings = {
+    panelPath: string;
+    locales: string[];
+    locale: string;
+    debug: boolean;
+    env: string;
+    csrfToken: string;
+};
 type Section = {
     title: string;
 };
@@ -13,8 +20,8 @@ type System = {
     templates: Template[];
 }
 
-let settings = writable < Settings > ({});
-let system = writable < System > ({
+let settings = writable<Settings | null>(null);
+let system = writable<System>({
     sections: [{
         title: 'Section'
     }],
@@ -26,7 +33,7 @@ async function loadSettings() {
     let response = await req.get('/settings');
 
     if (response.ok) {
-        settings.set(response.data);
+        settings.set(response.data as Settings);
     } else {
         throw new Error('Fatal error while requesting settings');
     }

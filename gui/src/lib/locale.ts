@@ -1,11 +1,8 @@
 import { readable } from 'svelte/store';
-import GetText from './gettext';
-import { getSettings } from './boot';
+import Gettext from './gettext';
+import { settings } from './settings';
 
-console.log(GetText);
-
-const i18n = GetText();
-const settings = getSettings();
+const i18n = new Gettext();
 const locale = readable(settings.locale);
 const locales = readable(settings.locales);
 
@@ -30,8 +27,7 @@ async function initGettext() {
 
     let messages = Object.assign(appMessages, themeMessages);
 
-    i18n.loadJSON(messages);
-    i18n.setLocale(locale);
+    i18n.loadJson(messages);
 }
 
 function getLocales() {
