@@ -1,8 +1,20 @@
 import { writable, get } from 'svelte/store';
 import req from './req';
 
-let settings = writable({});
-let system = writable({
+type Settings = Record<string, any>;
+type Section = {
+    title: string;
+};
+type Template = {
+    title: string;
+}
+type System = {
+    sections: Section[];
+    templates: Template[];
+}
+
+let settings = writable < Settings > ({});
+let system = writable < System > ({
     sections: [{
         title: 'Section'
     }],
@@ -34,7 +46,7 @@ async function boot() {
     }
 }
 
-function getSettings() {
+function getSettings(): Settings {
     return get(settings);
 }
 
