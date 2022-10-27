@@ -1,8 +1,6 @@
 import { plurals } from './plurals';
 
 type GettextOptions = {
-    locale: string,
-    domain: string,
     contextDelimiter?: string,
 };
 
@@ -16,14 +14,10 @@ interface Language {
 }
 
 export default class Gettext {
-    locale: string;
-    domain: string;
     contextDelimiter: string;
     dictionary: Language;
 
     constructor(options?: GettextOptions) {
-        this.locale = options.locale;
-        this.domain = options.domain
         this.contextDelimiter = options.contextDelimiter || String.fromCharCode(4); // \u0004
     }
 
@@ -56,25 +50,22 @@ export default class Gettext {
         let key = context ? context + this.contextDelimiter + msgid : msgid;
         let exist: boolean;
         let locale: string;
-        let locales = this.expandLocale(this.locale);
 
-        for (var i in locales) {
-            locale = locales[i];
-            exist = this.dictionary[domain] &&
-                this.dictionary[domain][locale] &&
-                this.dictionary[domain][locale][key];
+        locale = locales[i];
+        exist = this.dictionary[domain] &&
+            this.dictionary[domain][locale] &&
+            this.dictionary[domain][locale][key];
 
-            // because it's not possible to define both a singular and a plural form of the same msgid,
-            // we need to check that the stored form is the same as the expected one.
-            // if not, we'll just ignore the translation and consider it as not translated.
-            if (msgidPlural) {
-                exist = exist && "string" !== typeof _dictionary[domain][locale][key];
-            } else {
-                exist = exist && "string" === typeof _dictionary[domain][locale][key];
-            }
-            if (exist) {
-                break;
-            }
+        // because it's not possible to define both a singular and a plural form of the same msgid,
+        // we need to check that the stored form is the same as the expected one.
+        // if not, we'll just ignore the translation and consider it as not translated.
+        if (msgidPlural) {
+            exist = exist && "string" !== typeof this.dictionary[domain][locale][key];
+        } else {
+            exist = exist && "string" === typeof this.dictionary[domain][locale][key];
+        }
+        if (exist) {
+            break;
         }
 
         if (!exist) {
@@ -91,6 +82,10 @@ export default class Gettext {
         // Plural one
         options.plural_form = true;
         return t.apply(this, [exist ? translation : [msgid, msgidPlural], n, options].concat(Array.prototype.slice.call(arguments, 5)));
+    }
+
+    gettext(msgid: string): string {
+        return this.dcnpgettext(null, null, msgid, null, null);
     }
 
     loadJson(url: string) {

@@ -3,13 +3,13 @@
     import Modal from 'svelte-simple-modal';
     import Router from 'svelte-spa-router';
 
-    import { boot } from './lib/boot';
+    import sys from './lib/sys';
     import { authenticated } from './lib/user';
     import Nav from './shell/Nav.svelte';
 
     import getRoutes from './routes';
 
-    onMount(boot);
+    onMount(sys.boot);
 </script>
 
 {#if $authenticated}

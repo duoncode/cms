@@ -1,16 +1,14 @@
 import { readable } from 'svelte/store';
 import Gettext from './gettext';
-import { settings } from './settings';
 
 const i18n = new Gettext();
-const locale = readable(settings.locale);
-const locales = readable(settings.locales);
+const locale = readable<string>(settings.locale);
+const locales = readable<string>(settings.locales);
 
 
 // to avoid xgettext parsing problems define function as const
-console.log(i18n);
 const __ = i18n.gettext;
-const _n = i18n.ngettext;
+// const _n = i18n.ngettext;
 // const _d = (domain, msgid) => i18n.dcnpgettext(domain, undefined, msgid);
 // const _dn = (domain, msgid, msgIdPlural, n) => i18n.dcnpgettext(domain, undefined, msgid, msgIdPlural, n);
 
