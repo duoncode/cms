@@ -33,7 +33,6 @@ class Panel
         $config = $this->config;
 
         return [
-            'panelPath' => $config->panelUrl(),
             'types' => $config->types,
         ];
     }
