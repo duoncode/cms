@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
-use Conia\Config;
-use Conia\Permissions;
-use Conia\Request;
-use Conia\Util\Time;
+use Conia\Chuck\Request;
+use Conia\Core\Config;
+use Conia\Core\Permissions;
+use Conia\Core\Util\Time;
 use RuntimeException;
 
 class RememberDetails

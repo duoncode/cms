@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
-use Conia\App;
 use Conia\Chuck\Group;
-use Conia\Middleware\Permission;
-use Conia\View\Auth;
-use Conia\View\Page;
-use Conia\View\Panel;
+use Conia\Core\App;
+use Conia\Core\Middleware\Permission;
+use Conia\Core\View\Auth;
+use Conia\Core\View\Page;
+use Conia\Core\View\Panel;
 
 class Routes
 {

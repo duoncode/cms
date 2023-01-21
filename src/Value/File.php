@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Value;
+namespace Conia\Core\Value;
 
-use Conia\Locale;
+use Conia\Core\Locale;
 
 class File
 {

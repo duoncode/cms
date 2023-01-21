@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
 class Textarea extends Text
 {

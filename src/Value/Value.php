@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Value;
+namespace Conia\Core\Value;
 
 use Conia\Chuck\Error\NoSuchProperty;
-use Conia\Locale;
-use Conia\Request;
+use Conia\Chuck\Request;
+use Conia\Core\Locale;
 use ReflectionClass;
 
 abstract class Value

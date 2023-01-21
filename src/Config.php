@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
 use Closure;
 use Conia\Boiler\Engine;
 use Conia\Chuck\Config as BaseConfig;
-use Conia\Locales;
+use Conia\Core\Locales;
 use ValueError;
 
 class Config extends BaseConfig

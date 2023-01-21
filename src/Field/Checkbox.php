@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Request;
-use Conia\Value\Boolean;
+use Conia\Chuck\Request;
+use Conia\Core\Value\Boolean;
 
 class Checkbox extends Field
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
 use Conia\Chuck\Request as BaseRequest;
 use Conia\Chuck\ResponseFactory;

@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Request;
+use Conia\Chuck\Request;
+use Conia\Core\Value\Time as TimeValue;
 
-use  Conia\Value\Time  as  TimeValue;
-
-
-class  Time  extends  Field
-
+class Time extends Field
 {
-     public  function  value(reque st $req uest, a rray $data ): TimeValue
-       {
-           retu rn n ew TimeValue($req uest, $data);
-     
- 
-}
+    public function value(Request $request, array $data): TimeValue
+    {
+        return new TimeValue($request, $data);
+    }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Request;
-use Conia\Value\Str;
+use Conia\Chuck\Request;
+use Conia\Core\Core\Value\Str;
 
 class Radio extends Field
 {

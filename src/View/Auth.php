@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\View;
+namespace Conia\Core\View;
 
+use Conia\Chuck\Request;
 use Conia\Chuck\Response\Response;
-use Conia\Request;
 use Conia\Sire\Schema;
 
 class LoginSchema extends Schema

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
 use Conia\Chuck\Config;
 use Conia\Chuck\Error\Handler;
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Router;
+use Conia\Core\Routes;
 use Conia\Quma\Connection;
-use Conia\Routes;
 use PDO;
 use Psr\Container\ContainerInterface as PsrContainer;
 use Psr\Http\Message\ResponseInterface as PsrResponse;

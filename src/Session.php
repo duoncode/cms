@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
 use Conia\Chuck\Session as BaseSession;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Field\Field;
-use Conia\Request;
-use Conia\Value\Matrix as MatrixValue;
-use Conia\Value\Value;
+use Conia\Chuck\Request;
+use Conia\Core\Field\Field;
+use Conia\Core\Value\Matrix as MatrixValue;
+use Conia\Core\Value\Value;
 use ValueError;
 
 class Matrix extends Field

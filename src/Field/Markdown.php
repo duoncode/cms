@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Request;
+use Conia\Chuck\Request;
+use Conia\Core\Value\Html;
 
-use  Conia\Value\Html;
-
-
-class  Markdown  extends  Field
-
+class Markdown extends Field
 {
-     public  function  value(reque st $req uest, a rray $data ): Html
-       {
-           retu rn n ew Html($req uest, $data);
-     
- 
-}
+    public function value(Request $request, array $data): Html
+    {
+        return new Html($request, $data);
+    }
 }

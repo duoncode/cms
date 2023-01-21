@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Util;
+namespace Conia\Core\Util;
 
-use Conia\Config;
+use Conia\Core\Config;
 
 const CONIA_DEFAULT_PW_ENTROPY = 40.0;
 

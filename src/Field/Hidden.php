@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Request;
-use Conia\Value\Any;
+use Conia\Chuck\Request;
+use Conia\Core\Core\Value\Any;
 
 /**
  * A field type which is not shown in the admin.

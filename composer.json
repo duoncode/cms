@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Conia\\": "src"
+            "Conia\\Core\\": "src"
         },
         "files": [
             "src/Util/functions.php"
@@ -35,7 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Conia\\": "tests"
+            "Conia\\Core\\Tests\\": "tests"
         }
     }
 }

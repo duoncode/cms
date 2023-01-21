@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Util;
+namespace Conia\Core\Util;
 
 use Hidehalo\Nanoid\Client;
 
-if (!function_exists('Conia\Util\nanoid')) {
+if (!function_exists('Conia\Core\Util\nanoid')) {
     function nanoid()
     {
         $client = new Client();

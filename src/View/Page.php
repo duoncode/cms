@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\View;
+namespace Conia\Core\View;
 
 use Conia\Chuck\Error\HttpBadRequest;
 use Conia\Chuck\Error\HttpNotFound;
 use Conia\Chuck\Error\TemplateNotFound;
+use Conia\Chuck\Request;
 use Conia\Chuck\Response\Response;
-use Conia\Pages;
-use Conia\Request;
-use Conia\Type;
+use Conia\Core\Pages;
+use Conia\Core\Type;
 
 class Page
 {

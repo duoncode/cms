@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Tests\Setup\TestCase;
-use Conia\Util\Password;
+use Conia\Core\Tests\Setup\TestCase;
+use Conia\Core\Util\Password;
 
 uses(TestCase::class);
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Field\Field;
-use Conia\Request;
-use Conia\Value\Images;
+use Conia\Chuck\Request;
+use Conia\Core\Field\Field;
+use Conia\Core\Value\Images;
 
 class Image extends Field
 {

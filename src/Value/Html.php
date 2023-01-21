@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Value;
+namespace Conia\Core\Value;
 
 use Conia\Chuck\Util\Html as Sanitizer;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;

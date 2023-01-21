@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\View;
+namespace Conia\Core\View;
 
-use Conia\Config;
-use Conia\Request;
+use Conia\Chuck\Request;
+use Conia\Core\Config;
 
 class Panel
 {

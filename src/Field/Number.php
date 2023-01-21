@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Field;
+namespace Conia\Core\Field;
 
-use Conia\Field\Field;
-use Conia\Request;
-use Conia\Value\Number as NumberValue;
+use Conia\Chuck\Request;
+use Conia\Core\Field\Field;
+use Conia\Core\Value\Number as NumberValue;
 
 class Number extends Field
 {

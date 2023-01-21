@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Middleware;
+namespace Conia\Core\Middleware;
 
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Config;
+use Conia\Core\Config;
 
 class Session
 {

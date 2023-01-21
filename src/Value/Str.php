@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Value;
+namespace Conia\Core\Value;
 
 class Str extends Value
 {

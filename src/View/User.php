@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\View;
+namespace Conia\Core\View;
 
 class User
 {

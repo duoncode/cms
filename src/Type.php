@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia;
+namespace Conia\Core;
 
-use Conia\Field\Field;
-use Conia\Value\Value;
+use Conia\Core\Field\Field;
+use Conia\Core\Value\Value;
 use Generator;
 use RuntimeException;
 use ValueError;

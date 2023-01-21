@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Util\Strings;
+use Conia\Core\Util\Strings;
 
 test('String entropy', function () {
     $lower = Strings::entropy('spirit crusher');
