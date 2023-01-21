@@ -6,8 +6,6 @@ namespace Conia\Core;
 
 abstract class Block
 {
-    use SetsInfo;
-
     protected array $list = [];
     protected array $fields = [];
 

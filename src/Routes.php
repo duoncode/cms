@@ -28,7 +28,7 @@ class Routes
 
         // All API routes
         $app->group(
-            $this->panelApi,
+            $this->apiUrl,
             $this->addPanelApi(...),
             'conia.panel.',
         )->render('json');

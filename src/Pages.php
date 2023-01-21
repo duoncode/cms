@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-class Pages extends Model
+use Conia\Quma\Database;
+
+class Pages
 {
-    public static function byUrl(string $url): ?array
+    public function __construct(protected readonly Database $db)
     {
-        $page = self::db()->pages->byUrl([
+    }
+
+    public function byUrl(string $url): ?array
+    {
+        $page = $this->db->pages->byUrl([
             'url' => $url,
         ])->one();
 

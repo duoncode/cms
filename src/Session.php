@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Chuck\Session as BaseSession;
+use Conia\Session\Session as BaseSession;
+use SessionHandlerInterface;
 
 class Session extends BaseSession
 {
     protected string $authCookie;
 
     public function __construct(
-        protected string $name,
-        ?string $authCookie = null,
-        protected string $flashMessagesKey = 'flash_messages',
-        protected string $rememberedUriKey = 'remembered_uri',
+        protected readonly string $name = '',
+        protected readonly array $options = [],
+        protected readonly ?SessionHandlerInterface $handler = null,
     ) {
-        $this->authCookie = $authCookie ?: $name . '_auth';
+        parent::__construct($name, $options, $handler);
+
+        $this->authCookie = $name ? $name . '_auth' : 'conia_auth';
     }
 
     public function setUser(string $userId): void

@@ -12,24 +12,22 @@ use RuntimeException;
 
 class RememberDetails
 {
-    public function __construct(Token $token, int $expires)
-    {
-        $this->token = $token;
-        $this->expires = $expires;
+    public function __construct(
+        public readonly Token $token,
+        public readonly int $expires
+    ) {
     }
 }
 
 
 class Auth
 {
-    protected Config $config;
-    protected Session $session;
-
     public function __construct(
         protected Request $request,
+        protected Users $users,
+        protected Config $config,
+        protected Session $session,
     ) {
-        $this->config = $request->config();
-        $this->session = $request->session();
     }
 
     public function logout(): void
@@ -39,7 +37,7 @@ class Auth
         $hash = $this->getTokenHash();
 
         if ($hash) {
-            Users::forget($hash);
+            $this->users->forget($hash);
             $session->forgetRemembered();
         }
     }
@@ -50,7 +48,7 @@ class Auth
         bool $remember,
         bool $initSession,
     ): array|false {
-        $user = Users::byLogin($login);
+        $user = $this->users->byLogin($login);
 
         if (!$user) {
             return false;
@@ -81,7 +79,7 @@ class Auth
         $userId = $this->session->authenticatedUserId();
 
         if ($userId) {
-            $user = Users::byId($userId);
+            $user = $this->users->byId($userId);
 
             return $user;
         }
@@ -89,7 +87,7 @@ class Auth
         $hash = $this->getTokenHash();
 
         if ($hash) {
-            $user = Users::bySession($hash);
+            $user = $this->users->bySession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
                 $this->login($user['uid'], false);
@@ -105,7 +103,7 @@ class Auth
 
     public function permissions(): array
     {
-        $permissions = new Permissions($this->config);
+        $permissions = new Permissions();
         $user = $this->user();
 
         if ($user === null) {
@@ -120,7 +118,7 @@ class Auth
         $token = new Token($this->config->get('secret'));
         $expires = time() + $this->config->get('session.expires');
 
-        $remembered = Users::remember(
+        $remembered = $this->users->remember(
             $token->hash(),
             $userId,
             Time::toIsoDateTime($expires),
@@ -158,7 +156,7 @@ class Auth
             $token = $session->getAuthToken();
 
             if ($token !== null) {
-                Users::forget($userId);
+                $this->users->forget($userId);
             }
         }
     }

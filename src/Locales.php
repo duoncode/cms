@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Session\Session;
+use Conia\Core\Session;
 use RuntimeException;
 use ValueError;
 

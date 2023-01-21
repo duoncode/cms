@@ -7,8 +7,7 @@ namespace Conia\Core\Middleware;
 use Conia\Chuck\Error\HttpForbidden;
 use Conia\Chuck\Error\HttpUnauthorized;
 use Conia\Chuck\Request;
-use Conia\Chuck\RequestInterface;
-use Conia\Chuck\Response\ResponseInterface;
+use Conia\Chuck\Response;
 use Conia\Core\Auth;
 use Conia\Core\Permissions;
 
@@ -18,7 +17,7 @@ class Permission
     {
     }
 
-    public function __invoke(Request $request, callable $next): RequestInterface|ResponseInterface
+    public function __invoke(Request $request, callable $next): Response
     {
         $auth = new Auth($request);
         $user = $auth->user();

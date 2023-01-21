@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
+use Conia\Chuck\Factory;
 use Conia\Chuck\Request;
-use Conia\Chuck\Response\Response;
+use Conia\Chuck\Response;
 use Conia\Sire\Schema;
 
 class LoginSchema extends Schema
@@ -20,6 +21,12 @@ class LoginSchema extends Schema
 
 class Auth
 {
+    public function __construct(
+        protected readonly Factory $factory,
+        protected readonly \Conia\Core\Auth $auth,
+    ) {
+    }
+
     public function me()
     {
         return [
@@ -31,12 +38,11 @@ class Auth
     public function login(Request $request): Response
     {
         $schema = new LoginSchema();
-        $response = $request->response();
+        $response = Response::fromFactory($this->factory);
 
         if ($schema->validate($request->json())) {
             $values = $schema->values();
-            $auth = new \Conia\Auth($request);
-            $user = $auth->authenticate(
+            $user = $this->auth->authenticate(
                 $values['login'],
                 $values['password'],
                 $values['rememberme'],
@@ -64,10 +70,9 @@ class Auth
         return $response;
     }
 
-    public function logout(Request $request): array
+    public function logout(): array
     {
-        $auth = new \Conia\Auth($request);
-        $auth->logout();
+        $this->auth->logout();
 
         return ['ok' => true];
     }

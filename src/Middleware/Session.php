@@ -18,7 +18,8 @@ class Session
     {
         $session = new \Conia\Session\Session(
             $this->config->app(),
-            $this->config->get('sessionOptions')
+            $this->config->get('session.options', []),
+            $this->config->get('session.handler', null),
         );
         $session->start();
 

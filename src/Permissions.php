@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Core\Config;
-
 class Permissions
 {
     protected array $permissions = [
@@ -34,10 +32,6 @@ class Permissions
             'authenticated',
         ],
     ];
-
-    public function __construct(protected Config $config)
-    {
-    }
 
     public function add(string $role, string $permission)
     {

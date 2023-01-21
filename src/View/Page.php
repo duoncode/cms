@@ -4,33 +4,29 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Error\HttpBadRequest;
-use Conia\Chuck\Error\HttpNotFound;
-use Conia\Chuck\Error\TemplateNotFound;
+use Conia\Chuck\Exception\HttpBadRequest;
+use Conia\Chuck\Exception\HttpNotFound;
+use Conia\Chuck\Factory;
+use Conia\Chuck\Registry;
+use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
-use Conia\Chuck\Response\Response;
+use Conia\Chuck\Response;
 use Conia\Core\Pages;
 use Conia\Core\Type;
+use Throwable;
 
 class Page
 {
+    public function __construct(
+        protected readonly Factory $factory,
+        protected readonly Registry $registry,
+        protected readonly Pages $pages,
+    ) {
+    }
+
     public function catchall(Request $request): Response
     {
-        $parts = pathinfo($request->url(stripQuery: true));
-        $extension = $parts['extension'] ?? null;
-
-        // Remove the extension from the url
-        if (empty($parts['filename'])) {
-            $url = $parts['dirname'];
-        } else {
-            if (trim($parts['dirname']) === '/') {
-                $url = '/' . $parts['filename'];
-            } else {
-                $url = $parts['dirname'] . '/' . $parts['filename'];
-            }
-        }
-
-        $data = Pages::byUrl($url);
+        $data = $this->pages->byUrl($request->uri()->getPath());
 
         if (!$data) {
             throw new HttpNotFound();
@@ -43,19 +39,19 @@ class Page
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {
-                return $request->response()->json($page->json());
+                return Response::fromFactory($this->factory)->json($page->json());
             }
 
-            // try {
-            // Render the template
-            $renderer = $request->renderer('template', $page::template());
+            try {
+                // Render the template
+                $render = new Render('template', $page::template());
 
-            return $renderer->response([
-                'page' => $page,
-            ]);
-            // } catch (TemplateNotFound) {
-            // return $request->response()->json($page->json());
-            // }
+                return $render->response($this->registry, [
+                    'page' => $page,
+                ]);
+            } catch (Throwable) {
+                throw new HttpBadRequest();
+            }
         }
 
         throw new HttpBadRequest();

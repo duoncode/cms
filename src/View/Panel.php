@@ -9,11 +9,10 @@ use Conia\Core\Config;
 
 class Panel
 {
-    protected Config $config;
-
-    public function __construct(protected Request $request)
-    {
-        $this->config = $request->config();
+    public function __construct(
+        protected readonly Request $request,
+        protected readonly Config $config,
+    ) {
     }
 
     public function settings(): array
@@ -21,8 +20,8 @@ class Panel
         return [
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
-            'debug' => $this->request->config()->debug(),
-            'env' => $this->request->config()->env(),
+            'debug' => $this->config->debug(),
+            'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
         ];
     }

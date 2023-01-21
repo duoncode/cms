@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Boiler\Engine;
 use Conia\Chuck\Config as BaseConfig;
 use Conia\Core\Locales;
-use ValueError;
 
 class Config extends BaseConfig
 {
@@ -18,7 +16,6 @@ class Config extends BaseConfig
     protected string $panelUrl = 'panel';
     protected ?string $panelTheme = null;
     protected Closure $languageNegotiator;
-    private readonly string $root;
     private bool $debugPanel = false;
 
     public function __construct(
@@ -28,10 +25,7 @@ class Config extends BaseConfig
     ) {
         parent::__construct($app, $debug, $env);
 
-        $this->root = dirname(__DIR__);
-
-        $this->set('session.expires', 60 * 60 * 24);
-        $this->set('session.authcookie', $app . '_auth');
+        $this->set('session.options', []);
 
         $this->locales = new Locales();
         $this->types = new Types();
@@ -48,19 +42,12 @@ class Config extends BaseConfig
 
     public function setSecret(string $secret): void
     {
-        $this->set('secret', $secret);
+        $this->set('app.secret', $secret);
     }
 
     public function setPanelUrl(string $url): void
     {
-        if (preg_match('/^[A-Za-z0-9]{1,32}$/', $url)) {
-            $this->panelUrl = $url;
-        } else {
-            throw new ValueError(
-                'The panel url prefix be a nonempty string which consist only of letters' .
-                    ' and numbers. Its length must not be longer than 32 characters.'
-            );
-        }
+        $this->panelUrl = $url;
     }
 
     public function panelUrl(): string
@@ -91,12 +78,5 @@ class Config extends BaseConfig
     public function setDefaultLocale(string $locale): void
     {
         $this->locales->setDefault($locale);
-    }
-
-    public function templateEngine(array $defaults = []): Engine
-    {
-        return new Engine([$this->root . DIRECTORY_SEPARATOR . 'views'], array_merge([
-            'config' => $this,
-        ], $defaults));
     }
 }
