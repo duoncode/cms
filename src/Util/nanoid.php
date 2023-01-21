@@ -12,7 +12,7 @@ if (!function_exists('Conia\Util\nanoid')) {
         $client = new Client();
 
         return $client->formattedId(
-            alphabet: '123456789BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz',
+            alphabet: '123456789bcdfghklmnpqrstvwxyz',
             size: 13
         );
     }

@@ -7,7 +7,7 @@ namespace Conia\Util;
 class Strings
 {
     /**
-     * Calculate entropy of a string
+     * Calculate entropy of a string.
      */
     public static function entropy(string $str): float
     {
@@ -29,7 +29,7 @@ class Strings
             $matches = [];
             if (preg_match_all($pattern, $str, $matches)) {
                 $size += count(array_unique($matches[0]));
-                $classCount += 1;
+                $classCount++;
             }
         }
 
@@ -42,7 +42,7 @@ class Strings
         }
         $foundSpecialChars = count(array_unique($matches));
         if ($foundSpecialChars > 0) {
-            $classCount += 1;
+            $classCount++;
             $size += $foundSpecialChars;
         }
 
@@ -58,11 +58,11 @@ class Strings
 
         // probably something like acegik...
         if ($sumDiff <= 12) {
-            $len -= 1;
+            $len--;
         }
         // probably something like 12345 or aaabbb
         if ($sumDiff <= 5) {
-            $len -= 1;
+            $len--;
         }
 
         if ($classCount > 0) {
@@ -72,6 +72,7 @@ class Strings
         if ($size === 0.0 || $len <= 0) {
             return 0;
         }
+
         return log($size, 2) * $len;
     }
 }

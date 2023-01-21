@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Util;
 
-use Conia\ConfigInterface;
+use Conia\Config;
 
 const CONIA_DEFAULT_PW_ENTROPY = 40.0;
 
@@ -20,14 +20,13 @@ class Password
         }
     }
 
-    public static function fromConfig(ConfigInterface $config): self
+    public static function fromConfig(Config $config): self
     {
         $entropy = $config->get('password.entropy', CONIA_DEFAULT_PW_ENTROPY);
         $defaultAlgo = self::hasArgon2() ? PASSWORD_ARGON2ID : PASSWORD_BCRYPT;
         $algo = $config->get('password.algorithm', $defaultAlgo);
-        $pw = new self($algo, $entropy);
 
-        return $pw;
+        return new self($algo, $entropy);
     }
 
     public function strongEnough(string $password): bool
