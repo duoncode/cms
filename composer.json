@@ -11,13 +11,19 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "conia/boiler": "dev-main",
         "conia/chuck": "dev-main",
         "conia/cli": "dev-main",
         "conia/i18n": "dev-main",
-        "conia/puma": "dev-main",
+        "conia/quma": "dev-main",
         "conia/sire": "dev-main",
+        "conia/session": "dev-main",
+        "conia/sizer": "dev-main",
         "hidehalo/nanoid-php": "^1.1"
+    },
+    "require-dev": {
+        "conia/boiler": "dev-main",
+        "nyholm/psr7": "^1.5",
+        "nyholm/psr7-server": "^1"
     },
     "autoload": {
         "psr-4": {
