@@ -14,5 +14,3 @@ class InitApp extends Command
         return 0;
     }
 }
-
-return new InitApp();

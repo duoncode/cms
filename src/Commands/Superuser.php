@@ -3,22 +3,23 @@
 declare(strict_types=1);
 
 use Conia\Cli\Command;
+use Conia\Quma\Connection;
+use Conia\Quma\Database;
 
 class Superuser extends Command
 {
     public static string $group = 'General';
     public static string $title = 'Add superuser';
 
-    public function run(): void
-    {
-        $class = $config->di('Router');
-        $router = new $class();
-        $class = $config->di('Request');
-        $request = new $class($config, $router);
-        $model = $config->di('Model');
-        $model::init($request);
-        $auth = $config->di('Auth');
+    protected Database $db;
 
+    public function __construct(Connection $connection)
+    {
+        $this->db = new Database($connection);
+    }
+
+    public function run(): int|string
+    {
         $params = [];
 
         echo "Create a superuser\n\n";
@@ -30,14 +31,14 @@ class Superuser extends Command
             PASSWORD_ARGON2ID
         );
 
-        $result = $auth::addSuperuser($params);
+        $result = $this->db->users->addSuperuser($params);
         if ($result['success']) {
             echo "\nSuccessfully created superuser: " . $params['email'] . "\n";
         } else {
             echo "\nError occured. Please review your data!\n";
             echo $result['message'] . "\n";
         }
+
+        return 0;
     }
 }
-
-return new Superuser();
