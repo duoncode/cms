@@ -8,7 +8,6 @@ use Conia\Field\Field;
 use Conia\Request;
 use Conia\Value\Decimal as DecimalValue;
 
-
 class Decimal extends Field
 {
     public function value(Request $request, array $data): DecimalValue

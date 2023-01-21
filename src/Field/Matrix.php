@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Conia\Field;
 
-use \ValueError;
 use Conia\Field\Field;
 use Conia\Request;
-use Conia\Value\{Value, Matrix as MatrixValue};
-
+use Conia\Value\Matrix as MatrixValue;
+use Conia\Value\Value;
+use ValueError;
 
 class Matrix extends Field
 {
-    const I18N_MIXED = 'mixed';
-    const I18N_SEPARATE = 'separate';
+    public const I18N_MIXED = 'mixed';
+    public const I18N_SEPARATE = 'separate';
 
     protected int $columns = 12;
     protected string $i18n = 'mixed';

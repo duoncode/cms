@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Util;
 
+use Exception;
+
 class Number
 {
     /**
      * Parses a number string to a computer processible string
-     * which works with floatval
+     * which works with floatval.
      *
      * This works for any kind of input, American or European style.
      */
@@ -23,6 +25,6 @@ class Number
             return preg_replace('/\.(?=.*\.)/', '', $value);
         }
 
-        throw new \Exception(_('This is not a valid number'));
+        throw new Exception(_('This is not a valid number'));
     }
 }

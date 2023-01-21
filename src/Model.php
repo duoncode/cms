@@ -6,12 +6,10 @@ namespace Conia;
 
 use Conia\Puma\Database;
 
-
 abstract class Model
 {
     private static Request $request;
     private static Config $config;
-
 
     public static function initialize(Request $request): void
     {

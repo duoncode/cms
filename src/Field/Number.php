@@ -8,7 +8,6 @@ use Conia\Field\Field;
 use Conia\Request;
 use Conia\Value\Number as NumberValue;
 
-
 class Number extends Field
 {
     public function value(Request $request, array $data): NumberValue

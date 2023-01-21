@@ -7,7 +7,6 @@ namespace Conia\Field;
 use Conia\Request;
 use Conia\Value\Value;
 
-
 abstract class Field
 {
     public readonly string $type;
@@ -17,7 +16,6 @@ abstract class Field
     protected bool $required = false;
     protected ?int $width = null;
     protected ?int $height = null;
-
 
     public function __construct(protected string $label, mixed ...$args)
     {

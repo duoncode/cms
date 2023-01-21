@@ -7,7 +7,6 @@ namespace Conia\Field;
 use Conia\Request;
 use Conia\Value\Text as TextValue;
 
-
 class Text extends Field
 {
     public function value(Request $request, array $data): TextValue

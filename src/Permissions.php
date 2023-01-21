@@ -6,7 +6,6 @@ namespace Conia;
 
 use Conia\Config;
 
-
 class Permissions
 {
     protected array $permissions = [

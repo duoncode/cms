@@ -6,9 +6,13 @@ namespace Conia\Value;
 
 use Conia\Locale;
 
-
 class Files extends Value
 {
+    public function __toString(): string
+    {
+        return 'Files: count(' . count($this->raw()) . ')';
+    }
+
     public function raw(): array
     {
         $locale = $this->locale;
@@ -16,7 +20,9 @@ class Files extends Value
         while ($locale) {
             $value = $this->data[$this->locale->id] ?? null;
 
-            if ($value) return $value;
+            if ($value) {
+                return $value;
+            }
 
             $locale = $this->locale->fallback();
         }
@@ -24,19 +30,9 @@ class Files extends Value
         return [];
     }
 
-    public function __toString(): string
-    {
-        return 'Files: count(' . count($this->raw()) . ')';
-    }
-
     public function json(): mixed
     {
         return $this->raw();
-    }
-
-    protected function getFile(array $file, Locale $locale): File
-    {
-        return new File($file, $locale);
     }
 
     public function all(): array
@@ -44,5 +40,10 @@ class Files extends Value
         return array_map(function (array $file) {
             return $this->getFile($file, $this->locale);
         }, $this->raw());
+    }
+
+    protected function getFile(array $file, Locale $locale): File
+    {
+        return new File($file, $locale);
     }
 }

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use ValueError;
-use RuntimeException;
 use Conia\Sire\Schema;
 use Conia\Sire\SchemaInterface;
-
+use RuntimeException;
+use ValueError;
 
 abstract class SchemaI18N implements SchemaInterface
 {
@@ -63,13 +62,7 @@ abstract class SchemaI18N implements SchemaInterface
         }
 
         foreach ($this->langs as $lang) {
-            $schema = new class(
-                list: $this->list,
-                keepUnknown: $this->keepUnknown,
-                langs: $this->langs,
-                title: $this->title,
-            ) extends Schema
-            {
+            $schema = new class (list: $this->list, keepUnknown: $this->keepUnknown, langs: $this->langs, title: $this->title) extends Schema {
                 public static array $staticRules = [];
 
                 protected function rules(): void
@@ -94,7 +87,7 @@ abstract class SchemaI18N implements SchemaInterface
                 $errors = $schema->errors();
 
                 foreach ($errors['errors'] as $error) {
-                    $error['error'] = $error['error'] . " ($lang)";
+                    $error['error'] = $error['error'] . " ({$lang})";
                     $this->errorList[] = $error;
                 }
 
@@ -103,7 +96,7 @@ abstract class SchemaI18N implements SchemaInterface
                     $innerResult = [];
 
                     foreach ($mapErrors as $mapError) {
-                        $innerResult[] = $mapError . " ($lang)";
+                        $innerResult[] = $mapError . " ({$lang})";
                     }
 
                     $this->errorMap = array_merge_recursive(
@@ -122,19 +115,11 @@ abstract class SchemaI18N implements SchemaInterface
 
     public function errors(bool $grouped = false): array
     {
-        $result = [
+        return [
             'isList' => $this->list,
             'errors' => array_values($this->errorList),
             'map' => $this->errorMap,
         ];
-
-        return $result;
-    }
-
-    protected function rules(): void
-    {
-        // Must be implemented in child classes
-        throw new RuntimeException('not implemented');
     }
 
     public function values(): array
@@ -145,5 +130,11 @@ abstract class SchemaI18N implements SchemaInterface
     public function pristineValues(): array
     {
         return $this->pristineValues;
+    }
+
+    protected function rules(): void
+    {
+        // Must be implemented in child classes
+        throw new RuntimeException('not implemented');
     }
 }

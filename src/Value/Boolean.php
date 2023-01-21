@@ -6,7 +6,6 @@ namespace Conia\Value;
 
 use Conia\Request;
 
-
 class Boolean extends Value
 {
     public readonly bool $value;

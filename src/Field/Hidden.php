@@ -7,9 +7,8 @@ namespace Conia\Field;
 use Conia\Request;
 use Conia\Value\Any;
 
-
 /**
- * A field type which is not shown in the admin
+ * A field type which is not shown in the admin.
  */
 class Hidden extends Field
 {

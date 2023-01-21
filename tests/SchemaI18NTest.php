@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Chuck\SchemaI18N;
 
-
 test('Translated valid values', function () {
     $testData = [
         'de' => [
@@ -16,11 +15,10 @@ test('Translated valid values', function () {
             'text' => 'the23',
             'int' => '23',
             'required' => 'present',
-        ]
+        ],
     ];
 
-    $schema = new class(langs: ['de', 'en']) extends SchemaI18N
-    {
+    $schema = new class (langs: ['de', 'en']) extends SchemaI18N {
         protected function rules(): void
         {
             $this->add('int', 'Int', 'int');
@@ -49,11 +47,10 @@ test('Translated failing values', function () {
         'en' => [
             'text' => 'the13',
             'int' => 'error',
-        ]
+        ],
     ];
 
-    $schema = new class(langs: ['de', 'en']) extends SchemaI18N
-    {
+    $schema = new class (langs: ['de', 'en']) extends SchemaI18N {
         protected function rules(): void
         {
             $this->add('int', 'Int', 'int');
@@ -73,8 +70,7 @@ test('Translated failing values', function () {
 
 
 test('Empty field name', function () {
-    $schema = new class(langs: ['de', 'en']) extends SchemaI18N
-    {
+    $schema = new class (langs: ['de', 'en']) extends SchemaI18N {
         protected function rules(): void
         {
             $this->add('', 'Int', 'int');
@@ -85,8 +81,7 @@ test('Empty field name', function () {
 
 
 test('Empty languages array', function () {
-    $schema = new class(langs: []) extends SchemaI18N
-    {
+    $schema = new class (langs: []) extends SchemaI18N {
         protected function rules(): void
         {
             $this->add('int', 'Int', 'int');
@@ -97,8 +92,7 @@ test('Empty languages array', function () {
 
 
 test('Overwritten ::rules missing', function () {
-    $schema = new class(langs: []) extends SchemaI18N
-    {
+    $schema = new class (langs: []) extends SchemaI18N {
     };
     $schema->validate([]);
 })->throws(RuntimeException::class, 'not implemented');

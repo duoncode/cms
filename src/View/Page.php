@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Conia\Chuck\Error\{
-    HttpNotFound,
-    HttpBadRequest,
-    TemplateNotFound
-};
+use Conia\Chuck\Error\HttpBadRequest;
+use Conia\Chuck\Error\HttpNotFound;
+use Conia\Chuck\Error\TemplateNotFound;
 use Conia\Chuck\Response\Response;
-use Conia\Request;
 use Conia\Pages;
+use Conia\Request;
 use Conia\Type;
-
 
 class Page
 {
@@ -52,6 +49,7 @@ class Page
             // try {
             // Render the template
             $renderer = $request->renderer('template', $page::template());
+
             return $renderer->response([
                 'page' => $page,
             ]);

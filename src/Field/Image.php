@@ -8,7 +8,6 @@ use Conia\Field\Field;
 use Conia\Request;
 use Conia\Value\Images;
 
-
 class Image extends Field
 {
     protected bool $single = false;

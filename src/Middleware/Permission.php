@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Middleware;
 
+use Conia\Auth;
+use Conia\Chuck\Error\HttpForbidden;
+use Conia\Chuck\Error\HttpUnauthorized;
 use Conia\Chuck\RequestInterface;
 use Conia\Chuck\Response\ResponseInterface;
-use Conia\Chuck\Error\{HttpUnauthorized, HttpForbidden};
-use Conia\Request;
-use Conia\Auth;
 use Conia\Permissions;
-
+use Conia\Request;
 
 class Permission
 {

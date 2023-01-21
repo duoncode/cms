@@ -7,7 +7,6 @@ namespace Conia\Field;
 use Conia\Request;
 use Conia\Value\Files;
 
-
 class File extends Field
 {
     protected bool $single = false;

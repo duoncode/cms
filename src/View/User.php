@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-
 class User
 {
     public function list()

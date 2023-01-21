@@ -6,7 +6,6 @@ namespace Conia\Value;
 
 use Conia\Locale;
 
-
 class Images extends Files
 {
     public function __toString(): string

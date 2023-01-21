@@ -6,7 +6,6 @@ namespace Conia\Value;
 
 use Conia\Request;
 
-
 class Number extends Value
 {
     public readonly ?int $value;

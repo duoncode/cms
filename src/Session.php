@@ -6,7 +6,6 @@ namespace Conia;
 
 use Conia\Chuck\Session as BaseSession;
 
-
 class Session extends BaseSession
 {
     protected string $authCookie;

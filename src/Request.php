@@ -8,7 +8,6 @@ use Conia\Chuck\Request as BaseRequest;
 use Conia\Chuck\ResponseFactory;
 use Conia\Chuck\Routing\RouterInterface;
 
-
 /**
  * @method session
  */
@@ -29,8 +28,8 @@ class Request extends BaseRequest
 
     public function isXHR(): bool
     {
-        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
     public function session(): Session

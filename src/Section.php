@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia;
 
-
 class Section
 {
     public function __construct(

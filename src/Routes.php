@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Conia;
 
 use Conia\App;
-use Conia\Chuck\Routing\Group;
+use Conia\Chuck\Group;
 use Conia\Middleware\Permission;
-use Conia\View\{Auth, Panel, Page};
-
+use Conia\View\Auth;
+use Conia\View\Page;
+use Conia\View\Panel;
 
 class Routes
 {
@@ -18,7 +19,26 @@ class Routes
     public function __construct(protected Config $config)
     {
         $this->panelUrl = $config->panelUrl();
-        $this->panelApi = $this->panelUrl . '/api';
+        $this->apiUrl = $this->panelUrl . '/api';
+    }
+
+    public function add(App $app): void
+    {
+        $this->addIndex($app);
+
+        // All API routes
+        $app->group(
+            $this->panelApi,
+            $this->addPanelApi(...),
+            'conia.panel.',
+        )->render('json');
+
+        // Add catchall for page urls. Must be the last one
+        $app->get(
+            '/...slug',
+            [Page::class, 'catchall'],
+            'conia:catchall',
+        );
     }
 
     protected function addIndex(App $app): void
@@ -64,24 +84,5 @@ class Routes
         $this->addAuth($api);
         $this->addUser($api);
         $this->addSystem($api);
-    }
-
-    public function add(App $app): void
-    {
-        $this->addIndex($app);
-
-        // All API routes
-        $app->group(
-            $this->panelApi,
-            $this->addPanelApi(...),
-            'conia.panel.',
-        )->render('json');
-
-        // Add catchall for page urls. Must be the last one
-        $app->get(
-            '/...slug',
-            [Page::class, 'catchall'],
-            'conia:catchall',
-        );
     }
 }

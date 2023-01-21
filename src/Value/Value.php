@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use ReflectionClass;
 use Conia\Chuck\Error\NoSuchProperty;
 use Conia\Locale;
 use Conia\Request;
-
+use ReflectionClass;
 
 abstract class Value
 {
@@ -31,9 +30,10 @@ abstract class Value
             return $this->data[$name];
         }
 
-        throw new NoSuchProperty("The field doesn't have the property '$name'");
+        throw new NoSuchProperty("The field doesn't have the property '{$name}'");
     }
 
     abstract public function __toString(): string;
+
     abstract public function json(): mixed;
 }

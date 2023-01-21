@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use \IntlDateFormatter;
-
+use IntlDateFormatter;
 
 class Time extends DateTime
 {
-    const FORMAT = 'H:i:s';
+    public const FORMAT = 'H:i:s';
 
     public function localize(
         ?string $locale = null,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia;
 
-
 abstract class Block
 {
     use SetsInfo;
@@ -12,7 +11,7 @@ abstract class Block
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct(
+    final public function __construct(
         ?string $label,
         ?string $name,
         ?string $description = null,
@@ -22,6 +21,11 @@ abstract class Block
     }
 
     abstract public function init(): void;
+
+    public function render(): string
+    {
+        return '';
+    }
 
     protected function layout(): array
     {
@@ -39,10 +43,5 @@ abstract class Block
             'description' => $this->description,
             'layout' => $this->layout(),
         ];
-    }
-
-    public function render(): string
-    {
-        return '';
     }
 }

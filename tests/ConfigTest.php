@@ -41,4 +41,3 @@ test('Scripts', function () {
     expect($scripts->get()[0])->toEndWith(C::root() . C::DS . 'scripts');
     expect($scripts->get()[1])->toEndWith('/bin');
 });
-

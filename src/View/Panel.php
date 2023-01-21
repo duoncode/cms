@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Conia\Request;
 use Conia\Config;
-
+use Conia\Request;
 
 class Panel
 {
@@ -24,7 +23,7 @@ class Panel
             // 'locale' => 'de',
             'debug' => $this->request->config()->debug(),
             'env' => $this->request->config()->env(),
-            'csrfToken' => 'TOKEN' // TODO: real token
+            'csrfToken' => 'TOKEN', // TODO: real token
         ];
     }
 

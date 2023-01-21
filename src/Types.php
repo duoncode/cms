@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \ValueError;
-use \RuntimeException;
-
+use RuntimeException;
+use ValueError;
 
 class Types
 {
@@ -21,7 +20,7 @@ class Types
         $name = $class::name();
 
         if (array_key_exists($name, $this->types)) {
-            throw new RuntimeException("Type '$name' already exists");
+            throw new RuntimeException("Type '{$name}' already exists");
         }
 
         $this->types[$name] = [

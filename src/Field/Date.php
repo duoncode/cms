@@ -7,7 +7,6 @@ namespace Conia\Field;
 use Conia\Request;
 use Conia\Value\Date as DateValue;
 
-
 class Date extends Field
 {
     public function value(Request $request, array $data): DateValue

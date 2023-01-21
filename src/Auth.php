@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \RuntimeException;
 use Conia\Config;
-use Conia\Request;
 use Conia\Permissions;
+use Conia\Request;
 use Conia\Util\Time;
-
+use RuntimeException;
 
 class RememberDetails
 {
@@ -31,54 +30,6 @@ class Auth
     ) {
         $this->config = $request->config();
         $this->session = $request->session();
-    }
-
-    protected function remember(string $userId): RememberDetails
-    {
-        $token = new Token($this->config->get('secret'));
-        $expires = time() + $this->config->get('session.expires');
-
-        $remembered = Users::remember(
-            $token->hash(),
-            $userId,
-            Time::toIsoDateTime($expires),
-        );
-
-        if ($remembered) {
-            return new RememberDetails($token, $expires);
-        } else {
-            throw new RuntimeException('Could not remember user');
-        }
-    }
-
-    protected function login(string $userId, bool $remember): void
-    {
-        $session = $this->session;
-
-        // Regenerate the session id before setting the user id
-        // to mitigate session fixation attack.
-        $session->regenerate();
-        $session->setUser($userId);
-
-        if ($remember) {
-            $details = $this->remember($userId);
-
-            if ($details) {
-                $session->remember(
-                    $details->token,
-                    $details->expires
-                );
-            };
-        } else {
-            // Remove the user entry from loginsessions table as the user
-            // has not checked "remember me". In that case the session is
-            // only valid as long as the browser is not closed.
-            $token = $session->getAuthToken();
-
-            if ($token !== null) {
-                Users::forget($userId);
-            }
-        }
     }
 
     public function logout(): void
@@ -113,22 +64,9 @@ class Auth
             unset($user['pwhash']);
 
             return $user;
-        } else {
-            return false;
-        }
-    }
-
-
-    protected function getTokenHash(): ?string
-    {
-        $token = $this->session->getAuthToken();
-
-        if ($token) {
-            $hash = (new Token($this->config->get('secret'), $token))->hash();
-            return $hash;
         }
 
-        return null;
+        return false;
     }
 
     public function user(): ?array
@@ -144,6 +82,7 @@ class Auth
 
         if ($userId) {
             $user = Users::byId($userId);
+
             return $user;
         }
 
@@ -154,11 +93,13 @@ class Auth
 
             if ($user && !(strtotime($user['expires']) < time())) {
                 $this->login($user['uid'], false);
+
                 return $user;
             }
         }
 
         $user = null; // set static var
+
         return $user;
     }
 
@@ -172,5 +113,64 @@ class Auth
         }
 
         return $permissions->get($user['role']);
+    }
+
+    protected function remember(string $userId): RememberDetails
+    {
+        $token = new Token($this->config->get('secret'));
+        $expires = time() + $this->config->get('session.expires');
+
+        $remembered = Users::remember(
+            $token->hash(),
+            $userId,
+            Time::toIsoDateTime($expires),
+        );
+
+        if ($remembered) {
+            return new RememberDetails($token, $expires);
+        }
+
+        throw new RuntimeException('Could not remember user');
+    }
+
+    protected function login(string $userId, bool $remember): void
+    {
+        $session = $this->session;
+
+        // Regenerate the session id before setting the user id
+        // to mitigate session fixation attack.
+        $session->regenerate();
+        $session->setUser($userId);
+
+        if ($remember) {
+            $details = $this->remember($userId);
+
+            if ($details) {
+                $session->remember(
+                    $details->token,
+                    $details->expires
+                );
+            }
+        } else {
+            // Remove the user entry from loginsessions table as the user
+            // has not checked "remember me". In that case the session is
+            // only valid as long as the browser is not closed.
+            $token = $session->getAuthToken();
+
+            if ($token !== null) {
+                Users::forget($userId);
+            }
+        }
+    }
+
+    protected function getTokenHash(): ?string
+    {
+        $token = $this->session->getAuthToken();
+
+        if ($token) {
+            return (new Token($this->config->get('secret'), $token))->hash();
+        }
+
+        return null;
     }
 }

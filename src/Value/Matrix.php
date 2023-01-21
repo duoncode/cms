@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use \Generator;
-use \ValueError;
 use Conia\Request;
-
+use Generator;
+use ValueError;
 
 class Matrix extends Value
 {
@@ -23,6 +22,50 @@ class Matrix extends Value
             'mixed' => $this->getMixed($data),
             default => throw new ValueError('Unknown i18n setting of Matrix field'),
         };
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
+    }
+
+    public function render(?string $type = null, mixed ...$args)
+    {
+        $context = array_merge([
+            'prefix' => $this->prefix,
+            'columns' => $this->data['columns'] ?? 12,
+            'fields' => $this->localizedData,
+        ]);
+
+        if ($type) {
+            return $this->request->renderer($type, ...$args)->render($context);
+        }
+
+        $config = $this->request->config();
+        $engine = $config->templateEngine();
+
+        return $engine->render('matrix', array_merge(
+            [
+                'request' => $this->request,
+                'config' => $config,
+            ],
+            $context,
+        ));
+    }
+
+    public function json(): mixed
+    {
+        return [
+            'columns' => $this->data['columns'] ?? null,
+            'data' => $this->localizedData,
+        ];
+    }
+
+    public function prefix(string $prefix): static
+    {
+        $this->prefix = $prefix;
+
+        return $this;
     }
 
     protected function getField(array $field): Value
@@ -51,53 +94,9 @@ class Matrix extends Value
                 foreach ($fields as $field) {
                     yield $this->getField($field);
                 }
-            };
+            }
 
             $locale = $this->locale->fallback();
         }
-    }
-
-    public function render(?string $type = null, mixed ...$args)
-    {
-        $context = array_merge([
-            'prefix' => $this->prefix,
-            'columns' => $this->data['columns'] ?? 12,
-            'fields' => $this->localizedData,
-        ]);
-
-        if ($type) {
-            return $this->request->renderer($type, ...$args)->render($context);
-        }
-
-        $config = $this->request->config();
-        $engine = $config->templateEngine();
-
-        return $engine->render('matrix', array_merge(
-            [
-                'request' => $this->request,
-                'config' => $config,
-            ],
-            $context,
-        ));
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
-    }
-
-    public function json(): mixed
-    {
-        return [
-            'columns' => $this->data['columns'] ?? null,
-            'data' => $this->localizedData,
-        ];
-    }
-
-    public function prefix(string $prefix): static
-    {
-        $this->prefix = $prefix;
-
-        return $this;
     }
 }

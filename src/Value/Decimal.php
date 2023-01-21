@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use \NumberFormatter;
 use Conia\Request;
-
+use NumberFormatter;
 
 class Decimal extends Value
 {
@@ -21,14 +20,6 @@ class Decimal extends Value
         } else {
             $this->value = null;
         }
-    }
-
-    protected function getFormatter(int $style, int $digits, ?string $locale = null): NumberFormatter
-    {
-        $formatter = new NumberFormatter($locale ?: $this->locale->id, $style);
-        $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $digits);
-
-        return $formatter;
     }
 
     public function __toString(): string
@@ -65,5 +56,13 @@ class Decimal extends Value
     public function json(): mixed
     {
         return $this->value;
+    }
+
+    protected function getFormatter(int $style, int $digits, ?string $locale = null): NumberFormatter
+    {
+        $formatter = new NumberFormatter($locale ?: $this->locale->id, $style);
+        $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $digits);
+
+        return $formatter;
     }
 }

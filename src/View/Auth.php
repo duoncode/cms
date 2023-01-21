@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\View;
 
-use Conia\Sire\Schema;
 use Conia\Chuck\Response\Response;
 use Conia\Request;
-
+use Conia\Sire\Schema;
 
 class LoginSchema extends Schema
 {
@@ -49,18 +48,18 @@ class Auth
                     ['error' => _('Incorrect username or password.')],
                     $schema->pristineValues()
                 ), 401);
-            } else {
-                return $response->json($user);
             }
-        } else {
-            $response->json(
-                array_merge(
-                    ['error' => _('Please provide username and password.')],
-                    $schema->pristineValues()
-                ),
-                400
-            );
+
+            return $response->json($user);
         }
+        $response->json(
+            array_merge(
+                ['error' => _('Please provide username and password.')],
+                $schema->pristineValues()
+            ),
+            400
+        );
+
 
         return $response;
     }

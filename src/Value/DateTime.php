@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Value;
 
-use \DateTimeImmutable;
-use \DateTimeZone;
-use \IntlDateFormatter;
 use Conia\Request;
-
+use DateTimeImmutable;
+use DateTimeZone;
+use IntlDateFormatter;
 
 class DateTime extends Value
 {
-    const FORMAT = 'Y-m-d H:i:s';
+    public const FORMAT = 'Y-m-d H:i:s';
 
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
@@ -36,6 +35,11 @@ class DateTime extends Value
         } else {
             $this->datetime = null;
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->format(static::FORMAT);
     }
 
     public function format(string $format): string
@@ -64,11 +68,6 @@ class DateTime extends Value
         }
 
         return '';
-    }
-
-    public function __toString(): string
-    {
-        return $this->format(static::FORMAT);
     }
 
     public function json(): mixed
