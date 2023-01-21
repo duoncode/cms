@@ -2,6 +2,7 @@
 *.mo
 .env
 composer.lock
+.php*.cache
 /run
 /data/
 /gui/dist/
