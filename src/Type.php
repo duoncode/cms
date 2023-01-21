@@ -4,38 +4,35 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use \Generator;
-use \RuntimeException;
-use \ValueError;
 use Conia\Field\Field;
 use Conia\Value\Value;
+use Generator;
+use RuntimeException;
+use ValueError;
 
-
-abstract class Type extends Model
+abstract class Type
 {
-    static protected string $name = '';
-    static protected string $template = '';
-    static protected array $permissions = [];
-    static protected int $columns = 12;
+    protected static string $name = '';
+    protected static string $template = '';
+    protected static array $permissions = [];
+    protected static int $columns = 12;
 
     protected array $list = [];
     protected array $fields = [];
 
-    public final function __construct(
+    final public function __construct(
         protected readonly Request $request,
         protected readonly array $data,
     ) {
         $this->init();
     }
 
-    abstract public function init(): void;
-    abstract public function title(): string;
-
-    public final function __get(string $name): Value
+    final public function __get(string $name): Value
     {
         if (!array_key_exists($name, $this->fields)) {
             $type = $this::class;
-            throw new RuntimeException("Type $type has no field '$name'.");
+
+            throw new RuntimeException("Type {$type} has no field '{$name}'.");
         }
 
         $field = $this->fields[$name];
@@ -44,11 +41,15 @@ abstract class Type extends Model
         return $field->value($this->request, $content);
     }
 
-    public final function __set(string $name, Field $field): void
+    final public function __set(string $name, Field $field): void
     {
         $this->list[] = $name;
         $this->fields[$name] = $field;
     }
+
+    abstract public function init(): void;
+
+    abstract public function title(): string;
 
     public function form(): Generator
     {
@@ -94,17 +95,6 @@ abstract class Type extends Model
         return static::className();
     }
 
-    protected function getJsonContent(): array
-    {
-        $result = [];
-
-        foreach ($this->list as $field) {
-            $result[$field] = $this->__get($field)->json();
-        }
-
-        return $result;
-    }
-
     public function json(): array
     {
         $data = $this->data;
@@ -116,5 +106,16 @@ abstract class Type extends Model
         ];
 
         return array_merge($data, $content);
+    }
+
+    protected function getJsonContent(): array
+    {
+        $result = [];
+
+        foreach ($this->list as $field) {
+            $result[$field] = $this->__get($field)->json();
+        }
+
+        return $result;
     }
 }

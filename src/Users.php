@@ -4,46 +4,47 @@ declare(strict_types=1);
 
 namespace Conia;
 
-use Conia\Puma\Database;
+use Conia\Quma\Database;
 
-
-class Users extends Model
+class Users
 {
-    protected Database $db;
-
-    public static function byLogin(string $login): ?array
+    public function __construct(protected Database $db)
     {
-        return self::db()->users->get([
+    }
+
+    public function byLogin(string $login): ?array
+    {
+        return $this->db->users->get([
             'login' => $login,
         ])->one();
     }
 
-    public static function bySession(string $hash): ?array
+    public function bySession(string $hash): ?array
     {
-        return self::db()->users->get([
+        return $this->db->users->get([
             'sessionhash' => $hash,
         ])->one();
     }
 
-    public static function byId(string $uid): ?array
+    public function byId(string $uid): ?array
     {
-        return self::db()->users->get([
+        return $this->db->users->get([
             'uid' => $uid,
         ])->one();
     }
 
-    public static function remember(string $hash, string $userId, string $expires): bool
+    public function remember(string $hash, string $userId, string $expires): bool
     {
-        return self::db()->users->remember([
+        return $this->db->users->remember([
             'hash' => $hash,
             'user' => $userId,
             'expires' => $expires,
         ])->run();
     }
 
-    public static function forget(string $hash): bool
+    public function forget(string $hash): bool
     {
-        return self::db()->users->forget([
+        return $this->db->users->forget([
             'hash' => $hash,
         ])->run();
     }
