@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Hidehalo\Nanoid\Client;
+
 if (!function_exists('env')) {
     function env(string $key, bool|string|null $default = null): mixed
     {
@@ -22,5 +24,17 @@ if (!function_exists('env')) {
             'empty' => '',
             default => $value,
         };
+    }
+}
+
+if (!function_exists('nanoid')) {
+    function nanoid()
+    {
+        $client = new Client();
+
+        return $client->formattedId(
+            alphabet: '123456789bcdfghklmnpqrstvwxyz',
+            size: 13
+        );
     }
 }
