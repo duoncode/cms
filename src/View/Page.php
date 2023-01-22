@@ -32,6 +32,8 @@ class Page
             throw new HttpNotFound();
         }
 
+        error_log(print_r($data, true));
+
         $classname = $data['classname'];
 
         if (is_subclass_of($classname, Type::class)) {

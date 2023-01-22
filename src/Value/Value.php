@@ -7,6 +7,7 @@ namespace Conia\Core\Value;
 use Conia\Chuck\Request;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Locale;
+use Conia\Core\Type;
 
 abstract class Value
 {
@@ -14,6 +15,7 @@ abstract class Value
     protected readonly Locale $locale;
 
     public function __construct(
+        protected readonly Type $page,
         protected readonly Request $request,
         protected readonly array $data,
     ) {

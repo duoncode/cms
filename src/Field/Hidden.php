@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Field;
 
 use Conia\Chuck\Request;
+use Conia\Core\Type;
 use Conia\Core\Value\Any;
 
 /**
@@ -12,8 +13,8 @@ use Conia\Core\Value\Any;
  */
 class Hidden extends Field
 {
-    public function value(Request $request, array $data): Any
+    public function value(Type $page, Request $request, array $data): Any
     {
-        return new Any($request, $data);
+        return new Any($page, $request, $data);
     }
 }

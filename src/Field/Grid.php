@@ -6,11 +6,12 @@ namespace Conia\Core\Field;
 
 use Conia\Chuck\Request;
 use Conia\Core\Field\Field;
-use Conia\Core\Value\Matrix as MatrixValue;
+use Conia\Core\Type;
+use Conia\Core\Value\Grid as GridValue;
 use Conia\Core\Value\Value;
 use ValueError;
 
-class Matrix extends Field
+class Grid extends Field
 {
     public const I18N_MIXED = 'mixed';
     public const I18N_SEPARATE = 'separate';
@@ -20,7 +21,7 @@ class Matrix extends Field
 
     public function __toString(): string
     {
-        return 'Matrix Field';
+        return 'Grid Field';
     }
 
     public function columns(int $columns): static
@@ -47,7 +48,7 @@ class Matrix extends Field
             return $this;
         }
 
-        throw new ValueError('Wrong i18n value. Use the Matrix class constants');
+        throw new ValueError('Wrong i18n value. Use the Grid class constants');
     }
 
     public function getI18N(): string
@@ -55,8 +56,8 @@ class Matrix extends Field
         return $this->i18n;
     }
 
-    public function value(Request $request, array $data): Value
+    public function value(Type $page, Request $request, array $data): Value
     {
-        return new MatrixValue($request, $data);
+        return new GridValue($page, $request, $data);
     }
 }

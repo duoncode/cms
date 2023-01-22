@@ -33,7 +33,6 @@ abstract class Type
         protected readonly array $data,
     ) {
         $this->initFields();
-        error_log(print_r($data, true));
     }
 
     final public function __get(string $field): Value
@@ -47,7 +46,7 @@ abstract class Type
         $content = $this->data['content'][$field] ?? [];
         $field = $this->{$field};
 
-        return $field->value($this->request, $content);
+        return $field->value($this, $this->request, $content);
     }
 
     public function init(): void
