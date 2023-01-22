@@ -11,7 +11,6 @@ use ValueError;
 class Matrix extends Value
 {
     protected readonly Generator $localizedData;
-    protected string $prefix = 'conia-';
 
     public function __construct(Request $request, array $data)
     {
@@ -29,28 +28,22 @@ class Matrix extends Value
         return $this->render();
     }
 
-    public function render(?string $type = null, mixed ...$args)
+    public function render(string $tag = 'div', string $prefix = 'conia'): string
     {
-        $context = array_merge([
-            'prefix' => $this->prefix,
-            'columns' => $this->data['columns'] ?? 12,
-            'fields' => $this->localizedData,
-        ]);
+        $columns = $this->data['columns'] ?? 12;
 
-        if ($type) {
-            return $this->request->renderer($type, ...$args)->render($context);
-        }
+        $out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix . '-grid-columns-' . $columns . '">';
 
-        $config = $this->request->config();
-        $engine = $config->templateEngine();
+        foreach ($this->localizedData as $value);
 
-        return $engine->render('matrix', array_merge(
-            [
-                'request' => $this->request,
-                'config' => $config,
-            ],
-            $context,
-        ));
+        $out .= '</' . $tag . '>';
+
+        return $out;
+    }
+
+    public function renderValue(string $prefix, string $type, string $content): string
+    {
+        return '<div class="' . $prefix . '-' . $type;
     }
 
     public function json(): mixed
@@ -61,18 +54,12 @@ class Matrix extends Value
         ];
     }
 
-    public function prefix(string $prefix): static
-    {
-        $this->prefix = $prefix;
-
-        return $this;
-    }
-
     protected function getField(array $field): Value
     {
         return match ($field['type']) {
             'wysiwyg' => new Html($this->request, $field),
-            'image' => new Images($this->request, $field),
+            'image' => new Image($this->request, $field),
+            'text' => new Text($this->request, $field),
         };
     }
 
@@ -96,7 +83,13 @@ class Matrix extends Value
                 }
             }
 
-            $locale = $this->locale->fallback();
+            $fallback = $this->locale->fallback();
+
+            if ($locale === $fallback) {
+                break;
+            }
+
+            $locale = $fallback;
         }
     }
 }

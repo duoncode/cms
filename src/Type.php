@@ -33,6 +33,7 @@ abstract class Type
         protected readonly array $data,
     ) {
         $this->initFields();
+        error_log(print_r($data, true));
     }
 
     final public function __get(string $field): Value

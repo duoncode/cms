@@ -52,13 +52,12 @@ class DateTime extends Value
     }
 
     public function localize(
-        ?string $locale = null,
         int $dateFormat = IntlDateFormatter::MEDIUM,
         int $timeFormat = IntlDateFormatter::MEDIUM,
     ): string {
         if ($this->datetime) {
             $formatter = new IntlDateFormatter(
-                $locale ?: $this->locale->id,
+                $this->request->get('locale')->id,
                 $dateFormat,
                 $timeFormat,
                 $this->timezone

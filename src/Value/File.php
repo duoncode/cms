@@ -6,14 +6,8 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Locale;
 
-class File
+class File extends Value
 {
-    public function __construct(
-        protected readonly array $file,
-        protected readonly Locale $locale
-    ) {
-    }
-
     public function __toString(): string
     {
         return htmlspecialchars($this->file['file']);
@@ -21,7 +15,8 @@ class File
 
     public function title(): string
     {
-        $locale = $this->locale;
+        $locale = $this->request->get('locale');
+        assert($locale instanceof Locale);
 
         while ($locale) {
             $value = $this->file[$this->locale->id];

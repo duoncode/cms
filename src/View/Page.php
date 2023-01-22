@@ -42,16 +42,16 @@ class Page
                 return Response::fromFactory($this->factory)->json($page->json());
             }
 
-            try {
-                // Render the template
-                $render = new Render('template', $page::template());
+            // try {
+            // Render the template
+            $render = new Render('template', $page::template());
 
-                return $render->response($this->registry, [
-                    'page' => $page,
-                ]);
-            } catch (Throwable) {
-                throw new HttpBadRequest();
-            }
+            return $render->response($this->registry, [
+                'page' => $page,
+            ]);
+            // } catch (Throwable) {
+            //     throw new HttpBadRequest();
+            // }
         }
 
         throw new HttpBadRequest();

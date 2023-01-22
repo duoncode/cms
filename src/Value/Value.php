@@ -7,12 +7,10 @@ namespace Conia\Core\Value;
 use Conia\Chuck\Request;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Locale;
-use ReflectionClass;
 
 abstract class Value
 {
     public readonly string $fieldType;
-    public readonly string $valueType;
     protected readonly Locale $locale;
 
     public function __construct(
@@ -21,7 +19,6 @@ abstract class Value
     ) {
         $this->locale = $request->get('locale');
         $this->fieldType = $data['type'];
-        $this->valueType = (new ReflectionClass($this))->getShortName();
     }
 
     public function __get(string $name): mixed
