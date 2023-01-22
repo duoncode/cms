@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Chuck\Error\NoSuchProperty;
 use Conia\Chuck\Request;
+use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Locale;
 use ReflectionClass;
 
@@ -19,7 +19,7 @@ abstract class Value
         protected readonly Request $request,
         protected readonly array $data,
     ) {
-        $this->locale = $request->locale();
+        $this->locale = $request->get('locale');
         $this->fieldType = $data['type'];
         $this->valueType = (new ReflectionClass($this))->getShortName();
     }
