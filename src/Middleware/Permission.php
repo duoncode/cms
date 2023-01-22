@@ -6,12 +6,13 @@ namespace Conia\Core\Middleware;
 
 use Conia\Chuck\Error\HttpForbidden;
 use Conia\Chuck\Error\HttpUnauthorized;
+use Conia\Chuck\Middleware;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Auth;
 use Conia\Core\Permissions;
 
-class Permission
+class Permission implements Middleware
 {
     public function __construct(protected string $permission)
     {
