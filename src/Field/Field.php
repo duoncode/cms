@@ -10,22 +10,20 @@ use Conia\Core\Value\Value;
 abstract class Field
 {
     public readonly string $type;
-    public readonly array $args;
     protected ?string $description = null;
     protected bool $multilang = false;
     protected bool $required = false;
     protected ?int $width = null;
     protected ?int $height = null;
 
-    public function __construct(protected string $label, mixed ...$args)
+    public function __construct(protected string $label)
     {
-        $this->type = basename(str_replace('\\', '/', $this::class));
-        $this->args = $args;
+        $this->type = $this::class;
     }
 
-    public static function new(string $label, mixed ...$args): static
+    public static function new(string $label): static
     {
-        return new static($label, ...$args);
+        return new static($label);
     }
 
     public function validate(): bool
@@ -36,6 +34,13 @@ abstract class Field
     public function description(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function label(string $label): static
+    {
+        $this->label = $label;
 
         return $this;
     }
