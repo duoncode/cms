@@ -6,7 +6,9 @@ namespace Conia\Core;
 
 use Conia\Chuck\Group;
 use Conia\Core\App;
+use Conia\Core\Middleware\Locale;
 use Conia\Core\Middleware\Permission;
+use Conia\Core\Middleware\Session;
 use Conia\Core\View\Auth;
 use Conia\Core\View\Page;
 use Conia\Core\View\Panel;
@@ -38,7 +40,7 @@ class Routes
             '/...slug',
             [Page::class, 'catchall'],
             'conia:catchall',
-        );
+        )->middleware(Session::class, Locale::class);
     }
 
     protected function addIndex(App $app): void
