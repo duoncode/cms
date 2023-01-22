@@ -12,9 +12,9 @@ class Session extends BaseSession
     protected string $authCookie;
 
     public function __construct(
-        protected readonly string $name = '',
-        protected readonly array $options = [],
-        protected readonly ?SessionHandlerInterface $handler = null,
+        string $name = '',
+        array $options = [],
+        ?SessionHandlerInterface $handler = null,
     ) {
         parent::__construct($name, $options, $handler);
 
