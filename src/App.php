@@ -52,17 +52,22 @@ class App extends \Conia\Chuck\App
 
     public function database(
         string $dsn,
-        string|array $sql,
+        string|array $sql = null,
         string|array $migrations = null,
         array $options = [],
         bool $print = false
     ): void {
         $root = dirname(__DIR__);
-        $sql = array_merge([$root . '/db/sql'], is_array($sql) ? $sql : [$sql]);
-        $migrations = $migrations ? (is_array($migrations) ? $migrations : [$migrations]) : [];
-        $migrations = array_merge([$root . '/db/migrations'], $migrations);
+        $sql = array_merge(
+            [$root . '/db/sql'],
+            $sql ? (is_array($sql) ? $sql : [$sql]) : []
+        );
+        $migrations = array_merge(
+            [$root . '/db/migrations'],
+            $migrations ? (is_array($migrations) ? $migrations : [$migrations]) : []
+        );
 
-        $this->registry->add(Connetcion::class, new Connection(
+        $this->registry->add(Connection::class, new Connection(
             $dsn,
             $sql,
             $migrations,
