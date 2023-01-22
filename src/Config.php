@@ -79,4 +79,9 @@ class Config extends BaseConfig
     {
         $this->locales->setDefault($locale);
     }
+
+    public function locales(): Locales
+    {
+        return $this->locales;
+    }
 }

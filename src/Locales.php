@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Core\Session;
-use RuntimeException;
-use ValueError;
+use Conia\Chuck\Request;
+use Conia\Core\Exception\RuntimeException;
 
 class Locales
 {
@@ -39,20 +38,20 @@ class Locales
             return;
         }
 
-        throw new ValueError('Locale does not exist. Add all your locales first before setting the default.');
+        throw new RuntimeException('Locale does not exist. Add all your locales first before setting the default.');
     }
 
-    public function negotiate(Request $request, Session $session): Locale
+    public function negotiate(Request $request): Locale
     {
         if (count($this->locales) === 0) {
             throw new RuntimeException('No locales available. Add at least your default language.');
         }
 
         if ($this->negotiator) {
-            return ($this->negotiator)($request, $session);
+            return ($this->negotiator)($request);
         }
 
-        return $this->fromRequest($request, $session);
+        return $this->fromRequest($request);
     }
 
     public function setNegotiator(Closure $func): void
@@ -60,7 +59,7 @@ class Locales
         $this->negotiator = $func;
     }
 
-    public function fromRequest(Request $request, Session $session): Locale
+    public function fromRequest(Request $request): Locale
     {
         $uri = $request->uri();
 
@@ -83,9 +82,13 @@ class Locales
         }
 
         // From session
-        $locale = $request->session()->get('locale', false);
-        if ($locale && $this->exists($locale)) {
-            return $this->locales[$locale];
+        $session = $request->get('session', null);
+        if ($session) {
+            $locale = $session->get('locale', false);
+
+            if ($locale && $this->exists($locale)) {
+                return $this->locales[$locale];
+            }
         }
 
         // From the locales the browser says the user accepts
