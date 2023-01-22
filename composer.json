@@ -19,7 +19,8 @@
         "conia/session": "dev-main",
         "conia/sizer": "dev-main",
         "hidehalo/nanoid-php": "^1.1",
-        "pestphp/pest": "2.x-dev"
+        "pestphp/pest": "2.x-dev",
+        "symfony/html-sanitizer": "6.3.x-dev"
     },
     "require-dev": {
         "conia/boiler": "dev-main",
