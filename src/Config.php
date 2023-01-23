@@ -21,11 +21,14 @@ class Config extends BaseConfig
     public function __construct(
         string $app,
         bool $debug = false,
-        string $env = ''
+        string $env = '',
+        array $settings = [],
     ) {
-        parent::__construct($app, $debug, $env);
+        $settings = array_merge([
+            'session.options' => [],
+        ], $settings);
 
-        $this->set('session.options', []);
+        parent::__construct($app, $debug, $env, $settings);
 
         $this->locales = new Locales();
         $this->types = new Types();
@@ -40,32 +43,38 @@ class Config extends BaseConfig
         return $this->debugPanel;
     }
 
-    public function setSecret(string $secret): void
+    public function secret(string $secret): void
     {
         $this->set('app.secret', $secret);
     }
 
-    public function setPanelUrl(string $url): void
+    public function assets(string $path, string $cache): void
+    {
+        $this->set('assets.path', $path);
+        $this->set('assets.cache', $cache);
+    }
+
+    public function panelUrl(string $url): void
     {
         $this->panelUrl = $url;
     }
 
-    public function panelUrl(): string
+    public function getPanelUrl(): string
     {
         return $this->debugPanel ? '/panel' : '/' . $this->panelUrl;
     }
 
-    public function setPanelTheme(string $url): void
+    public function panelTheme(string $url): void
     {
         $this->panelTheme = $url;
     }
 
-    public function setLocaleNegotiator(Closure $func): void
+    public function localeNegotiator(Closure $func): void
     {
         $this->locales->setNegotiator($func);
     }
 
-    public function addLocale(
+    public function locale(
         string $id,
         string $title,
         ?string $fallback = null,
@@ -75,7 +84,7 @@ class Config extends BaseConfig
         $this->locales->add($id, $title, $fallback, $domains, $urlPrefix);
     }
 
-    public function setDefaultLocale(string $locale): void
+    public function defaultLocale(string $locale): void
     {
         $this->locales->setDefault($locale);
     }

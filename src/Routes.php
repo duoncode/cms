@@ -20,7 +20,7 @@ class Routes
 
     public function __construct(protected Config $config)
     {
-        $this->panelUrl = $config->panelUrl();
+        $this->panelUrl = $config->getPanelUrl();
         $this->apiUrl = $this->panelUrl . '/api';
     }
 
