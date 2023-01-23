@@ -14,6 +14,7 @@ use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Pages;
 use Conia\Core\Type;
+use Conia\Quma\Database;
 use Throwable;
 
 class Page
@@ -50,6 +51,7 @@ class Page
 
             return $render->response($this->registry, [
                 'page' => $page,
+                'pages' => new Pages($this->registry->get(Database::class)),
             ]);
             // } catch (Throwable) {
             //     throw new HttpBadRequest();
