@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Locale;
-
 class File extends Value
 {
     public function __toString(): string
@@ -15,8 +13,7 @@ class File extends Value
 
     public function title(): string
     {
-        $locale = $this->request->get('locale');
-        assert($locale instanceof Locale);
+        $locale = $this->locale;
 
         while ($locale) {
             $value = $this->file[$this->locale->id];

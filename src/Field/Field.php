@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Field;
 
-use Conia\Chuck\Request;
 use Conia\Core\Type;
 use Conia\Core\Value\Value;
 
@@ -99,5 +98,5 @@ abstract class Field
         return $this->height;
     }
 
-    abstract public function value(Type $page, Request $request, array $data): Value;
+    abstract public function value(Type $page, array $data): Value;
 }

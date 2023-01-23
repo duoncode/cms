@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Conia\Chuck\Request;
+use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Attr\Description;
@@ -29,7 +30,8 @@ abstract class Type
     protected array $list = [];
 
     final public function __construct(
-        protected readonly Request $request,
+        public readonly Request $request,
+        public readonly Config $config,
         protected readonly array $data,
     ) {
         $this->initFields();
@@ -46,7 +48,7 @@ abstract class Type
         $content = $this->data['content'][$field] ?? [];
         $field = $this->{$field};
 
-        return $field->value($this, $this->request, $content);
+        return $field->value($this, $content);
     }
 
     public function init(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Field;
 
-use Conia\Chuck\Request;
 use Conia\Core\Field\Field;
 use Conia\Core\Type;
 use Conia\Core\Value\Grid as GridValue;
@@ -56,8 +55,8 @@ class Grid extends Field
         return $this->i18n;
     }
 
-    public function value(Type $page, Request $request, array $data): Value
+    public function value(Type $page, array $data): Value
     {
-        return new GridValue($page, $request, $data);
+        return new GridValue($page, $data);
     }
 }

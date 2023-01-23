@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Chuck\Request;
 use Conia\Core\Type;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -17,9 +16,9 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(Type $page, Request $request, array $data)
+    public function __construct(Type $page, array $data)
     {
-        parent::__construct($page, $request, $data);
+        parent::__construct($page, $data);
 
         if ($data['timezone'] ?? null) {
             $this->timezone = new DateTimeZone($data['timezone']);
@@ -58,7 +57,7 @@ class DateTime extends Value
     ): string {
         if ($this->datetime) {
             $formatter = new IntlDateFormatter(
-                $this->request->get('locale')->id,
+                $this->locale->id,
                 $dateFormat,
                 $timeFormat,
                 $this->timezone

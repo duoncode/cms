@@ -11,10 +11,9 @@ class Time extends DateTime
     public const FORMAT = 'H:i:s';
 
     public function localize(
-        ?string $locale = null,
         int $dateFormat = IntlDateFormatter::NONE,
         int $timeFormat = IntlDateFormatter::SHORT,
     ): string {
-        return parent::localize($locale, $dateFormat, $timeFormat);
+        return parent::localize($dateFormat, $timeFormat);
     }
 }

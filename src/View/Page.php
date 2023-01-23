@@ -11,6 +11,7 @@ use Conia\Chuck\Registry;
 use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
+use Conia\Core\Config;
 use Conia\Core\Pages;
 use Conia\Core\Type;
 use Throwable;
@@ -24,7 +25,7 @@ class Page
     ) {
     }
 
-    public function catchall(Request $request): Response
+    public function catchall(Request $request, Config $config): Response
     {
         $data = $this->pages->byUrl($request->uri()->getPath());
 
@@ -32,12 +33,11 @@ class Page
             throw new HttpNotFound();
         }
 
-        error_log(print_r($data, true));
 
         $classname = $data['classname'];
 
         if (is_subclass_of($classname, Type::class)) {
-            $page = new $classname($request, $data);
+            $page = new $classname($request, $config, $data);
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {

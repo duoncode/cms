@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Chuck\Request;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Locale;
 use Conia\Core\Type;
@@ -16,10 +15,9 @@ abstract class Value
 
     public function __construct(
         protected readonly Type $page,
-        protected readonly Request $request,
         protected readonly array $data,
     ) {
-        $this->locale = $request->get('locale');
+        $this->locale = $page->request->get('locale');
         $this->fieldType = $data['type'];
     }
 
