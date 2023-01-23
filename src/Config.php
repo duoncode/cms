@@ -19,12 +19,16 @@ class Config extends BaseConfig
     private bool $debugPanel = false;
 
     public function __construct(
-        string $app,
+        public readonly string $root,
+        string $app = 'conia',
         bool $debug = false,
         string $env = '',
         array $settings = [],
     ) {
         $settings = array_merge([
+            'path.public' => "{$root}/public",
+            'path.assets' => '/assets',
+            'path.cache' => '/cache',
             'session.options' => [],
         ], $settings);
 
@@ -48,10 +52,15 @@ class Config extends BaseConfig
         $this->set('app.secret', $secret);
     }
 
-    public function assets(string $path, string $cache): void
+    public function publicPath(string $path): void
     {
-        $this->set('assets.path', $path);
-        $this->set('assets.cache', $cache);
+        $this->set('path.public', $path);
+    }
+
+    public function assets(string $assets, string $cache): void
+    {
+        $this->set('path.assets', $assets);
+        $this->set('path.cache', $cache);
     }
 
     public function panelUrl(string $url): void
