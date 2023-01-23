@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Assets;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Locale;
 use Conia\Core\Type;
@@ -33,4 +34,15 @@ abstract class Value
     abstract public function __toString(): string;
 
     abstract public function json(): mixed;
+
+    protected function getAssets(): \Conia\Sizer\Assets
+    {
+        static $assets = null;
+
+        if (!$assets) {
+            $assets = Assets::fromConfig($this->page->config);
+        }
+
+        return $assets;
+    }
 }

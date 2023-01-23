@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Assets;
 use Conia\Core\Type;
 use Generator;
 use ValueError;
@@ -36,14 +37,22 @@ class Grid extends Value
         ];
     }
 
-    public function render(string $tag = 'div', string $prefix = 'conia'): string
+    public function columns(): int
     {
-        $columns = $this->data['columns'] ?? 12;
+        return (int)($this->data['columns'] ?? 12);
+    }
+
+    public function render(mixed ...$args): string
+    {
+        $args['tag'] = $tag = $args['tag'] ?? 'div';
+        $args['prefix'] = $prefix = $args['prefix'] ?? 'conia';
+
+        $columns = $this->columns();
 
         $out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix . '-grid-columns-' . $columns . '">';
 
         foreach ($this->localizedData as $value) {
-            $out .= $this->renderValue($prefix, $value);
+            $out .= $this->renderValue($prefix, $value, $args);
         }
 
         $out .= '</' . $tag . '>';
@@ -51,7 +60,7 @@ class Grid extends Value
         return $out;
     }
 
-    protected function renderValue(string $prefix, GridItem $value): string
+    protected function renderValue(string $prefix, GridItem $value, array $args): string
     {
         $colspan = $prefix . '-colspan-' . $value->data['colspan'];
         $rowspan = $prefix . '-rowspan-' . $value->data['rowspan'];
@@ -60,16 +69,22 @@ class Grid extends Value
         $out .= match ($value->type) {
             'html' => $value->data['value'],
             'text' => $value->data['value'],
-            'image' => $this->renderImage($value->data['value']),
+            'image' => $this->renderImage($value->data, $args),
         };
         $out .= '</div>';
 
         return $out;
     }
 
-    protected function renderImage(string $value): string
+    protected function renderImage(array $data, array $args): string
     {
-        return '<img src="/assets/page/' . $this->page->uid() . '/' . $value . '">';
+        $maxWidth = $args['maxImageWidth'] ?? 1280;
+        $path = 'page/' . $this->page->uid() . '/' . $data['value'];
+        $image = $this->getAssets()->image($path);
+        $resized = $image->resize((int)($maxWidth / $this->columns() * (int)($data['colspan'] ?? 12)));
+        $cachePath = $this->page->config->get('path.cache') . '/' . $resized->relative(true);
+
+        return "<img src=\"{$cachePath}\">";
     }
 
     protected function getMixed(array $data): Generator

@@ -11,8 +11,8 @@ class Assets extends \Conia\Sizer\Assets
         $public = $config->get('path.public');
 
         return new \Conia\Sizer\Assets(
-            $public . '/' . $config->get('path.assets'),
-            $public . '/' . $config->get('path.cache'),
+            $public . $config->get('path.assets'),
+            $public . $config->get('path.cache'),
         );
     }
 }
