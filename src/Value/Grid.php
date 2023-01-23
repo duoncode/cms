@@ -42,14 +42,22 @@ class Grid extends Value
         return (int)($this->data['columns'] ?? 12);
     }
 
+    // Supported args:
+    //
+    // - prefix: All css classes are prefixed with this value. Default 'conia'
+    // - tag: The tag of the container. Default 'div'
+    // - maxImageWidth: The maximum width of images. Images will be resized according to colspan. Default: 1280
+    // - class: An additional class added to the container
     public function render(mixed ...$args): string
     {
         $args['tag'] = $tag = $args['tag'] ?? 'div';
         $args['prefix'] = $prefix = $args['prefix'] ?? 'conia';
+        $args['class'] = $class = ($args['class'] ?? '' ? ' ' . $args['class'] : '');
 
         $columns = $this->columns();
 
-        $out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix . '-grid-columns-' . $columns . '">';
+        $out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix .
+            '-grid-columns-' . $columns . $class . '">';
 
         foreach ($this->localizedData as $value) {
             $out .= $this->renderValue($prefix, $value, $args);
