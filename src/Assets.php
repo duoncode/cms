@@ -4,15 +4,26 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-class Assets extends \Conia\Sizer\Assets
+use Conia\Chuck\Request;
+
+class Assets
 {
-    public static function fromConfig(Config $config): \Conia\Sizer\Assets
-    {
+    protected \Conia\Sizer\Assets $assets;
+
+    public function __construct(
+        protected readonly Request $request,
+        protected readonly Config $config
+    ) {
         $public = $config->get('path.public');
 
-        return new \Conia\Sizer\Assets(
+        $this->assets = new \Conia\Sizer\Assets(
             $public . $config->get('path.assets'),
             $public . $config->get('path.cache'),
         );
+    }
+
+    public function image(string $path): Image
+    {
+        return new Image($this->request, $this->config, $this->assets->image($path));
     }
 }
