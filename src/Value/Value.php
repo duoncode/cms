@@ -15,7 +15,7 @@ abstract class Value
     protected readonly Locale $locale;
     protected readonly string $fieldName;
     protected readonly array $data;
-    protected readonly bool $multiLang;
+    protected readonly bool $multilang;
 
     public function __construct(
         protected readonly Type $page,
@@ -25,7 +25,7 @@ abstract class Value
         $this->data = $context->data;
         $this->fieldName = $context->fieldName;
         $this->fieldType = $context->field->type;
-        $this->multiLang = $context->field->isMultiLang();
+        $this->multilang = $context->field->isMultiLang();
     }
 
     public function __get(string $name): mixed

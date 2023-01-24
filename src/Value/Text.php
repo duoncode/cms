@@ -13,19 +13,23 @@ class Text extends Value
 
     public function raw(): string
     {
-        $locale = $this->locale;
+        if ($this->multilang) {
+            $locale = $this->locale;
 
-        while ($locale) {
-            $value = $this->data[$locale->id] ?? null;
+            while ($locale) {
+                $value = $this->data['value'][$locale->id] ?? null;
 
-            if ($value) {
-                return $value;
+                if ($value) {
+                    return $value;
+                }
+
+                $locale = $locale->fallback();
             }
 
-            $locale = $locale->fallback();
+            return '';
         }
 
-        return '';
+        return $this->data['value'] ?? '';
     }
 
     public function json(): mixed

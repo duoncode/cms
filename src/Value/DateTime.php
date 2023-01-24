@@ -20,13 +20,13 @@ class DateTime extends Value
     {
         parent::__construct($page, $context);
 
-        if ($data['timezone'] ?? null) {
+        if ($this->data['timezone'] ?? null) {
             $this->timezone = new DateTimeZone($this->data['timezone']);
         } else {
             $this->timezone = null;
         }
 
-        if ($data['value'] ?? null) {
+        if ($this->data['value'] ?? null) {
             $this->datetime = DateTimeImmutable::createFromFormat(
                 static::FORMAT,
                 $this->data['value'],

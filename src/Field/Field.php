@@ -63,7 +63,7 @@ abstract class Field
         return $this->required;
     }
 
-    public function multilang(bool $multilang): static
+    public function multilang(bool $multilang = true): static
     {
         $this->multilang = $multilang;
 

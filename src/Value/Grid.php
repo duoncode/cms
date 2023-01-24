@@ -36,12 +36,12 @@ class Grid extends Value
         ];
     }
 
-    public function image(int $index = 0): ?Image
-    {
-        foreach ($this->localizedData as $value) {
-            $out .= $this->renderValue($prefix, $value, $args);
-        }
-    }
+    // public function image(int $index = 0): ?Image
+    // {
+    //     foreach ($this->localizedData as $value) {
+    //         $out .= $this->renderValue($prefix, $value, $args);
+    //     }
+    // }
 
     public function columns(): int
     {
@@ -93,7 +93,7 @@ class Grid extends Value
     protected function renderImage(array $data, array $args): string
     {
         $maxWidth = $args['maxImageWidth'] ?? 1280;
-        $path = 'page/' . $this->page->uid() . '/' . $data['value'];
+        $path = 'page/' . $this->page->uid() . '/' . $data['file'];
         $image = $this->getAssets()->image($path);
         $resized = $image->resize((int)($maxWidth / $this->columns() * (int)($data['colspan'] ?? 12)));
         $cachePath = $this->page->config->get('path.cache') . '/' . $resized->relative(true);
