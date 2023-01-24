@@ -6,11 +6,12 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Type;
 use Conia\Core\Value\Html as HtmlValue;
+use Conia\Core\Value\ValueContext;
 
 class Html extends Field
 {
-    public function value(Type $page, string $field, array $data): HtmlValue
+    public function value(Type $page, ValueContext $context): HtmlValue
     {
-        return new HtmlValue($page, $field, $data);
+        return new HtmlValue($page, $context);
     }
 }

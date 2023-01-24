@@ -6,14 +6,15 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Type;
 use Conia\Core\Value\Any;
+use Conia\Core\Value\ValueContext;
 
 /**
  * A field type which is not shown in the admin.
  */
 class Hidden extends Field
 {
-    public function value(Type $page, string $field, array $data): Any
+    public function value(Type $page, ValueContext $context): Any
     {
-        return new Any($page, $field, $data);
+        return new Any($page, $context);
     }
 }

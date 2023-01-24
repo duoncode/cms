@@ -8,6 +8,7 @@ use Conia\Core\Field\Field;
 use Conia\Core\Type;
 use Conia\Core\Value\Grid as GridValue;
 use Conia\Core\Value\Value;
+use Conia\Core\Value\ValueContext;
 use ValueError;
 
 class Grid extends Field
@@ -55,8 +56,8 @@ class Grid extends Field
         return $this->i18n;
     }
 
-    public function value(Type $page, string $field, array $data): Value
+    public function value(Type $page, ValueContext $context): Value
     {
-        return new GridValue($page, $field, $data);
+        return new GridValue($page, $context);
     }
 }

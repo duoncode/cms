@@ -13,14 +13,19 @@ abstract class Value
 {
     public readonly string $fieldType;
     protected readonly Locale $locale;
+    protected readonly string $fieldName;
+    protected readonly array $data;
+    protected readonly bool $multiLang;
 
     public function __construct(
         protected readonly Type $page,
-        protected readonly string $field,
-        protected readonly array $data,
+        ValueContext $context,
     ) {
         $this->locale = $page->request->get('locale');
-        $this->fieldType = $data['type'];
+        $this->data = $context->data;
+        $this->fieldName = $context->fieldName;
+        $this->fieldType = $context->field->type;
+        $this->multiLang = $context->field->isMultiLang();
     }
 
     public function __get(string $name): mixed
@@ -29,7 +34,7 @@ abstract class Value
             return $this->data[$name];
         }
 
-        throw new NoSuchProperty("The field '{$this->field}' doesn't have the property '{$name}'");
+        throw new NoSuchProperty("The field '{$this->fieldName}' doesn't have the property '{$name}'");
     }
 
     abstract public function __toString(): string;

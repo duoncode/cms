@@ -16,12 +16,12 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(Type $page, string $field, array $data)
+    public function __construct(Type $page, ValueContext $context)
     {
-        parent::__construct($page, $field, $data);
+        parent::__construct($page, $context);
 
         if ($data['timezone'] ?? null) {
-            $this->timezone = new DateTimeZone($data['timezone']);
+            $this->timezone = new DateTimeZone($this->data['timezone']);
         } else {
             $this->timezone = null;
         }
@@ -29,7 +29,7 @@ class DateTime extends Value
         if ($data['value'] ?? null) {
             $this->datetime = DateTimeImmutable::createFromFormat(
                 static::FORMAT,
-                $data['value'],
+                $this->data['value'],
                 $this->timezone,
             );
         } else {

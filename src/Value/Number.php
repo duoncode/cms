@@ -10,12 +10,12 @@ class Number extends Value
 {
     public readonly ?int $value;
 
-    public function __construct(Type $page, string $field, array $data)
+    public function __construct(Type $page, ValueContext $context)
     {
-        parent::__construct($page, $field, $data);
+        parent::__construct($page, $context);
 
-        if (is_numeric($data['value'] ?? null)) {
-            $this->value = (int)$data['value'];
+        if (is_numeric($this->data['value'] ?? null)) {
+            $this->value = (int)$this->data['value'];
         } else {
             $this->value = null;
         }

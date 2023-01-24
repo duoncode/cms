@@ -6,11 +6,12 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Type;
 use Conia\Core\Value\Time as TimeValue;
+use Conia\Core\Value\ValueContext;
 
 class Time extends Field
 {
-    public function value(Type $page, string $field, array $data): TimeValue
+    public function value(Type $page, ValueContext $context): TimeValue
     {
-        return new TimeValue($page, $field, $data);
+        return new TimeValue($page, $context);
     }
 }

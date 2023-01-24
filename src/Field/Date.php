@@ -6,11 +6,12 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Type;
 use Conia\Core\Value\Date as DateValue;
+use Conia\Core\Value\ValueContext;
 
 class Date extends Field
 {
-    public function value(Type $page, string $field, array $data): DateValue
+    public function value(Type $page, ValueContext $context): DateValue
     {
-        return new DateValue($page, $field, $data);
+        return new DateValue($page, $context);
     }
 }

@@ -12,13 +12,13 @@ class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Type $page, string $field, array $data)
+    public function __construct(Type $page, ValueContext $context)
     {
-        parent::__construct($page, $field, $data);
+        parent::__construct($page, $context);
 
-        $this->localizedData = match ($data['i18n'] ?? null) {
-            'separate' => $this->getSeparate($data),
-            'mixed' => $this->getMixed($data),
+        $this->localizedData = match ($this->data['i18n'] ?? null) {
+            'separate' => $this->getSeparate($this->data),
+            'mixed' => $this->getMixed($this->data),
             default => throw new ValueError('Unknown i18n setting of Grid field'),
         };
     }
@@ -34,6 +34,13 @@ class Grid extends Value
             'columns' => $this->data['columns'] ?? null,
             'data' => $this->localizedData,
         ];
+    }
+
+    public function image(int $index = 0): ?Image
+    {
+        foreach ($this->localizedData as $value) {
+            $out .= $this->renderValue($prefix, $value, $args);
+        }
     }
 
     public function columns(): int

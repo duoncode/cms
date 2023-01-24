@@ -16,6 +16,7 @@ use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Value\Value;
+use Conia\Core\Value\ValueContext;
 use Generator;
 use ReflectionClass;
 use ReflectionProperty;
@@ -38,18 +39,18 @@ abstract class Type
         $this->initFields();
     }
 
-    final public function __get(string $field): Value
+    final public function __get(string $fieldName): Value
     {
-        if (!isset($this->{$field})) {
+        if (!isset($this->{$fieldName})) {
             $type = $this::class;
 
-            throw new NoSuchField("The field '{$field}' does not exist on Type '{$type}'.");
+            throw new NoSuchField("The field '{$fieldName}' does not exist on Type '{$type}'.");
         }
 
-        $content = $this->data['content'][$field] ?? [];
-        $fieldObj = $this->{$field};
+        $content = $this->data['content'][$fieldName] ?? [];
+        $field = $this->{$fieldName};
 
-        return $fieldObj->value($this, $field, $content);
+        return $field->value($this, new ValueContext($field, $fieldName, $content));
     }
 
     public function init(): void

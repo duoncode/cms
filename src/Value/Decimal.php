@@ -11,12 +11,12 @@ class Decimal extends Value
 {
     public readonly ?float $value;
 
-    public function __construct(Type $page, string $field, array $data)
+    public function __construct(Type $page, ValueContext $context)
     {
-        parent::__construct($page, $field, $data);
+        parent::__construct($page, $context);
 
-        if (is_numeric($data['value'] ?? null)) {
-            $this->value = floatval($data['value']);
+        if (is_numeric($this->data['value'] ?? null)) {
+            $this->value = floatval($this->data['value']);
         } else {
             $this->value = null;
         }

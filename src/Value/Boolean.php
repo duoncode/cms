@@ -10,12 +10,12 @@ class Boolean extends Value
 {
     public readonly bool $value;
 
-    public function __construct(Type $page, string $field, array $data)
+    public function __construct(Type $page, ValueContext $context)
     {
-        parent::__construct($page, $field, $data);
+        parent::__construct($page, $context);
 
-        if (is_bool($data['value'] ?? null)) {
-            $this->value = $data['value'];
+        if (is_bool($this->data['value'] ?? null)) {
+            $this->value = $this->data['value'];
         } else {
             $this->value = false;
         }

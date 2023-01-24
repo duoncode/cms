@@ -6,12 +6,12 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Type;
 use Conia\Core\Value\Text;
+use Conia\Core\Value\ValueContext;
 
 class Blocks extends Field
 {
-    public function value(Type $page, string $field, array $data): Text
+    public function value(Type $page, ValueContext $context): Text
     {
-        // TODO: use the correct value
-        return new Text($page, $field, $data);
+        return new Text($page, $context);
     }
 }
