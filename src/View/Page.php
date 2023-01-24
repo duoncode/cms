@@ -38,7 +38,8 @@ class Page
         $classname = $data['classname'];
 
         if (is_subclass_of($classname, Type::class)) {
-            $page = new $classname($request, $config, $data);
+            $pages = new Pages($this->registry->get(Database::class));
+            $page = new $classname($request, $config, $pages, $data);
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {
@@ -51,7 +52,7 @@ class Page
 
             return $render->response($this->registry, [
                 'page' => $page,
-                'pages' => new Pages($this->registry->get(Database::class)),
+                'pages' => $pages,
             ]);
             // } catch (Throwable) {
             //     throw new HttpBadRequest();
