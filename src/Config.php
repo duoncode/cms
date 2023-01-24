@@ -59,8 +59,8 @@ class Config extends BaseConfig
 
     public function assets(string $assets, string $cache): void
     {
-        $this->set('path.assets', $assets);
-        $this->set('path.cache', $cache);
+        $this->set('path.assets', '/' . ltrim($assets, '/'));
+        $this->set('path.cache', '/' . ltrim($cache, '/'));
     }
 
     public function panelUrl(string $url): void

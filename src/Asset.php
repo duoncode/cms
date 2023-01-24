@@ -8,7 +8,7 @@ use Conia\Chuck\Request;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Sizer;
 
-class Image
+class Asset
 {
     public function __construct(
         protected readonly Request $request,
@@ -17,7 +17,7 @@ class Image
     ) {
     }
 
-    public function resize(int $width = 0, int $height = 0, bool $crop = false): Image
+    public function resize(int $width = 0, int $height = 0, bool $crop = false): Asset
     {
         if ($this->image instanceof Sizer\CachedImage) {
             throw new RuntimeException('Image is already resized');

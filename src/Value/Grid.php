@@ -7,6 +7,7 @@ namespace Conia\Core\Value;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Grid as GridField;
+use Conia\Core\Field\Image as ImageField;
 use Conia\Core\Type;
 use Generator;
 
@@ -38,12 +39,43 @@ class Grid extends Value
         ];
     }
 
-    // public function image(int $index = 0): ?Image
-    // {
-    //     foreach ($this->localizedData as $value) {
-    //         $out .= $this->renderValue($prefix, $value, $args);
-    //     }
-    // }
+    public function image(int $index = 1): ?Image
+    {
+        $i = 0;
+
+        foreach ($this->localizedData as $value) {
+            if ($value->type === 'image') {
+                $i++;
+
+                if ($i === $index) {
+                    return (new ImageField('Inner Grid Field'))
+                        ->single()
+                        ->value(
+                            $this->page,
+                            new ValueContext($this->context->fieldName, $value->data)
+                        );
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public function hasImage(int $index = 1): bool
+    {
+        $i = 0;
+        foreach ($this->localizedData as $value) {
+            if ($value->type === 'image') {
+                $i++;
+
+                if ($i === $index) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     public function columns(): int
     {
@@ -94,13 +126,15 @@ class Grid extends Value
 
     protected function renderImage(array $data, array $args): string
     {
+        $file = $data['files'][0]['file'];
+        $title = $data['files'][0]['title'] ?? '';
         $maxWidth = $args['maxImageWidth'] ?? 1280;
-        $path = 'page/' . $this->page->uid() . '/' . $data['files'][0];
+        $path = $this->assetsPath() . $file;
         $image = $this->getAssets()->image($path);
         $resized = $image->resize((int)($maxWidth / $this->columns() * (int)($data['colspan'] ?? 12)));
-        $cachePath = $this->page->config->get('path.cache') . '/' . $resized->relative(true);
+        $url = $resized->url(true);
 
-        return "<img src=\"{$cachePath}\">";
+        return "<img src=\"{$url}\" alt=\"{$title}\">";
     }
 
     protected function getMixed(array $data): Generator

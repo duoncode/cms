@@ -17,10 +17,10 @@ class Image extends Field
     public function value(Type $page, ValueContext $context): Images|SingleImage
     {
         if ($this->single) {
-            return new Images($page, $this, $context);
+            return new SingleImage($page, $this, $context);
         }
 
-        return new SingleImage($page, $this, $context);
+        return new Images($page, $this, $context);
     }
 
     public function single(bool $single = true): static

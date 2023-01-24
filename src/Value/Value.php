@@ -21,7 +21,7 @@ abstract class Value
     public function __construct(
         protected readonly Type $page,
         protected readonly Field $field,
-        ValueContext $context,
+        protected readonly ValueContext $context,
     ) {
         $this->locale = $page->request->get('locale');
         $this->data = $context->data;
@@ -43,12 +43,17 @@ abstract class Value
 
     abstract public function json(): mixed;
 
-    protected function getAssets(): \Conia\Sizer\Assets
+    protected function assetsPath(): string
+    {
+        return 'page/' . $this->page->uid() . '/';
+    }
+
+    protected function getAssets(): Assets
     {
         static $assets = null;
 
         if (!$assets) {
-            $assets = Assets::fromConfig($this->page->config);
+            $assets = new Assets($this->page->request, $this->page->config);
         }
 
         return $assets;

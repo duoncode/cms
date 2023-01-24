@@ -22,8 +22,8 @@ class Assets
         );
     }
 
-    public function image(string $path): Image
+    public function image(string $path): Asset
     {
-        return new Image($this->request, $this->config, $this->assets->image($path));
+        return new Asset($this->request, $this->config, $this->assets->image($path));
     }
 }
