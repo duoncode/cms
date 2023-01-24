@@ -13,6 +13,6 @@ class Number extends Field
 {
     public function value(Type $page, ValueContext $context): NumberValue
     {
-        return new NumberValue($page, $context);
+        return new NumberValue($page, $this, $context);
     }
 }

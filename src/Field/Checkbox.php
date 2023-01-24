@@ -12,6 +12,6 @@ class Checkbox extends Field
 {
     public function value(Type $page, ValueContext $context): Boolean
     {
-        return new Boolean($page, $context);
+        return new Boolean($page, $this, $context);
     }
 }

@@ -12,6 +12,6 @@ class Text extends Field
 {
     public function value(Type $page, ValueContext $context): TextValue
     {
-        return new TextValue($page, $context);
+        return new TextValue($page, $this, $context);
     }
 }

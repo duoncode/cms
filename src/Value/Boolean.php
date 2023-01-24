@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Field\Field;
 use Conia\Core\Type;
 
 class Boolean extends Value
 {
     public readonly bool $value;
 
-    public function __construct(Type $page, ValueContext $context)
+    public function __construct(Type $page, Field $field, ValueContext $context)
     {
-        parent::__construct($page, $context);
+        parent::__construct($page, $field, $context);
 
         if (is_bool($this->data['value'] ?? null)) {
             $this->value = $this->data['value'];

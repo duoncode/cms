@@ -14,7 +14,7 @@ class File extends Field
 
     public function value(Type $page, ValueContext $context): Files
     {
-        return new Files($page, $context);
+        return new Files($page, $this, $context);
     }
 
     public function single(bool $single = true): static

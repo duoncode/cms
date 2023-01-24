@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Field\Field;
 use Conia\Core\Type;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -16,9 +17,9 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(Type $page, ValueContext $context)
+    public function __construct(Type $page, Field $field, ValueContext $context)
     {
-        parent::__construct($page, $context);
+        parent::__construct($page, $field, $context);
 
         if ($this->data['timezone'] ?? null) {
             $this->timezone = new DateTimeZone($this->data['timezone']);

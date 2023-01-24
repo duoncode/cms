@@ -6,6 +6,7 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Assets;
 use Conia\Core\Exception\NoSuchProperty;
+use Conia\Core\Field\Field;
 use Conia\Core\Locale;
 use Conia\Core\Type;
 
@@ -19,13 +20,14 @@ abstract class Value
 
     public function __construct(
         protected readonly Type $page,
+        protected readonly Field $field,
         ValueContext $context,
     ) {
         $this->locale = $page->request->get('locale');
         $this->data = $context->data;
         $this->fieldName = $context->fieldName;
-        $this->fieldType = $context->field->type;
-        $this->multilang = $context->field->isMultiLang();
+        $this->fieldType = $field->type;
+        $this->multilang = $field->isMultiLang();
     }
 
     public function __get(string $name): mixed

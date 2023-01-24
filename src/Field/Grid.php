@@ -58,6 +58,6 @@ class Grid extends Field
 
     public function value(Type $page, ValueContext $context): Value
     {
-        return new GridValue($page, $context);
+        return new GridValue($page, $this, $context);
     }
 }

@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Exception\ValueError;
+use Conia\Core\Field\Grid as GridField;
 use Conia\Core\Type;
 use Generator;
-use ValueError;
 
 class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Type $page, ValueContext $context)
+    public function __construct(Type $page, GridField $field, ValueContext $context)
     {
-        parent::__construct($page, $context);
+        parent::__construct($page, $field, $context);
 
         $this->localizedData = match ($this->data['i18n'] ?? null) {
             'separate' => $this->getSeparate($this->data),
@@ -93,7 +95,7 @@ class Grid extends Value
     protected function renderImage(array $data, array $args): string
     {
         $maxWidth = $args['maxImageWidth'] ?? 1280;
-        $path = 'page/' . $this->page->uid() . '/' . $data['file'];
+        $path = 'page/' . $this->page->uid() . '/' . $data['files'][0];
         $image = $this->getAssets()->image($path);
         $resized = $image->resize((int)($maxWidth / $this->columns() * (int)($data['colspan'] ?? 12)));
         $cachePath = $this->page->config->get('path.cache') . '/' . $resized->relative(true);
@@ -103,9 +105,7 @@ class Grid extends Value
 
     protected function getMixed(array $data): Generator
     {
-        foreach ($data['fields'] as $field) {
-            yield new GridItem($field['type'], $field);
-        }
+        throw new RuntimeException('Not implemented');
     }
 
     protected function getSeparate(array $data): Generator

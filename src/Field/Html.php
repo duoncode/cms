@@ -12,6 +12,6 @@ class Html extends Field
 {
     public function value(Type $page, ValueContext $context): HtmlValue
     {
-        return new HtmlValue($page, $context);
+        return new HtmlValue($page, $this, $context);
     }
 }

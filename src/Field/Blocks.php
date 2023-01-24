@@ -12,6 +12,6 @@ class Blocks extends Field
 {
     public function value(Type $page, ValueContext $context): Text
     {
-        return new Text($page, $context);
+        return new Text($page, $this, $context);
     }
 }

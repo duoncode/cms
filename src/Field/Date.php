@@ -12,6 +12,6 @@ class Date extends Field
 {
     public function value(Type $page, ValueContext $context): DateValue
     {
-        return new DateValue($page, $context);
+        return new DateValue($page, $this, $context);
     }
 }

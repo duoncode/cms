@@ -13,6 +13,6 @@ class Decimal extends Field
 {
     public function value(Type $page, ValueContext $context): DecimalValue
     {
-        return new DecimalValue($page, $context);
+        return new DecimalValue($page, $this, $context);
     }
 }

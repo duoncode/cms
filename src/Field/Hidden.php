@@ -15,6 +15,6 @@ class Hidden extends Field
 {
     public function value(Type $page, ValueContext $context): Any
     {
-        return new Any($page, $context);
+        return new Any($page, $this, $context);
     }
 }

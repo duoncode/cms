@@ -50,7 +50,7 @@ abstract class Type
         $content = $this->data['content'][$fieldName] ?? [];
         $field = $this->{$fieldName};
 
-        return $field->value($this, new ValueContext($field, $fieldName, $content));
+        return $field->value($this, new ValueContext($fieldName, $content));
     }
 
     public function init(): void

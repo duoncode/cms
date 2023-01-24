@@ -12,6 +12,6 @@ class Markdown extends Field
 {
     public function value(Type $page, ValueContext $context): Html
     {
-        return new Html($page, $context);
+        return new Html($page, $this, $context);
     }
 }

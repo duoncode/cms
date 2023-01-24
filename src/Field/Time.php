@@ -12,6 +12,6 @@ class Time extends Field
 {
     public function value(Type $page, ValueContext $context): TimeValue
     {
-        return new TimeValue($page, $context);
+        return new TimeValue($page, $this, $context);
     }
 }

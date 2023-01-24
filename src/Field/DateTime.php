@@ -12,6 +12,6 @@ class DateTime extends Field
 {
     public function value(Type $page, ValueContext $context): DateTimeValue
     {
-        return new DateTimeValue($page, $context);
+        return new DateTimeValue($page, $this, $context);
     }
 }

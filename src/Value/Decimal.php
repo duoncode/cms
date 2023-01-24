@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Field\Field;
 use Conia\Core\Type;
 use NumberFormatter;
 
@@ -11,9 +12,9 @@ class Decimal extends Value
 {
     public readonly ?float $value;
 
-    public function __construct(Type $page, ValueContext $context)
+    public function __construct(Type $page, Field $field, ValueContext $context)
     {
-        parent::__construct($page, $context);
+        parent::__construct($page, $field, $context);
 
         if (is_numeric($this->data['value'] ?? null)) {
             $this->value = floatval($this->data['value']);

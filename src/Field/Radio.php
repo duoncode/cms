@@ -12,6 +12,6 @@ class Radio extends Field
 {
     public function value(Type $page, ValueContext $context): Str
     {
-        return new Str($page, $context);
+        return new Str($page, $this, $context);
     }
 }
