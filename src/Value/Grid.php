@@ -7,6 +7,7 @@ namespace Conia\Core\Value;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Grid as GridField;
+use Conia\Core\Field\Html as HtmlField;
 use Conia\Core\Field\Image as ImageField;
 use Conia\Core\Type;
 use Generator;
@@ -48,7 +49,7 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return (new ImageField('Inner Grid Field'))
+                    return (new ImageField("Grid {$this->context->fieldName} Image Field"))
                         ->single()
                         ->value(
                             $this->page,
@@ -58,7 +59,7 @@ class Grid extends Value
             }
         }
 
-        return 0;
+        return null;
     }
 
     public function hasImage(int $index = 1): bool
@@ -75,6 +76,31 @@ class Grid extends Value
         }
 
         return false;
+    }
+
+    public function excerpt(
+        int $words = 30,
+        string $allowedTags = '',
+        int $index = 1
+    ): string
+    {
+        $i = 0;
+
+        foreach ($this->localizedData as $value) {
+            if ($value->type === 'html') {
+                $i++;
+
+                if ($i === $index) {
+                    return (new HtmlField("Grid {$this->context->fieldName} Html Field"))
+                        ->value(
+                            $this->page,
+                            new ValueContext($this->context->fieldName, $value->data)
+                        )->excerpt($words, $allowedTags);
+                }
+            }
+        }
+
+        return '';
     }
 
     public function columns(): int

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
+use Conia\Core\Util\Html as HtmlUtil;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Html extends Text
@@ -18,16 +18,13 @@ class Html extends Text
         ?HtmlSanitizerConfig $config = null,
         bool $removeEmptyLines = true,
     ): string {
-        $config = $config ?: (new HtmlSanitizerConfig())
-            // Allow "safe" elements and attributes. All scripts will be removed
-            // as well as other dangerous behaviors like CSS injection
-            ->allowSafeElements();
-        $sanitizer = new HtmlSanitizer($config);
-        $result = $sanitizer->sanitize($this->raw());
+        return HtmlUtil::sanitize($this->raw(), $config, $removeEmptyLines);
+    }
 
-        // also remove empty lines
-        return $removeEmptyLines ?
-            preg_replace("/(^[\r\n]*|[\r\n]+)[\\s\t]*[\r\n]+/", PHP_EOL, $result) :
-            $result;
+    public function excerpt(
+        int $limit = 30,
+        string $allowedTags = '<a><i><b><em><strong>',
+    ): string {
+        return HtmlUtil::excerpt($this->raw(), $limit, $allowedTags);
     }
 }
