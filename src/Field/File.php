@@ -11,9 +11,9 @@ class File extends Field
 {
     protected bool $single = false;
 
-    public function value(Type $page, array $data): Files
+    public function value(Type $page, string $field, array $data): Files
     {
-        return new Files($page, $data);
+        return new Files($page, $field, $data);
     }
 
     public function single(bool $single = true): static

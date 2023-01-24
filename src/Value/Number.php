@@ -10,9 +10,9 @@ class Number extends Value
 {
     public readonly ?int $value;
 
-    public function __construct(Type $page, array $data)
+    public function __construct(Type $page, string $field, array $data)
     {
-        parent::__construct($page, $data);
+        parent::__construct($page, $field, $data);
 
         if (is_numeric($data['value'] ?? null)) {
             $this->value = (int)$data['value'];

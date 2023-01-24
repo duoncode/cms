@@ -55,8 +55,8 @@ class Grid extends Field
         return $this->i18n;
     }
 
-    public function value(Type $page, array $data): Value
+    public function value(Type $page, string $field, array $data): Value
     {
-        return new GridValue($page, $data);
+        return new GridValue($page, $field, $data);
     }
 }

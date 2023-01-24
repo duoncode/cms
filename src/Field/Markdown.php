@@ -9,8 +9,8 @@ use Conia\Core\Value\Html;
 
 class Markdown extends Field
 {
-    public function value(Type $page, array $data): Html
+    public function value(Type $page, string $field, array $data): Html
     {
-        return new Html($page, $data);
+        return new Html($page, $field, $data);
     }
 }

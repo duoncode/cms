@@ -9,8 +9,8 @@ use Conia\Core\Value\DateTime as DateTimeValue;
 
 class DateTime extends Field
 {
-    public function value(Type $page, array $data): DateTimeValue
+    public function value(Type $page, string $field, array $data): DateTimeValue
     {
-        return new DateTimeValue($page, $data);
+        return new DateTimeValue($page, $field, $data);
     }
 }

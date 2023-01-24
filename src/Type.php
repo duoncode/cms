@@ -32,6 +32,7 @@ abstract class Type
     final public function __construct(
         public readonly Request $request,
         public readonly Config $config,
+        protected readonly Pages $pages,
         protected readonly array $data,
     ) {
         $this->initFields();
@@ -46,9 +47,9 @@ abstract class Type
         }
 
         $content = $this->data['content'][$field] ?? [];
-        $field = $this->{$field};
+        $fieldObj = $this->{$field};
 
-        return $field->value($this, $content);
+        return $fieldObj->value($this, $field, $content);
     }
 
     public function init(): void

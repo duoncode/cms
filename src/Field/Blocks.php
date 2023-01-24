@@ -9,9 +9,9 @@ use Conia\Core\Value\Text;
 
 class Blocks extends Field
 {
-    public function value(Type $page, array $data): Text
+    public function value(Type $page, string $field, array $data): Text
     {
         // TODO: use the correct value
-        return new Text($page, $data);
+        return new Text($page, $field, $data);
     }
 }

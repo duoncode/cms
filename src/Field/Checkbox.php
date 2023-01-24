@@ -9,8 +9,8 @@ use Conia\Core\Value\Boolean;
 
 class Checkbox extends Field
 {
-    public function value(Type $page, array $data): Boolean
+    public function value(Type $page, string $field, array $data): Boolean
     {
-        return new Boolean($page, $data);
+        return new Boolean($page, $field, $data);
     }
 }

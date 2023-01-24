@@ -9,8 +9,8 @@ use Conia\Core\Value\Text as TextValue;
 
 class Text extends Field
 {
-    public function value(Type $page, array $data): TextValue
+    public function value(Type $page, string $field, array $data): TextValue
     {
-        return new TextValue($page, $data);
+        return new TextValue($page, $field, $data);
     }
 }

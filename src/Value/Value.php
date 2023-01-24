@@ -16,6 +16,7 @@ abstract class Value
 
     public function __construct(
         protected readonly Type $page,
+        protected readonly string $field,
         protected readonly array $data,
     ) {
         $this->locale = $page->request->get('locale');
@@ -28,7 +29,7 @@ abstract class Value
             return $this->data[$name];
         }
 
-        throw new NoSuchProperty("The field doesn't have the property '{$name}'");
+        throw new NoSuchProperty("The field '{$this->field}' doesn't have the property '{$name}'");
     }
 
     abstract public function __toString(): string;

@@ -16,9 +16,9 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(Type $page, array $data)
+    public function __construct(Type $page, string $field, array $data)
     {
-        parent::__construct($page, $data);
+        parent::__construct($page, $field, $data);
 
         if ($data['timezone'] ?? null) {
             $this->timezone = new DateTimeZone($data['timezone']);

@@ -98,5 +98,5 @@ abstract class Field
         return $this->height;
     }
 
-    abstract public function value(Type $page, array $data): Value;
+    abstract public function value(Type $page, string $field, array $data): Value;
 }

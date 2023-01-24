@@ -10,8 +10,8 @@ use Conia\Core\Value\Options  as OptionsValue;
 
 class Options extends Field
 {
-    public function value(Type $page, array $data): OptionsValue
+    public function value(Type $page, string $field, array $data): OptionsValue
     {
-        return new OptionsValue($page, $data);
+        return new OptionsValue($page, $field, $data);
     }
 }

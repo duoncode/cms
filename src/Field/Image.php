@@ -12,9 +12,9 @@ class Image extends Field
 {
     protected bool $single = false;
 
-    public function value(Type $page, array $data): Images
+    public function value(Type $page, string $field, array $data): Images
     {
-        return new Images($page, $data);
+        return new Images($page, $field, $data);
     }
 
     public function single(bool $single = true): static

@@ -9,8 +9,8 @@ use Conia\Core\Value\Str;
 
 class Radio extends Field
 {
-    public function value(Type $page, array $data): Str
+    public function value(Type $page, string $field, array $data): Str
     {
-        return new Str($page, $data);
+        return new Str($page, $field, $data);
     }
 }

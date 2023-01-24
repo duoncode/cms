@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Assets;
 use Conia\Core\Type;
 use Generator;
 use ValueError;
@@ -13,9 +12,9 @@ class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Type $page, array $data)
+    public function __construct(Type $page, string $field, array $data)
     {
-        parent::__construct($page, $data);
+        parent::__construct($page, $field, $data);
 
         $this->localizedData = match ($data['i18n'] ?? null) {
             'separate' => $this->getSeparate($data),

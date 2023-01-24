@@ -12,8 +12,8 @@ use Conia\Core\Value\Any;
  */
 class Hidden extends Field
 {
-    public function value(Type $page, array $data): Any
+    public function value(Type $page, string $field, array $data): Any
     {
-        return new Any($page, $data);
+        return new Any($page, $field, $data);
     }
 }

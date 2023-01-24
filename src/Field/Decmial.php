@@ -10,8 +10,8 @@ use Conia\Core\Value\Decimal as DecimalValue;
 
 class Decimal extends Field
 {
-    public function value(Type $page, array $data): DecimalValue
+    public function value(Type $page, string $field, array $data): DecimalValue
     {
-        return new DecimalValue($page, $data);
+        return new DecimalValue($page, $field, $data);
     }
 }

@@ -9,8 +9,8 @@ use Conia\Core\Value\Time as TimeValue;
 
 class Time extends Field
 {
-    public function value(Type $page, array $data): TimeValue
+    public function value(Type $page, string $field, array $data): TimeValue
     {
-        return new TimeValue($page, $data);
+        return new TimeValue($page, $field, $data);
     }
 }
