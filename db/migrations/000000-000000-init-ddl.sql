@@ -68,7 +68,7 @@ EXCEPTION WHEN unique_violation THEN
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER update_users_01_changed_trigger BEFORE UPDATE ON conia.users
+CREATE TRIGGER update_users_01_change_trigger BEFORE UPDATE ON conia.users
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
 CREATE TRIGGER update_users_02_audit_trigger AFTER UPDATE
     ON conia.users FOR EACH ROW EXECUTE PROCEDURE
@@ -139,9 +139,30 @@ EXCEPTION WHEN unique_violation THEN
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER update_pages_01_changed_trigger BEFORE UPDATE ON conia.pages
+CREATE FUNCTION conia.check_if_deletable() RETURNS trigger
+   LANGUAGE plpgsql AS
+$$BEGIN
+    IF (
+        OLD.deleted IS NOT NULL
+        AND (
+            SELECT count(*)
+            FROM conia.menuitems mi
+            WHERE
+                mi.data->>type = 'page'
+                AND mi.data->>page = OLD.uid
+        ) > 0
+    )
+    THEN
+        RAISE EXCEPTION 'Page is still referenced in a menu';
+    END IF;
+
+    RETURN OLD;
+END;$$;
+CREATE TRIGGER update_pages_01_delete_trigger BEFORE UPDATE ON conia.pages
+   FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
+CREATE TRIGGER update_pages_02_change_trigger BEFORE UPDATE ON conia.pages
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
-CREATE TRIGGER update_pages_02_audit_trigger AFTER UPDATE
+CREATE TRIGGER update_pages_03_audit_trigger AFTER UPDATE
     ON conia.pages FOR EACH ROW EXECUTE PROCEDURE
     conia.process_pages_audit();
 
@@ -186,15 +207,9 @@ CREATE TRIGGER update_drafts_01_audit_trigger AFTER UPDATE
     conia.process_drafts_audit();
 
 
-
-CREATE TABLE conia.itemtypes (
-    type text NOT NULL CHECK (char_length(type) <= 32),
-    CONSTRAINT pk_itemtypes PRIMARY KEY (type)
-);
-
-
 CREATE TABLE conia.menues (
     menu text NOT NULL CHECK (char_length(menu) <= 32),
+    description text NOT NULL CHECK (char_length(description) <= 128),
     CONSTRAINT pk_menues PRIMARY KEY (menu)
 );
 
@@ -202,29 +217,13 @@ CREATE TABLE conia.menues (
 CREATE TABLE conia.menuitems (
     item integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) = 13),
-    type text NOT NULL,
     menu text NOT NULL,
     displayorder smallint NOT NULL,
-    title jsonb NOT NULL,
-    settings jsonb NOT NULL,
-    CONSTRAINT pk_menuitems PRIMARY KEY (item, type),
+    data jsonb NOT NULL,
+    CONSTRAINT pk_menuitems PRIMARY KEY (item),
     CONSTRAINT uc_menuitems_uid UNIQUE (uid),
-    CONSTRAINT fk_menuitems_itemtypes FOREIGN KEY (type)
-        REFERENCES conia.itemtypes (type) ON UPDATE CASCADE,
     CONSTRAINT fk_menuitems_menues FOREIGN KEY (menu)
         REFERENCES conia.menues (menu) ON UPDATE CASCADE
-);
-
-
-CREATE TABLE conia.linkedpages (
-    item integer NOT NULL,
-    page integer NOT NULL,
-    type text NOT NULL CHECK (type = 'page'),
-    CONSTRAINT pk_menupages PRIMARY KEY (item),
-    CONSTRAINT fk_linkedpages_menuitems FOREIGN KEY (item, type)
-        REFERENCES conia.menuitems (item, type) ON UPDATE CASCADE,
-    CONSTRAINT fk_linkedpages_pages FOREIGN KEY (page)
-        REFERENCES conia.pages (page)
 );
 
 
