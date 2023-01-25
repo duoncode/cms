@@ -22,6 +22,7 @@ return $config->setRules([
     'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
     'multiline_comment_opening_closing' => false,
     'multiline_whitespace_before_semicolons' => false,
+    'no_alternative_syntax' => ['fix_non_monolithic_code' => false],
     'no_extra_blank_lines' => false,
     'no_unused_imports' => false,
     'no_whitespace_before_comma_in_array' => true,
