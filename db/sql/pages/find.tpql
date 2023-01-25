@@ -21,4 +21,9 @@ FROM
         ue.usr = p.editor
 WHERE
     p.deleted IS NULL
-    <?= $query ?>;
+<?php if (isset($condition)) : ?>
+    <?= $condition ?>;
+<?php endif ?>
+<?php if (isset($url)) : ?>
+    AND u.url = :url
+<?php endif ?>

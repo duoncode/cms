@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Core\Exception\RuntimeException;
+use Conia\Chuck\Request;
 use Conia\Core\Type;
 use Conia\Quma\Database;
+use Iterator;
 
 class Pages
 {
-    public function __construct(protected readonly Database $db)
-    {
+    public function __construct(
+        protected readonly Database $db,
+        protected readonly Request $request,
+        protected readonly Config $config,
+    ) {
     }
 
     public function byUrl(string $url): ?array
     {
-        $page = $this->db->pages->byUrl([
+        $page = $this->db->pages->find([
             'url' => $url,
         ])->one();
 
@@ -32,13 +36,27 @@ class Pages
         array $types = [],
         int $limit = 0,
         string $order = '',
-    ): string {
+    ): Iterator {
         $contentCondition = $this->contentCondition($query);
         $typesCondition = $this->typesCondition($types);
         $limitStatement = $limit > 0 ? ' LIMIT ' . (string)$limit : '';
         $orderStatement = $this->orderStatement($order);
 
-        return $contentCondition . $typesCondition . $limitStatement . $orderStatement;
+        return $this->runQuery(
+            $contentCondition . $typesCondition . $orderStatement . $limitStatement
+        );
+    }
+
+    protected function runQuery(string $condition): Iterator
+    {
+        $pages = $this->db->pages->find(['condition' => $condition])->lazy();
+
+        foreach ($pages as $page) {
+            $class = $page['classname'];
+            $page['content'] = json_decode($page['content'], true);
+
+            yield new $class($this->request, $this->config, $this, $page);
+        }
     }
 
     protected function contentCondition(string $query): string
@@ -64,7 +82,7 @@ class Pages
         return match ($booleanOperator) {
             'AND' => 'AND (' . implode(' AND ', $expressions) . ')',
             'OR' => 'AND (' . implode(' OR ', $expressions) . ')',
-            default => $expression[0],
+            default => 'AND ' . $expressions[0],
         };
     }
 
@@ -76,7 +94,7 @@ class Pages
             if (class_exists($type) && is_subclass_of($type, Type::class)) {
                 $result[] = 'pt.classname = ' . $this->db->quote($type);
             } else {
-                throw new RuntimeException('Invalid type used in query');
+                $result[] = 'pt.name = ' . $this->db->quote($type);
             }
         }
 

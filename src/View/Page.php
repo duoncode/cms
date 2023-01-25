@@ -14,7 +14,6 @@ use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Pages;
 use Conia\Core\Type;
-use Conia\Quma\Database;
 use Throwable;
 
 class Page
@@ -26,7 +25,7 @@ class Page
     ) {
     }
 
-    public function catchall(Request $request, Config $config): Response
+    public function catchall(Request $request, Config $config, Pages $pages): Response
     {
         $data = $this->pages->byUrl($request->uri()->getPath());
 
@@ -35,11 +34,10 @@ class Page
         }
 
 
-        $classname = $data['classname'];
+        $class = $data['classname'];
 
-        if (is_subclass_of($classname, Type::class)) {
-            $pages = new Pages($this->registry->get(Database::class));
-            $page = new $classname($request, $config, $pages, $data);
+        if (is_subclass_of($class, Type::class)) {
+            $page = new $class($request, $config, $pages, $data);
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {

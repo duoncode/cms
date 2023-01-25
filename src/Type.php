@@ -87,7 +87,7 @@ abstract class Type
             return static::$name;
         }
 
-        return static::className();
+        return strtolower(static::className());
     }
 
     public function uid(): string
@@ -101,7 +101,7 @@ abstract class Type
             return static::$template;
         }
 
-        return static::className();
+        return static::name();
     }
 
     public function json(): array
