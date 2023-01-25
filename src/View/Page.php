@@ -12,7 +12,7 @@ use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Config;
-use Conia\Core\Pages;
+use Conia\Core\Finder;
 use Conia\Core\Type;
 use Throwable;
 
@@ -21,13 +21,12 @@ class Page
     public function __construct(
         protected readonly Factory $factory,
         protected readonly Registry $registry,
-        protected readonly Pages $pages,
     ) {
     }
 
-    public function catchall(Request $request, Config $config, Pages $pages): Response
+    public function catchall(Request $request, Config $config, Finder $find): Response
     {
-        $data = $this->pages->byUrl($request->uri()->getPath());
+        $data = $find->page->byUrl($request->uri()->getPath());
 
         if (!$data) {
             throw new HttpNotFound();
@@ -37,7 +36,7 @@ class Page
         $class = $data['classname'];
 
         if (is_subclass_of($class, Type::class)) {
-            $page = new $class($request, $config, $pages, $data);
+            $page = new $class($request, $config, $find, $data);
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {
@@ -50,7 +49,7 @@ class Page
 
             return $render->response($this->registry, [
                 'page' => $page,
-                'pages' => $pages,
+                'find' => $find,
             ]);
             // } catch (Throwable) {
             //     throw new HttpBadRequest();

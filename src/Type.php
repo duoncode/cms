@@ -15,6 +15,7 @@ use Conia\Core\Field\Attr\MultiLang;
 use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
+use Conia\Core\Finder;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
 use Generator;
@@ -33,7 +34,7 @@ abstract class Type
     final public function __construct(
         public readonly Request $request,
         public readonly Config $config,
-        protected readonly Pages $pages,
+        public readonly Finder $find,
         protected readonly array $data,
     ) {
         $this->initFields();

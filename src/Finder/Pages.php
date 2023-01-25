@@ -2,20 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Core\Finder;
 
 use Conia\Chuck\Request;
+use Conia\Core\Config;
+use Conia\Core\Finder;
 use Conia\Core\Type;
 use Conia\Quma\Database;
 use Iterator;
 
 class Pages
 {
+    public readonly Database $db;
+    public readonly Request $request;
+    public readonly Config $config;
+
     public function __construct(
-        protected readonly Database $db,
-        protected readonly Request $request,
-        protected readonly Config $config,
+        protected readonly Finder $find,
     ) {
+        $this->db = $find->db;
+        $this->request = $find->request;
+        $this->config = $find->config;
     }
 
     public function byUrl(string $url): ?array
@@ -55,7 +62,7 @@ class Pages
             $class = $page['classname'];
             $page['content'] = json_decode($page['content'], true);
 
-            yield new $class($this->request, $this->config, $this, $page);
+            yield new $class($this->request, $this->config, $this->find, $page);
         }
     }
 
