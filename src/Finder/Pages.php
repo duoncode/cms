@@ -9,13 +9,20 @@ use Conia\Core\Config;
 use Conia\Core\Finder;
 use Conia\Core\Type;
 use Conia\Quma\Database;
+use Generator;
 use Iterator;
 
-class Pages
+class Pages implements Iterator
 {
     public readonly Database $db;
     public readonly Request $request;
     public readonly Config $config;
+
+    protected string $whereFields = '';
+    protected string $whereTypes = '';
+    protected string $limit = '';
+    protected string $order = '';
+    protected Generator $result;
 
     public function __construct(
         protected readonly Finder $find,
@@ -25,45 +32,75 @@ class Pages
         $this->config = $find->config;
     }
 
-    public function byUrl(string $url): ?array
+    public function find(string $query): self
     {
-        $page = $this->db->pages->find([
-            'url' => $url,
-        ])->one();
+        $this->whereFields = $this->contentCondition($query);
 
-        if ($page) {
-            $page['content'] = json_decode($page['content'], true);
-        }
-
-        return $page;
+        return $this;
     }
 
-    public function find(
-        string $query,
-        array $types = [],
-        int $limit = 0,
-        string $order = '',
-    ): Iterator {
-        $contentCondition = $this->contentCondition($query);
-        $typesCondition = $this->typesCondition($types);
-        $limitStatement = $limit > 0 ? ' LIMIT ' . (string)$limit : '';
-        $orderStatement = $this->orderStatement($order);
+    public function types(string ...$types): self
+    {
+        $this->whereTypes = $this->typesCondition($types);
 
-        return $this->runQuery(
-            $contentCondition . $typesCondition . $orderStatement . $limitStatement
-        );
+        return $this;
     }
 
-    protected function runQuery(string $condition): Iterator
+    public function order(string ...$order): self
     {
-        $pages = $this->db->pages->find(['condition' => $condition])->lazy();
+        $this->order = $this->orderStatement(implode(',', $order));
 
-        foreach ($pages as $page) {
-            $class = $page['classname'];
-            $page['content'] = json_decode($page['content'], true);
+        return $this;
+    }
 
-            yield new $class($this->request, $this->config, $this->find, $page);
+    public function limit(int $limit): self
+    {
+        $this->limit = $limit > 0 ? ' LIMIT ' . (string)$limit : '';
+
+        return $this;
+    }
+
+    public function rewind(): void
+    {
+        if (!isset($this->result)) {
+            $this->fetchResult();
         }
+        $this->result->rewind();
+    }
+
+    public function current(): Type
+    {
+        if (!isset($this->result)) {
+            $this->fetchResult();
+        }
+
+        $page = $this->result->current();
+
+        $class = $page['classname'];
+        $page['content'] = json_decode($page['content'], true);
+
+        return new $class($this->request, $this->config, $this->find, $page);
+    }
+
+    public function key(): int
+    {
+        return $this->result->key();
+    }
+
+    public function next(): void
+    {
+        $this->result->next();
+    }
+
+    public function valid(): bool
+    {
+        return $this->result->valid();
+    }
+
+    protected function fetchResult(): void
+    {
+        $condition = $this->whereFields . $this->whereTypes . $this->order . $this->limit;
+        $this->result = $this->db->pages->find(['condition' => $condition])->lazy();
     }
 
     protected function contentCondition(string $query): string

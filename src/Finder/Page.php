@@ -35,4 +35,13 @@ class Page
 
         return $page;
     }
+
+    public function find(
+        string $query,
+        array $types = [],
+        int $limit = 0,
+        string $order = '',
+    ): array {
+        return [];
+    }
 }
