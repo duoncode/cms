@@ -10,6 +10,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "php": ">=8.2",
         "conia/chuck": "dev-main",
         "conia/cli": "dev-main",
         "conia/i18n": "dev-main",
