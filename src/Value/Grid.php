@@ -80,10 +80,9 @@ class Grid extends Value
 
     public function excerpt(
         int $words = 30,
-        string $allowedTags = '',
+        string $allowedTags = '<a><i><b><u><em><strong>',
         int $index = 1
-    ): string
-    {
+    ): string {
         $i = 0;
 
         foreach ($this->localizedData as $value) {
