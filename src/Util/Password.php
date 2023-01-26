@@ -6,14 +6,13 @@ namespace Conia\Core\Util;
 
 use Conia\Core\Config;
 
-const CONIA_DEFAULT_PW_ENTROPY = 40.0;
-
-
 class Password
 {
+    public const DEFAULT_PASSWORD_ENTROPY = 40.0;
+
     public function __construct(
         protected string|int|null $algo = null,
-        protected float $entropy = CONIA_DEFAULT_PW_ENTROPY,
+        protected float $entropy = self::DEFAULT_PASSWORD_ENTROPY,
     ) {
         if ($this->algo === null) {
             $this->algo = self::hasArgon2() ? PASSWORD_ARGON2ID : PASSWORD_BCRYPT;
@@ -22,7 +21,7 @@ class Password
 
     public static function fromConfig(Config $config): self
     {
-        $entropy = $config->get('password.entropy', CONIA_DEFAULT_PW_ENTROPY);
+        $entropy = $config->get('password.entropy', self::DEFAULT_PASSWORD_ENTROPY);
         $defaultAlgo = self::hasArgon2() ? PASSWORD_ARGON2ID : PASSWORD_BCRYPT;
         $algo = $config->get('password.algorithm', $defaultAlgo);
 

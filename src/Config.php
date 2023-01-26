@@ -30,6 +30,8 @@ class Config extends BaseConfig
             'path.assets' => '/assets',
             'path.cache' => '/cache',
             'session.options' => [],
+            // 'password.algorithm' => PASSWORD_* PHP constant
+            // 'password.entropy' => float
         ], $settings);
 
         parent::__construct($app, $debug, $env, $settings);

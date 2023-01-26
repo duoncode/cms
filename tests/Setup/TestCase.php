@@ -19,8 +19,8 @@ class TestCase extends BaseTestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function config(bool $debug = false): Config
+    public function config(array $settings = [], bool $debug = false): Config
     {
-        return new Config('conia', debug: $debug);
+        return new Config('conia', debug: $debug, settings: $settings);
     }
 }

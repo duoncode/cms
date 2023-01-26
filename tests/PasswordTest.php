@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Conia\Core\Config;
 use Conia\Core\Tests\Setup\TestCase;
 use Conia\Core\Util\Password;
 
@@ -34,12 +35,15 @@ test('Password verify', function () {
 
 
 test('Password init from config', function () {
+    $config = new Config('conia');
     $hasArgon = Password::hasArgon2();
 
     if ($hasArgon) {
-        $pw = Password::fromConfig($this->config());
+        $pw = Password::fromConfig($config);
         expect(str_starts_with($pw->hash('evil-chuck-666'), '$argon2id$v'))->toBe(true);
     }
+
+    $config->set('password.algorithm', PASSWORD_BCRYPT);
 
     $pw = Password::fromConfig($this->config([
         'password.algorithm' => PASSWORD_BCRYPT,

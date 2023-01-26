@@ -7,6 +7,8 @@ use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 
-test('Add database connection', function () {
-    new Config('chuck');
+test('Init Conig', function () {
+    $config = new Config('conia');
+
+    expect($config->app())->toBe('conia');
 });
