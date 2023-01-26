@@ -12,9 +12,9 @@ class Strings
     public static function entropy(string $str): float
     {
         $classes = [
-            // lower case uncode characters
+            // lower case unicode characters
             '/\p{Ll}/',
-            // upper case uncode characters
+            // upper case unicode characters
             '/\p{Lu}/',
             // unicode numbers
             '/\p{N}/',
