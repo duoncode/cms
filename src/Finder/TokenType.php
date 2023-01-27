@@ -24,15 +24,12 @@ enum TokenType
     case And;
     case Or;
 
-    // Right hand values: Literals
+    // Operands
     case String;
     case Number;
     case Boolean;
     case Null;
-
-    // Left hand values: Fields
+    case Keyword;
     case Field;
-
-    // Right hand values: Identifiers like 'now'
-    case Identifier;
+    case Content;
 }

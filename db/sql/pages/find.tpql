@@ -9,6 +9,7 @@ SELECT
     coalesce(ue.display, coalesce(ue.username, ue.email)) AS editor,
     p.created,
     p.changed,
+    p.deleted,
     u.url,
     p.content
 FROM
@@ -20,7 +21,9 @@ FROM
     INNER JOIN conia.users ue ON
         ue.usr = p.editor
 WHERE
+<?php if ($deleted) : ?>
     p.deleted IS NULL
+<?php endif ?>
 <?php if (isset($condition)) : ?>
     <?= $condition ?>;
 <?php endif ?>

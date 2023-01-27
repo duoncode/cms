@@ -135,7 +135,9 @@ final class QueryLexer
             if ($valid && !$this->atEnd()) {
                 $this->advance();
             } else {
-                $this->addToken(TokenGroup::Operand, TokenType::Identifier);
+                $lexeme = $this->getLexeme();
+                $type = $this->getIdentifierType($lexeme);
+                $this->tokens[] = new Token(TokenGroup::Operand, $type, $this->start, $lexeme);
 
                 break;
             }
@@ -206,15 +208,6 @@ final class QueryLexer
         );
     }
 
-    private function addToken(TokenGroup $group, TokenType $type): void
-    {
-        $length = $this->current - $this->start;
-        $slice = array_slice($this->source, $this->start, $length);
-        $lexeme = implode('', $slice);
-
-        $this->tokens[] = new Token($group, $type, $this->start, $lexeme);
-    }
-
     private function advance(): string
     {
         $result = $this->source[$this->current];
@@ -259,6 +252,49 @@ final class QueryLexer
     private function atEnd(): bool
     {
         return $this->current > $this->length - 1;
+    }
+
+    private function addToken(TokenGroup $group, TokenType $type): void
+    {
+        $lexeme = $this->getLexeme();
+        $this->tokens[] = new Token($group, $type, $this->start, $lexeme);
+    }
+
+    private function getLexeme(): string
+    {
+        $length = $this->current - $this->start;
+        $slice = array_slice($this->source, $this->start, $length);
+
+        return implode('', $slice);
+    }
+
+    private function getIdentifierType(string $lexeme): TokenType
+    {
+        switch ($lexeme) {
+            case 'true':
+            case 'false':
+                return TokenType::Boolean;
+            case 'null':
+                return TokenType::Null;
+            case 'now':
+                return TokenType::Keyword;
+            case 'changed':
+            case 'classname':
+            case 'created':
+            case 'creator':
+            case 'editor':
+            case 'deleted':
+            case 'id':
+            case 'locked':
+            case 'published':
+            case 'type':
+            case 'uid':
+            case 'url':
+            case 'fulltext':
+                return TokenType::Field;
+            default:
+                return TokenType::Content;
+        }
     }
 
     /**
