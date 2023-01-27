@@ -6,7 +6,7 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
 
-final class QueryParser
+final class QueryLexer
 {
     private int $start = 0;
     private int $current = 0;
@@ -14,10 +14,6 @@ final class QueryParser
     /** @psalm-type list<Token> */
     private array $tokens = [];
 
-    private bool $leftHand = true;
-    private bool $afterValue = false;
-    private bool $readyForParen = true; // Initialize with true to allow starting with an opening paren
-    private bool $readyForSubExpression = true;
     private readonly array $source;
     private readonly int $length;
 
@@ -29,86 +25,47 @@ final class QueryParser
 
     public function tokens(): array
     {
-        $tokens = $this->scan();
-
-        $i = 0;
-        $operandsAndOperators = 0;
-
-        foreach ($tokens as $token) {
-            if ($token->kind === TokenKind::LeftParen) {
-                $i++;
-            } elseif ($token->kind === TokenKind::RightParen) {
-                $i--;
-            }
-
-            if ($i < 0) {
-                throw new ParserException('Parse error. Unbalanced parentheses');
-            }
-
-            if ($token->group !== TokenGroup::BooleanSymbol) {
-                $operandsAndOperators++;
-            }
-        }
-
-        if ($i > 0) {
-            throw new ParserException('Parse error. Unbalanced parentheses');
-        }
-
-        if ($operandsAndOperators % 3 !== 0) {
-            throw new ParserException('Parse error. Syntax error.');
-        }
-
-        return $tokens;
-    }
-
-    private function scan(): array
-    {
         while (!$this->atEnd()) {
             $this->start = $this->current;
-            $this->scanToken();
+            $this->scan();
         }
 
         return $this->tokens;
     }
 
-    private function scanToken(): void
+    private function scan(): void
     {
         $char = $this->advance();
 
         switch ($char) {
             case ' ':
             case "\t":
+            case "\n":
+            case "\r":
                 break;
             case '(':
-                if ($this->readyForParen) {
-                    $this->startSubExpression();
-                    $this->addParen(TokenKind::LeftParen);
-                } else {
-                    throw new ParserException($this->errorMessage('Wrong parenthesis position.'));
-                }
+                $this->addParen(TokenType::LeftParen);
                 break;
             case ')':
-                $this->addParen(TokenKind::RightParen);
-                $this->readyForParen = false;
-                $this->readyForSubExpression = false;
+                $this->addParen(TokenType::RightParen);
                 break;
             case '&':
-                $this->addBooleanOperator(TokenKind::And);
+                $this->addBooleanOperator(TokenType::And);
                 break;
             case '|':
-                $this->addBooleanOperator(TokenKind::Or);
+                $this->addBooleanOperator(TokenType::Or);
                 break;
             case '=':
-                $this->addOperator(TokenKind::Equal);
+                $this->addOperator(TokenType::Equal);
                 break;
             case '~':
-                $this->addOperator(TokenKind::Like);
+                $this->addOperator(TokenType::Like);
                 break;
             case '!':
                 if ($this->matchNext('=')) {
-                    $this->addOperator(TokenKind::Unequal);
+                    $this->addOperator(TokenType::Unequal);
                 } elseif ($this->matchNext('~')) {
-                    $this->addOperator(TokenKind::NotLike);
+                    $this->addOperator(TokenType::NotLike);
                 } else {
                     throw new ParserException("Invalid operator '!'. " .
                         "It can only be used in combination with '=' and '~', i. e. '!=' and '!~'");
@@ -116,26 +73,26 @@ final class QueryParser
                 break;
             case '>':
                 if ($this->matchNext('=')) {
-                    $this->addOperator(TokenKind::GreaterEqual);
+                    $this->addOperator(TokenType::GreaterEqual);
                 } else {
-                    $this->addOperator(TokenKind::Greater);
+                    $this->addOperator(TokenType::Greater);
                 }
                 break;
             case '<':
                 if ($this->matchNext('=')) {
-                    $this->addOperator(TokenKind::LessEqual);
+                    $this->addOperator(TokenType::LessEqual);
                 } else {
-                    $this->addOperator(TokenKind::Less);
+                    $this->addOperator(TokenType::Less);
                 }
                 break;
             case '"':
-                $this->validate();
+                // $this->validate();
                 $this->consumeString();
-                $this->readyForParen = false;
+                // $this->readyForParen = false;
                 break;
             default:
-                $this->validate();
-                $this->readyForParen = false;
+                // $this->validate();
+                // $this->readyForParen = false;
                 if (is_numeric($char)) {
                     $this->consumeNumber();
                 } elseif ($this->isIdentifier($char)) {
@@ -146,35 +103,19 @@ final class QueryParser
         }
     }
 
-    private function addOperator(TokenKind $kind): void
+    private function addOperator(TokenType $type): void
     {
-        if (!$this->leftHand) {
-            throw new ParserException(
-                $this->errorMessage("Multiple operators. E. g. '==' instead of '='")
-            );
-        }
-
-        $this->leftHand = false;
-        $this->afterValue = false;
-        $this->readyForParen = false;
-        $this->addToken(TokenGroup::Operator, $kind);
+        $this->addToken(TokenGroup::Operator, $type);
     }
 
-    private function addBooleanOperator(TokenKind $kind): void
+    private function addBooleanOperator(TokenType $type): void
     {
-        $this->leftHand = true;
-        $this->afterValue = false;
-        $this->readyForParen = true;
-        $this->readyForSubExpression = true;
-        $this->addToken(TokenGroup::BooleanSymbol, $kind);
-        $this->startSubExpression();
+        $this->addToken(TokenGroup::BooleanOperator, $type);
     }
 
-    private function addParen(TokenKind $kind): void
+    private function addParen(TokenType $type): void
     {
-        $this->leftHand = true;
-        $this->afterValue = false;
-        $this->addToken(TokenGroup::BooleanSymbol, $kind);
+        $this->addToken(TokenGroup::GroupSymbol, $type);
     }
 
     private function isIdentifier(string $char): bool
@@ -191,13 +132,7 @@ final class QueryParser
             if ($valid && !$this->atEnd()) {
                 $this->advance();
             } else {
-                $this->afterValue = true;
-
-                if ($this->leftHand) {
-                    $this->addToken(TokenGroup::Operand, TokenKind::Field);
-                } else {
-                    $this->addToken(TokenGroup::Operand, TokenKind::Identifier);
-                }
+                $this->addToken(TokenGroup::Operand, TokenType::Identifier);
 
                 break;
             }
@@ -206,10 +141,6 @@ final class QueryParser
 
     private function consumeNumber(): void
     {
-        $this->validateSide(
-            $this->errorMessage('Numbers are only allowed on the right hand side of an expression')
-        );
-
         $hasDot = false;
 
         while (true) {
@@ -227,8 +158,8 @@ final class QueryParser
 
                 $this->advance();
             } else {
-                $this->afterValue = true;
-                $this->addToken(TokenGroup::Operand, TokenKind::Number);
+                // $this->afterValue = true;
+                $this->addToken(TokenGroup::Operand, TokenType::Number);
                 break;
             }
         }
@@ -236,8 +167,6 @@ final class QueryParser
 
     private function consumeString(): void
     {
-        $this->validateSide('Strings are only allowed on the right hand side of an expression');
-
         while ($this->peek() !== '"' && !$this->atEnd()) {
             if ($this->peek() === '\\' && $this->peekNext() === '"') {
                 $this->advance();
@@ -262,61 +191,22 @@ final class QueryParser
             $lexeme = implode('', $slice);
         }
 
-        $this->afterValue = true;
+        // $this->afterValue = true;
         $this->tokens[] = new Token(
             TokenGroup::Operand,
-            TokenKind::String,
+            TokenType::String,
+            $this->start,
             str_replace('\\"', '"', $lexeme),
         );
     }
 
-    private function startSubExpression(): void
+    private function addToken(TokenGroup $group, TokenType $type): void
     {
-        if (!$this->readyForSubExpression) {
-            throw new ParserException(
-                $this->errorMessage(
-                    'Wrong position to start a sub expression.'
-                )
-            );
-        }
-
-        $this->leftHand = true;
-        $this->afterValue = false;
-    }
-
-    private function validate(): void
-    {
-        if ($this->afterValue) {
-            throw new ParserException(
-                $this->errorMessage(
-                    'Multiple values on on side of and expression. Like `field1 "string" = 1`.'
-                )
-            );
-        }
-
-        if (!$this->readyForSubExpression) {
-            throw new ParserException(
-                $this->errorMessage(
-                    'Invalid position to start a sub expression.'
-                )
-            );
-        }
-    }
-    private function validateSide(string $msg): void
-    {
-        if ($this->leftHand) {
-            throw new ParserException($this->errorMessage($msg));
-        }
-    }
-
-    private function addToken(TokenGroup $group, TokenKind $kind): void
-    {
-        $start = $this->start;
         $length = $this->current - $this->start;
-        $slice = array_slice($this->source, $start, $length);
+        $slice = array_slice($this->source, $this->start, $length);
         $lexeme = implode('', $slice);
 
-        $this->tokens[] = new Token($group, $kind, $lexeme);
+        $this->tokens[] = new Token($group, $type, $this->start, $lexeme);
     }
 
     private function advance(): string
@@ -363,11 +253,5 @@ final class QueryParser
     private function atEnd(): bool
     {
         return $this->current > $this->length - 1;
-    }
-
-    private function errorMessage($msg): string
-    {
-        return "Parse error at position {$this->current}. {$msg}\n" .
-            "Query: `{$this->query}`";
     }
 }

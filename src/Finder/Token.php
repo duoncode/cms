@@ -8,9 +8,9 @@ readonly class Token
 {
     public function __construct(
         public TokenGroup $group,
-        public TokenKind $kind,
+        public TokenType $type,
+        public int $position,
         public string $lexeme
-    )
-    {
+    ) {
     }
 }
