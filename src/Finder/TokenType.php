@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-enum TokenKind
+enum TokenType
 {
     // Single character tokens
     case LeftParen;
