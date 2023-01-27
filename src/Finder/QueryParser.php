@@ -11,9 +11,8 @@ final class QueryParser
     /** @psalm-type list<Token> */
     private array $tokens = [];
 
-    private int $parensBalance = 0;
-    private int $operandsAndOperators = 0;
-    private int $pos = 0;
+    private int $operandsAndOperators;
+    private int $pos;
     private int $length;
     private bool $readyForCondition = true;
 
@@ -34,37 +33,18 @@ final class QueryParser
      */
     public function tokens(): array
     {
-        $this->parensBalance = 0;
+        $parensBalance = 0;
         $this->operandsAndOperators = 0;
         $this->readyForCondition = true;
         $this->pos = 0;
 
-        $tokens = $this->tokens;
-
         while ($this->pos < $this->length) {
-            $token = $tokens[$this->pos];
+            $token = $this->tokens[$this->pos];
             $type = $token->type;
 
             switch ($token->group) {
                 case TokenGroup::Operand:
-                    if (!$this->readyForCondition) {
-                        $this->error($token, 'Invalid position for a condition.');
-                    }
-
-                    // Consume the whole condition if valid
-                    if (
-                        $this->pos + 2 <= $this->length
-                        && $tokens[$this->pos + 1]->group === TokenGroup::Operator
-                        && $tokens[$this->pos + 2]->group === TokenGroup::Operand
-                    ) {
-                        $this->operandsAndOperators += 3;
-                        $this->pos += 3;
-                    } else {
-                        $this->error($token, 'Invalid condition.');
-                    }
-
-                    $this->readyForCondition = false;
-
+                    $this->validateCondition($token);
                     break;
                 case TokenGroup::Operator:
                     // As we consume operators together with operands, it would
@@ -73,64 +53,110 @@ final class QueryParser
 
                     break;
                 case TokenGroup::BooleanOperator:
-                    if ($this->readyForCondition) {
-                        $this->error(
-                            $token,
-                            'Invalid position for boolean operator. ' .
-                                'Maybe you used && instead of & or || instead of |'
-                        );
-                    }
-
-                    $this->readyForCondition = true;
-                    $this->pos++;
-
+                    $this->validateBooleanOperator($token);
                     break;
                 case TokenGroup::GroupSymbol:
-                    if ($type === TokenType::RightParen) {
-                        if (
-                            $this->pos > 0
-                            && $tokens[$this->pos - 1]->type === TokenType::LeftParen
-                        ) {
-                            $this->error(
-                                $token,
-                                'Empty group.'
-                            );
-                        }
-
-                        $this->readyForCondition = false;
-                    } else {
-                        if (!$this->readyForCondition) {
-                            $this->error($token, 'Invalid position for parenthesis.');
-                        }
-                    }
-
-                    $this->pos++;
-
+                    $this->validateGroup($type, $token);
                     break;
             }
 
             if ($type === TokenType::LeftParen) {
-                $this->parensBalance++;
+                $parensBalance++;
             } elseif ($type === TokenType::RightParen) {
-                $this->parensBalance--;
+                $parensBalance--;
             }
 
-            if ($this->parensBalance < 0) {
+            if ($parensBalance < 0) {
                 throw new ParserException('Parse error. Unbalanced parentheses');
             }
         }
 
-        if ($this->parensBalance > 0) {
+        if ($parensBalance > 0) {
             throw new ParserException('Parse error. Unbalanced parentheses');
-        }
-
-        if ($this->operandsAndOperators % 3 !== 0) {
-            throw new ParserException('Parse error. Syntax error.');
         }
 
         return $this->tokens;
     }
 
+    /**
+     * @throws ParserException
+     */
+    private function validateCondition(Token $token): void
+    {
+        if (!$this->readyForCondition) {
+            $this->error($token, 'Invalid position for a condition.');
+        }
+
+        // Consume the whole condition if valid
+        if (
+            $this->pos + 2 <= $this->length
+            && $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
+            && $this->tokens[$this->pos + 2]->group === TokenGroup::Operand
+        ) {
+            $this->readyForCondition = false;
+            $this->operandsAndOperators += 3;
+            $this->pos += 3;
+        } elseif (
+            $this->pos + 2 <= $this->length
+            && $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
+            && $this->tokens[$this->pos + 2]->group === TokenGroup::Operator
+        ) {
+            $this->error($token, 'Multiple operators. Maybe you used == instead of =.');
+        } else {
+            $this->error($token, 'Invalid condition.');
+        }
+    }
+
+    /**
+     * @throws ParserException
+     */
+    private function validateBooleanOperator(Token $token): void
+    {
+        if ($this->readyForCondition) {
+            $this->error(
+                $token,
+                'Invalid position for boolean operator. ' .
+                    'Maybe you used && instead of & or || instead of |'
+            );
+        }
+
+        if ($this->pos >= $this->length - 1) {
+            $this->error($token, 'Boolean operator at the end of the expression.');
+        }
+
+        $this->readyForCondition = true;
+        $this->pos++;
+    }
+
+    /**
+     * @throws ParserException
+     */
+    private function validateGroup(TokenType $type, Token $token): void
+    {
+        if ($type === TokenType::RightParen) {
+            if (
+                $this->pos > 0
+                && $this->tokens[$this->pos - 1]->type === TokenType::LeftParen
+            ) {
+                $this->error(
+                    $token,
+                    'Empty group.'
+                );
+            }
+
+            $this->readyForCondition = false;
+        } else {
+            if (!$this->readyForCondition) {
+                $this->error($token, 'Invalid position for parenthesis.');
+            }
+        }
+
+        $this->pos++;
+    }
+
+    /**
+     * @throws ParserException
+     */
     private function error(Token $token, string $msg): never
     {
         $position = $token->position + 1;
