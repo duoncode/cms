@@ -24,12 +24,12 @@ CREATE TABLE conia.userroles (
 CREATE TABLE conia.users (
     usr integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) = 13),
-    username text CHECK (username NOT SIMILAR TO '%@%' AND char_length(username) > 0),
+    username text CHECK (char_length(username) > 0),
     email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5),
-    display text,
     pwhash text NOT NULL,
     userrole text NOT NULL,
     active boolean NOT NULL,
+    data jsonb NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
@@ -51,37 +51,54 @@ CREATE UNIQUE INDEX uix_users_email ON conia.users
 CREATE OR REPLACE FUNCTION conia.process_users_audit()
     RETURNS TRIGGER AS $$
 BEGIN
-    IF (TG_OP = 'UPDATE') THEN
-        INSERT INTO audit.users (
-            usr, username, email, display, pwhash,
-            userrole, active, editor, changed, deleted
-        ) VALUES (
-            OLD.usr, OLD.username, OLD.email, OLD.display, OLD.pwhash,
-            OLD.userrole, OLD.active, OLD.editor, OLD.changed, OLD.deleted
-        );
-        RETURN OLD;
-    END IF;
+    INSERT INTO audit.users (
+        usr, username, email, pwhash, userrole, active,
+        data, editor, changed, deleted
+    ) VALUES (
+        OLD.usr, OLD.username, OLD.email, OLD.pwhash, OLD.userrole, OLD.active,
+        OLD.data, OLD.editor, OLD.changed, OLD.deleted
+    );
 
-    RETURN NULL;
+    RETURN OLD;
 EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'duplicate users audit row skipped. user: %, changed: %', OLD.usr, OLD.changed;
+    RAISE WARNING 'Duplicate users audit row skipped. user: %, changed: %', OLD.usr, OLD.changed;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER update_users_01_change_trigger BEFORE UPDATE ON conia.users
+CREATE OR REPLACE FUNCTION conia.validate_user_credentials()
+    RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.username IS NULL AND NEW.email IS NULL THEN
+        RAISE EXCEPTION 'Either username or email must be provided.';
+        RETURN NULL;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER users_trigger_01_change BEFORE UPDATE ON conia.users
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
-CREATE TRIGGER update_users_02_audit_trigger AFTER UPDATE
+CREATE TRIGGER users_trigger_02_verification BEFORE INSERT OR UPDATE ON conia.users
+    FOR EACH ROW EXECUTE FUNCTION conia.validate_user_credentials();
+CREATE TRIGGER users_trigger_03_audit AFTER UPDATE
     ON conia.users FOR EACH ROW EXECUTE PROCEDURE
     conia.process_users_audit();
 
 
+CREATE TABLE conia.activationcodes (
+    usr integer NOT NULL,
+    uid text NOT NULL CHECK (char_length(uid) <= 128),
+    CONSTRAINT pk_activationcodes PRIMARY KEY (usr),
+    CONSTRAINT fk_activationcodes_users FOREIGN KEY (usr) REFERENCES conia.users(usr)
+);
+
 CREATE TABLE conia.loginsessions (
     hash text NOT NULL,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    usr integer NOT NULL,
     expires timestamp with time zone NOT NULL,
     CONSTRAINT pk_loginsessions PRIMARY KEY (hash),
-    CONSTRAINT uc_loginsessions_uid UNIQUE (uid),
-    CONSTRAINT fk_loginsessions_users FOREIGN KEY (uid) REFERENCES conia.users(uid),
+    CONSTRAINT uc_loginsessions_usr UNIQUE (usr),
+    CONSTRAINT fk_loginsessions_users FOREIGN KEY (usr) REFERENCES conia.users(usr),
     CONSTRAINT ck_loginsessions_hash CHECK (char_length(hash) <= 254)
 );
 
@@ -122,20 +139,17 @@ CREATE INDEX ix_pages_tsv ON conia.pages USING GIN(tsv);
 CREATE OR REPLACE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
-    IF (TG_OP = 'UPDATE') THEN
-        INSERT INTO audit.pages (
-            page, changed, published, hidden, locked,
-            pagetype, editor, deleted, content
-        ) VALUES (
-            OLD.page, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
-            OLD.pagetype, OLD.editor, OLD.deleted, OLD.content
-        );
-        RETURN OLD;
-    END IF;
+    INSERT INTO audit.pages (
+        page, changed, published, hidden, locked,
+        pagetype, editor, deleted, content
+    ) VALUES (
+        OLD.page, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
+        OLD.pagetype, OLD.editor, OLD.deleted, OLD.content
+    );
 
-    RETURN NULL;
+    RETURN OLD;
 EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'duplicate pages audit row skipped. page: %, changed: %', OLD.page, OLD.changed;
+    RAISE WARNING 'Duplicate pages audit row skipped. page: %, changed: %', OLD.page, OLD.changed;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -158,11 +172,11 @@ $$BEGIN
 
     RETURN OLD;
 END;$$;
-CREATE TRIGGER update_pages_01_delete_trigger BEFORE UPDATE ON conia.pages
+CREATE TRIGGER pages_trigger_01_delete BEFORE UPDATE ON conia.pages
    FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
-CREATE TRIGGER update_pages_02_change_trigger BEFORE UPDATE ON conia.pages
+CREATE TRIGGER pages_trigger_02_change BEFORE UPDATE ON conia.pages
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
-CREATE TRIGGER update_pages_03_audit_trigger AFTER UPDATE
+CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
     ON conia.pages FOR EACH ROW EXECUTE PROCEDURE
     conia.process_pages_audit();
 
@@ -195,14 +209,14 @@ BEGIN
     ) VALUES (
         OLD.page, OLD.changed, OLD.editor, OLD.content
     );
+
     RETURN OLD;
-    -- END IF;
 EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'duplicate drafts audit row skipped. draft: %, changed: %', OLD.page, OLD.changed;
+    RAISE WARNING 'Duplicate drafts audit row skipped. draft: %, changed: %', OLD.page, OLD.changed;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER update_drafts_01_audit_trigger AFTER UPDATE
+CREATE TRIGGER drafts_trigger_01_audit AFTER UPDATE
     ON conia.drafts FOR EACH ROW EXECUTE PROCEDURE
     conia.process_drafts_audit();
 
@@ -292,9 +306,10 @@ CREATE TABLE audit.users (
     usr integer NOT NULL,
     username text,
     email text,
-    display text,
     pwhash text NOT NULL,
     userrole text NOT NULL,
+    active boolean NOT NULL,
+    data jsonb NOT NULL,
     editor integer NOT NULL,
     changed timestamp with time zone NOT NULL DEFAULT now(),
     deleted timestamp with time zone,
