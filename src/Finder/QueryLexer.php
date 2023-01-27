@@ -67,8 +67,11 @@ final class QueryLexer
                 } elseif ($this->matchNext('~')) {
                     $this->addOperator(TokenType::NotLike);
                 } else {
-                    throw new ParserException("Invalid operator '!'. " .
-                        "It can only be used in combination with '=' and '~', i. e. '!=' and '!~'");
+                    $this->error(
+                        "Invalid operator '!'. " .
+                        "It can only be used in combination with '=' " .
+                        "and '~', i. e. '!=' and '!~'"
+                    );
                 }
                 break;
             case '>':
@@ -93,12 +96,12 @@ final class QueryLexer
             default:
                 // $this->validate();
                 // $this->readyForParen = false;
-                if (is_numeric($char)) {
-                    $this->consumeNumber();
+                if (is_numeric($char) || $char === '-') {
+                    $this->consumeNumber($char);
                 } elseif ($this->isIdentifier($char)) {
                     $this->consumeIdentifier();
                 } else {
-                    throw new ParserException("Unknown character '{$char}'");
+                    $this->error("Unknown character '{$char}'");
                 }
         }
     }
@@ -139,30 +142,33 @@ final class QueryLexer
         }
     }
 
-    private function consumeNumber(): void
+    private function consumeNumber(string $char): void
     {
-        $hasDot = false;
-
-        while (true) {
-            $char = $this->peek();
-            $isDot = $char === '.';
-
-            if ((is_numeric($this->peek()) || $isDot) && !$this->atEnd()) {
-                if ($isDot) {
-                    if ($hasDot) {
-                        throw new ParserException('Number with multiple dots');
-                    }
-
-                    $hasDot = true;
-                }
-
-                $this->advance();
-            } else {
-                // $this->afterValue = true;
-                $this->addToken(TokenGroup::Operand, TokenType::Number);
-                break;
+        if ($char === '-') {
+            if (!is_numeric($this->peek())) {
+                $this->error("Unknown character '-'");
             }
         }
+
+        while (is_numeric($this->peek())) {
+            $this->advance();
+        }
+
+        if ($this->peek() === '.') {
+            $this->advance();
+            $hasFraction = false;
+
+            while (is_numeric($this->peek())) {
+                $hasFraction = true;
+                $this->advance();
+            }
+
+            if (!$hasFraction) {
+                $this->error('Invalid number.');
+            }
+        }
+
+        $this->addToken(TokenGroup::Operand, TokenType::Number);
     }
 
     private function consumeString(): void
@@ -176,7 +182,7 @@ final class QueryLexer
         }
 
         if ($this->atEnd()) {
-            throw new ParserException('Unterminated string');
+            $this->error('Unterminated string.');
         }
 
         // Hop to the closing "
@@ -253,5 +259,16 @@ final class QueryLexer
     private function atEnd(): bool
     {
         return $this->current > $this->length - 1;
+    }
+
+    /**
+     * @throws ParserException
+     */
+    private function error(string $msg): never
+    {
+        throw new ParserException(
+            "Parse error at position {$this->start}. {$msg}\n" .
+                "Query: `{$this->query}`"
+        );
     }
 }
