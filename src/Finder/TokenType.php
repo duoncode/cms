@@ -12,24 +12,24 @@ enum TokenType
 
     // Operators
     case Equal;
-    case Unequal;
     case Greater;
     case GreaterEqual;
     case Less;
     case LessEqual;
     case Like;
-    case NotLike;
+    case Unequal;
+    case Unlike;
 
     // Boolean Operators
     case And;
     case Or;
 
     // Operands
-    case String;
-    case Number;
     case Boolean;
-    case Null;
-    case Keyword;
-    case Field;
     case Content;
+    case Field;
+    case Keyword;
+    case Null;
+    case Number;
+    case String;
 }

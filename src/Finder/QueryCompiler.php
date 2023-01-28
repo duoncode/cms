@@ -11,33 +11,21 @@ final class QueryCompiler
     public function __construct(public readonly array $builtins)
     {
     }
-    public function compileQuery(string $query): string
+
+    public function compile(string $query): string
     {
         $parser = new QueryParser($query);
-        $ast = $parser->parse($query);
+        $tokens = $parser->parse($query);
 
-        return '';
+        return $this->build($tokens);
     }
 
-    public function parseOrder(string $statement)
+    private function build(array $tokens): string
     {
-        $statement = trim($statement);
-
-        $pattern = '/^ *([a-zA-Z0-9._-]+) *(ASC|DESC)? *$/';
-        $fields = explode(',', $statement);
-        $result = [];
-
-        foreach ($fields as $field) {
-            if (preg_match($pattern, trim($field), $matches)) {
-                $result[] = [
-                    'field' => $matches[1],
-                    'direction' => $matches[2] ?? null ?: 'ASC',
-                ];
-            } else {
-                throw new RuntimeException('Invalid query');
-            }
+        if (count($tokens) === 0) {
+            return '';
         }
 
-        return $result;
+        return '';
     }
 }

@@ -14,17 +14,20 @@ final class QueryLexer
     /** @psalm-type list<Token> */
     private array $tokens = [];
 
+    private readonly string $query;
     private readonly array $source;
     private readonly int $length;
 
-    public function __construct(private readonly string $query)
+    public function __construct(private readonly array $builtins = [])
     {
-        $this->source = mb_str_split($query);
-        $this->length = count($this->source);
     }
 
-    public function tokens(): array
+    public function tokens(string $query): array
     {
+        $this->query = $query;
+        $this->source = mb_str_split($query);
+        $this->length = count($this->source);
+
         while (!$this->atEnd()) {
             $this->start = $this->current;
             $this->scan();
@@ -65,7 +68,7 @@ final class QueryLexer
                 if ($this->matchNext('=')) {
                     $this->addOperator(TokenType::Unequal);
                 } elseif ($this->matchNext('~')) {
-                    $this->addOperator(TokenType::NotLike);
+                    $this->addOperator(TokenType::Unlike);
                 } else {
                     $this->error(
                         "Invalid operator '!'. " .
@@ -101,7 +104,7 @@ final class QueryLexer
                 } elseif ($this->isIdentifier($char)) {
                     $this->consumeIdentifier();
                 } else {
-                    $this->error("Unknown character '{$char}'");
+                    $this->error("Syntax error, unknown character '{$char}'");
                 }
         }
     }
@@ -148,7 +151,7 @@ final class QueryLexer
     {
         if ($char === '-') {
             if (!is_numeric($this->peek())) {
-                $this->error("Unknown character '-'");
+                $this->error("Syntax error, unknown character '-'");
             }
         }
 
@@ -277,22 +280,13 @@ final class QueryLexer
             case 'null':
                 return TokenType::Null;
             case 'now':
-                return TokenType::Keyword;
-            case 'changed':
-            case 'classname':
-            case 'created':
-            case 'creator':
-            case 'editor':
-            case 'deleted':
-            case 'id':
-            case 'locked':
-            case 'published':
-            case 'type':
-            case 'uid':
-            case 'url':
             case 'fulltext':
-                return TokenType::Field;
+                return TokenType::Keyword;
             default:
+                if (in_array($lexeme, $this->builtins)) {
+                    return TokenType::Field;
+                }
+
                 return TokenType::Content;
         }
     }
@@ -303,8 +297,10 @@ final class QueryLexer
     private function error(string $msg): never
     {
         throw new ParserException(
-            "Parse error at position {$this->start}. {$msg}\n" .
-                "Query: `{$this->query}`"
+            "Parse error at position {$this->start}. {$msg}\n\n" .
+                "Query: `{$this->query}`\n" .
+                str_repeat(' ', $this->start + 8) .
+                str_repeat('^', $this->current - $this->start) . "\n\n"
         );
     }
 }

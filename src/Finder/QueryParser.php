@@ -31,7 +31,7 @@ final class QueryParser
      *
      * @psalm-return list<Token>
      */
-    public function tokens(): array
+    public function parse(): array
     {
         $parensBalance = 0;
         $this->operandsAndOperators = 0;

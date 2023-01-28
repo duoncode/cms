@@ -17,7 +17,6 @@ class Pages implements Iterator
     public readonly Database $db;
     public readonly Request $request;
     public readonly Config $config;
-
     protected string $whereFields = '';
     protected string $whereTypes = '';
     protected string $limit = '';
@@ -30,6 +29,20 @@ class Pages implements Iterator
         $this->db = $find->db;
         $this->request = $find->request;
         $this->config = $find->config;
+        $this->builtins = [
+            'changed' => '',
+            'classname' => '',
+            'created' => '',
+            'creator' => '',
+            'editor' => '',
+            'deleted' => '',
+            'id' => '',
+            'locked' => '',
+            'published' => '',
+            'type' => '',
+            'uid' => '',
+            'url' => '',
+        ];
     }
 
     public function find(string $query): self
@@ -105,29 +118,7 @@ class Pages implements Iterator
 
     protected function contentCondition(string $query): string
     {
-        $parsed = (new Parser())->parseQuery($query);
-
-        if (count($parsed['expressions']) === 0) {
-            return '';
-        }
-
-        // $sql = '';
-        $booleanOperator = $parsed['booleanOperator'];
-
-        $expressions = [];
-        foreach ($parsed['expressions'] as $expression) {
-            $left = $this->left($expression['left']);
-            $operator = $expression['operator'];
-            $right = $this->db->quote($expression['right']);
-
-            $expressions[] = $left . ' ' . $operator . ' ' . $right;
-        }
-
-        return match ($booleanOperator) {
-            'AND' => 'AND (' . implode(' AND ', $expressions) . ')',
-            'OR' => 'AND (' . implode(' OR ', $expressions) . ')',
-            default => 'AND ' . $expressions[0],
-        };
+        $parsed = (new Compiler($this->builtins))->compile($query);
     }
 
     protected function typesCondition(array $types): string
@@ -144,40 +135,6 @@ class Pages implements Iterator
 
         if (count($result) > 0) {
             return ' AND (' . implode(' OR ', $result) . ')';
-        }
-
-        return '';
-    }
-
-    protected function orderStatement(string $order): string
-    {
-        $parsed = (new Parser())->parseOrder($order);
-
-        if (count($parsed) === 0) {
-            return '';
-        }
-
-        $result = [];
-
-        foreach ($parsed as $field) {
-            $parts = explode('.', $field['field']);
-            if (count($parts) > 1) {
-                [$first, $second] = $parts;
-            } else {
-                [$first, $second] = [$parts[0], 'value'];
-            }
-
-            $result[] = match ($field['field']) {
-                'created' => 'p.created ',
-                'creator' => 'p.changed ',
-                'id' => 'p.uid',
-                'uid' => 'p.uid',
-                default => "p.content->'{$first}'->>'{$second}'",
-            } . ' ' . $field['direction'];
-        }
-
-        if (count($result) > 0) {
-            return ' ORDER BY ' . implode(', ', $result);
         }
 
         return '';
