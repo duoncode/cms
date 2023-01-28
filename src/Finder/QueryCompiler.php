@@ -6,12 +6,15 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\RuntimeException;
 
-class Compiler
+final class QueryCompiler
 {
+    public function __construct(public readonly array $builtins)
+    {
+    }
     public function compileQuery(string $query): string
     {
         $parser = new QueryParser($query);
-        $ast = $parser->ast();
+        $ast = $parser->parse($query);
 
         return '';
     }

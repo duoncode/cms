@@ -19,14 +19,14 @@
         "conia/session": "dev-main",
         "conia/sizer": "dev-main",
         "hidehalo/nanoid-php": "^1.1",
-        "pestphp/pest": "2.x-dev",
-        "symfony/html-sanitizer": "6.3.x-dev"
+        "symfony/html-sanitizer": "^6.2"
     },
     "require-dev": {
         "conia/boiler": "dev-main",
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1",
-        "phpunit/phpunit": "10.0.x-dev"
+        "pestphp/pest": "^1",
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "psr-4": {
