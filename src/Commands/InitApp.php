@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Conia\Core\Commands;
+
 use Conia\Cli\Command;
 
 class InitApp extends Command

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Conia\Core\Commands;
+
 use Conia\Cli\Command;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;
@@ -10,7 +12,6 @@ class Superuser extends Command
 {
     public static string $group = 'General';
     public static string $title = 'Add superuser';
-
     protected Database $db;
 
     public function __construct(Connection $connection)

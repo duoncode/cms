@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Conia\Cli\Runner;
+use Conia\Core\Commands\RecreateDb;
+use Conia\I18n\I18n;
+use Conia\I18n\Source;
+use Conia\Quma\Connection;
+use Conia\Quma\MigrationCommands;
+
+$connection = new Connection(
+    'pgsql:host=localhost;dbname=conia_db;user=conia_user;password=conia_password',
+    __DIR__ . '/db/sql',
+    __DIR__ . '/db/migrations',
+    fetchMode: PDO::FETCH_ASSOC,
+    print: false,
+);
+
+
+// $commands = I18n::commands(
+//     dir: __DIR__ . '/locale',
+//     domain: 'conia',
+//     sources: [
+//         new Source(__DIR__ . '/src', '*.php', 'PHP'),
+//         new Source(__DIR__ . '/gui', '*.svelte', 'Python'),
+//     ],
+//     jsonDir: __DIR__ . '/gui/src/locale',
+// );
+$commands = MigrationCommands::get($connection);
+$commands->add(new RecreateDb('conia_db', 'conia_user', 'conia_password'));
+
+$runner = new Runner($commands);
+
+exit($runner->run());
+
+// vim: ft=php
