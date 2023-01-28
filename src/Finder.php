@@ -43,9 +43,9 @@ class Finder
         };
     }
 
-    public function pages(string $query): Pages
+    public function pages(string $query = '', bool $deleted = false): Pages
     {
-        return (new Pages($this))->find($query);
+        return (new Pages($this, $deleted))->find($query);
     }
 
     public function page(

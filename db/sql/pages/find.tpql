@@ -1,32 +1,31 @@
-SELECT
+SELECT DISTINCT
     p.uid,
     pt.name AS type,
     pt.classname,
     p.published,
     p.hidden,
     p.locked,
-    coalesce(uc.display, coalesce(uc.username, uc.email)) AS creator,
-    coalesce(ue.display, coalesce(ue.username, ue.email)) AS editor,
+    uc.uid AS creator,
+    ue.uid AS editor,
     p.created,
     p.changed,
     p.deleted,
-    u.url,
     p.content
 FROM
-    conia.urls u
-    INNER JOIN conia.pages p USING(page)
+    conia.pages p
     INNER JOIN conia.pagetypes pt USING(pagetype)
     INNER JOIN conia.users uc ON
         uc.usr = p.creator
     INNER JOIN conia.users ue ON
         ue.usr = p.editor
+    LEFT JOIN conia.urls u ON
+        u.page = p.page
 WHERE
-<?php if ($deleted) : ?>
-    p.deleted IS NULL
+<?php if (!isset($deleted) || !$deleted) : ?>
+    p.deleted IS NULL AND
 <?php endif ?>
 <?php if (isset($condition)) : ?>
     <?= $condition ?>;
-<?php endif ?>
-<?php if (isset($url)) : ?>
-    AND u.url = :url
+<?php elseif (isset($url)) : ?>
+    u.url = :url
 <?php endif ?>

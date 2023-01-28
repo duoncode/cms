@@ -8,6 +8,8 @@ use Conia\Core\Exception\ParserException;
 
 final class OrderCompiler
 {
+    use CompilesJsonAccessor;
+
     public function __construct(private readonly array $builtins = [])
     {
     }
@@ -31,7 +33,7 @@ final class OrderCompiler
             $expression = $this->builtins[$fieldName] ?? null;
 
             if (!$expression) {
-                $expression = $this->getJsonAccessor($fieldName);
+                $expression = $this->compileJsonAccessor($fieldName, 'p.content');
             }
 
             $expressions[] = $expression . ' ' . $field['direction'];
@@ -62,29 +64,5 @@ final class OrderCompiler
         }
 
         return $result;
-    }
-
-    private function getJsonAccessor(string $fieldName): string
-    {
-        $parts = $this->getParts($fieldName);
-        $count = count($parts);
-
-        if ($count === 1) {
-            return "p.content->'{$parts[0]}'->>'value'";
-        }
-
-        $middle = implode("'->'", array_slice($parts, 0, $count - 1));
-        $end = array_slice($parts, -1)[0];
-
-        return "p.content->'{$middle}'->>'{$end}'";
-    }
-
-    private function getParts(string $fieldName): array
-    {
-        if (str_ends_with($fieldName, '.')) {
-            throw new ParserException('Invalid query');
-        }
-
-        return explode('.', $fieldName);
     }
 }

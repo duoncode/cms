@@ -12,42 +12,45 @@ use Conia\Quma\Database;
 use Generator;
 use Iterator;
 
-class Pages implements Iterator
+final class Pages implements Iterator
 {
     public readonly Database $db;
     public readonly Request $request;
     public readonly Config $config;
-    protected string $whereFields = '';
-    protected string $whereTypes = '';
-    protected string $limit = '';
-    protected string $order = '';
-    protected Generator $result;
+    private string $whereFields = '';
+    private string $whereTypes = '';
+    private string $limit = '';
+    private string $order = '';
+    private readonly array $builtins;
+    private Generator $result;
 
     public function __construct(
         protected readonly Finder $find,
+        protected readonly bool $deleted,
     ) {
         $this->db = $find->db;
         $this->request = $find->request;
         $this->config = $find->config;
         $this->builtins = [
-            'changed' => '',
-            'classname' => '',
-            'created' => '',
-            'creator' => '',
-            'editor' => '',
-            'deleted' => '',
-            'id' => '',
-            'locked' => '',
-            'published' => '',
-            'type' => '',
-            'uid' => '',
-            'url' => '',
+            'changed' => 'p.changed',
+            'classname' => 'pt.classname',
+            'created' => 'p.created',
+            'creator' => 'uc.uid',
+            'editor' => 'ue.uid',
+            'deleted' => 'p.deleted',
+            'id' => 'p.uid',
+            'locked' => 'p.locked',
+            'published' => 'p.published',
+            'type' => 'pt.name',
+            'uid' => 'p.uid',
+            'url' => 'p.url',
         ];
     }
 
-    public function find(string $query): self
+    public function find(string $query, bool $deleted = false): self
     {
-        $this->whereFields = $this->contentCondition($query);
+        $compiler = new QueryCompiler($this->db, $this->builtins);
+        $this->whereFields = $compiler->compile($query);
 
         return $this;
     }
@@ -61,14 +64,15 @@ class Pages implements Iterator
 
     public function order(string ...$order): self
     {
-        $this->order = $this->orderStatement(implode(',', $order));
+        $compiler = new OrderCompiler($this->builtins);
+        $this->order = $compiler->compile(implode(',', $order));
 
         return $this;
     }
 
     public function limit(int $limit): self
     {
-        $this->limit = $limit > 0 ? ' LIMIT ' . (string)$limit : '';
+        $this->limit = $limit > 0 ? "\nLIMIT " . (string)$limit : '';
 
         return $this;
     }
@@ -110,18 +114,21 @@ class Pages implements Iterator
         return $this->result->valid();
     }
 
-    protected function fetchResult(): void
+    private function fetchResult(): void
     {
-        $condition = $this->whereFields . $this->whereTypes . $this->order . $this->limit;
-        $this->result = $this->db->pages->find(['condition' => $condition])->lazy();
+        $conditions = implode("    AND\n", array_filter([
+            trim($this->whereFields),
+            trim($this->whereTypes),
+        ], fn ($clause) => !empty($clause)));
+        $conditions .= $this->order . $this->limit;
+
+        $this->result = $this->db->pages->find([
+            'condition' => $conditions,
+            'deleted' => $this->deleted,
+        ])->lazy();
     }
 
-    protected function contentCondition(string $query): string
-    {
-        $parsed = (new Compiler($this->builtins))->compile($query);
-    }
-
-    protected function typesCondition(array $types): string
+    private function typesCondition(array $types): string
     {
         $result = [];
 
@@ -134,13 +141,13 @@ class Pages implements Iterator
         }
 
         if (count($result) > 0) {
-            return ' AND (' . implode(' OR ', $result) . ')';
+            return '    ' . implode("\n    OR", $result);
         }
 
         return '';
     }
 
-    protected function left(string $left): string
+    private function left(string $left): string
     {
         if (str_contains('.', $left)) {
             [$l, $r] = explode('.', $left);
@@ -157,7 +164,7 @@ class Pages implements Iterator
         };
     }
 
-    protected function right(string $right): string
+    private function right(string $right): string
     {
         return $this->db->quote($right);
     }
