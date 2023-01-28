@@ -13,4 +13,9 @@ readonly class Token
         public string $lexeme
     ) {
     }
+
+    public function len(): int
+    {
+        return strlen($this->lexeme);
+    }
 }

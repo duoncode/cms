@@ -9,17 +9,19 @@ use Conia\Core\Exception\ParserException;
 final class QueryParser
 {
     /** @psalm-type list<Token> */
-    private array $tokens = [];
+    private array $tokens;
 
     private int $operandsAndOperators;
     private int $pos;
     private int $length;
     private bool $readyForCondition = true;
+    private string $query;
 
-    public function __construct(private readonly string $query)
+    /**
+     * @psalm-param list<string> $builtins
+     */
+    public function __construct(private readonly array $builtins = [])
     {
-        $this->tokens = (new QueryLexer($query))->tokens();
-        $this->length = count($this->tokens);
     }
 
     /**
@@ -31,8 +33,12 @@ final class QueryParser
      *
      * @psalm-return list<Token>
      */
-    public function parse(): array
+    public function parse(string $query): array
     {
+        $this->query = $query;
+        $this->tokens = (new QueryLexer($this->builtins))->tokens($query);
+        $this->length = count($this->tokens);
+
         $parensBalance = 0;
         $this->operandsAndOperators = 0;
         $this->readyForCondition = true;
@@ -49,7 +55,7 @@ final class QueryParser
                 case TokenGroup::Operator:
                     // As we consume operators together with operands, it would
                     // be invalid if we would find operators anywhere else.
-                    $this->error($token, 'Invalid position for operator.');
+                    $this->error($token, 'Invalid position for an operator.');
 
                     break;
                 case TokenGroup::BooleanOperator:
@@ -67,12 +73,12 @@ final class QueryParser
             }
 
             if ($parensBalance < 0) {
-                throw new ParserException('Parse error. Unbalanced parentheses');
+                $this->error($token, 'Parse error. Unbalanced parenthesis');
             }
         }
 
         if ($parensBalance > 0) {
-            throw new ParserException('Parse error. Unbalanced parentheses');
+            $this->error($token, 'Parse error. Unbalanced parenthesis');
         }
 
         return $this->tokens;
@@ -115,7 +121,7 @@ final class QueryParser
         if ($this->readyForCondition) {
             $this->error(
                 $token,
-                'Invalid position for boolean operator. ' .
+                'Invalid position for a boolean operator. ' .
                     'Maybe you used && instead of & or || instead of |'
             );
         }
@@ -140,7 +146,7 @@ final class QueryParser
             ) {
                 $this->error(
                     $token,
-                    'Empty group.'
+                    'Invalid parenthesis: empty group.'
                 );
             }
 
@@ -161,9 +167,20 @@ final class QueryParser
     {
         $position = $token->position + 1;
 
+        if ($this->pos === count($this->tokens)) {
+            // This is a general error. We are after the last token.
+            $start = 8;
+            $len = strlen($this->query);
+        } else {
+            $start = $position + 7;
+            $len = $token->len();
+        }
+
         throw new ParserException(
-            "Parse error at position {$position}. {$msg}\n" .
-                "Query: `{$this->query}`"
+            "Parse error at position {$position}. {$msg}\n\n" .
+                "Query: `{$this->query}`\n" .
+                str_repeat(' ', $start) .
+                str_repeat('^', $len) . "\n\n"
         );
     }
 }
