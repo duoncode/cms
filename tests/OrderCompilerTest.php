@@ -10,6 +10,10 @@ uses(TestCase::class);
 
 const OB = "\nORDER BY\n    ";
 
+test('Fail on empty statement', function () {
+    (new OrderCompiler([]))->compile('');
+})->throws(ParserException::class, 'Empty order by clause');
+
 test('Compile simple statement', function () {
     $oc = new OrderCompiler([]);
 
@@ -85,4 +89,10 @@ test('Fail invalid field II', function () {
     $oc = new OrderCompiler();
 
     $oc->compile('.field.to');
+})->throws(ParserException::class, 'Invalid query');
+
+test('Fail multiple commas', function () {
+    $oc = new OrderCompiler();
+
+    $oc->compile('field1,,field2');
 })->throws(ParserException::class, 'Invalid query');

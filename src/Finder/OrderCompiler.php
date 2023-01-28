@@ -14,6 +14,10 @@ final class OrderCompiler
 
     public function compile(string $statement): string
     {
+        if (empty(trim($statement))) {
+            throw new ParserException('Empty order by clause');
+        }
+
         $parsed = $this->parse($statement);
 
         if (count($parsed) === 0) {
