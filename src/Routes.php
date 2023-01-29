@@ -15,13 +15,13 @@ use Conia\Core\View\Panel;
 
 class Routes
 {
-    protected string $panelUrl;
-    protected string $apiUrl;
+    protected string $panelPath;
+    protected string $apiPath;
 
     public function __construct(protected Config $config)
     {
-        $this->panelUrl = $config->getPanelUrl();
-        $this->apiUrl = $this->panelUrl . '/api';
+        $this->panelPath = $config->getPanelPath();
+        $this->apiPath = $this->panelPath . '/api';
     }
 
     public function add(App $app): void
@@ -30,12 +30,12 @@ class Routes
 
         // All API routes
         $app->group(
-            $this->apiUrl,
+            $this->apiPath,
             $this->addPanelApi(...),
             'conia.panel.',
         )->render('json');
 
-        // Add catchall for page urls. Must be the last one
+        // Add catchall for page url paths. Must be the last one
         $app->get(
             '/...slug',
             [Page::class, 'catchall'],
@@ -45,7 +45,7 @@ class Routes
 
     protected function addIndex(App $app): void
     {
-        $app->get($this->panelUrl, fn () => '<h1>Panel not found in public directory</h1>')
+        $app->get($this->panelPath, fn () => '<h1>Panel not found in public directory</h1>')
             ->render('text', contentType: 'text/html');
     }
 

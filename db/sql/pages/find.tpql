@@ -18,14 +18,14 @@ FROM
         uc.usr = p.creator
     INNER JOIN conia.users ue ON
         ue.usr = p.editor
-    LEFT JOIN conia.urls u ON
-        u.page = p.page
+    LEFT JOIN conia.urlpaths up ON
+        up.page = p.page
 WHERE
 <?php if (!isset($deleted) || !$deleted) : ?>
     p.deleted IS NULL AND
 <?php endif ?>
 <?php if (isset($condition)) : ?>
     <?= $condition ?>;
-<?php elseif (isset($url)) : ?>
-    u.url = :url
+<?php elseif (isset($path)) : ?>
+    up.path = :path
 <?php endif ?>

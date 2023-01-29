@@ -181,14 +181,14 @@ CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
     conia.process_pages_audit();
 
 
-CREATE TABLE conia.urls (
+CREATE TABLE conia.urlpaths (
     page integer NOT NULL,
-    url text NOT NULL CHECK (char_length(url) <= 512),
+    path text NOT NULL CHECK (char_length(path) <= 512),
     lang text NOT NULL CHECK (char_length(lang) <= 32),
     inactive timestamp with time zone,
-    CONSTRAINT pk_urls PRIMARY KEY (page, lang, url),
-    CONSTRAINT uc_urls_url UNIQUE (url),
-    CONSTRAINT fk_urls_pages FOREIGN KEY (page)
+    CONSTRAINT pk_urlpaths PRIMARY KEY (page, lang, path),
+    CONSTRAINT uc_urlpaths_path UNIQUE (path),
+    CONSTRAINT fk_urlpaths_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
 

@@ -12,8 +12,7 @@ class Config extends BaseConfig
 {
     public readonly Locales $locales;
     public readonly Types $types;
-
-    protected string $panelUrl = 'panel';
+    protected string $panelPath = 'panel';
     protected ?string $panelTheme = null;
     protected Closure $languageNegotiator;
     private bool $debugPanel = false;
@@ -65,14 +64,14 @@ class Config extends BaseConfig
         $this->set('path.cache', '/' . ltrim($cache, '/'));
     }
 
-    public function panelUrl(string $url): void
+    public function panelPath(string $path): void
     {
-        $this->panelUrl = $url;
+        $this->panelPath = $path;
     }
 
-    public function getPanelUrl(): string
+    public function getPanelPath(): string
     {
-        return $this->debugPanel ? '/panel' : '/' . $this->panelUrl;
+        return $this->debugPanel ? '/panel' : '/' . $this->panelPath;
     }
 
     public function panelTheme(string $url): void
