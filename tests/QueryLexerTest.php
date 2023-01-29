@@ -9,7 +9,8 @@ use Conia\Core\Tests\Setup\TestCase;
 uses(TestCase::class);
 
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1 > now & null >= 13 & field2 < "string") |' .
-    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3 !~ "string%" | path.de-DE != 31)';
+    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3 !~"string%" | path.de-DE != 31 | ' .
+    ' path !~~ \'url\' & field4 ~~ \'%str%\')';
 
 test('Simple query', function () {
     $lexer = new QueryLexer();
@@ -178,7 +179,15 @@ test('Token groups', function () {
     expect($tokens[31]->group->name)->toBe('Operand');
     expect($tokens[32]->group->name)->toBe('Operator');
     expect($tokens[33]->group->name)->toBe('Operand');
-    expect($tokens[34]->group->name)->toBe('GroupSymbol');
+    expect($tokens[34]->group->name)->toBe('BooleanOperator');
+    expect($tokens[35]->group->name)->toBe('Operand');
+    expect($tokens[36]->group->name)->toBe('Operator');
+    expect($tokens[37]->group->name)->toBe('Operand');
+    expect($tokens[38]->group->name)->toBe('BooleanOperator');
+    expect($tokens[39]->group->name)->toBe('Operand');
+    expect($tokens[40]->group->name)->toBe('Operator');
+    expect($tokens[41]->group->name)->toBe('Operand');
+    expect($tokens[42]->group->name)->toBe('GroupSymbol');
 });
 
 test('Token types', function () {
@@ -209,15 +218,23 @@ test('Token types', function () {
     expect($tokens[21]->type->name)->toBe('Builtin');
     expect($tokens[22]->type->name)->toBe('Or');
     expect($tokens[23]->type->name)->toBe('Field');
-    expect($tokens[24]->type->name)->toBe('Like');
+    expect($tokens[24]->type->name)->toBe('ILike');
     expect($tokens[25]->type->name)->toBe('String');
     expect($tokens[26]->type->name)->toBe('Or');
     expect($tokens[27]->type->name)->toBe('Builtin');
-    expect($tokens[28]->type->name)->toBe('Unlike');
+    expect($tokens[28]->type->name)->toBe('IUnlike');
     expect($tokens[29]->type->name)->toBe('String');
     expect($tokens[30]->type->name)->toBe('Or');
     expect($tokens[31]->type->name)->toBe('Path');
     expect($tokens[32]->type->name)->toBe('Unequal');
     expect($tokens[33]->type->name)->toBe('Number');
-    expect($tokens[34]->type->name)->toBe('RightParen');
+    expect($tokens[34]->type->name)->toBe('Or');
+    expect($tokens[35]->type->name)->toBe('Path');
+    expect($tokens[36]->type->name)->toBe('Unlike');
+    expect($tokens[37]->type->name)->toBe('String');
+    expect($tokens[38]->type->name)->toBe('And');
+    expect($tokens[39]->type->name)->toBe('Field');
+    expect($tokens[40]->type->name)->toBe('Like');
+    expect($tokens[41]->type->name)->toBe('String');
+    expect($tokens[42]->type->name)->toBe('RightParen');
 });

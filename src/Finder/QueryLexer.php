@@ -62,13 +62,21 @@ final class QueryLexer
                 $this->addOperator(TokenType::Equal);
                 break;
             case '~':
-                $this->addOperator(TokenType::Like);
+                if ($this->matchNext('~')) {
+                    $this->addOperator(TokenType::Like);
+                } else {
+                    $this->addOperator(TokenType::ILike);
+                }
                 break;
             case '!':
                 if ($this->matchNext('=')) {
                     $this->addOperator(TokenType::Unequal);
                 } elseif ($this->matchNext('~')) {
-                    $this->addOperator(TokenType::Unlike);
+                    if ($this->matchNext('~')) {
+                        $this->addOperator(TokenType::Unlike);
+                    } else {
+                        $this->addOperator(TokenType::IUnlike);
+                    }
                 } else {
                     $this->error(
                         "Invalid operator '!'. " .

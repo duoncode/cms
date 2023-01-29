@@ -14,6 +14,8 @@ enum TokenType
     case Equal;
     case Greater;
     case GreaterEqual;
+    case ILike;
+    case IUnlike;
     case Less;
     case LessEqual;
     case Like;
