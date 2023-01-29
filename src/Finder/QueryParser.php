@@ -28,8 +28,8 @@ final class QueryParser
      * valid SQL WHERE expression.
      *
      * Does not transform the token stream with one exception: if an operand
-     * is not part of an comparision (e. g. `field = 'string'`), is of type
-     * Content and is the sole part on one side of a boolean expression, it will
+     * is not part of an comparison (e. g. `field = 'string'`), is of type
+     * Field and is the sole part on one side of a boolean expression, it will
      * be transformed to token type Exists.
      *
      * Example:  field1 >= 1 & content1 & field2 = 'string'
@@ -114,8 +114,12 @@ final class QueryParser
             && $this->tokens[$this->pos + 1]->group === TokenGroup::BooleanOperator)
             || count($this->tokens) === $this->pos + 1
         ) {
-            if ($token->type !== TokenType::Content) {
-                $this->error($token, 'Exists condition operands must be of type Field');
+            if ($token->type !== TokenType::Field) {
+                $this->error(
+                    $token,
+                    'Conditions of type `field exists` must consist of ' .
+                    'a single operand of type Field.'
+                );
             }
             // Key exists query
             $this->tokens[$this->pos] = new Token(

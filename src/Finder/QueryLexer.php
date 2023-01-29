@@ -284,10 +284,10 @@ final class QueryLexer
                 return TokenType::Keyword;
             default:
                 if (in_array($lexeme, $this->builtins)) {
-                    return TokenType::Field;
+                    return TokenType::Builtin;
                 }
 
-                return TokenType::Content;
+                return TokenType::Field;
         }
     }
 

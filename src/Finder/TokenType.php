@@ -26,7 +26,7 @@ enum TokenType
 
     // Operands
     case Boolean;
-    case Content;
+    case Builtin;
     case Exists;
     case Field;
     case Keyword;

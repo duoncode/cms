@@ -9,12 +9,12 @@ use Conia\Core\Tests\Setup\TestCase;
 uses(TestCase::class);
 
 beforeEach(function () {
-    $this->parser = new QueryParser(['field']);
+    $this->parser = new QueryParser(['builtin']);
 });
 
 test('Parse query', function () {
     $parser = new QueryParser();
-    $tokens = $parser->parse('field = 13 & content & (content ~ "%like" | 73 != test) & content');
+    $tokens = $parser->parse('builtin = 13 & field & (field ~ "%like" | 73 != test) & field');
 
     expect(count($tokens))->toBe(17);
 });
@@ -52,11 +52,11 @@ test('Invalid condition III (generally invalid)', function () {
 })->throws(ParserException::class, 'Invalid condition');
 
 test('Invalid condition IV  (builtin in exists condition)', function () {
-    $this->parser->parse('1 = 1 | field');
-})->throws(ParserException::class, 'Exists condition operands');
+    $this->parser->parse('1 = 1 | builtin');
+})->throws(ParserException::class, 'Conditions of type `field exists`');
 
 test('Invalid boolean operator I', function () {
-    $this->parser->parse('content || 1 = 1');
+    $this->parser->parse('field || 1 = 1');
 })->throws(ParserException::class, 'Invalid position for a boolean operator');
 
 test('Invalid boolean operator II', function () {
