@@ -14,9 +14,9 @@ beforeEach(function () {
 
 test('Parse query', function () {
     $parser = new QueryParser();
-    $tokens = $parser->parse('field = 13 & (content ~ "%like" | 73 != test)');
+    $tokens = $parser->parse('field = 13 & content & (content ~ "%like" | 73 != test) & content');
 
-    expect(count($tokens))->toBe(13);
+    expect(count($tokens))->toBe(17);
 });
 
 test('Invalid postion for operator I', function () {
@@ -51,8 +51,12 @@ test('Invalid condition III (generally invalid)', function () {
     $this->parser->parse('1 = 1 | 1 1 =');
 })->throws(ParserException::class, 'Invalid condition');
 
+test('Invalid condition IV  (builtin in exists condition)', function () {
+    $this->parser->parse('1 = 1 | field');
+})->throws(ParserException::class, 'Exists condition operands');
+
 test('Invalid boolean operator I', function () {
-    $this->parser->parse('1 = 1 || 1 = 1');
+    $this->parser->parse('content || 1 = 1');
 })->throws(ParserException::class, 'Invalid position for a boolean operator');
 
 test('Invalid boolean operator II', function () {

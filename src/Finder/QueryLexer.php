@@ -281,7 +281,6 @@ final class QueryLexer
             case 'null':
                 return TokenType::Null;
             case 'now':
-            case 'fulltext':
                 return TokenType::Keyword;
             default:
                 if (in_array($lexeme, $this->builtins)) {

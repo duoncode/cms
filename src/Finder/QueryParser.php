@@ -11,7 +11,6 @@ final class QueryParser
     /** @psalm-type list<Token> */
     private array $tokens;
 
-    private int $operandsAndOperators;
     private int $pos;
     private int $length;
     private bool $readyForCondition = true;
@@ -28,10 +27,16 @@ final class QueryParser
      * Returns a stream of tokens which can be translated to a
      * valid SQL WHERE expression.
      *
-     * Does not transform the token stream. It simply checks if it is valid
-     * and returns it as it is.
+     * Does not transform the token stream with one exception: if an operand
+     * is not part of an comparision (e. g. `field = 'string'`), is of type
+     * Content and is the sole part on one side of a boolean expression, it will
+     * be transformed to token type Exists.
      *
-     * @psalm-return list<Token>
+     * Example:  field1 >= 1 & content1 & field2 = 'string'
+     *                         ^^^^^^^^
+     *           content1 will be set to token type Exists
+     *
+     * All other tokens are simply checked if they are in the correct position.
      */
     public function parse(string $query): array
     {
@@ -40,7 +45,6 @@ final class QueryParser
         $this->length = count($this->tokens);
 
         $parensBalance = 0;
-        $this->operandsAndOperators = 0;
         $this->readyForCondition = true;
         $this->pos = 0;
 
@@ -99,12 +103,33 @@ final class QueryParser
             && $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
             && $this->tokens[$this->pos + 2]->group === TokenGroup::Operand
         ) {
-            $this->readyForCondition = false;
-            $this->operandsAndOperators += 3;
+            // A Regular key value comparision
+                //
+            // Advance 3 steps: operand operator operand
             $this->pos += 3;
+            // Wrong position to start a new condition after this one
+            $this->readyForCondition = false;
         } elseif (
-            $this->pos + 2 <= $this->length
-            && $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
+            ($this->pos + 2 <= $this->length
+            && $this->tokens[$this->pos + 1]->group === TokenGroup::BooleanOperator)
+            || count($this->tokens) === $this->pos + 1
+        ) {
+            if ($token->type !== TokenType::Content) {
+                $this->error($token, 'Exists condition operands must be of type Field');
+            }
+            // Key exists query
+            $this->tokens[$this->pos] = new Token(
+                TokenGroup::Operand,
+                TokenType::Exists,
+                $token->position,
+                $token->lexeme
+            );
+            // We advance two steps as we checked the BooleanOperator already
+            $this->pos += 2;
+            // After the BooleanOperator a new condition can be started
+            $this->readyForCondition = true;
+        } elseif (
+            $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
             && $this->tokens[$this->pos + 2]->group === TokenGroup::Operator
         ) {
             $this->error($token, 'Multiple operators. Maybe you used == instead of =.');
