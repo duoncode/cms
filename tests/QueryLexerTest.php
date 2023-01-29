@@ -13,11 +13,49 @@ const QUERY_ALL_ELEMENTS = '(true = content1 & field1 > now & null >= 13 & conte
 
 test('Simple query', function () {
     $lexer = new QueryLexer();
+    $tokens = $lexer->tokens('field = test');
+
+    expect($tokens[0]->type->name)->toBe('Content');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('Content');
+});
+
+test('Simple query with single quote string', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens("field = 'test'");
+
+    expect($tokens[0]->type->name)->toBe('Content');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('String');
+});
+
+test('Simple query with double quote string', function () {
+    $lexer = new QueryLexer();
     $tokens = $lexer->tokens('field = "test"');
 
     expect($tokens[0]->type->name)->toBe('Content');
     expect($tokens[1]->type->name)->toBe('Equal');
     expect($tokens[2]->type->name)->toBe('String');
+});
+
+test('Simple query with single quote string and escape', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens("field = '\"test\"\\'string\\'test'");
+
+    expect($tokens[0]->type->name)->toBe('Content');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('String');
+    expect($tokens[2]->lexeme)->toBe('"test"\'string\'test');
+});
+
+test('Simple query with double quote string and escape', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens('field = "\'test\'\\"string\\"test"');
+
+    expect($tokens[0]->type->name)->toBe('Content');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('String');
+    expect($tokens[2]->lexeme)->toBe("'test'\"string\"test");
 });
 
 test('Unterminated string', function () {

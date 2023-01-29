@@ -92,8 +92,9 @@ final class QueryLexer
                 }
                 break;
             case '"':
+            case "'":
                 // $this->validate();
-                $this->consumeString();
+                $this->consumeString($char);
                 // $this->readyForParen = false;
                 break;
             default:
@@ -176,10 +177,10 @@ final class QueryLexer
         $this->addToken(TokenGroup::Operand, TokenType::Number);
     }
 
-    private function consumeString(): void
+    private function consumeString(string $char): void
     {
-        while ($this->peek() !== '"' && !$this->atEnd()) {
-            if ($this->peek() === '\\' && $this->peekNext() === '"') {
+        while ($this->peek() !== $char && !$this->atEnd()) {
+            if ($this->peek() === '\\' && $this->peekNext() === $char) {
                 $this->advance();
             }
 
@@ -207,7 +208,7 @@ final class QueryLexer
             TokenGroup::Operand,
             TokenType::String,
             $this->start,
-            str_replace('\\"', '"', $lexeme),
+            str_replace('\\' . $char, $char, $lexeme),
         );
     }
 
