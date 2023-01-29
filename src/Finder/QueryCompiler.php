@@ -20,41 +20,47 @@ final class QueryCompiler
     public function compile(string $query): string
     {
         $parser = new QueryParser(array_keys($this->builtins));
-        $tokens = $parser->parse($query);
+        $items = $parser->parse($query);
 
-        return $this->build($tokens);
+        return $this->build($items);
     }
 
-    private function build(array $tokens): string
+    private function build(array $items): string
     {
-        if (count($tokens) === 0) {
+        if (count($items) === 0) {
             return '';
         }
 
         $clause = '';
 
-        foreach ($tokens as $token) {
-            $clause .= match ($token->type) {
-                TokenType::LeftParen => '(',
-                TokenType::RightParen => '(',
-                TokenType::Equal => ' = ',
-                TokenType::Greater => ' > ',
-                TokenType::GreaterEqual => ' >= ',
-                TokenType::Less => ' < ',
-                TokenType::LessEqual => ' <=',
-                TokenType::Like => ' LIKE ',
-                TokenType::Unequal => ' !=',
-                TokenType::Unlike => ' NOT LIKE ',
-                TokenType::And => ' AND ',
-                TokenType::Or => ' OR ',
-                TokenType::Boolean => strtolower($token->lexeme),
-                TokenType::Field => $this->compileJsonAccessor($token->lexeme, 'p.content'),
-                TokenType::Builtin => $this->builtins[$token->lexeme],
-                TokenType::Keyword => $this->translateKeyword($token->lexeme),
-                TokenType::Null => 'NULL',
-                TokenType::Number => $token->lexeme,
-                TokenType::String => $this->db->quote($token->lexeme),
-            };
+        foreach ($items as $item) {
+            if ($item instanceof Condition) {
+                $clause = $item->print();
+            } else {
+                $clause .= match ($item->type) {
+                    TokenType::LeftParen => '(',
+                    TokenType::RightParen => ')',
+                    TokenType::Equal => ' = ',
+                    TokenType::Greater => ' > ',
+                    TokenType::GreaterEqual => ' >= ',
+                    TokenType::Less => ' < ',
+                    TokenType::LessEqual => ' <=',
+                    TokenType::Like => ' LIKE ',
+                    TokenType::ILike => ' ILIKE ',
+                    TokenType::Unequal => ' !=',
+                    TokenType::Unlike => ' NOT LIKE ',
+                    TokenType::IUnlike => ' NOT ILIKE ',
+                    TokenType::And => ' AND ',
+                    TokenType::Or => ' OR ',
+                    TokenType::Boolean => strtolower($item->lexeme),
+                    TokenType::Field => $this->compileJsonAccessor($item->lexeme, 'p.content'),
+                    TokenType::Builtin => $this->builtins[$item->lexeme],
+                    TokenType::Keyword => $this->translateKeyword($item->lexeme),
+                    TokenType::Null => 'NULL',
+                    TokenType::Number => $item->lexeme,
+                    TokenType::String => $this->db->quote($item->lexeme),
+                };
+            }
         }
 
         return $clause;

@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-readonly class Token
+readonly class Comparison extends Condition
 {
     public function __construct(
         public Token $left,
         public Token $operator,
-        public int $right,
-        public string $lexeme
+        public Token $right,
     ) {
     }
 
-    public function len(): int
+    public function print(): string
     {
-        return strlen($this->lexeme);
+        return '';
     }
 }

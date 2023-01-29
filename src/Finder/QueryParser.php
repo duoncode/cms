@@ -54,7 +54,7 @@ final class QueryParser
 
             switch ($token->group) {
                 case TokenGroup::Operand:
-                    $this->validateCondition($token);
+                    $result[] = $this->getCondition($token);
                     break;
                 case TokenGroup::Operator:
                     // As we consume operators together with operands, it would
@@ -63,10 +63,10 @@ final class QueryParser
 
                     break;
                 case TokenGroup::BooleanOperator:
-                    $this->validateBooleanOperator($token);
+                    $result[] = $this->getBooleanOperator($token);
                     break;
                 case TokenGroup::GroupSymbol:
-                    $this->validateGroup($type, $token);
+                    $result[] = $this->getGroup($type, $token);
                     break;
             }
 
@@ -85,13 +85,13 @@ final class QueryParser
             $this->error($token, 'Parse error. Unbalanced parenthesis');
         }
 
-        return $this->tokens;
+        return $result;
     }
 
     /**
      * @throws ParserException
      */
-    private function validateCondition(Token $token): void
+    private function getCondition(Token $token): Condition
     {
         if (!$this->readyForCondition) {
             $this->error($token, 'Invalid position for a condition.');
@@ -104,48 +104,67 @@ final class QueryParser
             && $this->tokens[$this->pos + 2]->group === TokenGroup::Operand
         ) {
             // A Regular key value comparision
-                //
-            // Advance 3 steps: operand operator operand
-            $this->pos += 3;
-            // Wrong position to start a new condition after this one
-            $this->readyForCondition = false;
-        } elseif (
+            return $this->getComparisonCondition($token);
+        }
+
+        if (
             ($this->pos + 2 <= $this->length
             && $this->tokens[$this->pos + 1]->group === TokenGroup::BooleanOperator)
             || count($this->tokens) === $this->pos + 1
         ) {
-            if ($token->type !== TokenType::Field) {
-                $this->error(
-                    $token,
-                    'Conditions of type `field exists` must consist of ' .
-                    'a single operand of type Field.'
-                );
-            }
             // Key exists query
-            $this->tokens[$this->pos] = new Token(
-                TokenGroup::Operand,
-                TokenType::Exists,
-                $token->position,
-                $token->lexeme
-            );
-            // We advance two steps as we checked the BooleanOperator already
-            $this->pos += 2;
-            // After the BooleanOperator a new condition can be started
-            $this->readyForCondition = true;
-        } elseif (
+            return $this->getExistsCondition($token);
+        }
+
+        if (
             $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
             && $this->tokens[$this->pos + 2]->group === TokenGroup::Operator
         ) {
             $this->error($token, 'Multiple operators. Maybe you used == instead of =.');
-        } else {
-            $this->error($token, 'Invalid condition.');
         }
+
+        $this->error($token, 'Invalid condition.');
+    }
+
+    private function getComparisonCondition(Token $left): Condition
+    {
+        $operator = $this->tokens[$this->pos + 1];
+        $right = $this->tokens[$this->pos + 2];
+
+        // Advance 3 steps: operand operator operand
+        $this->pos += 3;
+        // Wrong position to start a new condition after this one
+        $this->readyForCondition = false;
+
+        if ($left->type === TokenType::Path || $left->type === TokenType::Path) {
+            return new UrlPath($left, $operator, $right);
+        }
+
+        return new Comparison($left, $operator, $right);
+    }
+
+    private function getExistsCondition(Token $token): Exists
+    {
+        if ($token->type !== TokenType::Field) {
+            $this->error(
+                $token,
+                'Conditions of type `field exists` must consist of ' .
+                'a single operand of type Field.'
+            );
+        }
+
+        // We advance two steps as we checked the BooleanOperator already
+        $this->pos += 2;
+        // After the BooleanOperator a new condition can be started
+        $this->readyForCondition = true;
+
+        return new Exists($token);
     }
 
     /**
      * @throws ParserException
      */
-    private function validateBooleanOperator(Token $token): void
+    private function getBooleanOperator(Token $token): Token
     {
         if ($this->readyForCondition) {
             $this->error(
@@ -161,12 +180,14 @@ final class QueryParser
 
         $this->readyForCondition = true;
         $this->pos++;
+
+        return $token;
     }
 
     /**
      * @throws ParserException
      */
-    private function validateGroup(TokenType $type, Token $token): void
+    private function getGroup(TokenType $type, Token $token): Token
     {
         if ($type === TokenType::RightParen) {
             if (
@@ -187,6 +208,8 @@ final class QueryParser
         }
 
         $this->pos++;
+
+        return $token;
     }
 
     /**
