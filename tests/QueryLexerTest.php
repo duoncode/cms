@@ -9,7 +9,7 @@ use Conia\Core\Tests\Setup\TestCase;
 uses(TestCase::class);
 
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1 > now & null >= 13 & field2 < "string") |' .
-    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3 !~ "string%" | path.de != 31)';
+    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3 !~ "string%" | path.de-DE != 31)';
 
 test('Simple query', function () {
     $lexer = new QueryLexer();

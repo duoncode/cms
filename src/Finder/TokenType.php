@@ -28,6 +28,7 @@ enum TokenType
     case Boolean;
     case Builtin;
     case Exists;
+    case Path;
     case Field;
     case Keyword;
     case Null;

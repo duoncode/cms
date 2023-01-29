@@ -93,13 +93,9 @@ final class QueryLexer
                 break;
             case '"':
             case "'":
-                // $this->validate();
                 $this->consumeString($char);
-                // $this->readyForParen = false;
                 break;
             default:
-                // $this->validate();
-                // $this->readyForParen = false;
                 if (is_numeric($char) || $char === '-') {
                     $this->consumeNumber($char);
                 } elseif ($this->isIdentifier($char)) {
@@ -134,7 +130,11 @@ final class QueryLexer
     {
         while (true) {
             $char = $this->peek();
-            $valid = ctype_alpha($char) || ctype_digit($char) || $char === '_' || $char === '.';
+            $valid = ctype_alpha($char)
+                || ctype_digit($char)
+                || $char === '_'
+                || $char === '-'
+                || $char === '.';
 
             if ($valid && !$this->atEnd()) {
                 $this->advance();
@@ -283,6 +283,10 @@ final class QueryLexer
             case 'now':
                 return TokenType::Keyword;
             default:
+                if ($lexeme === 'path' || str_starts_with($lexeme, 'path.')) {
+                    return TokenType::Path;
+                }
+
                 if (in_array($lexeme, $this->builtins)) {
                     return TokenType::Builtin;
                 }

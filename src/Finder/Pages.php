@@ -43,7 +43,6 @@ final class Pages implements Iterator
             'published' => 'p.published',
             'type' => 'pt.name',
             'uid' => 'p.uid',
-            'url' => 'p.url',
         ];
     }
 

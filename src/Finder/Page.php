@@ -23,10 +23,10 @@ class Page
         $this->config = $find->config;
     }
 
-    public function byUrl(string $url): ?array
+    public function byPath(string $path): ?array
     {
         $page = $this->db->pages->find([
-            'url' => $url,
+            'path' => $path,
         ])->one();
 
         if ($page) {
