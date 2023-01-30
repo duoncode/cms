@@ -6,9 +6,9 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
 
-trait CompilesJsonAccessor
+trait CompilesFields
 {
-    private function compileJsonAccessor(string $fieldName, string $tableField): string
+    private function compileField(string $fieldName, string $tableField): string
     {
         $parts = $this->getParts($fieldName);
         $count = count($parts);
