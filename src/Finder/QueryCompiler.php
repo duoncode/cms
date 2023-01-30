@@ -20,9 +20,8 @@ final class QueryCompiler
     public function compile(string $query): string
     {
         $parser = new QueryParser(array_keys($this->builtins));
-        $tokens = $parser->parse($query);
 
-        return $this->build($tokens);
+        return $this->build($parser->parse($query));
     }
 
     private function build(array $items): string

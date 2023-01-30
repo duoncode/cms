@@ -24,6 +24,7 @@ final class QueryParser
 
     private int $pos;
     private int $length;
+    private int $parensBalance;
     private bool $readyForCondition = true;
     private string $query;
 
@@ -57,42 +58,31 @@ final class QueryParser
         $this->tokens = (new QueryLexer($this->builtins))->tokens($query);
         $this->length = count($this->tokens);
 
-        $parensBalance = 0;
+        $this->parensBalance = 0;
         $this->readyForCondition = true;
         $this->pos = 0;
 
         while ($this->pos < $this->length) {
             $token = $this->tokens[$this->pos];
 
-            switch ($token->group) {
-                case TokenGroup::Operand:
-                    $result[] = $this->getExpression($token);
-                    break;
-                case TokenGroup::Operator:
-                    // As we consume operators together with operands, it would
-                    // be invalid if we would find operators anywhere else.
-                    $this->error($token, 'Invalid position for an operator.');
+            $result[] = match ($token->group) {
+                TokenGroup::Operand => $this->getExpression($token),
+                TokenGroup::BooleanOperator => $this->getBooleanOperator($token),
+                TokenGroup::LeftParen => $this->getLeftParen($token),
+                TokenGroup::RightParen => $this->getRightParen($token),
 
-                    break;
-                case TokenGroup::BooleanOperator:
-                    $result[] = $this->getBooleanOperator($token);
-                    break;
-                case TokenGroup::LeftParen:
-                    $result[] = $this->getLeftParen($token);
-                    $parensBalance++;
-                    break;
-                case TokenGroup::RightParen:
-                    $result[] = $this->getRightParen($token);
-                    $parensBalance--;
-                    break;
-            }
+                // Special case Operator:
+                // As we consume operators together with operands, it would
+                // be invalid if we would find operators anywhere else.
+                TokenGroup::Operator => $this->error($token, 'Invalid position for an operator.'),
+            };
 
-            if ($parensBalance < 0) {
+            if ($this->parensBalance < 0) {
                 $this->error($token, 'Parse error. Unbalanced parenthesis');
             }
         }
 
-        if ($parensBalance > 0) {
+        if ($this->parensBalance > 0) {
             $this->error($token, 'Parse error. Unbalanced parenthesis');
         }
 
@@ -202,6 +192,7 @@ final class QueryParser
             $this->error($token, 'Invalid position for parenthesis.');
         }
 
+        $this->parensBalance++;
         $this->pos++;
 
         return new LeftParen($token);
@@ -223,6 +214,7 @@ final class QueryParser
         }
 
         $this->readyForCondition = false;
+        $this->parensBalance--;
         $this->pos++;
 
         return new RightParen($token);
