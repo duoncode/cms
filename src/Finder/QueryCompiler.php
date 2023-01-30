@@ -9,7 +9,7 @@ use Conia\Quma\Database;
 
 final class QueryCompiler
 {
-    use CompilesJsonAccessor;
+    use CompilesField;
 
     public function __construct(
         private readonly Database $db,
@@ -20,9 +20,9 @@ final class QueryCompiler
     public function compile(string $query): string
     {
         $parser = new QueryParser(array_keys($this->builtins));
-        $items = $parser->parse($query);
+        $tokens = $parser->parse($query);
 
-        return $this->build($items);
+        return $this->build($tokens);
     }
 
     private function build(array $items): string
@@ -53,7 +53,7 @@ final class QueryCompiler
                     TokenType::And => ' AND ',
                     TokenType::Or => ' OR ',
                     TokenType::Boolean => strtolower($item->lexeme),
-                    TokenType::Field => $this->compileJsonAccessor($item->lexeme, 'p.content'),
+                    TokenType::Field => $this->compileField($item->lexeme, 'p.content'),
                     TokenType::Builtin => $this->builtins[$item->lexeme],
                     TokenType::Keyword => $this->translateKeyword($item->lexeme),
                     TokenType::Null => 'NULL',

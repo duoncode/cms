@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core\Finder\Output;
 
-use Conia\Core\Finder\CompilesJsonAccessor;
+use Conia\Core\Finder\CompilesField;
 use Conia\Core\Finder\Input\Token;
 use Conia\Core\Finder\Input\TokenType;
 use Conia\Quma\Database;
 
-abstract readonly class Condition
+abstract readonly class Expression
 {
-    use CompilesJsonAccessor;
+    use CompilesField;
 
     private Database $db;
     private array $builtins;
@@ -40,7 +40,7 @@ abstract readonly class Condition
     {
         return match ($token) {
             TokenType::Boolean => strtolower($token->lexeme),
-            TokenType::Field => $this->compileJsonAccessor($token->lexeme, 'p.content'),
+            TokenType::Field => $this->compileField($token->lexeme, 'p.content'),
             TokenType::Builtin => $this->builtins[$token->lexeme],
             TokenType::Keyword => $this->translateKeyword($token->lexeme),
             TokenType::Null => 'NULL',

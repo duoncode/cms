@@ -145,7 +145,7 @@ test('Token groups', function () {
     $lexer = new QueryLexer(['builtin1', 'builtin2', 'builtin3']);
     $tokens = $lexer->tokens(QUERY_ALL_ELEMENTS);
 
-    expect($tokens[0]->group->name)->toBe('GroupSymbol');
+    expect($tokens[0]->group->name)->toBe('LeftParen');
     expect($tokens[1]->group->name)->toBe('Operand');
     expect($tokens[2]->group->name)->toBe('Operator');
     expect($tokens[3]->group->name)->toBe('Operand');
@@ -161,9 +161,9 @@ test('Token groups', function () {
     expect($tokens[13]->group->name)->toBe('Operand');
     expect($tokens[14]->group->name)->toBe('Operator');
     expect($tokens[15]->group->name)->toBe('Operand');
-    expect($tokens[16]->group->name)->toBe('GroupSymbol');
+    expect($tokens[16]->group->name)->toBe('RightParen');
     expect($tokens[17]->group->name)->toBe('BooleanOperator');
-    expect($tokens[18]->group->name)->toBe('GroupSymbol');
+    expect($tokens[18]->group->name)->toBe('LeftParen');
     expect($tokens[19]->group->name)->toBe('Operand');
     expect($tokens[20]->group->name)->toBe('Operator');
     expect($tokens[21]->group->name)->toBe('Operand');
@@ -187,7 +187,7 @@ test('Token groups', function () {
     expect($tokens[39]->group->name)->toBe('Operand');
     expect($tokens[40]->group->name)->toBe('Operator');
     expect($tokens[41]->group->name)->toBe('Operand');
-    expect($tokens[42]->group->name)->toBe('GroupSymbol');
+    expect($tokens[42]->group->name)->toBe('RightParen');
 });
 
 test('Token types', function () {

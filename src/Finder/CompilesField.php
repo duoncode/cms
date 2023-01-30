@@ -6,7 +6,7 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
 
-trait CompilesFields
+trait CompilesField
 {
     private function compileField(string $fieldName, string $tableField): string
     {

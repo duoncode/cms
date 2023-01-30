@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core\Finder\Output;
 
-readonly class Exists extends Condition implements Output
+use Conia\Core\Finder\Input\Token;
+
+readonly final class Exists extends Expression implements Output
 {
-    public function __construct(private Token $token)
-    {
+    public function __construct(
+        private Token $token,
+    ) {
     }
 
     public function get(): string

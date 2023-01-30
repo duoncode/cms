@@ -8,7 +8,7 @@ use Conia\Core\Exception\ParserException;
 
 final class OrderCompiler
 {
-    use CompilesJsonAccessor;
+    use CompilesField;
 
     public function __construct(private readonly array $builtins = [])
     {
@@ -33,7 +33,7 @@ final class OrderCompiler
             $expression = $this->builtins[$fieldName] ?? null;
 
             if (!$expression) {
-                $expression = $this->compileJsonAccessor($fieldName, 'p.content');
+                $expression = $this->compileField($fieldName, 'p.content');
             }
 
             $expressions[] = $expression . ' ' . $field['direction'];

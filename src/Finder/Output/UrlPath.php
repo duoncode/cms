@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core\Finder\Output;
 
-readonly class UrlPath extends Condition
+use Conia\Core\Finder\Input\Token;
+
+readonly final class UrlPath extends Expression implements Output
 {
     public function __construct(
         public Token $left,
@@ -13,7 +15,7 @@ readonly class UrlPath extends Condition
     ) {
     }
 
-    public function print(): string
+    public function get(): string
     {
         return '';
     }

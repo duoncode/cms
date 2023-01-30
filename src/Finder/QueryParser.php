@@ -5,6 +5,17 @@ declare(strict_types=1);
 namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Input\Token;
+use Conia\Core\Finder\Input\TokenGroup;
+use Conia\Core\Finder\Input\TokenType;
+use Conia\Core\Finder\Output\Comparison;
+use Conia\Core\Finder\Output\Exists;
+use Conia\Core\Finder\Output\Expression;
+use Conia\Core\Finder\Output\LeftParen;
+use Conia\Core\Finder\Output\Operator;
+use Conia\Core\Finder\Output\RightParen;
+use Conia\Core\Finder\Output\UrlPath;
+use Conia\Quma\Database;
 
 final class QueryParser
 {
@@ -19,8 +30,10 @@ final class QueryParser
     /**
      * @psalm-param list<string> $builtins
      */
-    public function __construct(private readonly array $builtins = [])
-    {
+    public function __construct(
+        private readonly Database $db,
+        private readonly array $builtins = []
+    ) {
     }
 
     /**
@@ -50,11 +63,10 @@ final class QueryParser
 
         while ($this->pos < $this->length) {
             $token = $this->tokens[$this->pos];
-            $type = $token->type;
 
             switch ($token->group) {
                 case TokenGroup::Operand:
-                    $result[] = $this->getCondition($token);
+                    $result[] = $this->getExpression($token);
                     break;
                 case TokenGroup::Operator:
                     // As we consume operators together with operands, it would
@@ -65,15 +77,14 @@ final class QueryParser
                 case TokenGroup::BooleanOperator:
                     $result[] = $this->getBooleanOperator($token);
                     break;
-                case TokenGroup::GroupSymbol:
-                    $result[] = $this->getGroup($type, $token);
+                case TokenGroup::LeftParen:
+                    $result[] = $this->getLeftParen($token);
+                    $parensBalance++;
                     break;
-            }
-
-            if ($type === TokenType::LeftParen) {
-                $parensBalance++;
-            } elseif ($type === TokenType::RightParen) {
-                $parensBalance--;
+                case TokenGroup::RightParen:
+                    $result[] = $this->getRightParen($token);
+                    $parensBalance--;
+                    break;
             }
 
             if ($parensBalance < 0) {
@@ -91,7 +102,7 @@ final class QueryParser
     /**
      * @throws ParserException
      */
-    private function getCondition(Token $token): Condition
+    private function getExpression(Token $token): Expression
     {
         if (!$this->readyForCondition) {
             $this->error($token, 'Invalid position for a condition.');
@@ -126,7 +137,7 @@ final class QueryParser
         $this->error($token, 'Invalid condition.');
     }
 
-    private function getComparisonCondition(Token $left): Condition
+    private function getComparisonCondition(Token $left): Expression
     {
         $operator = $this->tokens[$this->pos + 1];
         $right = $this->tokens[$this->pos + 2];
@@ -140,7 +151,7 @@ final class QueryParser
             return new UrlPath($left, $operator, $right);
         }
 
-        return new Comparison($left, $operator, $right);
+        return new Comparison($left, $operator, $right, $this->builtins, $this->db);
     }
 
     private function getExistsCondition(Token $token): Exists
@@ -164,7 +175,7 @@ final class QueryParser
     /**
      * @throws ParserException
      */
-    private function getBooleanOperator(Token $token): Token
+    private function getBooleanOperator(Token $token): Operator
     {
         if ($this->readyForCondition) {
             $this->error(
@@ -181,35 +192,42 @@ final class QueryParser
         $this->readyForCondition = true;
         $this->pos++;
 
-        return $token;
+        return new Operator($token);
     }
 
     /**
      * @throws ParserException
      */
-    private function getGroup(TokenType $type, Token $token): Token
+    private function getLeftParen(Token $token): LeftParen
     {
-        if ($type === TokenType::RightParen) {
-            if (
-                $this->pos > 0
-                && $this->tokens[$this->pos - 1]->type === TokenType::LeftParen
-            ) {
-                $this->error(
-                    $token,
-                    'Invalid parenthesis: empty group.'
-                );
-            }
-
-            $this->readyForCondition = false;
-        } else {
-            if (!$this->readyForCondition) {
-                $this->error($token, 'Invalid position for parenthesis.');
-            }
+        if (!$this->readyForCondition) {
+            $this->error($token, 'Invalid position for parenthesis.');
         }
 
         $this->pos++;
 
-        return $token;
+        return new LeftParen($token);
+    }
+
+    /**
+     * @throws ParserException
+     */
+    private function getRightParen(Token $token): RightParen
+    {
+        if (
+            $this->pos > 0
+            && $this->tokens[$this->pos - 1]->type === TokenType::LeftParen
+        ) {
+            $this->error(
+                $token,
+                'Invalid parenthesis: empty group.'
+            );
+        }
+
+        $this->readyForCondition = false;
+        $this->pos++;
+
+        return new RightParen($token);
     }
 
     /**
