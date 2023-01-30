@@ -3,20 +3,36 @@
 declare(strict_types=1);
 
 use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Output\Comparison;
+use Conia\Core\Finder\Output\Exists;
+use Conia\Core\Finder\Output\LeftParen;
+use Conia\Core\Finder\Output\Operator;
+use Conia\Core\Finder\Output\RightParen;
+use Conia\Core\Finder\Output\UrlPath;
 use Conia\Core\Finder\QueryParser;
 use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 
 beforeEach(function () {
-    $this->parser = new QueryParser(['builtin']);
+    $this->parser = new QueryParser($this->db(), ['builtin']);
 });
 
 test('Parse query', function () {
-    $parser = new QueryParser();
-    $tokens = $parser->parse('builtin = 13 & field & (field ~ "%like" | 73 != test) & field');
+    $parser = new QueryParser($this->db());
+    $output = $parser->parse('builtin = 13 & field & (field ~ "%like" | path != test) & field');
 
-    expect(count($tokens))->toBe(17);
+    expect($output[0])->toBeInstanceOf(Comparison::class);
+    expect($output[1])->toBeInstanceOf(Operator::class);
+    expect($output[2])->toBeInstanceOf(Exists::class);
+    expect($output[3])->toBeInstanceOf(Operator::class);
+    expect($output[4])->toBeInstanceOf(LeftParen::class);
+    expect($output[5])->toBeInstanceOf(Comparison::class);
+    expect($output[6])->toBeInstanceOf(Operator::class);
+    expect($output[7])->toBeInstanceOf(UrlPath::class);
+    expect($output[8])->toBeInstanceOf(RightParen::class);
+    expect($output[9])->toBeInstanceOf(Operator::class);
+    expect($output[10])->toBeInstanceOf(Exists::class);
 });
 
 test('Invalid postion for operator I', function () {

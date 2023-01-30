@@ -147,7 +147,7 @@ final class QueryParser
         // Wrong position to start a new condition after this one
         $this->readyForCondition = false;
 
-        if ($left->type === TokenType::Path || $left->type === TokenType::Path) {
+        if ($left->type === TokenType::Path || $right->type === TokenType::Path) {
             return new UrlPath($left, $operator, $right);
         }
 
@@ -164,10 +164,8 @@ final class QueryParser
             );
         }
 
-        // We advance two steps as we checked the BooleanOperator already
-        $this->pos += 2;
-        // After the BooleanOperator a new condition can be started
-        $this->readyForCondition = true;
+        $this->readyForCondition = false;
+        $this->pos++;
 
         return new Exists($token);
     }
