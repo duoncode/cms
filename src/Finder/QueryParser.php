@@ -55,7 +55,7 @@ final class QueryParser
     public function parse(string $query): array
     {
         $this->query = $query;
-        $this->tokens = (new QueryLexer($this->builtins))->tokens($query);
+        $this->tokens = (new QueryLexer(array_keys($this->builtins)))->tokens($query);
         $this->length = count($this->tokens);
 
         $this->parensBalance = 0;
@@ -141,7 +141,7 @@ final class QueryParser
             return new UrlPath($left, $operator, $right);
         }
 
-        return new Comparison($left, $operator, $right, $this->builtins, $this->db);
+        return new Comparison($left, $operator, $right, $this->db, $this->builtins);
     }
 
     private function getExistsCondition(Token $token): Exists

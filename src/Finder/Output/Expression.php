@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder\Output;
 
+use Conia\Core\Exception\ParserException;
 use Conia\Core\Finder\CompilesField;
 use Conia\Core\Finder\Input\Token;
 use Conia\Core\Finder\Input\TokenType;
@@ -13,10 +14,7 @@ abstract readonly class Expression
 {
     use CompilesField;
 
-    private Database $db;
-    private array $builtins;
-
-    private function getOperator(TokenType $type): string
+    protected function getOperator(TokenType $type): string
     {
         return match ($type) {
             TokenType::LeftParen => '(',
@@ -33,27 +31,27 @@ abstract readonly class Expression
             TokenType::IUnlike => ' NOT ILIKE ',
             TokenType::And => ' AND ',
             TokenType::Or => ' OR ',
+            default => throw new ParserException('Invalid expression operator: ' . $type->name),
         };
     }
 
-    private function getOperand(Token $token): string
+    protected function getOperand(Token $token, Database $db, array $builtins): string
     {
-        return match ($token) {
+        return match ($token->type) {
             TokenType::Boolean => strtolower($token->lexeme),
             TokenType::Field => $this->compileField($token->lexeme, 'p.content'),
-            TokenType::Builtin => $this->builtins[$token->lexeme],
+            TokenType::Builtin => $builtins[$token->lexeme],
             TokenType::Keyword => $this->translateKeyword($token->lexeme),
             TokenType::Null => 'NULL',
             TokenType::Number => $token->lexeme,
-            TokenType::String => $this->db->quote($token->lexeme),
+            TokenType::String => $db->quote($token->lexeme),
         };
     }
 
-    private function translateKeyword(string $keyword): string
+    protected function translateKeyword(string $keyword): string
     {
         return match ($keyword) {
             'now' => 'NOW()',
-            'fulltext' => 'tsv websearch_to_tsquery',
         };
     }
 }

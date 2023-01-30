@@ -13,13 +13,15 @@ readonly final class Comparison extends Expression implements Output
         public Token $left,
         public Token $operator,
         public Token $right,
-        private array $builitns,
-        private Database $db
+        private Database $db,
+        private array $builtins,
     ) {
     }
 
     public function get(): string
     {
-        return '';
+        return $this->getOperand($this->left, $this->db, $this->builtins) .
+            $this->getOperator($this->operator->type) .
+            $this->getOperand($this->right, $this->db, $this->builtins);
     }
 }

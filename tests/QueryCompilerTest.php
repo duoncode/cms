@@ -25,14 +25,8 @@ test('Compile builtin', function () {
     expect($compiler->compile('test = 1'))->toBe('table.test = 1');
 });
 
-test('Compile now', function () {
+test('Compile keyword now', function () {
     $compiler = new QueryCompiler($this->db(), ['test' => 'test']);
 
     expect($compiler->compile('test = now'))->toBe('test = NOW()');
-});
-
-test('Compile fulltext', function () {
-    $compiler = new QueryCompiler($this->db(), ['test' => 'test']);
-
-    expect($compiler->compile('fulltext = now'))->toBe('tsv = NOW()');
 });

@@ -15,7 +15,7 @@ use Conia\Core\Tests\Setup\TestCase;
 uses(TestCase::class);
 
 beforeEach(function () {
-    $this->parser = new QueryParser($this->db(), ['builtin']);
+    $this->parser = new QueryParser($this->db(), ['builtin' => 'c.builtin']);
 });
 
 test('Parse query', function () {
