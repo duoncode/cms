@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core\Finder\Input;
 
 enum TokenGroup
 {
-    // Symbols used to group boolean expressions: ( )
-    case GroupSymbol;
+    // Prenthesis used to group boolean expressions: ( )
+    case LeftParen;
+    case RightParen;
 
     // Operators used in boolean expresssions: & |
     case BooleanOperator;

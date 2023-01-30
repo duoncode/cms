@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core\Finder\Input;
 
 enum TokenType
 {

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Input\Token;
+use Conia\Core\Finder\Input\TokenGroup;
+use Conia\Core\Finder\Input\TokenType;
 
 final class QueryLexer
 {
@@ -47,10 +50,10 @@ final class QueryLexer
             case "\r":
                 break;
             case '(':
-                $this->addParen(TokenType::LeftParen);
+                $this->addParen(TokenGroup::LeftParen, TokenType::LeftParen);
                 break;
             case ')':
-                $this->addParen(TokenType::RightParen);
+                $this->addParen(TokenGroup::RightParen, TokenType::RightParen);
                 break;
             case '&':
                 $this->addBooleanOperator(TokenType::And);
@@ -124,9 +127,9 @@ final class QueryLexer
         $this->addToken(TokenGroup::BooleanOperator, $type);
     }
 
-    private function addParen(TokenType $type): void
+    private function addParen(TokenGroup $group, TokenType $type): void
     {
-        $this->addToken(TokenGroup::GroupSymbol, $type);
+        $this->addToken($group, $type);
     }
 
     private function isIdentifier(string $char): bool
