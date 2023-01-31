@@ -10,8 +10,9 @@ use Conia\Quma\Database;
 
 class Superuser extends Command
 {
-    public static string $group = 'General';
-    public static string $title = 'Add superuser';
+    protected string $group = 'General';
+    protected string $name = 'add-superuser';
+    protected string $description = 'Add a superuser';
     protected Database $db;
 
     public function __construct(Connection $connection)

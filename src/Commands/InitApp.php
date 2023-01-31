@@ -8,8 +8,9 @@ use Conia\Cli\Command;
 
 class InitApp extends Command
 {
-    public static string $group = 'General';
-    public static string $title = 'Initialize the Conia app';
+    protected string $group = 'General';
+    protected string $name = 'init-app';
+    protected string $description = 'Initialize the Conia app';
 
     public function run(): int
     {
