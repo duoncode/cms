@@ -15,7 +15,6 @@ use Conia\Core\Finder\Output\LeftParen;
 use Conia\Core\Finder\Output\Operator;
 use Conia\Core\Finder\Output\RightParen;
 use Conia\Core\Finder\Output\UrlPath;
-use Conia\Quma\Database;
 
 final class QueryParser
 {
@@ -32,25 +31,14 @@ final class QueryParser
      * @psalm-param list<string> $builtins
      */
     public function __construct(
-        private readonly Database $db,
+        private readonly Context $context,
         private readonly array $builtins = []
     ) {
     }
 
     /**
-     * Returns a stream of tokens which can be translated to a
+     * Returns an array of output tokens which can be translated to a
      * valid SQL WHERE expression.
-     *
-     * Does not transform the token stream with one exception: if an operand
-     * is not part of an comparison (e. g. `field = 'string'`), is of type
-     * Field and is the sole part on one side of a boolean expression, it will
-     * be transformed to token type Exists.
-     *
-     * Example:  field1 >= 1 & content1 & field2 = 'string'
-     *                         ^^^^^^^^
-     *           content1 will be set to token type Exists
-     *
-     * All other tokens are simply checked if they are in the correct position.
      */
     public function parse(string $query): array
     {
@@ -141,7 +129,7 @@ final class QueryParser
             return new UrlPath($left, $operator, $right);
         }
 
-        return new Comparison($left, $operator, $right, $this->db, $this->builtins);
+        return new Comparison($left, $operator, $right, $this->context, $this->builtins);
     }
 
     private function getExistsCondition(Token $token): Exists

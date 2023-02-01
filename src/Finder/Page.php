@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Quma\Database;
-
 class Page
 {
     public function __construct(
-        public readonly Database $db,
-        public readonly Request $request,
-        public readonly Config $config,
+        private readonly Context $context,
     ) {
     }
 
     public function byPath(string $path): ?array
     {
-        $page = $this->db->pages->find([
+        $page = $this->context->db->pages->find([
             'path' => $path,
         ])->one();
 

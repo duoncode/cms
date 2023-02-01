@@ -9,11 +9,11 @@ use Conia\Core\Config;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Finder\Block;
 use Conia\Core\Finder\Blocks;
+use Conia\Core\Finder\Context;
 use Conia\Core\Finder\Menu;
 use Conia\Core\Finder\Page;
 use Conia\Core\Finder\Pages;
 use Conia\Quma\Database;
-use Iterator;
 
 /**
  * @psalm-property-read Pages  $pages
@@ -24,21 +24,21 @@ use Iterator;
  */
 class Finder
 {
-    public function __construct(
-        public readonly Database $db,
-        public readonly Request $request,
-        public readonly Config $config,
-    ) {
+    private readonly Context $context;
+
+    public function __construct(Database $db, Request $request, Config $config)
+    {
+        $this->context = new Context($db, $request, $config);
     }
 
     public function __get($key): Pages|Page|Blocks|Block|Menu
     {
         return match ($key) {
-            'pages' => new Pages($this->db, $this->request, $this->config),
-            'page' => new Page($this->db, $this->request, $this->config),
-            'blocks' => new Blocks($this->db, $this->request, $this->config),
-            'block' => new Block($this->db, $this->request, $this->config),
-            'menu' => new Menu($this->db, $this->request, $this->config),
+            'pages' => new Pages($this->context),
+            'page' => new Page($this->context),
+            'blocks' => new Blocks($this->context),
+            'block' => new Block($this->context),
+            'menu' => new Menu($this->context),
             default => throw new RuntimeException('Property not supported')
         };
     }

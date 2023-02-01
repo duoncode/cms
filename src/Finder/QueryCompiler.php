@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-use Conia\Quma\Database;
-
 final class QueryCompiler
 {
     use CompilesField;
 
     public function __construct(
-        private readonly Database $db,
-        public readonly array $builtins
+        private readonly Context $context,
+        private readonly array $builtins
     ) {
     }
 
     public function compile(string $query): string
     {
-        $parser = new QueryParser($this->db, $this->builtins);
+        $parser = new QueryParser($this->context, $this->builtins);
 
         return $this->build($parser->parse($query));
     }

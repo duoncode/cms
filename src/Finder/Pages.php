@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Core\Finder;
 use Conia\Core\Type;
-use Conia\Quma\Database;
 use Generator;
 use Iterator;
 
@@ -22,14 +18,9 @@ final class Pages implements Iterator
     private Generator $result;
 
     public function __construct(
-        public readonly Database $db,
-        public readonly Request $request,
-        public readonly Config $config,
-        protected readonly bool $deleted,
+        private readonly Context $context,
+        private readonly bool $deleted,
     ) {
-        $this->db = $find->db;
-        $this->request = $find->request;
-        $this->config = $find->config;
         $this->builtins = [
             'changed' => 'p.changed',
             'classname' => 'pt.classname',
@@ -47,10 +38,10 @@ final class Pages implements Iterator
 
     public function find(string $query, bool $deleted = false): self
     {
-        $compiler = new QueryCompiler($this->db, $this->builtins);
+        $compiler = new QueryCompiler($this->context, $this->builtins);
         $this->whereFields = $compiler->compile($query);
 
-        return $this; "field.<lang>
+        return $this;
     }
 
     public function types(string ...$types): self
@@ -120,7 +111,7 @@ final class Pages implements Iterator
         ], fn ($clause) => !empty($clause)));
         $conditions .= $this->order . $this->limit;
 
-        $this->result = $this->db->pages->find([
+        $this->result = $this->context->db->pages->find([
             'condition' => $conditions,
             'deleted' => $this->deleted,
         ])->lazy();
