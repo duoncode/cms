@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-use Conia\Core\Exception\ParserException;
-
 trait CompilesField
 {
     private function compileField(string $fieldName, string $tableField): string
     {
-        $parts = $this->getParts($fieldName);
+        $parts = explode('.', $fieldName);
         $count = count($parts);
 
         if ($count === 1) {
@@ -21,14 +19,5 @@ trait CompilesField
         $end = array_slice($parts, -1)[0];
 
         return "{$tableField}->'{$middle}'->>'{$end}'";
-    }
-
-    private function getParts(string $fieldName): array
-    {
-        if (str_ends_with($fieldName, '.')) {
-            throw new ParserException('Invalid query');
-        }
-
-        return explode('.', $fieldName);
     }
 }

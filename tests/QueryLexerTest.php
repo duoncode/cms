@@ -59,6 +59,58 @@ test('Simple query with double quote string and escape', function () {
     expect($tokens[2]->lexeme)->toBe("'test'\"string\"test");
 });
 
+test('Simple query with special character in identifier', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens(
+        'field.* = "test" | field.? = "test" | field.*.test = 1 | field.?.test = 1'
+    );
+
+    expect($tokens[0]->lexeme)->toBe('field.*');
+    expect($tokens[4]->lexeme)->toBe('field.?');
+    expect($tokens[8]->lexeme)->toBe('field.*.test');
+    expect($tokens[12]->lexeme)->toBe('field.?.test');
+});
+
+test('Invalid dot I', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field. = "test"');
+})->throws(ParserException::class, 'Invalid use of dot');
+
+test('Invalid dot II', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field..test = "test"');
+})->throws(ParserException::class, 'Invalid use of dot');
+
+test('Invalid dot III', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('.field = "test"');
+})->throws(ParserException::class, 'Syntax error');
+
+test('Invalid special char I', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field.*h = "test"');
+})->throws(ParserException::class, 'Invalid use of special');
+
+test('Invalid special char II', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field.h* = "test"');
+})->throws(ParserException::class, 'Syntax error');
+
+test('Invalid special char III', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field.?h = "test"');
+})->throws(ParserException::class, 'Invalid use of special');
+
+test('Invalid special char IV', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('field.h? = "test"');
+})->throws(ParserException::class, 'Syntax error');
+
+test('Invalid special char V', function () {
+    $lexer = new QueryLexer();
+    $lexer->tokens('fiel?d = "test"');
+})->throws(ParserException::class, 'Syntax error');
+
 test('Unterminated string', function () {
     $lexer = new QueryLexer();
     $lexer->tokens('field = "test');

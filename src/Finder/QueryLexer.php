@@ -139,13 +139,27 @@ final class QueryLexer
 
     private function consumeIdentifier(): void
     {
+        $wasDot = false;
+        $wasSpecial = false;
+
         while (true) {
             $char = $this->peek();
+            $isDot = $char === '.';
+            $isSpecial = $char === '*' || $char === '?';
+
             $valid = ctype_alpha($char)
                 || ctype_digit($char)
                 || $char === '_'
                 || $char === '-'
-                || $char === '.';
+                || $isDot
+                || ($wasDot && $isSpecial);
+
+            if ($valid && $wasSpecial && !$isDot) {
+                $this->error('Invalid use of special character (like ? or *) in identifier.');
+            }
+
+            $wasDot = $isDot;
+            $wasSpecial = $isSpecial;
 
             if ($valid && !$this->atEnd()) {
                 $this->advance();
@@ -285,6 +299,10 @@ final class QueryLexer
 
     private function getIdentifierType(string $lexeme): TokenType
     {
+        if (str_ends_with($lexeme, '.') || strpos($lexeme, '..') !== false) {
+            $this->error('Invalid use of dot (.) in indentifier');
+        }
+
         switch ($lexeme) {
             case 'true':
             case 'false':
