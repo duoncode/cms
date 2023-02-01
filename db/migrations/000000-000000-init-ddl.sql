@@ -136,6 +136,7 @@ CREATE TABLE conia.pages (
         REFERENCES conia.pagetypes (pagetype) ON UPDATE CASCADE ON DELETE NO ACTION
 );
 CREATE INDEX ix_pages_tsv ON conia.pages USING GIN(tsv);
+CREATE INDEX ix_pages_content ON conia.pages USING GIN (pagetype, content);
 CREATE OR REPLACE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
