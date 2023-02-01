@@ -21,24 +21,50 @@ readonly final class Comparison extends Expression implements Output
 
     public function get(): string
     {
+        if (
+            $this->right->type === TokenType::Field
+            || $this->right->type === TokenType::Builtin
+        ) {
+            // Like:
+            //     field1 > field2
+            //     'test' = builtin
+            return $this->getSimpleExpression();
+        }
+
         if ($this->left->type === TokenType::Field) {
+            // We have a chance to use a json query
             return $this->getFieldExpression();
         }
 
-        return $this->getOperand($this->left, $this->context->db, $this->builtins) .
-            $this->getOperator($this->operator->type) .
-            $this->getOperand($this->right, $this->context->db, $this->builtins);
+        // Hopefully a builtin query
+        // TODO: Should we reject expressions where the left side is
+        //       neither Field nor Builtin?
+        return $this->getSimpleExpression();
     }
 
     private function getFieldExpression(): string
     {
-        $parts = explode('.', $this->left->lexeme);
+        return match ($this->operator->type) {
+            TokenType::Equal => $this->getContainsExpression(false),
+            TokenType::Unequal => $this->getContainsExpression(true),
+            default => $this->getJsonPathExpression(),
+        };
+    }
 
-        if ($this->operator->type === TokenType::Equal) {
-            if (count($parts) > 1) {
-            }
-        }
-
+    private function getJsonPathExpression(): string
+    {
         return '';
+    }
+
+    private function getContainsExpression(bool $isNot): string
+    {
+        return $isNot ? 'NOT ' : '';
+    }
+
+    private function getSimpleExpression(): string
+    {
+        return $this->getOperand($this->left, $this->context->db, $this->builtins) .
+            $this->getOperator($this->operator->type) .
+            $this->getOperand($this->right, $this->context->db, $this->builtins);
     }
 }
