@@ -14,9 +14,6 @@ use Iterator;
 
 final class Pages implements Iterator
 {
-    public readonly Database $db;
-    public readonly Request $request;
-    public readonly Config $config;
     private string $whereFields = '';
     private string $whereTypes = '';
     private string $limit = '';
@@ -25,7 +22,9 @@ final class Pages implements Iterator
     private Generator $result;
 
     public function __construct(
-        protected readonly Finder $find,
+        public readonly Database $db,
+        public readonly Request $request,
+        public readonly Config $config,
         protected readonly bool $deleted,
     ) {
         $this->db = $find->db;
@@ -51,7 +50,7 @@ final class Pages implements Iterator
         $compiler = new QueryCompiler($this->db, $this->builtins);
         $this->whereFields = $compiler->compile($query);
 
-        return $this;
+        return $this; "field.<lang>
     }
 
     public function types(string ...$types): self

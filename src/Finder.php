@@ -34,11 +34,11 @@ class Finder
     public function __get($key): Pages|Page|Blocks|Block|Menu
     {
         return match ($key) {
-            'pages' => new Pages($this),
-            'page' => new Page($this),
-            'blocks' => new Blocks($this),
-            'block' => new Block($this),
-            'menu' => new Menu($this),
+            'pages' => new Pages($this->db, $this->request, $this->config),
+            'page' => new Page($this->db, $this->request, $this->config),
+            'blocks' => new Blocks($this->db, $this->request, $this->config),
+            'block' => new Block($this->db, $this->request, $this->config),
+            'menu' => new Menu($this->db, $this->request, $this->config),
             default => throw new RuntimeException('Property not supported')
         };
     }
