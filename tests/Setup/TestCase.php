@@ -96,7 +96,28 @@ class TestCase extends BaseTestCase
 
     public function config(array $settings = [], bool $debug = false): Config
     {
-        return new Config('conia', debug: $debug, settings: $settings);
+        $config = new Config('conia', debug: $debug, settings: $settings);
+
+        $config->locale(
+            'en',
+            title: 'English',
+            domains: ['www.example.com'],
+        );
+        $config->locale(
+            'de',
+            title: 'Deutsch',
+            domains: ['www.example.de'],
+            fallback: 'en',
+        );
+        $config->locale(
+            'it',
+            domains: ['www.example.it'],
+            title: 'Italiano',
+            fallback: 'en',
+        );
+        $config->defaultLocale('en');
+
+        return $config;
     }
 
     public function conn(): Connection

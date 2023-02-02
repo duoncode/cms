@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Finder;
 
 use Conia\Core\Exception\ParserException;
+use Conia\Core\Exception\ParserOutputException;
 use Conia\Core\Finder\Input\Token;
 use Conia\Core\Finder\Input\TokenGroup;
 use Conia\Core\Finder\Input\TokenType;
@@ -51,22 +52,26 @@ final class QueryParser
         $this->pos = 0;
 
         while ($this->pos < $this->length) {
-            $token = $this->tokens[$this->pos];
+            try {
+                $token = $this->tokens[$this->pos];
 
-            $result[] = match ($token->group) {
-                TokenGroup::Operand => $this->getExpression($token),
-                TokenGroup::BooleanOperator => $this->getBooleanOperator($token),
-                TokenGroup::LeftParen => $this->getLeftParen($token),
-                TokenGroup::RightParen => $this->getRightParen($token),
+                $result[] = match ($token->group) {
+                    TokenGroup::Operand => $this->getExpression($token),
+                    TokenGroup::BooleanOperator => $this->getBooleanOperator($token),
+                    TokenGroup::LeftParen => $this->getLeftParen($token),
+                    TokenGroup::RightParen => $this->getRightParen($token),
 
-                // Special case Operator:
-                // As we consume operators together with operands, it would
-                // be invalid if we would find operators anywhere else.
-                TokenGroup::Operator => $this->error($token, 'Invalid position for an operator.'),
-            };
+                    // Special case Operator:
+                    // As we consume operators together with operands, it would
+                    // be invalid if we would find operators anywhere else.
+                    TokenGroup::Operator => $this->error($token, 'Invalid position for an operator.'),
+                };
 
-            if ($this->parensBalance < 0) {
-                $this->error($token, 'Parse error. Unbalanced parenthesis');
+                if ($this->parensBalance < 0) {
+                    $this->error($token, 'Parse error. Unbalanced parenthesis');
+                }
+            } catch (ParserOutputException $e) {
+                $this->error($e->token, $e->getMessage());
             }
         }
 
@@ -129,7 +134,7 @@ final class QueryParser
             return new UrlPath($left, $operator, $right);
         }
 
-        return new Comparison($left, $operator, $right, $this->context, $this->builtins);
+        return new Comparison($left, $operator, $right, $this->db, $this->builtins);
     }
 
     private function getExistsCondition(Token $token): Exists
