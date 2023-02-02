@@ -15,10 +15,14 @@ enum TokenType
     case Greater;
     case GreaterEqual;
     case ILike;
+    case INotRegex;
+    case IRegex;
     case IUnlike;
     case Less;
     case LessEqual;
     case Like;
+    case NotRegex;
+    case Regex;
     case Unequal;
     case Unlike;
 

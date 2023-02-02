@@ -8,9 +8,10 @@ use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 
-const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1 > now & null >= 13 & field2 < "string") |' .
-    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3 !~"string%" | path.de-DE != 31 | ' .
-    ' path !~~ \'url\' & field4 ~~ \'%str%\')';
+const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |' .
+    '(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | ' .
+    ' path !~~ \'url\' &field4 ~~\'%str%\' & field5 ~* "(a|b)" & field6 !~* "(a|b)" | ' .
+    ' field7 ~~* "%abc%" | field8 !~~* "%abc")';
 
 test('Simple query', function () {
     $lexer = new QueryLexer();
@@ -239,7 +240,23 @@ test('Token groups', function () {
     expect($tokens[39]->group->name)->toBe('Operand');
     expect($tokens[40]->group->name)->toBe('Operator');
     expect($tokens[41]->group->name)->toBe('Operand');
-    expect($tokens[42]->group->name)->toBe('RightParen');
+    expect($tokens[42]->group->name)->toBe('BooleanOperator');
+    expect($tokens[43]->group->name)->toBe('Operand');
+    expect($tokens[44]->group->name)->toBe('Operator');
+    expect($tokens[45]->group->name)->toBe('Operand');
+    expect($tokens[46]->group->name)->toBe('BooleanOperator');
+    expect($tokens[47]->group->name)->toBe('Operand');
+    expect($tokens[48]->group->name)->toBe('Operator');
+    expect($tokens[49]->group->name)->toBe('Operand');
+    expect($tokens[50]->group->name)->toBe('BooleanOperator');
+    expect($tokens[51]->group->name)->toBe('Operand');
+    expect($tokens[52]->group->name)->toBe('Operator');
+    expect($tokens[53]->group->name)->toBe('Operand');
+    expect($tokens[54]->group->name)->toBe('BooleanOperator');
+    expect($tokens[55]->group->name)->toBe('Operand');
+    expect($tokens[56]->group->name)->toBe('Operator');
+    expect($tokens[57]->group->name)->toBe('Operand');
+    expect($tokens[58]->group->name)->toBe('RightParen');
 });
 
 test('Token types', function () {
@@ -270,11 +287,11 @@ test('Token types', function () {
     expect($tokens[21]->type->name)->toBe('Builtin');
     expect($tokens[22]->type->name)->toBe('Or');
     expect($tokens[23]->type->name)->toBe('Field');
-    expect($tokens[24]->type->name)->toBe('ILike');
+    expect($tokens[24]->type->name)->toBe('Regex');
     expect($tokens[25]->type->name)->toBe('String');
     expect($tokens[26]->type->name)->toBe('Or');
     expect($tokens[27]->type->name)->toBe('Builtin');
-    expect($tokens[28]->type->name)->toBe('IUnlike');
+    expect($tokens[28]->type->name)->toBe('NotRegex');
     expect($tokens[29]->type->name)->toBe('String');
     expect($tokens[30]->type->name)->toBe('Or');
     expect($tokens[31]->type->name)->toBe('Path');
@@ -288,5 +305,21 @@ test('Token types', function () {
     expect($tokens[39]->type->name)->toBe('Field');
     expect($tokens[40]->type->name)->toBe('Like');
     expect($tokens[41]->type->name)->toBe('String');
-    expect($tokens[42]->type->name)->toBe('RightParen');
+    expect($tokens[42]->type->name)->toBe('And');
+    expect($tokens[43]->type->name)->toBe('Field');
+    expect($tokens[44]->type->name)->toBe('IRegex');
+    expect($tokens[45]->type->name)->toBe('String');
+    expect($tokens[46]->type->name)->toBe('And');
+    expect($tokens[47]->type->name)->toBe('Field');
+    expect($tokens[48]->type->name)->toBe('INotRegex');
+    expect($tokens[49]->type->name)->toBe('String');
+    expect($tokens[50]->type->name)->toBe('Or');
+    expect($tokens[51]->type->name)->toBe('Field');
+    expect($tokens[52]->type->name)->toBe('ILike');
+    expect($tokens[53]->type->name)->toBe('String');
+    expect($tokens[54]->type->name)->toBe('Or');
+    expect($tokens[55]->type->name)->toBe('Field');
+    expect($tokens[56]->type->name)->toBe('IUnlike');
+    expect($tokens[57]->type->name)->toBe('String');
+    expect($tokens[58]->type->name)->toBe('RightParen');
 });

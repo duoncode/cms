@@ -66,19 +66,40 @@ final class QueryLexer
                 break;
             case '~':
                 if ($this->matchNext('~')) {
-                    $this->addOperator(TokenType::Like);
+                    if ($this->matchNext('*')) {
+                        // ~~*
+                        $this->addOperator(TokenType::ILike);
+                    } else {
+                        // ~~
+                        $this->addOperator(TokenType::Like);
+                    }
+                } elseif ($this->matchNext('*')) {
+                    // ~*
+                    $this->addOperator(TokenType::IRegex);
                 } else {
-                    $this->addOperator(TokenType::ILike);
+                    // ~
+                    $this->addOperator(TokenType::Regex);
                 }
                 break;
             case '!':
                 if ($this->matchNext('=')) {
+                    // !=
                     $this->addOperator(TokenType::Unequal);
                 } elseif ($this->matchNext('~')) {
                     if ($this->matchNext('~')) {
-                        $this->addOperator(TokenType::Unlike);
+                        if ($this->matchNext('*')) {
+                            // !~~*
+                            $this->addOperator(TokenType::IUnlike);
+                        } else {
+                            // !~~
+                            $this->addOperator(TokenType::Unlike);
+                        }
+                    } elseif ($this->matchNext('*')) {
+                        // !~*
+                        $this->addOperator(TokenType::INotRegex);
                     } else {
-                        $this->addOperator(TokenType::IUnlike);
+                        // !~
+                        $this->addOperator(TokenType::NotRegex);
                     }
                 } else {
                     $this->error(
