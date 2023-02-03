@@ -176,18 +176,19 @@ class TestCase extends BaseTestCase
         }
     }
 
-    public function psrRequest(): PsrServerRequest
+    public function psrRequest(string $localeId = 'en'): PsrServerRequest
     {
         $factory = new Psr17Factory();
-
         $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
             $factory, // ServerRequestFactory
             $factory, // UriFactory
             $factory, // UploadedFileFactory
             $factory  // StreamFactory
         );
+        $request = $creator->fromGlobals();
+        $locale = $this->config()->locales()->get($localeId);
 
-        return $creator->fromGlobals();
+        return $request->withAttribute('locale', $locale);
     }
 
     public function fullTrim(string $text): string

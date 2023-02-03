@@ -12,9 +12,9 @@ use Conia\Core\Finder\Input\TokenType;
 readonly final class Comparison extends Expression implements Output
 {
     public function __construct(
-        public Token $left,
-        public Token $operator,
-        public Token $right,
+        private Token $left,
+        private Token $operator,
+        private Token $right,
         private Context $context,
         private array $builtins,
     ) {
@@ -44,24 +44,31 @@ readonly final class Comparison extends Expression implements Output
 
         throw new ParserOutputException(
             $this->left,
-            'Only fields or `path` are allowed on the left side of an expresseion'
+            'Only fields or `path` are allowed on the left side of an expression.'
         );
     }
 
     private function getFieldExpression(): string
     {
-        [$operator, $jsonOperator, $right] = match ($this->operator->type) {
-            TokenType::Equal => ['@@', '==', $this->getRight()],
-            TokenType::Regex => ['@?', '?', $this->getRegex(false)],
-            TokenType::IRegex => ['@?', '?', $this->getRegex(true)],
-            TokenType::NotRegex => ['@?', '?', $this->getRegex(false)],
-            TokenType::INotRegex => ['@?', '?', $this->getRegex(true)],
-            default => ['@@', $this->operator->lexeme, $this->getRight()],
+        [$operator, $jsonOperator, $right, $negate] = match ($this->operator->type) {
+            TokenType::Equal => ['@@', '==', $this->getRight(), false],
+            TokenType::Regex => ['@?', '?', $this->getRegex(false), false],
+            TokenType::IRegex => ['@?', '?', $this->getRegex(true), false],
+            TokenType::NotRegex => ['@?', '?', $this->getRegex(false), true],
+            TokenType::INotRegex => ['@?', '?', $this->getRegex(true), true],
+            default => ['@@', $this->operator->lexeme, $this->getRight(), false],
         };
 
         $left = $this->getField();
 
-        return sprintf("content %s '$.%s %s %s'", $operator, $left, $jsonOperator, $right);
+        return sprintf(
+            "%sp.content %s '$.%s %s %s'",
+            $negate ? 'NOT ' : '',
+            $operator,
+            $left,
+            $jsonOperator,
+            $right
+        );
     }
 
     private function getRegex(bool $ignoreCase): string
@@ -69,38 +76,69 @@ readonly final class Comparison extends Expression implements Output
         if (!($this->right->type === TokenType::String)) {
             throw new ParserOutputException(
                 $this->right,
-                'Only fields or `path` are allowed on the left side of an expresseion'
+                'Only strings are allowed on the right side of a regex expressions.'
             );
         }
 
         $case = $ignoreCase ? ' flag "i"' : '';
 
         // TODO: quote double quotes, check also in tests
-        $pattern = '"' . trim("'", $this->context->db->quote($this->right->lexeme)) . '"';
+        $pattern = '"' . trim($this->context->db->quote($this->right->lexeme), "'") . '"';
 
         return sprintf('(@ like_regex %s%s)', $pattern, $case);
     }
 
     private function getField(): string
     {
-        return '';
+        $parts = explode('.', $this->left->lexeme);
+
+        return match (count($parts)) {
+            2 => $this->compileField($parts),
+            1 => $parts[0] . '.value',
+            default => $this->compileAccessor($parts),
+        };
+    }
+
+    private function compileField(array $segments): string
+    {
+        return match ($segments[1]) {
+            '*' => $segments[0] . '.value.*',
+            '?' => $segments[0] . '.value.' . $this->getCurrentLocale(),
+            default => implode('.', $segments),
+        };
+    }
+
+    private function compileAccessor(array $segments): string
+    {
+        $accessor = implode('.', $segments);
+
+        if (strpos($accessor, '?') !== false) {
+            throw new ParserOutputException(
+                $this->left,
+                'The questionmark is allowed after the first dot only.'
+            );
+        }
+
+        return $accessor;
+    }
+
+    private function getCurrentLocale(): string
+    {
+        return $this->context->request->get('locale')->id;
     }
 
     private function getRight(): string
     {
-        switch ($this->right->type) {
-            case TokenType::String:
-                return trim("'", $this->context->db->quote($this->right->lexeme));
-            case TokenType::Number:
-            case TokenType::Boolean:
-            case TokenType::Null:
-                return $this->right->lexeme;
-            default:
-                throw new ParserOutputException(
-                    $this->right,
-                    'The right hand side in a field expression must be a literal'
-                );
-        }
+        return match ($this->right->type) {
+            TokenType::String => $this->quote($this->right->lexeme),
+            TokenType::Number,
+            TokenType::Boolean,
+            TokenType::Null => $this->right->lexeme,
+            default => throw new ParserOutputException(
+                $this->right,
+                'The right hand side in a field expression must be a literal'
+            ),
+        };
     }
 
     private function getSimpleExpression(): string
@@ -117,10 +155,17 @@ readonly final class Comparison extends Expression implements Output
             $this->getOperand($this->right, $this->context->db, $this->builtins);
     }
 
-    private function getLocales(): Iterator
+    private function quote(string $string): string
     {
-        foreach ($this->context->config->locales() as $locale) {
-            yield $locale->id;
-        }
+        return sprintf(
+            '"%s"',
+            // Escape all unescaped double quotes
+            // TODO: can prepended backslashes be exploited
+            preg_replace(
+                '/(?<!\\\\)(")/',
+                '\\"',
+                trim($this->context->db->quote($string), "'")
+            )
+        );
     }
 }

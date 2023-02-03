@@ -134,7 +134,7 @@ final class QueryParser
             return new UrlPath($left, $operator, $right);
         }
 
-        return new Comparison($left, $operator, $right, $this->db, $this->builtins);
+        return new Comparison($left, $operator, $right, $this->context, $this->builtins);
     }
 
     private function getExistsCondition(Token $token): Exists
