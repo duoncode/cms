@@ -11,7 +11,7 @@ uses(TestCase::class);
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |' .
     '(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | ' .
     ' path !~~ \'url\' &field4 ~~\'%str%\' & field5 ~* "(a|b)" & field6 !~* "(a|b)" | ' .
-    ' field7 ~~* "%abc%" | field8 !~~* "%abc")';
+    ' field7 ~~* /%abc%/ | field8 !~~* /%a\\/bc/)';
 
 test('Simple query', function () {
     $lexer = new QueryLexer();
@@ -40,24 +40,43 @@ test('Simple query with double quote string', function () {
     expect($tokens[2]->type->name)->toBe('String');
 });
 
-test('Simple query with single quote string and escape', function () {
+test('Simple query with pattern string', function () {
     $lexer = new QueryLexer();
-    $tokens = $lexer->tokens("field = '\"test\"\\'string\\'test'");
+    $tokens = $lexer->tokens('field = /test/');
 
     expect($tokens[0]->type->name)->toBe('Field');
     expect($tokens[1]->type->name)->toBe('Equal');
     expect($tokens[2]->type->name)->toBe('String');
-    expect($tokens[2]->lexeme)->toBe('"test"\'string\'test');
+});
+
+test('Simple query with single quote string and escape', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens("field = '\"test\"\\'st/r\\ing\\'test'");
+
+    expect($tokens[0]->type->name)->toBe('Field');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('String');
+    expect($tokens[2]->lexeme)->toBe('"test"\'st/r\\ing\'test');
 });
 
 test('Simple query with double quote string and escape', function () {
     $lexer = new QueryLexer();
-    $tokens = $lexer->tokens('field = "\'test\'\\"string\\"test"');
+    $tokens = $lexer->tokens('field = "\'test\'\\"str\\ing\\"test"');
 
     expect($tokens[0]->type->name)->toBe('Field');
     expect($tokens[1]->type->name)->toBe('Equal');
     expect($tokens[2]->type->name)->toBe('String');
-    expect($tokens[2]->lexeme)->toBe("'test'\"string\"test");
+    expect($tokens[2]->lexeme)->toBe("'test'\"str\\ing\"test");
+});
+
+test('Simple query with pattern string and escape', function () {
+    $lexer = new QueryLexer();
+    $tokens = $lexer->tokens('field = /\'test\'\\/st"r\\i"ng\\/test/');
+
+    expect($tokens[0]->type->name)->toBe('Field');
+    expect($tokens[1]->type->name)->toBe('Equal');
+    expect($tokens[2]->type->name)->toBe('String');
+    expect($tokens[2]->lexeme)->toBe("'test'/st\"r\\i\"ng/test");
 });
 
 test('Simple query with special character in identifier', function () {

@@ -125,6 +125,7 @@ final class QueryLexer
                 break;
             case '"':
             case "'":
+            case '/':
                 $this->consumeString($char);
                 break;
             default:
