@@ -1,4 +1,5 @@
 CREATE EXTENSION btree_gist;
+CREATE EXTENSION btree_gin;
 CREATE EXTENSION unaccent;
 
 CREATE SCHEMA conia;
@@ -158,20 +159,20 @@ CREATE FUNCTION conia.check_if_deletable() RETURNS trigger
    LANGUAGE plpgsql AS
 $$BEGIN
     IF (
-        OLD.deleted IS NOT NULL
+        NEW.deleted IS NOT NULL
         AND (
             SELECT count(*)
             FROM conia.menuitems mi
             WHERE
-                mi.data->>type = 'page'
-                AND mi.data->>page = OLD.uid
+                mi.data->>'type' = 'page'
+                AND mi.data->>'page' = OLD.uid
         ) > 0
     )
     THEN
         RAISE EXCEPTION 'Page is still referenced in a menu';
     END IF;
 
-    RETURN OLD;
+    RETURN NEW;
 END;$$;
 CREATE TRIGGER pages_trigger_01_delete BEFORE UPDATE ON conia.pages
    FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
