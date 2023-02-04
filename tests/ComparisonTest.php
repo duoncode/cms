@@ -89,6 +89,24 @@ test('Operator like/ilike', function () {
     expect($compiler->compile('field !~~* /%iunlike/'))->toBe("p.content->'field'->>'value' NOT ILIKE '%iunlike'");
 });
 
+test('Remaining operators', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    expect($compiler->compile('builtin="string"'))->toBe("builtin = 'string'");
+    expect($compiler->compile('builtin!="string"'))->toBe("builtin != 'string'");
+    expect($compiler->compile('builtin>23'))->toBe('builtin > 23');
+    expect($compiler->compile('builtin>=23'))->toBe('builtin >= 23');
+    expect($compiler->compile('builtin<23'))->toBe('builtin < 23');
+    expect($compiler->compile('builtin<=23'))->toBe('builtin <= 23');
+
+    expect($compiler->compile('field="string"'))->toBe('p.content @@ \'$.field.value == "string"\'');
+    expect($compiler->compile('field!="string"'))->toBe('p.content @@ \'$.field.value != "string"\'');
+    expect($compiler->compile('field>23'))->toBe('p.content @@ \'$.field.value > 23\'');
+    expect($compiler->compile('field>=23'))->toBe('p.content @@ \'$.field.value >= 23\'');
+    expect($compiler->compile('field<23'))->toBe('p.content @@ \'$.field.value < 23\'');
+    expect($compiler->compile('field<=23'))->toBe('p.content @@ \'$.field.value <= 23\'');
+});
+
 test('Multilang field operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
