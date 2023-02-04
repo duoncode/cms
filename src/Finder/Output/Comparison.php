@@ -22,24 +22,28 @@ readonly final class Comparison extends Expression implements Output
 
     public function get(): string
     {
+        switch ($this->operator->type) {
+            case TokenType::Like:
+            case TokenType::Unlike:
+            case TokenType::ILike:
+            case TokenType::IUnlike:
+                return $this->getSqlExpression();
+        }
+
         if ($this->left->type === TokenType::Field) {
-            switch ($this->operator->type) {
-                case TokenType::Like:
-                case TokenType::Unlike:
-                case TokenType::ILike:
-                case TokenType::IUnlike:
-                    return $this->getSimpleExpression();
-                default:
-                    return $this->getFieldExpression();
+            if ($this->right->type === TokenType::Builtin) {
+                return $this->getSqlExpression();
             }
+
+            return $this->getJsonPathExpression();
         }
 
         if ($this->left->type === TokenType::Builtin) {
-            return $this->getSimpleExpression();
+            return $this->getSqlExpression();
         }
 
         if ($this->left->type === TokenType::Path) {
-            return $this->getPathExpression();
+            return $this->getUrlPathExpression();
         }
 
         throw new ParserOutputException(
@@ -48,7 +52,7 @@ readonly final class Comparison extends Expression implements Output
         );
     }
 
-    private function getFieldExpression(): string
+    private function getJsonPathExpression(): string
     {
         [$operator, $jsonOperator, $right, $negate] = match ($this->operator->type) {
             TokenType::Equal => ['@@', '==', $this->getRight(), false],
@@ -141,14 +145,17 @@ readonly final class Comparison extends Expression implements Output
         };
     }
 
-    private function getSimpleExpression(): string
+    private function getSqlExpression(): string
     {
-        return $this->getOperand($this->left, $this->context->db, $this->builtins) .
-            $this->getOperator($this->operator->type) .
-            $this->getOperand($this->right, $this->context->db, $this->builtins);
+        return sprintf(
+            '%s %s %s',
+            $this->getOperand($this->left, $this->context->db, $this->builtins),
+            $this->getOperator($this->operator->type),
+            $this->getOperand($this->right, $this->context->db, $this->builtins),
+        );
     }
 
-    private function getPathExpression(): string
+    private function getUrlPathExpression(): string
     {
         return $this->getOperand($this->left, $this->context->db, $this->builtins) .
             $this->getOperator($this->operator->type) .

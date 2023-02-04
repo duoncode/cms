@@ -75,6 +75,20 @@ test('Operator regex operand pattern', function () {
     expect($compiler->compile('field !~* /^test$/'))->toBe("NOT p.content @? '$.field.value ? (@ like_regex \"^test$\" flag \"i\")'");
 });
 
+test('Operator like/ilike', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    expect($compiler->compile('builtin ~~ "%like\"%"'))->toBe("builtin LIKE '%like\"%'");
+    expect($compiler->compile('builtin ~~* /%ilike%/'))->toBe("builtin ILIKE '%ilike%'");
+    expect($compiler->compile('builtin !~~ /%unlike/'))->toBe("builtin NOT LIKE '%unlike'");
+    expect($compiler->compile('builtin !~~* /%iunlike/'))->toBe("builtin NOT ILIKE '%iunlike'");
+
+    expect($compiler->compile('field ~~ "%like\"%"'))->toBe("p.content->'field'->>'value' LIKE '%like\"%'");
+    expect($compiler->compile('field ~~* /%ilike%/'))->toBe("p.content->'field'->>'value' ILIKE '%ilike%'");
+    expect($compiler->compile('field !~~ /%unlike/'))->toBe("p.content->'field'->>'value' NOT LIKE '%unlike'");
+    expect($compiler->compile('field !~~* /%iunlike/'))->toBe("p.content->'field'->>'value' NOT ILIKE '%iunlike'");
+});
+
 test('Multilang field operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
