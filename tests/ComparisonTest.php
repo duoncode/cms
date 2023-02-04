@@ -87,6 +87,9 @@ test('Operator like/ilike', function () {
     expect($compiler->compile('field ~~* /%ilike%/'))->toBe("p.content->'field'->>'value' ILIKE '%ilike%'");
     expect($compiler->compile('field !~~ /%unlike/'))->toBe("p.content->'field'->>'value' NOT LIKE '%unlike'");
     expect($compiler->compile('field !~~* /%iunlike/'))->toBe("p.content->'field'->>'value' NOT ILIKE '%iunlike'");
+
+    expect($compiler->compile('builtin ~~ field'))->toBe("builtin LIKE p.content->'field'->>'value'");
+    expect($compiler->compile('field ~~ builtin'))->toBe("p.content->'field'->>'value' LIKE builtin");
 });
 
 test('Remaining operators', function () {
@@ -105,6 +108,10 @@ test('Remaining operators', function () {
     expect($compiler->compile('field>=23'))->toBe('p.content @@ \'$.field.value >= 23\'');
     expect($compiler->compile('field<23'))->toBe('p.content @@ \'$.field.value < 23\'');
     expect($compiler->compile('field<=23'))->toBe('p.content @@ \'$.field.value <= 23\'');
+
+    expect($compiler->compile('builtin>field'))->toBe("builtin > p.content->'field'->>'value'");
+    expect($compiler->compile('field<=builtin'))->toBe("p.content->'field'->>'value' <= builtin");
+    expect($compiler->compile('field=field2'))->toBe("p.content->'field'->>'value' = p.content->'field2'->>'value'");
 });
 
 test('Multilang field operand', function () {

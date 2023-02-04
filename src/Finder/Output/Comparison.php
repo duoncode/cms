@@ -31,7 +31,10 @@ readonly final class Comparison extends Expression implements Output
         }
 
         if ($this->left->type === TokenType::Field) {
-            if ($this->right->type === TokenType::Builtin) {
+            if (
+                $this->right->type === TokenType::Builtin
+                || $this->right->type === TokenType::Field
+            ) {
                 return $this->getSqlExpression();
             }
 
