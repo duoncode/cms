@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Conia\Core\Exception\ParserOutputException;
 use Conia\Core\Finder\Context;
 use Conia\Core\Finder\QueryCompiler;
 use Conia\Core\Tests\Setup\TestCase;
@@ -131,3 +132,9 @@ test('Keyword now', function () {
 
     expect($compiler->compile('test = now'))->toBe('test = NOW()');
 });
+
+test('Reject literal on left side', function () {
+    $compiler = new QueryCompiler($this->context, []);
+
+    $compiler->compile('"string" = 1');
+})->throws(ParserOutputException::class, 'Only fields or ');
