@@ -45,10 +45,6 @@ readonly final class Comparison extends Expression implements Output
             return $this->getSqlExpression();
         }
 
-        if ($this->left->type === TokenType::Path) {
-            return $this->getUrlPathExpression();
-        }
-
         throw new ParserOutputException(
             $this->left,
             'Only fields or `path` are allowed on the left side of an expression.'
@@ -156,13 +152,6 @@ readonly final class Comparison extends Expression implements Output
             $this->getOperator($this->operator->type),
             $this->getOperand($this->right, $this->context->db, $this->builtins),
         );
-    }
-
-    private function getUrlPathExpression(): string
-    {
-        return $this->getOperand($this->left, $this->context->db, $this->builtins) .
-            $this->getOperator($this->operator->type) .
-            $this->getOperand($this->right, $this->context->db, $this->builtins);
     }
 
     private function quote(string $string): string
