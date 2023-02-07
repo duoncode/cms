@@ -6,14 +6,13 @@ CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
 
-CREATE FUNCTION conia.update_changed_column() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION conia.update_changed_column()
+    RETURNS TRIGGER AS $$
 BEGIN
    NEW.changed = now();
    RETURN NEW;
 END;
-$$;
+$$ LANGUAGE plpgsql;
 
 
 CREATE TABLE conia.userroles (
@@ -49,7 +48,7 @@ CREATE UNIQUE INDEX uix_users_username ON conia.users
     USING btree (lower(username)) WHERE (deleted IS NULL AND username IS NOT NULL);
 CREATE UNIQUE INDEX uix_users_email ON conia.users
     USING btree (lower(email)) WHERE (deleted IS NULL AND email IS NOT NULL);
-CREATE OR REPLACE FUNCTION conia.process_users_audit()
+CREATE FUNCTION conia.process_users_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.users (
@@ -66,7 +65,7 @@ EXCEPTION WHEN unique_violation THEN
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION conia.validate_user_credentials()
+CREATE FUNCTION conia.validate_user_credentials()
     RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.username IS NULL AND NEW.email IS NULL THEN
@@ -126,7 +125,6 @@ CREATE TABLE conia.pages (
     changed timestamp with time zone NOT NULL DEFAULT now(),
     deleted timestamp with time zone,
     content jsonb NOT NULL,
-    tsv tsvector NOT NULL GENERATED ALWAYS AS (jsonb_to_tsvector('simple', content, '["string"]')) STORED,
     CONSTRAINT pk_pages PRIMARY KEY (page),
     CONSTRAINT uc_pages_uid UNIQUE (uid),
     CONSTRAINT fk_pages_users_creator FOREIGN KEY (creator)
@@ -136,9 +134,8 @@ CREATE TABLE conia.pages (
     CONSTRAINT fk_pages_pagetypes FOREIGN KEY (pagetype)
         REFERENCES conia.pagetypes (pagetype) ON UPDATE CASCADE ON DELETE NO ACTION
 );
-CREATE INDEX ix_pages_tsv ON conia.pages USING GIN(tsv);
 CREATE INDEX ix_pages_content ON conia.pages USING GIN (pagetype, content);
-CREATE OR REPLACE FUNCTION conia.process_pages_audit()
+CREATE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.pages (
@@ -155,9 +152,9 @@ EXCEPTION WHEN unique_violation THEN
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE FUNCTION conia.check_if_deletable() RETURNS trigger
-   LANGUAGE plpgsql AS
-$$BEGIN
+CREATE FUNCTION conia.check_if_deletable()
+    RETURNS TRIGGER AS $$
+BEGIN
     IF (
         NEW.deleted IS NOT NULL
         AND (
@@ -173,7 +170,8 @@ $$BEGIN
     END IF;
 
     RETURN NEW;
-END;$$;
+END;
+$$ LANGUAGE plpgsql;
 CREATE TRIGGER pages_trigger_01_delete BEFORE UPDATE ON conia.pages
    FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
 CREATE TRIGGER pages_trigger_02_change BEFORE UPDATE ON conia.pages
@@ -181,6 +179,17 @@ CREATE TRIGGER pages_trigger_02_change BEFORE UPDATE ON conia.pages
 CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
     ON conia.pages FOR EACH ROW EXECUTE PROCEDURE
     conia.process_pages_audit();
+
+
+CREATE TABLE conia.fulltext (
+    page integer NOT NULL,
+    lang text NOT NULL CHECK (char_length(lang) = 32),
+    document tsvector NOT NULL,
+    CONSTRAINT pk_fulltext PRIMARY KEY (page, lang),
+    CONSTRAINT fk_fulltext_pages FOREIGN KEY (page)
+        REFERENCES conia.pages (page)
+);
+CREATE INDEX ix_pages_tsv ON conia.fulltext USING GIN(document);
 
 
 CREATE TABLE conia.urlpaths (
@@ -203,7 +212,7 @@ CREATE TABLE conia.drafts (
     CONSTRAINT pk_drafts PRIMARY KEY (page),
     CONSTRAINT fk_drafts_pages FOREIGN KEY (page) REFERENCES conia.pages (page)
 );
-CREATE OR REPLACE FUNCTION conia.process_drafts_audit()
+CREATE FUNCTION conia.process_drafts_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.drafts (
