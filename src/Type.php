@@ -9,6 +9,7 @@ use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Attr\Description;
+use Conia\Core\Field\Attr\Fulltext;
 use Conia\Core\Field\Attr\Height;
 use Conia\Core\Field\Attr\Label;
 use Conia\Core\Field\Attr\MultiLang;
@@ -28,7 +29,6 @@ abstract class Type
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
-
     protected array $list = [];
 
     final public function __construct(
@@ -151,33 +151,24 @@ abstract class Type
             switch ($attr->getName()) {
                 case Required::class:
                     $field->required(true);
-
                     break;
-
                 case MultiLang::class:
                     $field->multilang(true);
-
                     break;
-
-
                 case Label::class:
                     $field->label($attr->newInstance()->label);
-
                     break;
-
                 case Description::class:
                     $field->description($attr->newInstance()->description);
-
                     break;
-
+                case Fulltext::class:
+                    $field->fulltext($attr->newInstance()->fulltextWeight);
+                    break;
                 case Width::class:
                     $field->width($attr->newInstance()->width);
-
                     break;
-
                 case Height::class:
                     $field->height($attr->newInstance()->height);
-
                     break;
             }
         }

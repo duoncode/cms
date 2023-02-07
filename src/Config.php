@@ -88,10 +88,11 @@ class Config extends BaseConfig
         string $id,
         string $title,
         ?string $fallback = null,
+        ?string $pgDict = null,
         array|null $domains = null,
         ?string $urlPrefix = null,
     ) {
-        $this->locales->add($id, $title, $fallback, $domains, $urlPrefix);
+        $this->locales->add($id, $title, $fallback, $pgDict, $domains, $urlPrefix);
     }
 
     public function defaultLocale(string $locale): void

@@ -12,6 +12,7 @@ class Locales
 {
     /** @var array<string, Locale> */
     protected array $locales = [];
+
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
 
@@ -19,10 +20,11 @@ class Locales
         string $id,
         string $title,
         ?string $fallback = null,
+        ?string $pgDict = null,
         ?array $domains = null,
         ?string $urlPrefix = null,
     ) {
-        $this->locales[$id] = new Locale($this, $id, $title, $fallback, $domains, $urlPrefix);
+        $this->locales[$id] = new Locale($this, $id, $title, $fallback, $pgDict, $domains, $urlPrefix);
     }
 
     public function get(string $id): Locale

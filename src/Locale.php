@@ -14,6 +14,7 @@ class Locale
         public readonly string $id,
         public readonly string $title,
         public readonly ?string $fallback = null,
+        public readonly ?string $pgDict = null,
         ?array $domains = null,
         ?string $urlPrefix = null,
     ) {
