@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Field;
 
+use Conia\Core\Field\Attr\FulltextWeight;
 use Conia\Core\Type;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
@@ -16,6 +17,7 @@ abstract class Field
     protected bool $required = false;
     protected ?int $width = null;
     protected ?int $height = null;
+    protected ?FulltextWeight $fulltextWeight = null;
 
     public function __construct(protected string $label)
     {
@@ -73,6 +75,18 @@ abstract class Field
     public function isMultilang(): bool
     {
         return $this->multilang;
+    }
+
+    public function fulltext(FulltextWeight $fulltextWeight): static
+    {
+        $this->fulltextWeight = $fulltextWeight;
+
+        return $this;
+    }
+
+    public function getFulltextWeight(): ?FulltextWeight
+    {
+        return $this->fulltextWeight;
     }
 
     public function width(int $width): static
