@@ -21,11 +21,21 @@ FROM
     LEFT JOIN conia.urlpaths up ON
         up.page = p.page
 WHERE
+    1 = 1
 <?php if (!isset($deleted) || !$deleted) : ?>
-    p.deleted IS NULL AND
+    AND p.deleted IS NULL
+<?php endif ?>
+<?php if (!isset($published)) : ?>
+    AND p.published = true
+<?php else: ?>
+    AND p.published = :published
 <?php endif ?>
 <?php if (isset($condition)) : ?>
-    <?= $condition ?>;
-<?php elseif (isset($path)) : ?>
-    up.path = :path
+    AND <?= $condition ?>;
+<?php endif ?>
+<?php if (isset($order)) : ?>
+<?= $order ?>;
+<?php endif ?>
+<?php if (isset($limit)) : ?>
+<?= $limit ?>;
 <?php endif ?>

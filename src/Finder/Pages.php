@@ -105,15 +105,16 @@ final class Pages implements Iterator
 
     private function fetchResult(): void
     {
-        $conditions = implode("    AND\n", array_filter([
+        $conditions = implode(' AND ', array_filter([
             trim($this->whereFields),
             trim($this->whereTypes),
         ], fn ($clause) => !empty($clause)));
-        $conditions .= $this->order . $this->limit;
 
         $this->result = $this->context->db->pages->find([
             'condition' => $conditions,
             'deleted' => $this->deleted,
+            'order' => $this->order,
+            'limit' => $this->limit,
         ])->lazy();
     }
 
