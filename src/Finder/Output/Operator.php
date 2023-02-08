@@ -18,8 +18,8 @@ class Operator implements Output
     public function get(): string
     {
         return match ($this->token->type) {
-            TokenType::And => 'AND',
-            TokenType::Or => 'OR',
+            TokenType::And => ' AND ',
+            TokenType::Or => ' OR ',
             default => throw new ParserException('Invalid boolean operator'),
         };
     }
