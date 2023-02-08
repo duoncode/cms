@@ -30,7 +30,7 @@ final class QueryCompiler
         $clause = '';
 
         foreach ($parserOutput as $output) {
-            $clause = $output->get();
+            $clause .= $output->get();
         }
 
         return $clause;
