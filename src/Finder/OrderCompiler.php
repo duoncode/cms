@@ -40,7 +40,7 @@ final class OrderCompiler
         }
 
         if (count($expressions) > 0) {
-            return "\nORDER BY\n    " . implode(",\n    ", $expressions);
+            return "\n    " . implode(",\n    ", $expressions);
         }
 
         return '';

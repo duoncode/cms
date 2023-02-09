@@ -25,7 +25,7 @@ class Page
 
     public function catchall(Context $context, Finder $find): Response
     {
-        $data = $find->page->byUrl($context->request->uri()->getPath());
+        $data = $find->page->byPath($context->request->uri()->getPath());
 
         if (!$data) {
             throw new HttpNotFound();

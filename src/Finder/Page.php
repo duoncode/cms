@@ -15,10 +15,12 @@ class Page
     ) {
     }
 
-    public function byPath(string $path): ?array
+    public function byPath(string $path, ?bool $deleted = false, ?bool $published = true): ?array
     {
         $page = $this->context->db->pages->find([
             'path' => $path,
+            'published' => $published,
+            'deleted' => $deleted,
         ])->one();
 
         if ($page) {

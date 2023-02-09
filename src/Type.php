@@ -26,13 +26,13 @@ use ReflectionProperty;
 
 abstract class Type
 {
+    public readonly Request $request;
+    public readonly Config $config;
+    protected readonly Database $db;
     protected static string $name = '';
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
-    protected readonly Request $request;
-    protected readonly Config $config;
-    protected readonly Database $db;
     protected array $list = [];
 
     final public function __construct(

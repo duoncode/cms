@@ -16,8 +16,8 @@ final class Pages implements Iterator
     private string $whereTypes = '';
     private string $order = '';
     private ?int $limit = null;
-    private readonly ?bool $deleted;
-    private readonly ?bool $published;
+    private ?bool $deleted = false;
+    private ?bool $published = true;
     private readonly array $builtins;
     private Generator $result;
 
@@ -70,6 +70,20 @@ final class Pages implements Iterator
         return $this;
     }
 
+    public function published(?bool $published): self
+    {
+        $this->published = $published;
+
+        return $this;
+    }
+
+    public function deleted(?bool $deleted): self
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
     public function rewind(): void
     {
         if (!isset($this->result)) {
@@ -118,6 +132,7 @@ final class Pages implements Iterator
         $this->result = $this->context->db->pages->find([
             'condition' => $conditions,
             'deleted' => $this->deleted,
+            'published' => $this->published,
             'order' => $this->order,
             'limit' => $this->limit,
         ])->lazy();
@@ -129,9 +144,9 @@ final class Pages implements Iterator
 
         foreach ($types as $type) {
             if (class_exists($type) && is_subclass_of($type, Type::class)) {
-                $result[] = 'pt.classname = ' . $this->db->quote($type);
+                $result[] = 'pt.classname = ' . $this->context->db->quote($type);
             } else {
-                $result[] = 'pt.name = ' . $this->db->quote($type);
+                $result[] = 'pt.name = ' . $this->context->db->quote($type);
             }
         }
 
@@ -140,27 +155,5 @@ final class Pages implements Iterator
         }
 
         return '';
-    }
-
-    private function left(string $left): string
-    {
-        if (str_contains('.', $left)) {
-            [$l, $r] = explode('.', $left);
-
-            return "p.content->'{$l}'->>'{$r}'";
-        }
-
-        return match ($left) {
-            'editor' => 'coalesce(ue.display, coalesce(ue.username, ue.email))',
-            'creator' => 'coalesce(uc.display, coalesce(uc.username, uc.email))',
-            'id' => 'p.uid',
-            'uid' => 'p.uid',
-            default => "p.content->'{$left}'->>'value'",
-        };
-    }
-
-    private function right(string $right): string
-    {
-        return $this->db->quote($right);
     }
 }
