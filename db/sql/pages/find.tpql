@@ -5,12 +5,13 @@ SELECT DISTINCT
     p.published,
     p.hidden,
     p.locked,
+    coalesce()
     uc.uid AS creator,
     ue.uid AS editor,
     p.created,
     p.changed,
     p.deleted,
-    p.content
+    p.content::text
 FROM
     conia.pages p
     INNER JOIN conia.pagetypes pt USING(pagetype)
@@ -22,20 +23,27 @@ FROM
         up.page = p.page
 WHERE
     1 = 1
-<?php if (!isset($deleted) || !$deleted) : ?>
+
+<?php if (isset($deleted)) : ?>
+    <?php if ($deleted) : ?>
+    AND p.deleted IS NOT NULL
+    <?php else: ?>
     AND p.deleted IS NULL
+    <?php endif ?>
 <?php endif ?>
-<?php if (!isset($published)) : ?>
-    AND p.published = true
-<?php else: ?>
+
+<?php if (isset($published)) : ?>
     AND p.published = :published
 <?php endif ?>
+
 <?php if (isset($condition)) : ?>
-    AND <?= $condition ?>;
+    AND <?= $condition ?>
 <?php endif ?>
-<?php if (isset($order)) : ?>
-<?= $order ?>;
+
+<?php if (isset($orderBy)) : ?>
+ORDER BY <?= $orderBy ?>
 <?php endif ?>
+
 <?php if (isset($limit)) : ?>
-<?= $limit ?>;
-<?php endif ?>
+LIMIT :limit
+<?php endif ?>;

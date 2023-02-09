@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Chuck\Request;
-use Conia\Core\Config;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Finder\Block;
 use Conia\Core\Finder\Blocks;
-use Conia\Core\Finder\Context;
 use Conia\Core\Finder\Menu;
 use Conia\Core\Finder\Page;
 use Conia\Core\Finder\Pages;
-use Conia\Quma\Database;
 
 /**
  * @psalm-property-read Pages  $pages
@@ -24,28 +20,26 @@ use Conia\Quma\Database;
  */
 class Finder
 {
-    private readonly Context $context;
-
-    public function __construct(Database $db, Request $request, Config $config)
+    public function __construct(private readonly Context $context)
     {
-        $this->context = new Context($db, $request, $config);
     }
 
     public function __get($key): Pages|Page|Blocks|Block|Menu
     {
         return match ($key) {
-            'pages' => new Pages($this->context),
-            'page' => new Page($this->context),
-            'blocks' => new Blocks($this->context),
-            'block' => new Block($this->context),
-            'menu' => new Menu($this->context),
+            'pages' => new Pages($this->context, $this),
+            'page' => new Page($this->context, $this),
+            'blocks' => new Blocks($this->context, $this),
+            'block' => new Block($this->context, $this),
+            'menu' => new Menu($this->context, $this),
             default => throw new RuntimeException('Property not supported')
         };
     }
 
-    public function pages(string $query = '', bool $deleted = false): Pages
-    {
-        return (new Pages($this, $deleted))->find($query);
+    public function pages(
+        string $query = '',
+    ): Pages {
+        return (new Pages($this->context, $this))->find($query);
     }
 
     public function page(
@@ -54,6 +48,6 @@ class Finder
         int $limit = 0,
         string $order = '',
     ): array {
-        return (new Page($this))->find($query, $types, $limit, $order);
+        return (new Page($this->context, $this))->find($query, $types, $limit, $order);
     }
 }

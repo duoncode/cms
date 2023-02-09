@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
+use Conia\Core\Context;
+use Conia\Core\Finder;
 use Conia\Core\Type;
 use Generator;
 use Iterator;
@@ -12,14 +14,16 @@ final class Pages implements Iterator
 {
     private string $whereFields = '';
     private string $whereTypes = '';
-    private string $limit = '';
     private string $order = '';
+    private ?int $limit = null;
+    private readonly ?bool $deleted;
+    private readonly ?bool $published;
     private readonly array $builtins;
     private Generator $result;
 
     public function __construct(
         private readonly Context $context,
-        private readonly bool $deleted,
+        private readonly Finder $find,
     ) {
         $this->builtins = [
             'changed' => 'p.changed',
@@ -36,7 +40,7 @@ final class Pages implements Iterator
         ];
     }
 
-    public function find(string $query, bool $deleted = false): self
+    public function find(string $query): self
     {
         $compiler = new QueryCompiler($this->context, $this->builtins);
         $this->whereFields = $compiler->compile($query);
@@ -61,7 +65,7 @@ final class Pages implements Iterator
 
     public function limit(int $limit): self
     {
-        $this->limit = $limit > 0 ? "\nLIMIT " . (string)$limit : '';
+        $this->limit = $limit;
 
         return $this;
     }
@@ -84,8 +88,9 @@ final class Pages implements Iterator
 
         $class = $page['classname'];
         $page['content'] = json_decode($page['content'], true);
+        $context = $this->context;
 
-        return new $class($this->request, $this->config, $this->find, $page);
+        return new $class($context->request, $context->config, $this, $page);
     }
 
     public function key(): int

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
+use Conia\Core\Context;
+
 final class QueryCompiler
 {
     use CompilesField;

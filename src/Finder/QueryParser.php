@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
+use Conia\Core\Context;
 use Conia\Core\Exception\ParserException;
 use Conia\Core\Exception\ParserOutputException;
 use Conia\Core\Finder\Input\Token;

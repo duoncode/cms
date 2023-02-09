@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
+use Conia\Core\Context;
+use Conia\Core\Finder;
+
 class Page
 {
     public function __construct(
         private readonly Context $context,
+        private readonly Finder $find,
     ) {
     }
 
@@ -26,9 +30,6 @@ class Page
 
     public function find(
         string $query,
-        array $types = [],
-        int $limit = 0,
-        string $order = '',
     ): array {
         return [];
     }
