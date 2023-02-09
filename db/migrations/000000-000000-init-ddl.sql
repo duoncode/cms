@@ -173,7 +173,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 CREATE TRIGGER pages_trigger_01_delete BEFORE UPDATE ON conia.pages
-   FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
+    FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
 CREATE TRIGGER pages_trigger_02_change BEFORE UPDATE ON conia.pages
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
 CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
