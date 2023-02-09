@@ -9,9 +9,8 @@ use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Renderer\Render;
-use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Config;
+use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Type;
 use Throwable;
@@ -24,19 +23,18 @@ class Page
     ) {
     }
 
-    public function catchall(Request $request, Config $config, Finder $find): Response
+    public function catchall(Context $context, Finder $find): Response
     {
-        $data = $find->page->byUrl($request->uri()->getPath());
+        $data = $find->page->byUrl($context->request->uri()->getPath());
 
         if (!$data) {
             throw new HttpNotFound();
         }
 
-
         $class = $data['classname'];
 
         if (is_subclass_of($class, Type::class)) {
-            $page = new $class($request, $config, $find, $data);
+            $page = new $class($context, $find, $data);
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {

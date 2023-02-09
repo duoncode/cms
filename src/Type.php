@@ -19,6 +19,7 @@ use Conia\Core\Field\Field;
 use Conia\Core\Finder;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
+use Conia\Quma\Database;
 use Generator;
 use ReflectionClass;
 use ReflectionProperty;
@@ -29,15 +30,21 @@ abstract class Type
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
+    protected readonly Request $request;
+    protected readonly Config $config;
+    protected readonly Database $db;
     protected array $list = [];
 
     final public function __construct(
-        public readonly Request $request,
-        public readonly Config $config,
-        public readonly Finder $find,
+        protected readonly Context $context,
+        protected readonly Finder $find,
         protected readonly array $data,
     ) {
         $this->initFields();
+
+        $this->db = $context->db;
+        $this->request = $context->request;
+        $this->config = $context->config;
     }
 
     final public function __get(string $fieldName): Value
