@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Core;
 
 use Conia\Chuck\Request;
 use Conia\Core\Config;
