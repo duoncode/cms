@@ -12,20 +12,20 @@ use Conia\Core\Value\ValueContext;
 
 class Image extends Field
 {
-    protected bool $single = false;
+    protected bool $multiple = false;
 
     public function value(Type $page, ValueContext $context): Images|SingleImage
     {
-        if ($this->single) {
-            return new SingleImage($page, $this, $context);
+        if ($this->multiple) {
+            return new Images($page, $this, $context);
         }
 
-        return new Images($page, $this, $context);
+        return new SingleImage($page, $this, $context);
     }
 
-    public function single(bool $single = true): static
+    public function multiple(bool $multiple = true): static
     {
-        $this->single = $single;
+        $this->multiple = $multiple;
 
         return $this;
     }
