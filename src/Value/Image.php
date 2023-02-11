@@ -23,7 +23,11 @@ class Image extends File
         return sprintf(
             '<img src="%s" alt="%s"/>',
             $this->url($bust),
-            htmlspecialchars($this->data['files'][0]['title'] ?? '', ENT_QUOTES, 'UTF-8')
+            htmlspecialchars(
+                $this->alt() ?: strip_tags($this->title()),
+                ENT_QUOTES,
+                'UTF-8'
+            )
         );
     }
 
@@ -48,6 +52,42 @@ class Image extends File
         $this->crop = $crop;
 
         return $this;
+    }
+
+    public function title(): string
+    {
+        return $this->textValue('title');
+    }
+
+    public function alt(): string
+    {
+        return $this->textValue('alt');
+    }
+
+    public function textValue(string $key): string
+    {
+        if ($this->translate) {
+            return $this->translated($key);
+        }
+
+        return $this->data['files'][0][$key] ?? '';
+    }
+
+    protected function translated(string $key): string
+    {
+        $locale = $this->locale;
+
+        while ($locale) {
+            $value = $this->data['files'][0][$key][$locale->id] ?? null;
+
+            if ($value) {
+                return $value;
+            }
+
+            $locale = $locale->fallback();
+        }
+
+        return '';
     }
 
     protected function getImage(): Asset

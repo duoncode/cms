@@ -6,8 +6,7 @@ namespace Conia\Core\Field;
 
 use Conia\Core\Field\Field;
 use Conia\Core\Type;
-use Conia\Core\Value\Image as SingleImage;
-use Conia\Core\Value\Images;
+use Conia\Core\Value;
 use Conia\Core\Value\ValueContext;
 
 class Image extends Field
@@ -15,13 +14,21 @@ class Image extends Field
     protected bool $multiple = false;
     protected bool $translateImage = false;
 
-    public function value(Type $page, ValueContext $context): Images|SingleImage
+    public function value(Type $page, ValueContext $context): Value\Images|Value\Image
     {
         if ($this->multiple) {
-            return new Images($page, $this, $context);
+            if ($this->translateImage) {
+                return new Value\TranslatedImages($page, $this, $context);
+            }
+
+            return new Value\Images($page, $this, $context);
         }
 
-        return new SingleImage($page, $this, $context);
+        if ($this->translateImage) {
+            return new Value\TranslatedImage($page, $this, $context);
+        }
+
+        return new Value\Image($page, $this, $context);
     }
 
     public function multiple(bool $multiple = true): static
@@ -36,10 +43,5 @@ class Image extends Field
          $this->translateImage = $translate;
 
          return $this;
-     }
-
-     public function shouldTranslateImage(): bool
-     {
-         return $this->translateImage;
      }
 }
