@@ -193,7 +193,6 @@ abstract class Type
                         throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
                     }
 
-                    $field->translate(true);
                     $field->translateImage(true);
 
                     break;

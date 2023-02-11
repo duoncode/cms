@@ -41,6 +41,7 @@ class Image extends Field
      public function translateImage(bool $translate = true): static
      {
          $this->translateImage = $translate;
+         $this->translate = $translate;
 
          return $this;
      }
