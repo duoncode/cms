@@ -16,6 +16,7 @@ use Conia\Core\Field\Attr\Label;
 use Conia\Core\Field\Attr\Multiple;
 use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Translate;
+use Conia\Core\Field\Attr\TranslateImage;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Finder;
@@ -185,6 +186,14 @@ abstract class Type
                     }
 
                     $field->multiple(true);
+
+                    break;
+                case TranslateImage::class:
+                    if (!$field instanceof \Conia\Core\Field\Image) {
+                        throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
+                    }
+
+                    $field->translateImage(true);
 
                     break;
             }

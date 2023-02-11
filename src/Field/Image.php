@@ -13,6 +13,7 @@ use Conia\Core\Value\ValueContext;
 class Image extends Field
 {
     protected bool $multiple = false;
+    protected bool $translateImage = false;
 
     public function value(Type $page, ValueContext $context): Images|SingleImage
     {
@@ -29,4 +30,16 @@ class Image extends Field
 
         return $this;
     }
+
+     public function translateImage(bool $translate = true): static
+     {
+         $this->translateImage = $translate;
+
+         return $this;
+     }
+
+     public function shouldTranslateImage(): bool
+     {
+         return $this->translateImage;
+     }
 }
