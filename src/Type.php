@@ -13,9 +13,9 @@ use Conia\Core\Field\Attr\Description;
 use Conia\Core\Field\Attr\Fulltext;
 use Conia\Core\Field\Attr\Height;
 use Conia\Core\Field\Attr\Label;
-use Conia\Core\Field\Attr\MultiLang;
+use Conia\Core\Field\Attr\Multiple;
 use Conia\Core\Field\Attr\Required;
-use Conia\Core\Field\Attr\Single;
+use Conia\Core\Field\Attr\Translate;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Finder;
@@ -161,8 +161,8 @@ abstract class Type
                 case Required::class:
                     $field->required(true);
                     break;
-                case MultiLang::class:
-                    $field->multilang(true);
+                case Translate::class:
+                    $field->translate(true);
                     break;
                 case Label::class:
                     $field->label($attr->newInstance()->label);

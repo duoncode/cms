@@ -13,7 +13,7 @@ class Text extends Value
 
     public function raw(): string
     {
-        if ($this->multilang) {
+        if ($this->translate) {
             $locale = $this->locale;
 
             while ($locale) {

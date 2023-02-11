@@ -13,7 +13,7 @@ abstract class Field
 {
     public readonly string $type;
     protected ?string $description = null;
-    protected bool $multilang = false;
+    protected bool $translate = false;
     protected bool $required = false;
     protected ?int $width = null;
     protected ?int $height = null;
@@ -65,16 +65,16 @@ abstract class Field
         return $this->required;
     }
 
-    public function multilang(bool $multilang = true): static
+    public function translate(bool $translate = true): static
     {
-        $this->multilang = $multilang;
+        $this->translate = $translate;
 
         return $this;
     }
 
-    public function isMultilang(): bool
+    public function isTranslatable(): bool
     {
-        return $this->multilang;
+        return $this->translate;
     }
 
     public function fulltext(FulltextWeight $fulltextWeight): static
