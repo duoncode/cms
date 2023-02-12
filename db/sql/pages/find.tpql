@@ -27,7 +27,6 @@ FROM
         up.page = p.page
 WHERE
     1 = 1
-
 <?php if (isset($deleted)) : ?>
     <?php if ($deleted) : ?>
     AND p.deleted IS NOT NULL
@@ -35,30 +34,24 @@ WHERE
     AND p.deleted IS NULL
     <?php endif ?>
 <?php endif ?>
-
 <?php if (isset($published)) : ?>
     AND p.published = :published
 <?php endif ?>
-
 <?php if (isset($condition)) : ?>
     AND <?= $condition ?>
 <?php endif ?>
-
 <?php if (isset($path)) : ?>
     AND up.path = :path
 <?php endif ?>
-
 GROUP BY
     p.page,
     uc.uid,
     ue.uid,
     pt.name,
     pt.classname
-
 <?php if (isset($orderBy)) : ?>
 ORDER BY <?= $orderBy ?>
 <?php endif ?>
-
 <?php if (isset($limit)) : ?>
 LIMIT :limit
 <?php endif ?>;
