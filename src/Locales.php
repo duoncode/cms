@@ -14,7 +14,6 @@ class Locales implements Iterator
     /** @var array<string, Locale> */
     protected array $locales = [];
 
-    protected int $pointer = 0;
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
 
@@ -36,27 +35,27 @@ class Locales implements Iterator
 
     public function rewind(): void
     {
-        $this->pointer = 0;
+        reset($this->locales);
     }
 
     public function current(): Locale
     {
-        return $this->locales[$this->pointer];
+        return current($this->locales);
     }
 
-    public function key(): int
+    public function key(): string
     {
-        return $this->pointer;
+        return key($this->locales);
     }
 
     public function next(): void
     {
-        $this->pointer++;
+        next($this->locales);
     }
 
     public function valid(): bool
     {
-        return isset($this->locales[$this->pointer]);
+        return key($this->locales) !== null;
     }
 
     public function setDefault(string $locale): void
