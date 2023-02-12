@@ -106,6 +106,25 @@ abstract class Type
         return $this->data['uid'];
     }
 
+    public function path(Locale $locale = null): string
+    {
+        $paths = json_decode($this->data['paths'], true);
+
+        if (!$locale) {
+            $locale = $this->request->get('locale');
+        }
+
+        while ($locale) {
+            if (isset($paths[$locale->id])) {
+                return $paths[$locale->id];
+            }
+
+            $locale = $locale->fallback();
+        }
+
+        throw new RuntimeException('No url path found');
+    }
+
     public static function template(): ?string
     {
         if (!empty(static::$template)) {
