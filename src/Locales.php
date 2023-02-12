@@ -7,12 +7,14 @@ namespace Conia\Core;
 use Closure;
 use Conia\Chuck\Request;
 use Conia\Core\Exception\RuntimeException;
+use Iterator;
 
-class Locales
+class Locales implements Iterator
 {
     /** @var array<string, Locale> */
     protected array $locales = [];
 
+    protected int $pointer = 0;
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
 
@@ -30,6 +32,31 @@ class Locales
     public function get(string $id): Locale
     {
         return $this->locales[$id];
+    }
+
+    public function rewind(): void
+    {
+        $this->pointer = 0;
+    }
+
+    public function current(): Locale
+    {
+        return $this->locales[$this->pointer];
+    }
+
+    public function key(): int
+    {
+        return $this->pointer;
+    }
+
+    public function next(): void
+    {
+        $this->pointer++;
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->locales[$this->pointer]);
     }
 
     public function setDefault(string $locale): void
