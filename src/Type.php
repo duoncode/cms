@@ -52,6 +52,11 @@ abstract class Type
 
     final public function __get(string $fieldName): Value
     {
+        return $this->get($fieldName);
+    }
+
+    final public function get(string $fieldName): Value
+    {
         if (!isset($this->{$fieldName})) {
             $type = $this::class;
 
