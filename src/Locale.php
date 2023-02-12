@@ -36,4 +36,9 @@ class Locale
     {
         return $this->fallback ? $this->locales->get($this->fallback) : null;
     }
+
+    public function domain(int $index = 0): string
+    {
+        return $this->domains[$index];
+    }
 }
