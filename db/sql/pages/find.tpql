@@ -13,9 +13,8 @@ SELECT DISTINCT
     uc.uid AS creator,
     ue.uid AS editor,
     coalesce(
-        jsonb_agg(
-            DISTINCT jsonb_build_object(up.lang, up.path)
-        ) FILTER (WHERE up.inactive IS NULL),
+        jsonb_object_agg(up.locale, up.path)
+            FILTER (WHERE up.inactive IS NULL),
         '{}')::jsonb AS paths
 FROM
     conia.pages p

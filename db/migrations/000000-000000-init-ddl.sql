@@ -183,9 +183,9 @@ CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
 
 CREATE TABLE conia.fulltext (
     page integer NOT NULL,
-    lang text NOT NULL CHECK (char_length(lang) = 32),
+    locale text NOT NULL CHECK (char_length(locale) = 32),
     document tsvector NOT NULL,
-    CONSTRAINT pk_fulltext PRIMARY KEY (page, lang),
+    CONSTRAINT pk_fulltext PRIMARY KEY (page, locale),
     CONSTRAINT fk_fulltext_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
@@ -195,13 +195,15 @@ CREATE INDEX ix_pages_tsv ON conia.fulltext USING GIN(document);
 CREATE TABLE conia.urlpaths (
     page integer NOT NULL,
     path text NOT NULL CHECK (char_length(path) <= 512),
-    lang text NOT NULL CHECK (char_length(lang) <= 32),
+    locale text NOT NULL CHECK (char_length(locale) <= 32),
     inactive timestamp with time zone,
-    CONSTRAINT pk_urlpaths PRIMARY KEY (page, lang, path),
+    CONSTRAINT pk_urlpaths PRIMARY KEY (page, locale, path),
     CONSTRAINT uc_urlpaths_path UNIQUE (path),
     CONSTRAINT fk_urlpaths_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
+CREATE UNIQUE INDEX uix_urlpaths_locale ON conia.urlpaths
+    USING btree (page, locale) WHERE (inactive IS NULL);
 
 
 CREATE TABLE conia.drafts (
