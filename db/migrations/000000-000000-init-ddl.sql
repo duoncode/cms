@@ -115,6 +115,7 @@ CREATE TABLE conia.pagetypes (
 CREATE TABLE conia.pages (
     page integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) = 13),
+    parent integer,
     published boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
     locked boolean DEFAULT false NOT NULL,
@@ -129,6 +130,8 @@ CREATE TABLE conia.pages (
     CONSTRAINT uc_pages_uid UNIQUE (uid),
     CONSTRAINT fk_pages_users_creator FOREIGN KEY (creator)
         REFERENCES conia.users (usr),
+    CONSTRAINT fk_pages_pages FOREIGN KEY (parent)
+        REFERENCES conia.pages (page),
     CONSTRAINT fk_pages_users_editor FOREIGN KEY (editor)
         REFERENCES conia.users (usr),
     CONSTRAINT fk_pages_pagetypes FOREIGN KEY (pagetype)
@@ -139,10 +142,10 @@ CREATE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.pages (
-        page, changed, published, hidden, locked,
+        page, parent, changed, published, hidden, locked,
         pagetype, editor, deleted, content
     ) VALUES (
-        OLD.page, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
+        OLD.page, OLD.parent, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
         OLD.pagetype, OLD.editor, OLD.deleted, OLD.content
     );
 
@@ -198,10 +201,11 @@ CREATE TABLE conia.urlpaths (
     locale text NOT NULL CHECK (char_length(locale) <= 32),
     inactive timestamp with time zone,
     CONSTRAINT pk_urlpaths PRIMARY KEY (page, locale, path),
-    CONSTRAINT uc_urlpaths_path UNIQUE (path),
     CONSTRAINT fk_urlpaths_pages FOREIGN KEY (page)
         REFERENCES conia.pages (page)
 );
+CREATE UNIQUE INDEX uix_urlpaths_path ON conia.urlpaths
+    USING btree (path);
 CREATE UNIQUE INDEX uix_urlpaths_locale ON conia.urlpaths
     USING btree (page, locale) WHERE (inactive IS NULL);
 
@@ -242,15 +246,15 @@ CREATE TABLE conia.menus (
 
 
 CREATE TABLE conia.menuitems (
-    item text NOT NULL CHECK (char_length(uid) = 13),
-    parent text CHECK (char_length(uid) = 13),
+    item text NOT NULL CHECK (char_length(item) = 13),
+    parent text CHECK (char_length(parent) = 13),
     menu text NOT NULL,
     displayorder smallint NOT NULL,
     data jsonb NOT NULL,
     CONSTRAINT pk_menuitems PRIMARY KEY (item),
     CONSTRAINT fk_menuitems_menus FOREIGN KEY (menu)
         REFERENCES conia.menus (menu) ON UPDATE CASCADE,
-    CONSTRAINT fk_menuitems_tree FOREIGN KEY (parent)
+    CONSTRAINT fk_menuitems_menuitems FOREIGN KEY (parent)
         REFERENCES conia.menuitems (item)
 );
 
@@ -291,6 +295,7 @@ CREATE TABLE conia.pagetags (
 
 CREATE TABLE audit.pages (
     page integer NOT NULL,
+    parent integer,
     changed timestamp with time zone NOT NULL,
     published boolean NOT NULL,
     hidden boolean NOT NULL,
