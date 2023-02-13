@@ -9,3 +9,4 @@ TODO
 - Move docs from mkdocs to vitepress?
 - Check entropy algorithm. See: https://github.com/mvhenten/string-entropy/blob/master/index.js
   The example works in another way. We count character classes, the example adds alphabet lengths.
+- Update menu items when the path of an page changes
