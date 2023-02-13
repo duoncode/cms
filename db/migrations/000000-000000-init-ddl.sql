@@ -162,7 +162,7 @@ BEGIN
             FROM conia.menuitems mi
             WHERE
                 mi.data->>'type' = 'page'
-                AND mi.data->>'page' = OLD.uid
+                AND mi.data->>'page' = OLD.page
         ) > 0
     )
     THEN
@@ -234,23 +234,24 @@ CREATE TRIGGER drafts_trigger_01_audit AFTER UPDATE
     conia.process_drafts_audit();
 
 
-CREATE TABLE conia.menues (
+CREATE TABLE conia.menus (
     menu text NOT NULL CHECK (char_length(menu) <= 32),
     description text NOT NULL CHECK (char_length(description) <= 128),
-    CONSTRAINT pk_menues PRIMARY KEY (menu)
+    CONSTRAINT pk_menus PRIMARY KEY (menu)
 );
 
 
 CREATE TABLE conia.menuitems (
-    item integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    item text NOT NULL CHECK (char_length(uid) = 13),
+    parent text CHECK (char_length(uid) = 13),
     menu text NOT NULL,
     displayorder smallint NOT NULL,
     data jsonb NOT NULL,
     CONSTRAINT pk_menuitems PRIMARY KEY (item),
-    CONSTRAINT uc_menuitems_uid UNIQUE (uid),
-    CONSTRAINT fk_menuitems_menues FOREIGN KEY (menu)
-        REFERENCES conia.menues (menu) ON UPDATE CASCADE
+    CONSTRAINT fk_menuitems_menus FOREIGN KEY (menu)
+        REFERENCES conia.menus (menu) ON UPDATE CASCADE,
+    CONSTRAINT fk_menuitems_tree FOREIGN KEY (parent)
+        REFERENCES conia.menuitems (item)
 );
 
 
