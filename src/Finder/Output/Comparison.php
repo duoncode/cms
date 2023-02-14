@@ -127,7 +127,7 @@ readonly final class Comparison extends Expression implements Output
 
     private function getCurrentLocale(): string
     {
-        return $this->context->request->get('locale')->id;
+        return $this->context->localeId();
     }
 
     private function getRight(): string
