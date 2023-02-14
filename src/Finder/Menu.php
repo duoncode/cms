@@ -51,6 +51,58 @@ class Menu implements Iterator
         return key($this->items) !== null;
     }
 
+    public function html(string $class = '', string $tag = 'nav'): string
+    {
+        return $this->compileHtml($this, $class, $tag);
+    }
+
+    protected function compileHtml(
+        Iterator $items,
+        string $class = '',
+        string $tag = 'nav',
+    ): string {
+        $out = '';
+
+        foreach ($items as $item) {
+            $image = $item->image() ?: '';
+
+            if ($image) {
+                $image = sprintf('<div class="nav-image"><img src="%s" alt="Navigation Icon"/></div>', $image);
+            }
+
+            $submenu = $this->compileHtml($item->children(), tag: '');
+
+            if ($submenu) {
+                $submenu = sprintf('<div class="nav-submenu">%s</div>', $submenu);
+            }
+
+            $out .= sprintf(
+                '<li class="nav-level-%s">%s<div class="nav-label"><span>%s</span></div>%s</li>',
+                (string)$item->level(),
+                $image,
+                $item->title(),
+                $submenu,
+            );
+        }
+
+        if ($out) {
+            $class = $class ? sprintf(' class="%s"', $class) : '';
+
+            return $tag ?
+                sprintf(
+                    '<%s%s><ul class="nav-level-%s">%s</ul></%s>',
+                    $tag,
+                    $class,
+                    $item->level(),
+                    $out,
+                    $tag
+                ) :
+                sprintf('<ul%s class="nav-level-%s">%s</ul>', $class, $item->level(), $out);
+        }
+
+        return '';
+    }
+
     protected function makeTree(array $items): array
     {
         $tree = [];

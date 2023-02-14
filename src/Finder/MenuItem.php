@@ -6,19 +6,19 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Context;
 use Generator;
-use Iterator
+use Iterator;
 
 class MenuItem implements Iterator
 {
     protected readonly array $data;
-    protected array $children = [];
+    protected array $children;
 
     public function __construct(
         protected readonly Context $context,
         protected readonly array $item
     ) {
         $this->data = json_decode($item['data'], true);
-        error_log('gemacht');
+        $this->children = $item['children'];
     }
 
     public function rewind(): void
@@ -48,7 +48,7 @@ class MenuItem implements Iterator
 
     public function type(): string
     {
-        return $this->item['type'];
+        return $this->data['type'];
     }
 
     public function title(): string
@@ -59,6 +59,22 @@ class MenuItem implements Iterator
     public function path(): string
     {
         return $this->translated('path');
+    }
+
+    public function image(): ?string
+    {
+        $image = $this->data['image'] ?? null;
+
+        if (!$image) {
+            return null;
+        }
+
+        return sprintf('/assets/menu/%s/%s', $this->item['menu'], $image);
+    }
+
+    public function level(): int
+    {
+        return $this->item['level'];
     }
 
     public function children(): Generator
