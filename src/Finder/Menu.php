@@ -77,13 +77,23 @@ class Menu implements Iterator
                 $submenu = sprintf('<div class="nav-submenu">%s</div>', $submenu);
             }
 
-            $out .= sprintf(
-                '<li class="nav-level-%s%s">%s<div class="nav-label"><span>%s</span></div>%s</li>',
-                (string)$item->level(),
-                $class ? ' ' . $class : '',
+            $content = sprintf(
+                '%s<div class="nav-label"><span>%s</span></div>%s',
                 $image,
                 $item->title(),
                 $submenu,
+            );
+
+            $content = match ($item->type()) {
+                'page' => sprintf('<a href="%s">%s</a>', $item->path(), $content),
+                default => $content,
+            };
+
+            $out .= sprintf(
+                '<li class="nav-level-%s%s">%s</li>',
+                (string)$item->level(),
+                $class ? ' ' . $class : '',
+                $content,
             );
         }
 
