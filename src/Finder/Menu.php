@@ -64,6 +64,7 @@ class Menu implements Iterator
         $out = '';
 
         foreach ($items as $item) {
+            $class = $item->class();
             $image = $item->image() ?: '';
 
             if ($image) {
@@ -77,8 +78,9 @@ class Menu implements Iterator
             }
 
             $out .= sprintf(
-                '<li class="nav-level-%s">%s<div class="nav-label"><span>%s</span></div>%s</li>',
+                '<li class="nav-level-%s%s">%s<div class="nav-label"><span>%s</span></div>%s</li>',
                 (string)$item->level(),
+                $class ? ' ' . $class : '',
                 $image,
                 $item->title(),
                 $submenu,

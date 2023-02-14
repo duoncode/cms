@@ -72,6 +72,11 @@ class MenuItem implements Iterator
         return sprintf('/assets/menu/%s/%s', $this->item['menu'], $image);
     }
 
+    public function class(): ?string
+    {
+        return $this->data['class'] ?? null;
+    }
+
     public function level(): int
     {
         return $this->item['level'];
