@@ -94,6 +94,11 @@ class MenuItem implements Iterator
         $this->children = $children;
     }
 
+    public function hasChildren(): bool
+    {
+        return count($this->children) > 0;
+    }
+
     protected function translated(string $key): string
     {
         $locale = $this->context->locale();
