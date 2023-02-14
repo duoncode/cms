@@ -50,4 +50,9 @@ class Finder
     ): array {
         return (new Page($this->context, $this))->find($query, $types, $limit, $order);
     }
+
+    public function menu(string $menu): Menu
+    {
+        return new Menu($this->context, $menu);
+    }
 }
