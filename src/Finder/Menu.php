@@ -10,12 +10,16 @@ use Iterator;
 
 class Menu implements Iterator
 {
-    protected readonly array $items;
+    protected array $items;
     protected int $pointer = 0;
 
-    public function __construct(Context $context, string $menu)
-    {
-        $this->items = $context->db->menus->get(['menu' => $menu])->all();
+    public function __construct(
+        protected readonly Context $context,
+        string $menu
+    ) {
+        $this->items = $this->makeTree(
+            $context->db->menus->get(['menu' => $menu])->all()
+        );
 
         if (count($this->items) === 0) {
             throw new RuntimeException('Menu not found');
@@ -24,26 +28,46 @@ class Menu implements Iterator
 
     public function rewind(): void
     {
-        $this->pointer = 0;
+        reset($this->items);
     }
 
     public function current(): MenuItem
     {
-        return new MenuItem($this->items[$this->pointer]);
+        return new MenuItem($this->context, current($this->items));
     }
 
-    public function key(): int
+    public function key(): string
     {
-        return $this->pointer;
+        return key($this->items);
     }
 
     public function next(): void
     {
-        $this->pointer++;
+        next($this->items);
     }
 
     public function valid(): bool
     {
-        return isset($this->items[$this->pointer]);
+        return key($this->items) !== null;
+    }
+
+    protected function makeTree(array $items): array
+    {
+        $tree = [];
+
+        foreach ($items as $item) {
+            $arr = &$tree;
+
+            foreach (explode('.', $item['path']) as $segment) {
+                if (isset($arr[$segment])) {
+                    $arr = &$arr[$segment]['children'];
+                } else {
+                    $arr[$segment] = $item;
+                    $arr[$segment]['children'] = [];
+                }
+            }
+        }
+
+        return $tree;
     }
 }

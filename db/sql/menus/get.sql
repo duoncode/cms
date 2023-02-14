@@ -1,7 +1,8 @@
 WITH RECURSIVE nav AS (
    SELECT
        menu,
-       array[displayorder] AS tree,
+       item AS path,
+       array[displayorder] AS sort,
        1 AS level,
        item,
        parent,
@@ -16,7 +17,8 @@ WITH RECURSIVE nav AS (
 
    SELECT
        m.menu,
-       tree || m.displayorder AS tree,
+       path || '.' || m.item AS path,
+       sort || m.displayorder AS sort,
        nav.level + 1 AS level,
        m.item,
        m.parent,
@@ -29,12 +31,14 @@ WITH RECURSIVE nav AS (
 SELECT
     menu,
     item,
-    tree,
+    sort,
+    path,
+    parent,
     level,
     data
 FROM
     nav
 ORDER BY
     menu,
-    tree,
+    sort,
     item;
