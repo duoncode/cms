@@ -90,8 +90,9 @@ class Menu implements Iterator
             };
 
             $out .= sprintf(
-                '<li class="nav-level-%s%s">%s</li>',
+                '<li class="nav-level-%s%s%s">%s</li>',
                 (string)$item->level(),
+                $item->hasChildren() ? ' nav-has-children' : '',
                 $class ? ' ' . $class : '',
                 $content,
             );
