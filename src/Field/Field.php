@@ -113,5 +113,5 @@ abstract class Field
         return $this->height;
     }
 
-    abstract public function value(Type $page, ValueContext $context): Value;
+    abstract public function value(Type $node, ValueContext $context): Value;
 }

@@ -11,8 +11,8 @@ use Conia\Core\Value\ValueContext;
 
 class Decimal extends Field
 {
-    public function value(Type $page, ValueContext $context): DecimalValue
+    public function value(Type $node, ValueContext $context): DecimalValue
     {
-        return new DecimalValue($page, $this, $context);
+        return new DecimalValue($node, $this, $context);
     }
 }

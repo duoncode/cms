@@ -13,8 +13,8 @@ use Conia\Core\Value\ValueContext;
  */
 class Hidden extends Field
 {
-    public function value(Type $page, ValueContext $context): Any
+    public function value(Type $node, ValueContext $context): Any
     {
-        return new Any($page, $this, $context);
+        return new Any($node, $this, $context);
     }
 }

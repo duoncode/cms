@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Text extends Field
 {
-    public function value(Type $page, ValueContext $context): TextValue
+    public function value(Type $node, ValueContext $context): TextValue
     {
-        return new TextValue($page, $this, $context);
+        return new TextValue($node, $this, $context);
     }
 }

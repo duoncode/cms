@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Checkbox extends Field
 {
-    public function value(Type $page, ValueContext $context): Boolean
+    public function value(Type $node, ValueContext $context): Boolean
     {
-        return new Boolean($page, $this, $context);
+        return new Boolean($node, $this, $context);
     }
 }

@@ -11,8 +11,8 @@ use Conia\Core\Value\ValueContext;
 
 class Options extends Field
 {
-    public function value(Type $page, ValueContext $context): OptionsValue
+    public function value(Type $node, ValueContext $context): OptionsValue
     {
-        return new OptionsValue($page, $this, $context);
+        return new OptionsValue($node, $this, $context);
     }
 }

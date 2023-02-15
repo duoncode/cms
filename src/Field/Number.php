@@ -11,8 +11,8 @@ use Conia\Core\Value\ValueContext;
 
 class Number extends Field
 {
-    public function value(Type $page, ValueContext $context): NumberValue
+    public function value(Type $node, ValueContext $context): NumberValue
     {
-        return new NumberValue($page, $this, $context);
+        return new NumberValue($node, $this, $context);
     }
 }

@@ -12,9 +12,9 @@ class File extends Field
 {
     protected bool $single = false;
 
-    public function value(Type $page, ValueContext $context): Files
+    public function value(Type $node, ValueContext $context): Files
     {
-        return new Files($page, $this, $context);
+        return new Files($node, $this, $context);
     }
 
     public function single(bool $single = true): static

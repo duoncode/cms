@@ -56,8 +56,8 @@ class Grid extends Field
         return $this->i18n;
     }
 
-    public function value(Type $page, ValueContext $context): Value
+    public function value(Type $node, ValueContext $context): Value
     {
-        return new GridValue($page, $this, $context);
+        return new GridValue($node, $this, $context);
     }
 }

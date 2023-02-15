@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Iframe extends Field
 {
-    public function value(Type $page, ValueContext $context): Html
+    public function value(Type $node, ValueContext $context): Html
     {
-        return new Html($page, $this, $context);
+        return new Html($node, $this, $context);
     }
 }

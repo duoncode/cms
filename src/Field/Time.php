@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Time extends Field
 {
-    public function value(Type $page, ValueContext $context): TimeValue
+    public function value(Type $node, ValueContext $context): TimeValue
     {
-        return new TimeValue($page, $this, $context);
+        return new TimeValue($node, $this, $context);
     }
 }

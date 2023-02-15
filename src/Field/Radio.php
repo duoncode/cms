@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Radio extends Field
 {
-    public function value(Type $page, ValueContext $context): Str
+    public function value(Type $node, ValueContext $context): Str
     {
-        return new Str($page, $this, $context);
+        return new Str($node, $this, $context);
     }
 }

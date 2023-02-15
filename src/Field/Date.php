@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Date extends Field
 {
-    public function value(Type $page, ValueContext $context): DateValue
+    public function value(Type $node, ValueContext $context): DateValue
     {
-        return new DateValue($page, $this, $context);
+        return new DateValue($node, $this, $context);
     }
 }

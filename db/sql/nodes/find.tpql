@@ -26,7 +26,7 @@ FROM
     LEFT JOIN conia.urlpaths up ON
         up.node = n.node
 WHERE
-    t.kind = :type
+    t.kind = :kind
 <?php if (isset($deleted)) : ?>
     <?php if ($deleted) : ?>
     AND n.deleted IS NOT NULL

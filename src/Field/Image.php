@@ -14,21 +14,21 @@ class Image extends Field
     protected bool $multiple = false;
     protected bool $translateImage = false;
 
-    public function value(Type $page, ValueContext $context): Value\Images|Value\Image
+    public function value(Type $node, ValueContext $context): Value\Images|Value\Image
     {
         if ($this->multiple) {
             if ($this->translateImage) {
-                return new Value\TranslatedImages($page, $this, $context);
+                return new Value\TranslatedImages($node, $this, $context);
             }
 
-            return new Value\Images($page, $this, $context);
+            return new Value\Images($node, $this, $context);
         }
 
         if ($this->translateImage) {
-            return new Value\TranslatedImage($page, $this, $context);
+            return new Value\TranslatedImage($node, $this, $context);
         }
 
-        return new Value\Image($page, $this, $context);
+        return new Value\Image($node, $this, $context);
     }
 
     public function multiple(bool $multiple = true): static

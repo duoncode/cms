@@ -10,8 +10,8 @@ use Conia\Core\Value\ValueContext;
 
 class Html extends Field
 {
-    public function value(Type $page, ValueContext $context): HtmlValue
+    public function value(Type $node, ValueContext $context): HtmlValue
     {
-        return new HtmlValue($page, $this, $context);
+        return new HtmlValue($node, $this, $context);
     }
 }
