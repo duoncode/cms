@@ -23,8 +23,8 @@ class Fulltext extends Command
 
     private function update(Database $db): void
     {
-        foreach ($db->fulltext->pages()->lazy() as $page) {
-            $json = json_decode($page['content'], true);
+        foreach ($db->fulltext->nodes()->lazy() as $node) {
+            $json = json_decode($node['content'], true);
             error_log(print_r($json, true));
             break;
         }

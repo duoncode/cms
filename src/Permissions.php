@@ -15,6 +15,7 @@ class Permissions
             'edit-settings',
             'edit-users',
             'edit-pages',
+            'edit-blocks',
             'authenticated',
         ],
         'admin' => [
@@ -23,12 +24,14 @@ class Permissions
             'panel',
             'edit-users',
             'edit-pages',
+            'edit-blocks',
             'authenticated',
         ],
         'editor' => [
             'editor',
             'panel',
             'edit-pages',
+            'edit-blocks',
             'authenticated',
         ],
     ];

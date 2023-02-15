@@ -129,12 +129,13 @@ final class Pages implements Iterator
             trim($this->whereTypes),
         ], fn ($clause) => !empty($clause)));
 
-        $this->result = $this->context->db->pages->find([
+        $this->result = $this->context->db->nodes->find([
             'condition' => $conditions,
             'deleted' => $this->deleted,
             'published' => $this->published,
             'order' => $this->order,
             'limit' => $this->limit,
+            'kind' => 'page',
         ])->lazy();
     }
 
