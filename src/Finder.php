@@ -30,8 +30,6 @@ class Finder
             'pages' => new Pages($this->context, $this),
             'page' => new Page($this->context, $this),
             'blocks' => new Blocks($this->context, $this),
-            'block' => new Block($this->context, $this),
-            'menu' => new Menu($this->context, $this),
             default => throw new RuntimeException('Property not supported')
         };
     }
@@ -54,5 +52,10 @@ class Finder
     public function menu(string $menu): Menu
     {
         return new Menu($this->context, $menu);
+    }
+
+    public function block(string $uid, ?bool $deleted = false, ?bool $published = true): Block
+    {
+        return new Block($this->context, $this, $uid, $deleted, $published);
     }
 }
