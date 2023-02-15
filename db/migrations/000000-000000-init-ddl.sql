@@ -5,7 +5,7 @@ CREATE EXTENSION unaccent;
 CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
-CREATE TYPE conia.contenttype AS ENUM ('node', 'block');
+CREATE TYPE conia.contenttype AS ENUM ('page', 'block');
 
 
 CREATE FUNCTION conia.update_changed_column()
@@ -25,7 +25,7 @@ CREATE TABLE conia.userroles (
 
 CREATE TABLE conia.users (
     usr integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    uid text NOT NULL CHECK (char_length(uid) <= 64),
     username text CHECK (char_length(username) > 0),
     email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5),
     pwhash text NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE conia.types (
 
 CREATE TABLE conia.nodes (
     node integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    uid text NOT NULL CHECK (char_length(uid) <= 64),
     parent integer,
     published boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
@@ -249,8 +249,8 @@ CREATE TABLE conia.menus (
 
 
 CREATE TABLE conia.menuitems (
-    item text NOT NULL CHECK (char_length(item) = 13),
-    parent text CHECK (char_length(parent) = 13),
+    item text NOT NULL CHECK (char_length(item) <= 64),
+    parent text CHECK (char_length(parent) <= 64),
     menu text NOT NULL,
     displayorder smallint NOT NULL,
     data jsonb NOT NULL,
@@ -264,7 +264,7 @@ CREATE TABLE conia.menuitems (
 
 CREATE TABLE conia.topics (
     topic integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    uid text NOT NULL CHECK (char_length(uid) <= 64),
     name jsonb NOT NULL,
     color text NOT NULL CHECK (char_length(color) <= 128),
     CONSTRAINT pk_topics PRIMARY KEY (topic),
@@ -274,7 +274,7 @@ CREATE TABLE conia.topics (
 
 CREATE TABLE conia.tags (
     tag integer GENERATED ALWAYS AS IDENTITY,
-    uid text NOT NULL CHECK (char_length(uid) = 13),
+    uid text NOT NULL CHECK (char_length(uid) <= 64),
     name jsonb NOT NULL,
     topic integer NOT NULL,
     CONSTRAINT pk_tags PRIMARY KEY (tag),
