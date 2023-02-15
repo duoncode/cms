@@ -14,7 +14,7 @@ SELECT DISTINCT
     ue.uid AS editor,
     coalesce(
         jsonb_object_agg(up.locale, up.path)
-            FILTER (WHERE up.inactive IS NULL),
+            FILTER (WHERE up.inactive IS NULL AND up.path IS NOT NULL),
         '{}')::jsonb AS paths
 FROM
     conia.nodes n
@@ -27,6 +27,9 @@ FROM
         up.node = n.node
 WHERE
     t.kind = :kind
+<?php if (isset($uid)) : ?>
+    AND n.uid = :uid
+<?php endif ?>
 <?php if (isset($deleted)) : ?>
     <?php if ($deleted) : ?>
     AND n.deleted IS NOT NULL
