@@ -16,9 +16,9 @@ class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Type $page, GridField $field, ValueContext $context)
+    public function __construct(Type $node, GridField $field, ValueContext $context)
     {
-        parent::__construct($page, $field, $context);
+        parent::__construct($node, $field, $context);
 
         $this->localizedData = match ($this->data['i18n'] ?? null) {
             'separate' => $this->getSeparate($this->data),
@@ -52,7 +52,7 @@ class Grid extends Value
                     return (new ImageField("Grid {$this->context->fieldName} Image Field"))
                         ->single()
                         ->value(
-                            $this->page,
+                            $this->node,
                             new ValueContext($this->context->fieldName, $value->data)
                         );
                 }
@@ -92,7 +92,7 @@ class Grid extends Value
                 if ($i === $index) {
                     return (new HtmlField("Grid {$this->context->fieldName} Html Field"))
                         ->value(
-                            $this->page,
+                            $this->node,
                             new ValueContext($this->context->fieldName, $value->data)
                         )->excerpt($words, $allowedTags);
                 }

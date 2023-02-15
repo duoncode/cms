@@ -11,9 +11,9 @@ class Number extends Value
 {
     public readonly ?int $value;
 
-    public function __construct(Type $page, Field $field, ValueContext $context)
+    public function __construct(Type $node, Field $field, ValueContext $context)
     {
-        parent::__construct($page, $field, $context);
+        parent::__construct($node, $field, $context);
 
         if (is_numeric($this->data['value'] ?? null)) {
             $this->value = (int)$this->data['value'];

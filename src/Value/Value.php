@@ -19,11 +19,11 @@ abstract class Value
     protected readonly bool $translate;
 
     public function __construct(
-        protected readonly Type $page,
+        protected readonly Type $node,
         protected readonly Field $field,
         protected readonly ValueContext $context,
     ) {
-        $this->locale = $page->request->get('locale');
+        $this->locale = $node->request->get('locale');
         $this->data = $context->data;
         $this->fieldName = $context->fieldName;
         $this->fieldType = $field->type;
@@ -45,7 +45,7 @@ abstract class Value
 
     protected function assetsPath(): string
     {
-        return 'page/' . $this->page->uid() . '/';
+        return 'node/' . $this->node->uid() . '/';
     }
 
     protected function getAssets(): Assets
@@ -53,7 +53,7 @@ abstract class Value
         static $assets = null;
 
         if (!$assets) {
-            $assets = new Assets($this->page->request, $this->page->config);
+            $assets = new Assets($this->node->request, $this->node->config);
         }
 
         return $assets;

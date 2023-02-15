@@ -11,9 +11,9 @@ class Boolean extends Value
 {
     public readonly bool $value;
 
-    public function __construct(Type $page, Field $field, ValueContext $context)
+    public function __construct(Type $node, Field $field, ValueContext $context)
     {
-        parent::__construct($page, $field, $context);
+        parent::__construct($node, $field, $context);
 
         if (is_bool($this->data['value'] ?? null)) {
             $this->value = $this->data['value'];
