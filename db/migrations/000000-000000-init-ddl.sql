@@ -5,6 +5,8 @@ CREATE EXTENSION unaccent;
 CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
+CREATE TYPE conia.contenttype AS ENUM ('page', 'block');
+
 
 CREATE FUNCTION conia.update_changed_column()
     RETURNS TRIGGER AS $$
@@ -103,12 +105,13 @@ CREATE TABLE conia.loginsessions (
 );
 
 
-CREATE TABLE conia.pagetypes (
-    pagetype integer GENERATED ALWAYS AS IDENTITY,
+CREATE TABLE conia.types (
+    type integer GENERATED ALWAYS AS IDENTITY,
     name text NOT NULL CHECK (char_length(name) <= 64),
     classname text NOT NULL CHECK (char_length(classname) <= 256),
-    CONSTRAINT pk_pagetypes PRIMARY KEY (pagetype),
-    CONSTRAINT uc_pagestypes_name UNIQUE (name)
+    kind conia.contenttype NOT NULL,
+    CONSTRAINT pk_types PRIMARY KEY (type),
+    CONSTRAINT uc_types_name UNIQUE (name)
 );
 
 
@@ -119,7 +122,7 @@ CREATE TABLE conia.pages (
     published boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
     locked boolean DEFAULT false NOT NULL,
-    pagetype integer NOT NULL,
+    type integer NOT NULL,
     creator integer NOT NULL,
     editor integer NOT NULL,
     created timestamp with time zone NOT NULL DEFAULT now(),
@@ -134,19 +137,19 @@ CREATE TABLE conia.pages (
         REFERENCES conia.pages (page),
     CONSTRAINT fk_pages_users_editor FOREIGN KEY (editor)
         REFERENCES conia.users (usr),
-    CONSTRAINT fk_pages_pagetypes FOREIGN KEY (pagetype)
-        REFERENCES conia.pagetypes (pagetype) ON UPDATE CASCADE ON DELETE NO ACTION
+    CONSTRAINT fk_pages_types FOREIGN KEY (type)
+        REFERENCES conia.types (type) ON UPDATE CASCADE ON DELETE NO ACTION
 );
-CREATE INDEX ix_pages_content ON conia.pages USING GIN (pagetype, content);
+CREATE INDEX ix_pages_content ON conia.pages USING GIN (type, content);
 CREATE FUNCTION conia.process_pages_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.pages (
         page, parent, changed, published, hidden, locked,
-        pagetype, editor, deleted, content
+        type, editor, deleted, content
     ) VALUES (
         OLD.page, OLD.parent, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
-        OLD.pagetype, OLD.editor, OLD.deleted, OLD.content
+        OLD.type, OLD.editor, OLD.deleted, OLD.content
     );
 
     RETURN OLD;
@@ -300,7 +303,7 @@ CREATE TABLE audit.pages (
     published boolean NOT NULL,
     hidden boolean NOT NULL,
     locked boolean NOT NULL,
-    pagetype text NOT NULL,
+    type text NOT NULL,
     editor integer NOT NULL,
     deleted timestamp with time zone,
     content jsonb NOT NULL,

@@ -8,8 +8,8 @@ SELECT DISTINCT
     p.changed,
     p.deleted,
     p.content,
-    pt.name AS type,
-    pt.classname,
+    t.name AS type,
+    t.classname,
     uc.uid AS creator,
     ue.uid AS editor,
     coalesce(
@@ -18,7 +18,7 @@ SELECT DISTINCT
         '{}')::jsonb AS paths
 FROM
     conia.pages p
-    INNER JOIN conia.pagetypes pt USING(pagetype)
+    INNER JOIN conia.types t USING(type)
     INNER JOIN conia.users uc ON
         uc.usr = p.creator
     INNER JOIN conia.users ue ON
@@ -47,8 +47,8 @@ GROUP BY
     p.page,
     uc.uid,
     ue.uid,
-    pt.name,
-    pt.classname
+    t.name,
+    t.classname
 <?php if (isset($orderBy)) : ?>
 ORDER BY <?= $orderBy ?>
 <?php endif ?>
