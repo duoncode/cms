@@ -1,11 +1,11 @@
 DELETE FROM conia.fulltext ft
 WHERE
-    ft.page NOT IN (
+    ft.node NOT IN (
         SELECT
-            p.page
+            n.node
         FROM
-            conia.pages p
+            conia.nodes n
         WHERE
-            p.deleted IS NULL
-            AND p.published = true
+            n.deleted IS NULL
+            AND n.published = true
     );

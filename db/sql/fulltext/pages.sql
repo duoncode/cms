@@ -1,10 +1,10 @@
 SELECT
-    p.content,
-    pt.classname
+    n.content,
+    t.classname
 FROM
-    conia.pages p
+    conia.nodes n
 JOIN conia.types t
-    ON pt.type = p.type
+    ON t.type = n.type
 WHERE
-    p.deleted IS NULL
-    AND p.published = true;
+    n.deleted IS NULL
+    AND n.published = true;

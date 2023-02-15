@@ -5,7 +5,7 @@ CREATE EXTENSION unaccent;
 CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
-CREATE TYPE conia.contenttype AS ENUM ('page', 'block');
+CREATE TYPE conia.contenttype AS ENUM ('node', 'block');
 
 
 CREATE FUNCTION conia.update_changed_column()
@@ -115,8 +115,8 @@ CREATE TABLE conia.types (
 );
 
 
-CREATE TABLE conia.pages (
-    page integer GENERATED ALWAYS AS IDENTITY,
+CREATE TABLE conia.nodes (
+    node integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) = 13),
     parent integer,
     published boolean DEFAULT false NOT NULL,
@@ -129,32 +129,32 @@ CREATE TABLE conia.pages (
     changed timestamp with time zone NOT NULL DEFAULT now(),
     deleted timestamp with time zone,
     content jsonb NOT NULL,
-    CONSTRAINT pk_pages PRIMARY KEY (page),
-    CONSTRAINT uc_pages_uid UNIQUE (uid),
-    CONSTRAINT fk_pages_users_creator FOREIGN KEY (creator)
+    CONSTRAINT pk_nodes PRIMARY KEY (node),
+    CONSTRAINT uc_nodes_uid UNIQUE (uid),
+    CONSTRAINT fk_nodes_users_creator FOREIGN KEY (creator)
         REFERENCES conia.users (usr),
-    CONSTRAINT fk_pages_pages FOREIGN KEY (parent)
-        REFERENCES conia.pages (page),
-    CONSTRAINT fk_pages_users_editor FOREIGN KEY (editor)
+    CONSTRAINT fk_nodes_nodes FOREIGN KEY (parent)
+        REFERENCES conia.nodes (node),
+    CONSTRAINT fk_nodes_users_editor FOREIGN KEY (editor)
         REFERENCES conia.users (usr),
-    CONSTRAINT fk_pages_types FOREIGN KEY (type)
+    CONSTRAINT fk_nodes_types FOREIGN KEY (type)
         REFERENCES conia.types (type) ON UPDATE CASCADE ON DELETE NO ACTION
 );
-CREATE INDEX ix_pages_content ON conia.pages USING GIN (type, content);
-CREATE FUNCTION conia.process_pages_audit()
+CREATE INDEX ix_nodes_content ON conia.nodes USING GIN (type, content);
+CREATE FUNCTION conia.process_nodes_audit()
     RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO audit.pages (
-        page, parent, changed, published, hidden, locked,
+    INSERT INTO audit.nodes (
+        node, parent, changed, published, hidden, locked,
         type, editor, deleted, content
     ) VALUES (
-        OLD.page, OLD.parent, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
+        OLD.node, OLD.parent, OLD.changed, OLD.published, OLD.hidden, OLD.locked,
         OLD.type, OLD.editor, OLD.deleted, OLD.content
     );
 
     RETURN OLD;
 EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'Duplicate pages audit row skipped. page: %, changed: %', OLD.page, OLD.changed;
+    RAISE WARNING 'Duplicate nodes audit row skipped. node: %, changed: %', OLD.node, OLD.changed;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -167,72 +167,72 @@ BEGIN
             SELECT count(*)
             FROM conia.menuitems mi
             WHERE
-                mi.data->>'type' = 'page'
-                AND mi.data->>'page' = OLD.page
+                mi.data->>'type' = 'node'
+                AND mi.data->>'node' = OLD.node
         ) > 0
     )
     THEN
-        RAISE EXCEPTION 'Page is still referenced in a menu';
+        RAISE EXCEPTION 'node is still referenced in a menu';
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER pages_trigger_01_delete BEFORE UPDATE ON conia.pages
+CREATE TRIGGER nodes_trigger_01_delete BEFORE UPDATE ON conia.nodes
     FOR EACH ROW EXECUTE PROCEDURE conia.check_if_deletable();
-CREATE TRIGGER pages_trigger_02_change BEFORE UPDATE ON conia.pages
+CREATE TRIGGER nodes_trigger_02_change BEFORE UPDATE ON conia.nodes
     FOR EACH ROW EXECUTE FUNCTION conia.update_changed_column();
-CREATE TRIGGER pages_trigger_03_audit AFTER UPDATE
-    ON conia.pages FOR EACH ROW EXECUTE PROCEDURE
-    conia.process_pages_audit();
+CREATE TRIGGER nodes_trigger_03_audit AFTER UPDATE
+    ON conia.nodes FOR EACH ROW EXECUTE PROCEDURE
+    conia.process_nodes_audit();
 
 
 CREATE TABLE conia.fulltext (
-    page integer NOT NULL,
+    node integer NOT NULL,
     locale text NOT NULL CHECK (char_length(locale) = 32),
     document tsvector NOT NULL,
-    CONSTRAINT pk_fulltext PRIMARY KEY (page, locale),
-    CONSTRAINT fk_fulltext_pages FOREIGN KEY (page)
-        REFERENCES conia.pages (page)
+    CONSTRAINT pk_fulltext PRIMARY KEY (node, locale),
+    CONSTRAINT fk_fulltext_nodes FOREIGN KEY (node)
+        REFERENCES conia.nodes (node)
 );
-CREATE INDEX ix_pages_tsv ON conia.fulltext USING GIN(document);
+CREATE INDEX ix_nodes_tsv ON conia.fulltext USING GIN(document);
 
 
 CREATE TABLE conia.urlpaths (
-    page integer NOT NULL,
+    node integer NOT NULL,
     path text NOT NULL CHECK (char_length(path) <= 512),
     locale text NOT NULL CHECK (char_length(locale) <= 32),
     inactive timestamp with time zone,
-    CONSTRAINT pk_urlpaths PRIMARY KEY (page, locale, path),
-    CONSTRAINT fk_urlpaths_pages FOREIGN KEY (page)
-        REFERENCES conia.pages (page)
+    CONSTRAINT pk_urlpaths PRIMARY KEY (node, locale, path),
+    CONSTRAINT fk_urlpaths_nodes FOREIGN KEY (node)
+        REFERENCES conia.nodes (node)
 );
 CREATE UNIQUE INDEX uix_urlpaths_path ON conia.urlpaths
     USING btree (path);
 CREATE UNIQUE INDEX uix_urlpaths_locale ON conia.urlpaths
-    USING btree (page, locale) WHERE (inactive IS NULL);
+    USING btree (node, locale) WHERE (inactive IS NULL);
 
 
 CREATE TABLE conia.drafts (
-    page integer NOT NULL,
+    node integer NOT NULL,
     changed timestamp with time zone NOT NULL,
     editor integer NOT NULL,
     content jsonb NOT NULL,
-    CONSTRAINT pk_drafts PRIMARY KEY (page),
-    CONSTRAINT fk_drafts_pages FOREIGN KEY (page) REFERENCES conia.pages (page)
+    CONSTRAINT pk_drafts PRIMARY KEY (node),
+    CONSTRAINT fk_drafts_nodes FOREIGN KEY (node) REFERENCES conia.nodes (node)
 );
 CREATE FUNCTION conia.process_drafts_audit()
     RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO audit.drafts (
-        page, changed, editor, content
+        node, changed, editor, content
     ) VALUES (
-        OLD.page, OLD.changed, OLD.editor, OLD.content
+        OLD.node, OLD.changed, OLD.editor, OLD.content
     );
 
     RETURN OLD;
 EXCEPTION WHEN unique_violation THEN
-    RAISE WARNING 'Duplicate drafts audit row skipped. draft: %, changed: %', OLD.page, OLD.changed;
+    RAISE WARNING 'Duplicate drafts audit row skipped. draft: %, changed: %', OLD.node, OLD.changed;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -284,20 +284,20 @@ CREATE TABLE conia.tags (
 );
 
 
-CREATE TABLE conia.pagetags (
-    page integer NOT NULL,
+CREATE TABLE conia.nodetags (
+    node integer NOT NULL,
     tag integer NOT NULL,
     sort smallint NOT NULL DEFAULT 0,
-    CONSTRAINT pk_pagetags PRIMARY KEY (page, tag),
-    CONSTRAINT fk_pagetags_pages FOREIGN KEY (page)
-        REFERENCES conia.pages (page),
-    CONSTRAINT fk_pagetags_tags FOREIGN KEY (tag)
+    CONSTRAINT pk_nodetags PRIMARY KEY (node, tag),
+    CONSTRAINT fk_nodetags_nodes FOREIGN KEY (node)
+        REFERENCES conia.nodes (node),
+    CONSTRAINT fk_nodetags_tags FOREIGN KEY (tag)
         REFERENCES conia.tags (tag)
 );
 
 
-CREATE TABLE audit.pages (
-    page integer NOT NULL,
+CREATE TABLE audit.nodes (
+    node integer NOT NULL,
     parent integer,
     changed timestamp with time zone NOT NULL,
     published boolean NOT NULL,
@@ -307,20 +307,20 @@ CREATE TABLE audit.pages (
     editor integer NOT NULL,
     deleted timestamp with time zone,
     content jsonb NOT NULL,
-    CONSTRAINT pk_pages PRIMARY KEY (page, changed),
-    CONSTRAINT fk_audit_pages FOREIGN KEY (page)
-        REFERENCES conia.pages (page)
+    CONSTRAINT pk_nodes PRIMARY KEY (node, changed),
+    CONSTRAINT fk_audit_nodes FOREIGN KEY (node)
+        REFERENCES conia.nodes (node)
 );
 
 
 CREATE TABLE audit.drafts (
-    page integer NOT NULL,
+    node integer NOT NULL,
     changed timestamp with time zone NOT NULL,
     editor integer NOT NULL,
     content jsonb NOT NULL,
-    CONSTRAINT pk_drafts PRIMARY KEY (page, changed),
-    CONSTRAINT fk_audit_drafts FOREIGN KEY (page)
-        REFERENCES conia.drafts (page)
+    CONSTRAINT pk_drafts PRIMARY KEY (node, changed),
+    CONSTRAINT fk_audit_drafts FOREIGN KEY (node)
+        REFERENCES conia.drafts (node)
 );
 
 

@@ -1,13 +1,13 @@
 SELECT DISTINCT
-    p.page,
-    p.uid,
-    p.published,
-    p.hidden,
-    p.locked,
-    p.created,
-    p.changed,
-    p.deleted,
-    p.content,
+    n.node,
+    n.uid,
+    n.published,
+    n.hidden,
+    n.locked,
+    n.created,
+    n.changed,
+    n.deleted,
+    n.content,
     t.name AS type,
     t.classname,
     uc.uid AS creator,
@@ -17,25 +17,25 @@ SELECT DISTINCT
             FILTER (WHERE up.inactive IS NULL),
         '{}')::jsonb AS paths
 FROM
-    conia.pages p
+    conia.nodes n
     INNER JOIN conia.types t USING(type)
     INNER JOIN conia.users uc ON
-        uc.usr = p.creator
+        uc.usr = n.creator
     INNER JOIN conia.users ue ON
-        ue.usr = p.editor
+        ue.usr = n.editor
     LEFT JOIN conia.urlpaths up ON
-        up.page = p.page
+        up.node = n.node
 WHERE
-    1 = 1
+    t.kind = :type
 <?php if (isset($deleted)) : ?>
     <?php if ($deleted) : ?>
-    AND p.deleted IS NOT NULL
+    AND n.deleted IS NOT NULL
     <?php else: ?>
-    AND p.deleted IS NULL
+    AND n.deleted IS NULL
     <?php endif ?>
 <?php endif ?>
 <?php if (isset($published)) : ?>
-    AND p.published = :published
+    AND n.published = :published
 <?php endif ?>
 <?php if (isset($condition)) : ?>
     AND <?= $condition ?>
@@ -44,7 +44,7 @@ WHERE
     AND up.path = :path
 <?php endif ?>
 GROUP BY
-    p.page,
+    n.node,
     uc.uid,
     ue.uid,
     t.name,
