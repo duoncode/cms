@@ -70,7 +70,7 @@ class Image extends File
             return $this->translated($key);
         }
 
-        return $this->data['files'][0][$key] ?? '';
+        return $this->data['files'][$this->index][$key] ?? '';
     }
 
     protected function translated(string $key): string
@@ -78,7 +78,7 @@ class Image extends File
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data['files'][0][$key][$locale->id] ?? null;
+            $value = $this->data['files'][$this->index][$key][$locale->id] ?? null;
 
             if ($value) {
                 return $value;
@@ -92,7 +92,7 @@ class Image extends File
 
     protected function getImage(): Asset
     {
-        $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][0]['file']);
+        $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$this->index]['file']);
 
         if ($this->width > 0 || $this->height > 0) {
             $image = $image->resize($this->width, $this->height, $this->crop);

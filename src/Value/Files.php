@@ -4,13 +4,40 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Locale;
+use Iterator;
 
-class Files extends Value
+class Files extends Value implements Iterator
 {
+    protected int $pointer = 0;
+
     public function __toString(): string
     {
         return 'Files: count(' . count($this->raw()) . ')';
+    }
+
+    public function rewind(): void
+    {
+        $this->pointer = 0;
+    }
+
+    public function current(): File
+    {
+        return new File($this->node, $this->field, $this->context, $this->pointer);
+    }
+
+    public function key(): int
+    {
+        return $this->pointer;
+    }
+
+    public function next(): void
+    {
+        $this->pointer++;
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->data['files'][$this->pointer]);
     }
 
     public function raw(): array
@@ -35,15 +62,8 @@ class Files extends Value
         return $this->raw();
     }
 
-    public function all(): array
+    protected function len(): int
     {
-        return array_map(function (array $file) {
-            return $this->getFile($file, $this->locale);
-        }, $this->raw());
-    }
-
-    protected function getFile(array $file, Locale $locale): File
-    {
-        return new File($file, $locale);
+        return count($this->data['files']);
     }
 }

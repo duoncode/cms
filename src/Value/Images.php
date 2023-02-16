@@ -4,17 +4,28 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Locale;
-
 class Images extends Files
 {
     public function __toString(): string
     {
-        return 'Images: count(' . count($this->raw()) . ')';
+        $out = '';
+
+        for ($i = 0; $i < count($this->data['files']); $i++) {
+            $out .= (string)$this->get($i);
+        }
+
+        return $out;
     }
 
-    protected function getFile(array $file, Locale $locale): Image
+    public function current(): Image
     {
-        return new Image($file, $locale);
+        return $this->get($this->pointer);
+    }
+
+    protected function get(int $index): Image
+    {
+        error_log(print_r($index, true));
+
+        return new Image($this->node, $this->field, $this->context, $index);
     }
 }
