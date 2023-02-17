@@ -55,6 +55,11 @@ class Image extends File
         return $this;
     }
 
+    public function link(): string
+    {
+        return $this->textValue('link');
+    }
+
     public function title(): string
     {
         return $this->textValue('title');
