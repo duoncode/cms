@@ -26,17 +26,17 @@ final class Pages implements Iterator
         private readonly Finder $find,
     ) {
         $this->builtins = [
-            'changed' => 'p.changed',
-            'classname' => 'pt.classname',
-            'created' => 'p.created',
+            'changed' => 'n.changed',
+            'classname' => 't.classname',
+            'created' => 'n.created',
             'creator' => 'uc.uid',
             'editor' => 'ue.uid',
-            'deleted' => 'p.deleted',
-            'id' => 'p.uid',
-            'locked' => 'p.locked',
-            'published' => 'p.published',
-            'type' => 'pt.name',
-            'uid' => 'p.uid',
+            'deleted' => 'n.deleted',
+            'id' => 'n.uid',
+            'locked' => 'n.locked',
+            'published' => 'n.published',
+            'type' => 't.name',
+            'uid' => 'n.uid',
         ];
     }
 
@@ -111,7 +111,7 @@ final class Pages implements Iterator
         $page['content'] = json_decode($page['content'], true);
         $context = $this->context;
 
-        return new $class($context->request, $context->config, $this, $page);
+        return new $class($context, $this->find, $page);
     }
 
     public function key(): int
@@ -152,9 +152,9 @@ final class Pages implements Iterator
 
         foreach ($types as $type) {
             if (class_exists($type) && is_subclass_of($type, Type::class)) {
-                $result[] = 'pt.classname = ' . $this->context->db->quote($type);
+                $result[] = 't.classname = ' . $this->context->db->quote($type);
             } else {
-                $result[] = 'pt.name = ' . $this->context->db->quote($type);
+                $result[] = 't.name = ' . $this->context->db->quote($type);
             }
         }
 

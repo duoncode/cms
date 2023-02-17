@@ -1,4 +1,4 @@
-SELECT DISTINCT
+SELECT
     n.node,
     n.uid,
     n.published,
@@ -31,11 +31,11 @@ WHERE
     AND n.uid = :uid
 <?php endif ?>
 <?php if (isset($deleted)) : ?>
-    <?php if ($deleted) : ?>
+<?php if ($deleted) : ?>
     AND n.deleted IS NOT NULL
-    <?php else: ?>
+<?php else: ?>
     AND n.deleted IS NULL
-    <?php endif ?>
+<?php endif ?>
 <?php endif ?>
 <?php if (isset($published)) : ?>
     AND n.published = :published
@@ -46,15 +46,17 @@ WHERE
 <?php if (isset($path)) : ?>
     AND up.path = :path
 <?php endif ?>
+
 GROUP BY
     n.node,
     uc.uid,
     ue.uid,
     t.name,
     t.classname
-<?php if (isset($orderBy)) : ?>
-ORDER BY <?= $orderBy ?>
+<?php if (isset($order)) : ?>
+ORDER BY <?= $order ?>
 <?php endif ?>
 <?php if (isset($limit)) : ?>
+
 LIMIT :limit
 <?php endif ?>;

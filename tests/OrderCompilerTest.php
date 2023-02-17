@@ -17,25 +17,25 @@ test('Fail on empty statement', function () {
 test('Compile simple statement', function () {
     $oc = new OrderCompiler([]);
 
-    expect($oc->compile('test'))->toBe(OB . "p.content->'test'->>'value' ASC");
+    expect($oc->compile('test'))->toBe(OB . "n.content->'test'->>'value' ASC");
 });
 
 test('Compile statement with builtin', function () {
-    $oc = new OrderCompiler(['field' => 'p.field']);
+    $oc = new OrderCompiler(['field' => 'n.field']);
 
-    expect($oc->compile('field'))->toBe(OB . 'p.field ASC');
+    expect($oc->compile('field'))->toBe(OB . 'n.field ASC');
 });
 
 test('Compile statement with dotted field', function () {
     $oc = new OrderCompiler([]);
 
-    expect($oc->compile('test.lang'))->toBe(OB . "p.content->'test'->>'lang' ASC");
-    expect($oc->compile('test.lang.de'))->toBe(OB . "p.content->'test'->'lang'->>'de' ASC");
+    expect($oc->compile('test.lang'))->toBe(OB . "n.content->'test'->>'lang' ASC");
+    expect($oc->compile('test.lang.de'))->toBe(OB . "n.content->'test'->'lang'->>'de' ASC");
 });
 
 test('Compile mixed statement', function () {
-    $oc = new OrderCompiler(['field' => 'p.field']);
-    $s = OB . "p.field ASC,\n    p.content->'test'->>'value' ASC";
+    $oc = new OrderCompiler(['field' => 'n.field']);
+    $s = OB . "n.field ASC,\n    n.content->'test'->>'value' ASC";
 
     expect($oc->compile('field, test'))->toBe($s);
 });
@@ -43,20 +43,20 @@ test('Compile mixed statement', function () {
 test('Change direction', function () {
     $oc = new OrderCompiler([]);
 
-    expect($oc->compile('test desc'))->toBe(OB . "p.content->'test'->>'value' DESC");
+    expect($oc->compile('test desc'))->toBe(OB . "n.content->'test'->>'value' DESC");
 });
 
 test('Change direction with builtin', function () {
-    $oc = new OrderCompiler(['field' => 'p.field']);
+    $oc = new OrderCompiler(['field' => 'n.field']);
 
-    expect($oc->compile('field DeSc'))->toBe(OB . 'p.field DESC');
+    expect($oc->compile('field DeSc'))->toBe(OB . 'n.field DESC');
 });
 
 test('Compile larger mixed statement', function () {
-    $oc = new OrderCompiler(['field' => 'p.field', 'column' => 'uc.column']);
+    $oc = new OrderCompiler(['field' => 'n.field', 'column' => 'uc.column']);
     $s = ",\n    ";
-    $result = OB . "p.field DESC{$s}p.content->'test'->>'value' ASC{$s}" .
-        "uc.column ASC{$s}p.content->'another'->'lang'->>'en' DESC";
+    $result = OB . "n.field DESC{$s}n.content->'test'->>'value' ASC{$s}" .
+        "uc.column ASC{$s}n.content->'another'->'lang'->>'en' DESC";
 
     expect($oc->compile('field DESC, test asc, column, another.lang.en Desc'))->toBe($result);
 });
