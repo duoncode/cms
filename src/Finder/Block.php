@@ -18,6 +18,7 @@ class Block
         private readonly Context $context,
         private readonly Finder $find,
         string $uid,
+        private readonly array $templateContext = [],
         ?bool $deleted,
         ?bool $published,
     ) {
@@ -42,9 +43,10 @@ class Block
     {
         $render = new Render('template', $this->block::template());
 
-        return $render->render($this->context->registry, [
+        return $render->render($this->context->registry, array_merge([
             'block' => $this->block,
             'find' => $this->find,
-        ]);
+            'locale' => $this->context->request->get('locale'),
+        ], $this->templateContext);
     }
 }
