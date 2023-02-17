@@ -21,59 +21,59 @@ test('Json string quoting', function () {
     $compiler = new QueryCompiler($this->context, []);
 
     expect($compiler->compile('field = " \"\" \' "'))->toBe(
-        'p.content @@ \'$.field.value == " \"\" \'\' "\''
+        'n.content @@ \'$.field.value == " \"\" \'\' "\''
     );
 
     expect($compiler->compile("field = '\"\"\"'"))->toBe(
-        'p.content @@ \'$.field.value == "\"\"\""\''
+        'n.content @@ \'$.field.value == "\"\"\""\''
     );
 
     expect($compiler->compile("field = 'test\\' \" \\\" '"))->toBe(
-        'p.content @@ \'$.field.value == "test\'\' \" \" "\''
+        'n.content @@ \'$.field.value == "test\'\' \" \" "\''
     );
 
     expect($compiler->compile('field = \'test\\\' \\"\\" "" "\\" \\""\''))->toBe(
-        'p.content @@ \'$.field.value == "test\'\' \"\" \"\" \"\" \"\""\''
+        'n.content @@ \'$.field.value == "test\'\' \"\" \"\" \"\" \"\""\''
     );
 });
 
 test('Number operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
-    expect($compiler->compile('field = 13'))->toBe("p.content @@ '$.field.value == 13'");
-    expect($compiler->compile('field.value.de = 13'))->toBe("p.content @@ '$.field.value.de == 13'");
-    expect($compiler->compile('field = 13.73'))->toBe("p.content @@ '$.field.value == 13.73'");
-    expect($compiler->compile('field.value.de = 13.73'))->toBe("p.content @@ '$.field.value.de == 13.73'");
+    expect($compiler->compile('field = 13'))->toBe("n.content @@ '$.field.value == 13'");
+    expect($compiler->compile('field.value.de = 13'))->toBe("n.content @@ '$.field.value.de == 13'");
+    expect($compiler->compile('field = 13.73'))->toBe("n.content @@ '$.field.value == 13.73'");
+    expect($compiler->compile('field.value.de = 13.73'))->toBe("n.content @@ '$.field.value.de == 13.73'");
 });
 
 test('String operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
-    expect($compiler->compile('field = "string"'))->toBe('p.content @@ \'$.field.value == "string"\'');
-    expect($compiler->compile("field = 'string'"))->toBe('p.content @@ \'$.field.value == "string"\'');
-    expect($compiler->compile('field = /string/'))->toBe('p.content @@ \'$.field.value == "string"\'');
-    expect($compiler->compile("field.value.de = 'string'"))->toBe('p.content @@ \'$.field.value.de == "string"\'');
-    expect($compiler->compile('field.value.de = "string"'))->toBe('p.content @@ \'$.field.value.de == "string"\'');
-    expect($compiler->compile('field.value.de = /string/'))->toBe('p.content @@ \'$.field.value.de == "string"\'');
+    expect($compiler->compile('field = "string"'))->toBe('n.content @@ \'$.field.value == "string"\'');
+    expect($compiler->compile("field = 'string'"))->toBe('n.content @@ \'$.field.value == "string"\'');
+    expect($compiler->compile('field = /string/'))->toBe('n.content @@ \'$.field.value == "string"\'');
+    expect($compiler->compile("field.value.de = 'string'"))->toBe('n.content @@ \'$.field.value.de == "string"\'');
+    expect($compiler->compile('field.value.de = "string"'))->toBe('n.content @@ \'$.field.value.de == "string"\'');
+    expect($compiler->compile('field.value.de = /string/'))->toBe('n.content @@ \'$.field.value.de == "string"\'');
 });
 
 test('Boolean operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
-    expect($compiler->compile('field = false'))->toBe("p.content @@ '$.field.value == false'");
-    expect($compiler->compile('field = true'))->toBe("p.content @@ '$.field.value == true'");
-    expect($compiler->compile('field.value.de = false'))->toBe("p.content @@ '$.field.value.de == false'");
-    expect($compiler->compile('field.value.de = true'))->toBe("p.content @@ '$.field.value.de == true'");
+    expect($compiler->compile('field = false'))->toBe("n.content @@ '$.field.value == false'");
+    expect($compiler->compile('field = true'))->toBe("n.content @@ '$.field.value == true'");
+    expect($compiler->compile('field.value.de = false'))->toBe("n.content @@ '$.field.value.de == false'");
+    expect($compiler->compile('field.value.de = true'))->toBe("n.content @@ '$.field.value.de == true'");
 });
 
 test('Operator regex operand pattern', function () {
     $compiler = new QueryCompiler($this->context, []);
 
-    expect($compiler->compile('field ~ /^test$/'))->toBe("p.content @? '$.field.value ? (@ like_regex \"^test$\")'");
-    expect($compiler->compile('field ~* /^test$/'))->toBe("p.content @? '$.field.value ? (@ like_regex \"^test$\" flag \"i\")'");
+    expect($compiler->compile('field ~ /^test$/'))->toBe("n.content @? '$.field.value ? (@ like_regex \"^test$\")'");
+    expect($compiler->compile('field ~* /^test$/'))->toBe("n.content @? '$.field.value ? (@ like_regex \"^test$\" flag \"i\")'");
 
-    expect($compiler->compile('field !~ /^test$/'))->toBe("NOT p.content @? '$.field.value ? (@ like_regex \"^test$\")'");
-    expect($compiler->compile('field !~* /^test$/'))->toBe("NOT p.content @? '$.field.value ? (@ like_regex \"^test$\" flag \"i\")'");
+    expect($compiler->compile('field !~ /^test$/'))->toBe("NOT n.content @? '$.field.value ? (@ like_regex \"^test$\")'");
+    expect($compiler->compile('field !~* /^test$/'))->toBe("NOT n.content @? '$.field.value ? (@ like_regex \"^test$\" flag \"i\")'");
 });
 
 test('Operator like/ilike', function () {
@@ -84,13 +84,13 @@ test('Operator like/ilike', function () {
     expect($compiler->compile('builtin !~~ /%unlike/'))->toBe("builtin NOT LIKE '%unlike'");
     expect($compiler->compile('builtin !~~* /%iunlike/'))->toBe("builtin NOT ILIKE '%iunlike'");
 
-    expect($compiler->compile('field ~~ "%like\"%"'))->toBe("p.content->'field'->>'value' LIKE '%like\"%'");
-    expect($compiler->compile('field ~~* /%ilike%/'))->toBe("p.content->'field'->>'value' ILIKE '%ilike%'");
-    expect($compiler->compile('field !~~ /%unlike/'))->toBe("p.content->'field'->>'value' NOT LIKE '%unlike'");
-    expect($compiler->compile('field !~~* /%iunlike/'))->toBe("p.content->'field'->>'value' NOT ILIKE '%iunlike'");
+    expect($compiler->compile('field ~~ "%like\"%"'))->toBe("n.content->'field'->>'value' LIKE '%like\"%'");
+    expect($compiler->compile('field ~~* /%ilike%/'))->toBe("n.content->'field'->>'value' ILIKE '%ilike%'");
+    expect($compiler->compile('field !~~ /%unlike/'))->toBe("n.content->'field'->>'value' NOT LIKE '%unlike'");
+    expect($compiler->compile('field !~~* /%iunlike/'))->toBe("n.content->'field'->>'value' NOT ILIKE '%iunlike'");
 
-    expect($compiler->compile('builtin ~~ field'))->toBe("builtin LIKE p.content->'field'->>'value'");
-    expect($compiler->compile('field ~~ builtin'))->toBe("p.content->'field'->>'value' LIKE builtin");
+    expect($compiler->compile('builtin ~~ field'))->toBe("builtin LIKE n.content->'field'->>'value'");
+    expect($compiler->compile('field ~~ builtin'))->toBe("n.content->'field'->>'value' LIKE builtin");
 });
 
 test('Remaining operators', function () {
@@ -103,22 +103,22 @@ test('Remaining operators', function () {
     expect($compiler->compile('builtin<23'))->toBe('builtin < 23');
     expect($compiler->compile('builtin<=23'))->toBe('builtin <= 23');
 
-    expect($compiler->compile('field="string"'))->toBe('p.content @@ \'$.field.value == "string"\'');
-    expect($compiler->compile('field!="string"'))->toBe('p.content @@ \'$.field.value != "string"\'');
-    expect($compiler->compile('field>23'))->toBe('p.content @@ \'$.field.value > 23\'');
-    expect($compiler->compile('field>=23'))->toBe('p.content @@ \'$.field.value >= 23\'');
-    expect($compiler->compile('field<23'))->toBe('p.content @@ \'$.field.value < 23\'');
-    expect($compiler->compile('field<=23'))->toBe('p.content @@ \'$.field.value <= 23\'');
+    expect($compiler->compile('field="string"'))->toBe('n.content @@ \'$.field.value == "string"\'');
+    expect($compiler->compile('field!="string"'))->toBe('n.content @@ \'$.field.value != "string"\'');
+    expect($compiler->compile('field>23'))->toBe('n.content @@ \'$.field.value > 23\'');
+    expect($compiler->compile('field>=23'))->toBe('n.content @@ \'$.field.value >= 23\'');
+    expect($compiler->compile('field<23'))->toBe('n.content @@ \'$.field.value < 23\'');
+    expect($compiler->compile('field<=23'))->toBe('n.content @@ \'$.field.value <= 23\'');
 
-    expect($compiler->compile('builtin>field'))->toBe("builtin > p.content->'field'->>'value'");
-    expect($compiler->compile('field<=builtin'))->toBe("p.content->'field'->>'value' <= builtin");
-    expect($compiler->compile('field=field2'))->toBe("p.content->'field'->>'value' = p.content->'field2'->>'value'");
+    expect($compiler->compile('builtin>field'))->toBe("builtin > n.content->'field'->>'value'");
+    expect($compiler->compile('field<=builtin'))->toBe("n.content->'field'->>'value' <= builtin");
+    expect($compiler->compile('field=field2'))->toBe("n.content->'field'->>'value' = n.content->'field2'->>'value'");
 });
 
 test('Multilang field operand', function () {
     $compiler = new QueryCompiler($this->context, []);
 
-    expect($compiler->compile('field.* = "test"'))->toBe("p.content @@ '$.field.value.* == \"test\"'");
+    expect($compiler->compile('field.* = "test"'))->toBe("n.content @@ '$.field.value.* == \"test\"'");
 });
 
 test('Builtin operand', function () {

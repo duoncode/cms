@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder\Output;
 
+use Conia\Core\Context;
 use Conia\Core\Exception\ParserOutputException;
-use Conia\Core\Finder\Context;
 use Conia\Core\Finder\Input\Token;
 use Conia\Core\Finder\Input\TokenType;
 
@@ -65,7 +65,7 @@ readonly final class Comparison extends Expression implements Output
         $left = $this->getField();
 
         return sprintf(
-            "%sp.content %s '$.%s %s %s'",
+            "%sn.content %s '$.%s %s %s'",
             $negate ? 'NOT ' : '',
             $operator,
             $left,

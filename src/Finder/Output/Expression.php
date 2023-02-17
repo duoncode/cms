@@ -39,7 +39,7 @@ abstract readonly class Expression
     {
         return match ($token->type) {
             TokenType::Boolean => strtolower($token->lexeme),
-            TokenType::Field => $this->compileField($token->lexeme, 'p.content'),
+            TokenType::Field => $this->compileField($token->lexeme, 'n.content'),
             TokenType::Builtin => $builtins[$token->lexeme],
             TokenType::Keyword => $this->translateKeyword($token->lexeme),
             TokenType::Null => 'NULL',
