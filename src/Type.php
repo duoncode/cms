@@ -205,10 +205,6 @@ abstract class Type
                     $field->height($attr->newInstance()->height);
                     break;
                 case Multiple::class:
-                    if (!$field instanceof \Conia\Core\Field\Image) {
-                        throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
-                    }
-
                     $field->multiple(true);
 
                     break;
