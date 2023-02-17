@@ -23,10 +23,12 @@ class Text extends Value
             $locale = $this->locale;
 
             while ($locale) {
-                $this->value = $this->data['value'][$locale->id] ?? null;
+                $value = $this->data['value'][$locale->id] ?? null;
 
-                if ($this->value) {
-                    return $this->value;
+                if ($value) {
+                    $this->value = $value;
+
+                    return $value;
                 }
 
                 $locale = $locale->fallback();
@@ -37,7 +39,7 @@ class Text extends Value
             return '';
         }
 
-        $this->value = $this->data['value'] ?? '';
+        $this->value = isset($this->data['value']) ? $this->data['value'] : '';
 
         return $this->value;
     }
