@@ -20,4 +20,9 @@ class Str extends Value
     {
         return $this->raw();
     }
+
+    public function isset(): bool
+    {
+        return $this->raw() ? true : false;
+    }
 }

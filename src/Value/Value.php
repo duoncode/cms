@@ -41,6 +41,8 @@ abstract class Value
 
     abstract public function __toString(): string;
 
+    abstract public function isset(): bool;
+
     abstract public function json(): mixed;
 
     protected function assetsPath(): string

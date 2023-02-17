@@ -31,4 +31,9 @@ class Boolean extends Value
     {
         return $this->value;
     }
+
+    public function isset(): bool
+    {
+        return true;
+    }
 }

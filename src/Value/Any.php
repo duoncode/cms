@@ -20,4 +20,9 @@ class Any extends Value
     {
         return $this->raw();
     }
+
+    public function isset(): bool
+    {
+        return isset($this->data['value']) ? true : false;
+    }
 }

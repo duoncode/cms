@@ -35,4 +35,9 @@ class Number extends Value
     {
         return $this->value;
     }
+
+    public function isset(): bool
+    {
+        return isset($this->value) ? true : false;
+    }
 }

@@ -62,6 +62,11 @@ class Files extends Value implements Iterator
         return $this->raw();
     }
 
+    public function isset(): bool
+    {
+        return isset($this->data['files'][0]) ? true : false;
+    }
+
     protected function len(): int
     {
         return count($this->data['files']);

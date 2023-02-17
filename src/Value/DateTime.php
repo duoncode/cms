@@ -43,6 +43,11 @@ class DateTime extends Value
         return $this->format(static::FORMAT);
     }
 
+   public function isset(): bool
+   {
+       return isset($this->datetime) ? true : false;
+   }
+
     public function format(string $format): string
     {
         if ($this->datetime) {

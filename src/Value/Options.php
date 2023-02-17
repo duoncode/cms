@@ -20,4 +20,9 @@ class Options extends Value
     {
         return $this->raw();
     }
+
+    public function isset(): bool
+    {
+        return count($this->raw()) > 0 ? true : false;
+    }
 }

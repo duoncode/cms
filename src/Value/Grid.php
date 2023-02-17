@@ -132,6 +132,16 @@ class Grid extends Value
         return $out;
     }
 
+    /**
+     * Returns always true as it will normally used in a loop.
+     *
+     * TODO: check the statement above
+     */
+    public function isset(): bool
+    {
+        return true;
+    }
+
     protected function renderValue(string $prefix, GridItem $value, array $args): string
     {
         $colspan = $prefix . '-colspan-' . $value->data['colspan'];

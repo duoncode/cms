@@ -44,4 +44,9 @@ class File extends Value
     {
         return [];
     }
+
+    public function isset(): bool
+    {
+        return isset($this->data['files'][0]) ? true : false;
+    }
 }
