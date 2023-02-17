@@ -24,8 +24,6 @@ class Images extends Files
 
     protected function get(int $index): Image
     {
-        error_log(print_r($index, true));
-
         return new Image($this->node, $this->field, $this->context, $index);
     }
 }

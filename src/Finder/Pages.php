@@ -55,6 +55,13 @@ final class Pages implements Iterator
         return $this;
     }
 
+    public function type(string $type): self
+    {
+        $this->whereTypes = $this->typesCondition([$type]);
+
+        return $this;
+    }
+
     public function order(string ...$order): self
     {
         $compiler = new OrderCompiler($this->builtins);
