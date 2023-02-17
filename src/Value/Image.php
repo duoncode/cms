@@ -18,10 +18,11 @@ class Image extends File
         return $this->tag(true);
     }
 
-    public function tag(bool $bust = true): string
+    public function tag(bool $bust = true, string $class = null): string
     {
         return sprintf(
-            '<img src="%s" alt="%s"/>',
+            '<img %ssrc="%s" alt="%s">',
+            $class ? sprintf('class="%s" ', htmlspecialchars($class, ENT_QUOTES, 'UTF-8')) : '',
             $this->url($bust),
             htmlspecialchars(
                 $this->alt() ?: strip_tags($this->title()),
