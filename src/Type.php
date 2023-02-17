@@ -50,12 +50,12 @@ abstract class Type
         $this->config = $context->config;
     }
 
-    final public function __get(string $fieldName): Value
+    final public function __get(string $fieldName): ?Value
     {
         return $this->get($fieldName);
     }
 
-    final public function get(string $fieldName): Value
+    final public function get(string $fieldName): ?Value
     {
         if (!isset($this->{$fieldName})) {
             $type = $this::class;
@@ -66,7 +66,13 @@ abstract class Type
         $content = $this->data['content'][$fieldName] ?? [];
         $field = $this->{$fieldName};
 
-        return $field->value($this, new ValueContext($fieldName, $content));
+        $value = $field->value($this, new ValueContext($fieldName, $content));
+
+        if ($value->isset()) {
+            return $value;
+        }
+
+        return null;
     }
 
     public function init(): void
