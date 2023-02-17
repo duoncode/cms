@@ -19,8 +19,8 @@ class Block
         private readonly Finder $find,
         string $uid,
         private readonly array $templateContext = [],
-        ?bool $deleted,
-        ?bool $published,
+        ?bool $deleted = false,
+        ?bool $published = true,
     ) {
         $data = $this->context->db->nodes->find([
             'uid' => $uid,

@@ -54,8 +54,13 @@ class Finder
         return new Menu($this->context, $menu);
     }
 
-    public function block(string $uid, ?bool $deleted = false, ?bool $published = true): Block
+    public function block(
+        string $uid,
+        array $templateContext = [],
+        ?bool $deleted = false,
+        ?bool $published = true
+    ): Block
     {
-        return new Block($this->context, $this, $uid, $deleted, $published);
+        return new Block($this->context, $this, $uid, $templateContext, $deleted, $published);
     }
 }
