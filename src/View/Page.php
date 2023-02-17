@@ -48,6 +48,7 @@ class Page
             return $render->response($this->registry, [
                 'page' => $page,
                 'find' => $find,
+                'locale' => $context->request->get('locale'),
             ]);
             // } catch (Throwable) {
             //     throw new HttpBadRequest();
