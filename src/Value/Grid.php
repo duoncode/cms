@@ -50,7 +50,6 @@ class Grid extends Value
 
                 if ($i === $index) {
                     return (new ImageField("Grid {$this->context->fieldName} Image Field"))
-                        ->single()
                         ->value(
                             $this->node,
                             new ValueContext($this->context->fieldName, $value->data)
