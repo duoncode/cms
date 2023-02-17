@@ -47,6 +47,6 @@ class Block
             'block' => $this->block,
             'find' => $this->find,
             'locale' => $this->context->request->get('locale'),
-        ], $this->templateContext);
+        ], $this->templateContext));
     }
 }
