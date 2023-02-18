@@ -8,17 +8,17 @@ use Conia\Core\Asset;
 
 class TranslatedImage extends Image
 {
-    public function textValue(string $key): string
+    protected function textValue(string $key, int $index): string
     {
-        return $this->translated($key);
+        return $this->translated($key, $index);
     }
 
-    protected function translated(string $key): string
+    protected function translated(string $key, int $index): string
     {
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data['files'][0][$locale->id][$key] ?? null;
+            $value = $this->data['files'][$index][$locale->id][$key] ?? null;
 
             if ($value) {
                 return $value;
@@ -30,9 +30,9 @@ class TranslatedImage extends Image
         return '';
     }
 
-    protected function getImage(): Asset
+    protected function getImage(int $index): Asset
     {
-        $file = $this->translated('file');
+        $file = $this->translated('file', $index);
         $image = $this->getAssets()->image($this->assetsPath() . $file);
 
         if ($this->width > 0 || $this->height > 0) {

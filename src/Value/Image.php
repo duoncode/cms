@@ -34,7 +34,7 @@ class Image extends File
 
     public function url(bool $bust = true): string
     {
-        if ($url = filter_var($this->getImage()->url($bust), FILTER_VALIDATE_URL)) {
+        if ($url = filter_var($this->getImage($this->index)->url($bust), FILTER_VALIDATE_URL)) {
             return $url;
         }
 
@@ -43,7 +43,7 @@ class Image extends File
 
     public function path(bool $bust = true): string
     {
-        return filter_var($this->getImage()->path($bust), FILTER_SANITIZE_URL);
+        return filter_var($this->getImage($this->index)->path($bust), FILTER_SANITIZE_URL);
     }
 
     public function resize(int $width = 0, int $height = 0, bool $crop = false): self
@@ -57,34 +57,34 @@ class Image extends File
 
     public function link(): string
     {
-        return $this->textValue('link');
+        return $this->textValue('link', $this->index);
     }
 
     public function title(): string
     {
-        return $this->textValue('title');
+        return $this->textValue('title', $this->index);
     }
 
     public function alt(): string
     {
-        return $this->textValue('alt');
+        return $this->textValue('alt', $this->index);
     }
 
-    public function textValue(string $key): string
+    protected function textValue(string $key, int $index): string
     {
         if ($this->translate) {
-            return $this->translated($key);
+            return $this->translated($key, $index);
         }
 
         return $this->data['files'][$this->index][$key][$this->defaultLocale->id] ?? '';
     }
 
-    protected function translated(string $key): string
+    protected function translated(string $key, int $index): string
     {
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data['files'][$this->index][$key][$locale->id] ?? null;
+            $value = $this->data['files'][$index][$key][$locale->id] ?? null;
 
             if ($value) {
                 return $value;
@@ -96,9 +96,9 @@ class Image extends File
         return '';
     }
 
-    protected function getImage(): Asset
+    protected function getImage(int $index): Asset
     {
-        $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$this->index]['file']);
+        $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$index]['file']);
 
         if ($this->width > 0 || $this->height > 0) {
             $image = $image->resize($this->width, $this->height, $this->crop);
