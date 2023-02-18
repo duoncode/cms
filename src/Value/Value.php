@@ -14,6 +14,7 @@ abstract class Value
 {
     public readonly string $fieldType;
     protected readonly Locale $locale;
+    protected readonly Locale $defaultLocale;
     protected readonly string $fieldName;
     protected readonly array $data;
     protected readonly bool $translate;
@@ -24,6 +25,7 @@ abstract class Value
         protected readonly ValueContext $context,
     ) {
         $this->locale = $node->request->get('locale');
+        $this->defaultLocale = $node->request->get('defaultLocale');
         $this->data = $context->data;
         $this->fieldName = $context->fieldName;
         $this->fieldType = $field->type;
