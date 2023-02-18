@@ -71,20 +71,31 @@ class Locales implements Iterator
 
     public function getDefault(): Locale
     {
+        $count = count($this->locales);
+
+        if ($count === 0) {
+            throw new RuntimeException('No locales available. You must add at least your default language.');
+        }
+
+        // default locale from config file
+        if (is_null($this->default)) {
+            if ($count > 1) {
+                throw new RuntimeException('Default locale not available');
+            }
+
+            $this->default = array_key_first($this->locales);
+        }
+
         return $this->locales[$this->default];
     }
 
     public function negotiate(Request $request): Locale
     {
-        if (count($this->locales) === 0) {
-            throw new RuntimeException('No locales available. Add at least your default language.');
-        }
-
         if ($this->negotiator) {
-            return ($this->negotiator)($request);
+            return ($this->negotiator)($request, $this->locales, $this->getDefault());
         }
 
-        return $this->fromRequest($request);
+        return $this->fromRequest($request, $this->locales, $this->getDefault());
     }
 
     public function setNegotiator(Closure $func): void
@@ -92,13 +103,13 @@ class Locales implements Iterator
         $this->negotiator = $func;
     }
 
-    public function fromRequest(Request $request): Locale
+    protected function fromRequest(Request $request, array $locales, Locale $default): Locale
     {
         $uri = $request->uri();
 
         // By domain
         $host = strtolower(explode(':', $uri->getHost())[0]);
-        foreach ($this->locales as $locale) {
+        foreach ($locales as $locale) {
             foreach ($locale->domains as $domain) {
                 if ($host === $domain) {
                     return $locale;
@@ -108,7 +119,7 @@ class Locales implements Iterator
 
         // From URL path prefix. e. g. http://example.com/en_EN/path/to/page
         $prefix = explode('/', trim($uri->getPath(), '/'))[0];
-        foreach ($this->locales as $locale) {
+        foreach ($locales as $locale) {
             if ($prefix === $locale->urlPrefix) {
                 return $locale;
             }
@@ -120,22 +131,17 @@ class Locales implements Iterator
             $locale = $session->get('locale', false);
 
             if ($locale && $this->exists($locale)) {
-                return $this->locales[$locale];
+                return $locales[$locale];
             }
         }
 
         // From the locales the browser says the user accepts
         $locale = $this->fromBrowser();
         if ($locale && $this->exists($locale)) {
-            return $this->locales[$locale];
+            return $locales[$locale];
         }
 
-        // default locale from config file
-        if ($this->default !== null) {
-            return $this->locales[$this->default];
-        }
-
-        throw new RuntimeException('Default locale is not set');
+        return $default;
     }
 
     protected function exists(string $id): bool
