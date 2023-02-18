@@ -19,29 +19,23 @@ class Text extends Value
             return $this->value;
         }
 
-        if ($this->translate) {
-            $locale = $this->locale;
+        $locale = $this->locale;
 
-            while ($locale) {
-                $value = $this->data['value'][$locale->id] ?? null;
+        while ($locale) {
+            $value = $this->data['value'][$locale->id] ?? null;
 
-                if ($value) {
-                    $this->value = $value;
+            if ($value) {
+                $this->value = $value;
 
-                    return $value;
-                }
-
-                $locale = $locale->fallback();
+                return $value;
             }
 
-            $this->value = '';
-
-            return '';
+            $locale = $locale->fallback();
         }
 
-        $this->value = isset($this->data['value']) ? $this->data['value'] : '';
+        $this->value = '';
 
-        return $this->value;
+        return '';
     }
 
     public function json(): mixed

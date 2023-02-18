@@ -70,16 +70,7 @@ class Image extends File
         return $this->textValue('alt');
     }
 
-    public function textValue(string $key): string
-    {
-        if ($this->translate) {
-            return $this->translated($key);
-        }
-
-        return $this->data['files'][$this->index][$key] ?? '';
-    }
-
-    protected function translated(string $key): string
+    protected function textValue(string $key): string
     {
         $locale = $this->locale;
 
