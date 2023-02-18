@@ -20,6 +20,7 @@ class Locale implements Middleware
         $locales = $this->config->locales();
         $locale = $locales->negotiate($request);
         $request->set('locale', $locale);
+        $request->set('defaultLocale', $locales->getDefault());
 
         return $next($request);
     }
