@@ -69,6 +69,11 @@ class Locales implements Iterator
         throw new RuntimeException('Locale does not exist. Add all your locales first before setting the default.');
     }
 
+    public function getDefault(): Locale
+    {
+        return $this->locales[$this->default];
+    }
+
     public function negotiate(Request $request): Locale
     {
         if (count($this->locales) === 0) {
