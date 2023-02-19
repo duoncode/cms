@@ -40,7 +40,7 @@ final class Pages implements Iterator
         ];
     }
 
-    public function find(string $query): self
+    public function filter(string $query): self
     {
         $compiler = new QueryCompiler($this->context, $this->builtins);
         $this->whereFields = $compiler->compile($query);

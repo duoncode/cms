@@ -37,7 +37,7 @@ class Finder
     public function pages(
         string $query = '',
     ): Pages {
-        return (new Pages($this->context, $this))->find($query);
+        return (new Pages($this->context, $this))->filter($query);
     }
 
     public function page(
@@ -59,8 +59,7 @@ class Finder
         array $templateContext = [],
         ?bool $deleted = false,
         ?bool $published = true
-    ): Block
-    {
+    ): Block {
         return new Block($this->context, $this, $uid, $templateContext, $deleted, $published);
     }
 }
