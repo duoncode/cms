@@ -47,6 +47,8 @@ abstract class Value
 
     abstract public function json(): mixed;
 
+    abstract public function unwrap(): mixed;
+
     protected function assetsPath(): string
     {
         return 'node/' . $this->node->uid() . '/';

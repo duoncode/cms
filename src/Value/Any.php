@@ -8,17 +8,17 @@ class Any extends Value
 {
     public function __toString(): string
     {
-        return htmlspecialchars($this->raw());
+        return htmlspecialchars((string)$this->unwrap());
     }
 
-    public function raw(): mixed
+    public function unwrap(): ?mixed
     {
         return $this->data['value'] ?? null;
     }
 
     public function json(): mixed
     {
-        return $this->raw();
+        return $this->unwrap();
     }
 
     public function isset(): bool

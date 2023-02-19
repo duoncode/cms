@@ -32,6 +32,7 @@ class Page
         }
 
         $class = $data['classname'];
+        error_log($class);
 
         if (is_subclass_of($class, Type::class)) {
             $page = new $class($context, $find, $data);

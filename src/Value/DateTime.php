@@ -43,10 +43,15 @@ class DateTime extends Value
         return $this->format(static::FORMAT);
     }
 
-   public function isset(): bool
-   {
-       return isset($this->datetime) ? true : false;
-   }
+    public function isset(): bool
+    {
+        return isset($this->datetime) ? true : false;
+    }
+
+    public function unwrap(): ?DateTimeImmutable
+    {
+        return $this->datetime;
+    }
 
     public function format(string $format): string
     {

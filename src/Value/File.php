@@ -40,6 +40,11 @@ class File extends Value
         return '';
     }
 
+    public function unwrap(): ?array
+    {
+        return $this->data['files'][0] ?? null;
+    }
+
     public function json(): mixed
     {
         return [];

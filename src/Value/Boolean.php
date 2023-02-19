@@ -27,6 +27,11 @@ class Boolean extends Value
         return (string)$this->value;
     }
 
+    public function unwrap(): bool
+    {
+        return $this->value;
+    }
+
     public function json(): mixed
     {
         return $this->value;

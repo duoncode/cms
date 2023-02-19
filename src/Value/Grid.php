@@ -32,7 +32,12 @@ class Grid extends Value
         return $this->render();
     }
 
-    public function json(): mixed
+    public function json(): array
+    {
+        return $this->unwrap();
+    }
+
+    public function unwrap(): array
     {
         return [
             'columns' => $this->data['columns'] ?? null,

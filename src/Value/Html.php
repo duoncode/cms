@@ -18,13 +18,13 @@ class Html extends Text
         ?HtmlSanitizerConfig $config = null,
         bool $removeEmptyLines = true,
     ): string {
-        return HtmlUtil::sanitize($this->raw(), $config, $removeEmptyLines);
+        return HtmlUtil::sanitize($this->unwrap(), $config, $removeEmptyLines);
     }
 
     public function excerpt(
         int $limit = 30,
         string $allowedTags = '<a><i><b><em><strong>',
     ): string {
-        return HtmlUtil::excerpt($this->raw(), $limit, $allowedTags);
+        return HtmlUtil::excerpt($this->unwrap(), $limit, $allowedTags);
     }
 }

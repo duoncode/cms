@@ -12,7 +12,7 @@ class Files extends Value implements Iterator
 
     public function __toString(): string
     {
-        return 'Files: count(' . count($this->raw()) . ')';
+        return 'Files: count(' . count($this->unwrap()) . ')';
     }
 
     public function rewind(): void
@@ -40,7 +40,7 @@ class Files extends Value implements Iterator
         return isset($this->data['files'][$this->pointer]);
     }
 
-    public function raw(): array
+    public function unwrap(): array
     {
         $locale = $this->locale;
 
@@ -59,7 +59,7 @@ class Files extends Value implements Iterator
 
     public function json(): mixed
     {
-        return $this->raw();
+        return $this->unwrap();
     }
 
     public function isset(): bool

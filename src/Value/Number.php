@@ -31,7 +31,12 @@ class Number extends Value
         return (string)$this->value;
     }
 
-    public function json(): mixed
+    public function json(): ?int
+    {
+        return $this->unwrap();
+    }
+
+    public function unwrap(): ?int
     {
         return $this->value;
     }

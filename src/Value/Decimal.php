@@ -32,10 +32,15 @@ class Decimal extends Value
         return $this->value;
     }
 
-   public function isset(): bool
-   {
-       return isset($this->value) ? true : false;
-   }
+    public function unwrap(): ?float
+    {
+        return $this->value;
+    }
+
+    public function isset(): bool
+    {
+        return isset($this->value) ? true : false;
+    }
 
     public function localize(?int $digits = 2, ?string $locale = null): string
     {

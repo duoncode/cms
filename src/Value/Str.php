@@ -8,21 +8,21 @@ class Str extends Value
 {
     public function __toString(): string
     {
-        return htmlspecialchars($this->raw());
+        return htmlspecialchars($this->unwrap());
     }
 
-    public function raw(): string
+    public function unwrap(): string
     {
         return $this->data['value'] ?? '';
     }
 
     public function json(): string
     {
-        return $this->raw();
+        return $this->unwrap();
     }
 
     public function isset(): bool
     {
-        return $this->raw() ? true : false;
+        return $this->unwrap() ? true : false;
     }
 }
