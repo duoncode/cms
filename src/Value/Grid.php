@@ -137,14 +137,14 @@ class Grid extends Value
         return $out;
     }
 
-    /**
-     * Returns always true as it will normally used in a loop.
-     *
-     * TODO: check the statement above
-     */
     public function isset(): bool
     {
-        return true;
+        return match ($this->data['i18n'] ?? null) {
+            'separate' => count($this->data[$this->defaultLocale->id]) > 0,
+            // TODO: correct?
+            'mixed' => count($this->data['value']) > 0,
+            default => throw new ValueError('Unknown i18n setting of Grid field'),
+        };
     }
 
     protected function renderValue(string $prefix, GridItem $value, array $args): string
@@ -176,7 +176,8 @@ class Grid extends Value
         return "<img src=\"{$url}\" alt=\"{$title}\">";
     }
 
-    protected function getMixed(array $data): Generator
+    // TODO: obviously
+    protected function getMixed(array $data): array
     {
         throw new RuntimeException('Not implemented');
     }

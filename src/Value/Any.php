@@ -11,7 +11,7 @@ class Any extends Value
         return htmlspecialchars((string)$this->unwrap());
     }
 
-    public function unwrap(): ?mixed
+    public function unwrap(): mixed
     {
         return $this->data['value'] ?? null;
     }
