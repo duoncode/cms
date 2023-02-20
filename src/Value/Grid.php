@@ -7,9 +7,9 @@ namespace Conia\Core\Value;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Grid as GridField;
-use Conia\Core\Field\Html as HtmlField;
 use Conia\Core\Field\Image as ImageField;
 use Conia\Core\Type;
+use Conia\Core\Util\Html as HtmlUtil;
 use Generator;
 
 class Grid extends Value
@@ -94,11 +94,7 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return (new HtmlField("Grid {$this->context->fieldName} Html Field"))
-                        ->value(
-                            $this->node,
-                            new ValueContext($this->context->fieldName, $value->data)
-                        )->excerpt($words, $allowedTags);
+                    return HtmlUtil::excerpt($value->data['value'], $words, $allowedTags);
                 }
             }
         }

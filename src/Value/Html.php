@@ -22,9 +22,9 @@ class Html extends Text
     }
 
     public function excerpt(
-        int $limit = 30,
+        int $words = 30,
         string $allowedTags = '<a><i><b><em><strong>',
     ): string {
-        return HtmlUtil::excerpt($this->unwrap(), $limit, $allowedTags);
+        return HtmlUtil::excerpt($this->unwrap(), $words, $allowedTags);
     }
 }
