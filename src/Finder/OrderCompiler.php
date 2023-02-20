@@ -33,7 +33,7 @@ final class OrderCompiler
             $expression = $this->builtins[$fieldName] ?? null;
 
             if (!$expression) {
-                $expression = $this->compileField($fieldName, 'n.content');
+                $expression = $this->compileField($fieldName, 'n.content', asIs: true);
             }
 
             $expressions[] = $expression . ' ' . $field['direction'];

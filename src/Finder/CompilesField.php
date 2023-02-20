@@ -6,18 +6,22 @@ namespace Conia\Core\Finder;
 
 trait CompilesField
 {
-    private function compileField(string $fieldName, string $tableField): string
-    {
+    private function compileField(
+        string $fieldName,
+        string $tableField,
+        bool $asIs = false
+    ): string {
         $parts = explode('.', $fieldName);
         $count = count($parts);
+        $arrow = $asIs ? '->' : '->>';
 
         if ($count === 1) {
-            return "{$tableField}->'{$parts[0]}'->>'value'";
+            return "{$tableField}->'{$parts[0]}'{$arrow}'value'";
         }
 
         $middle = implode("'->'", array_slice($parts, 0, $count - 1));
         $end = array_slice($parts, -1)[0];
 
-        return "{$tableField}->'{$middle}'->>'{$end}'";
+        return "{$tableField}->'{$middle}'{$arrow}'{$end}'";
     }
 }
