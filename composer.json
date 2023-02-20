@@ -2,6 +2,7 @@
     "name": "conia/core",
     "description": "Conia CMS/CMF Core Library",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "ebene fünf GmbH",
