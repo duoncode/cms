@@ -152,6 +152,12 @@ class Grid extends Value
         $out .= match ($value->type) {
             'html' => $value->data['value'],
             'text' => $value->data['value'],
+            'h1' => '<h1>' . $value->data['value'] . '</h1>',
+            'h2' => '<h2>' . $value->data['value'] . '</h2>',
+            'h3' => '<h3>' . $value->data['value'] . '</h3>',
+            'h4' => '<h4>' . $value->data['value'] . '</h4>',
+            'h5' => '<h5>' . $value->data['value'] . '</h5>',
+            'h6' => '<h6>' . $value->data['value'] . '</h6>',
             'image' => $this->renderImage($value->data, $args),
         };
         $out .= '</div>';
