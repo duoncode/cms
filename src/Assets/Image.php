@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Core\Assets;
 
 use Conia\Chuck\Request;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Sizer;
 
-class Asset
+class Image
 {
     public function __construct(
         protected readonly Request $request,
-        protected readonly Config $config,
+        protected readonly Assets $assets,
         protected readonly Sizer\Image|Sizer\CachedImage $image,
     ) {
     }
 
-    public function resize(int $width = 0, int $height = 0, bool $crop = false): Asset
+    public function resize(int $width = 0, int $height = 0, bool $crop = false): static
     {
         if ($this->image instanceof Sizer\CachedImage) {
             throw new RuntimeException('Image is already resized');
@@ -25,23 +25,23 @@ class Asset
 
         return new self(
             $this->request,
-            $this->config,
+            $this->assets,
             $this->image->resize($width, $height, $crop)
         );
     }
 
-    public function path(bool $bust = true): string
+    public function path(bool $bust = false): string
     {
         if ($this->image instanceof Sizer\CachedImage) {
-            $dir = $this->config->get('path.cache');
+            $dir = $this->assets->cacheDir;
         } else {
-            $dir = $this->config->get('path.assets');
+            $dir = $this->assets->assetsDir;
         }
 
-        return $dir . '/' . $this->image->relative($bust);
+        return substr($dir . '/' . $this->image->urlPath($bust), strlen($this->assets->publicDir));
     }
 
-    public function url(bool $bust = true): string
+    public function url(bool $bust = false): string
     {
         return $this->request->origin() . $this->path($bust);
     }

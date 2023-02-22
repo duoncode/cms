@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Assets;
+use Conia\Core\Assets\Assets;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Field\Field;
 use Conia\Core\Locale;

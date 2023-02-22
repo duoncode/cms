@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Asset;
-
 class TranslatedImage extends Image
 {
     protected function textValue(string $key, int $index): string
@@ -30,7 +28,7 @@ class TranslatedImage extends Image
         return '';
     }
 
-    protected function getImage(int $index): Asset
+    protected function getImage(int $index): \Conia\Core\Image
     {
         $file = $this->translated('file', $index);
         $image = $this->getAssets()->image($this->assetsPath() . $file);

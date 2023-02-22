@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
-use Conia\Core\Asset;
+use Conia\Core\Assets;
 use Conia\Core\Exception\RuntimeException;
 
 class Image extends File
@@ -32,8 +32,9 @@ class Image extends File
         );
     }
 
-    public function url(bool $bust = true): string
+    public function url(bool $bust = false): string
     {
+        error_log($this->getImage($this->index)->url($bust));
         if ($url = filter_var($this->getImage($this->index)->url($bust), FILTER_VALIDATE_URL)) {
             return $url;
         }
@@ -41,7 +42,7 @@ class Image extends File
         throw new RuntimeException('Invalid image url');
     }
 
-    public function path(bool $bust = true): string
+    public function path(bool $bust = false): string
     {
         return filter_var($this->getImage($this->index)->path($bust), FILTER_SANITIZE_URL);
     }
@@ -96,7 +97,7 @@ class Image extends File
         return '';
     }
 
-    protected function getImage(int $index): Asset
+    protected function getImage(int $index): Assets\Image
     {
         $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$index]['file']);
 
