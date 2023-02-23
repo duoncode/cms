@@ -6,12 +6,14 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Assets;
 use Conia\Core\Exception\RuntimeException;
+use Gumlet\ImageResize;
 
 class Image extends File
 {
-    protected int $width = 0;
-    protected int $height = 0;
-    protected bool $crop = false;
+    protected ?Assets\Size $size = null;
+    protected ?Assets\ResizeMode $resizeMode = null;
+    protected bool $enlarge = false;
+    protected ?int $quality = null;
 
     public function __toString(): string
     {
@@ -34,7 +36,6 @@ class Image extends File
 
     public function url(bool $bust = false): string
     {
-        error_log($this->getImage($this->index)->url($bust));
         if ($url = filter_var($this->getImage($this->index)->url($bust), FILTER_VALIDATE_URL)) {
             return $url;
         }
@@ -47,11 +48,81 @@ class Image extends File
         return filter_var($this->getImage($this->index)->path($bust), FILTER_SANITIZE_URL);
     }
 
-    public function resize(int $width = 0, int $height = 0, bool $crop = false): self
+    public function width(int $width, bool $enlarge = false): static
     {
-        $this->width = $width;
-        $this->height = $height;
-        $this->crop = $crop;
+        $this->size = new Assets\Size($width);
+        $this->resizeMode = Assets\ResizeMode::Width;
+        $this->enlarge = $enlarge;
+
+        return $this;
+    }
+
+    public function height(int $height, bool $enlarge = false): static
+    {
+        $this->size = new Assets\Size($height);
+        $this->resizeMode = Assets\ResizeMode::Height;
+        $this->enlarge = $enlarge;
+
+        return $this;
+    }
+
+    public function longSide(int $size, bool $enlarge = false): static
+    {
+        $this->size = new Assets\Size($size);
+        $this->resizeMode = Assets\ResizeMode::LongSide;
+        $this->enlarge = $enlarge;
+
+        return $this;
+    }
+
+    public function shortSide(int $size, bool $enlarge = false): static
+    {
+        $this->size = new Assets\Size($size);
+        $this->resizeMode = Assets\ResizeMode::ShortSide;
+        $this->enlarge = $enlarge;
+
+        return $this;
+    }
+
+    public function fit(int $width, int $height, bool $enlarge = false): static
+    {
+        $this->size = new Assets\Size($width, $height);
+        $this->resizeMode = Assets\ResizeMode::Fit;
+        $this->enlarge = $enlarge;
+
+        return $this;
+    }
+
+    public function crop(int $width, int $height, string $position = 'center'): static
+    {
+        $position = match ($position) {
+            'top' => ImageResize::CROPTOP,
+            'centre' => ImageResize::CROPCENTRE,
+            'center' => ImageResize::CROPCENTER,
+            'bottom' => ImageResize::CROPBOTTOM,
+            'left' => ImageResize::CROPLEFT,
+            'right' => ImageResize::CROPRIGHT,
+            'topcenter' => ImageResize::CROPTOPCENTER,
+            default => throw new RuntimeException('Crop position not supported: ' . $position),
+        };
+
+        $this->size = new Assets\Size($width, $height, $position);
+        $this->resizeMode = Assets\ResizeMode::Crop;
+
+        return $this;
+    }
+
+    public function freecrop(int $width, int $height, int|false $x = false, int|false $y = false): static
+    {
+        $this->size = new Assets\Size($width, $height, ['x' => $x, 'y' => $y]);
+        $this->resizeMode = Assets\ResizeMode::FreeCrop;
+
+        return $this;
+    }
+
+    public function quality(int $quality): static
+    {
+        $this->quality = $quality;
 
         return $this;
     }
@@ -101,8 +172,8 @@ class Image extends File
     {
         $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$index]['file']);
 
-        if ($this->width > 0 || $this->height > 0) {
-            $image = $image->resize($this->width, $this->height, $this->crop);
+        if ($this->size) {
+            $image = $image->resize($this->size, $this->resizeMode, $this->enlarge, $this->quality);
         }
 
         return $image;

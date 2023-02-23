@@ -34,7 +34,7 @@ class Assets
             );
         }
 
-        return new Image($this->request, $this, $this->sizerAssets->image($path));
+        return new Image($this->request, $this, $path);
     }
 
     public function file(string $path): File
