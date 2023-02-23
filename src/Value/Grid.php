@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Value;
 
+use Conia\Core\Assets\ResizeMode;
+use Conia\Core\Assets\Size;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Grid as GridField;
@@ -172,7 +174,12 @@ class Grid extends Value
         $maxWidth = $args['maxImageWidth'] ?? 1280;
         $path = $this->assetsPath() . $file;
         $image = $this->getAssets()->image($path);
-        $resized = $image->resize((int)($maxWidth / $this->columns() * (int)($data['colspan'] ?? 12)));
+        $resized = $image->resize(
+            new Size((int)($maxWidth / $this->columns()) * (int)($data['colspan'] ?? 12)),
+            ResizeMode::Width,
+            enlarge: false,
+            quality: null,
+        );
         $url = $resized->url(true);
 
         return "<img src=\"{$url}\" alt=\"{$title}\">";
