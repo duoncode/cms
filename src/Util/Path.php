@@ -8,7 +8,7 @@ use Conia\Core\Exception\RuntimeException;
 
 class Path
 {
-    public static function inside(string $parent, string $child): string
+    public static function inside(string $parent, string $child, bool $checkIsFile = false): string
     {
         $parent = realpath($parent);
 
@@ -19,7 +19,11 @@ class Path
         $path = realpath(rtrim($parent, '\\/') . DIRECTORY_SEPARATOR . ltrim($child, '\\/'));
 
         if (!$path || strncmp($path, $parent, strlen($parent)) !== 0) {
-            throw new RuntimeException('File does not exist or is not in the expected location.');
+            throw new RuntimeException('File or directory does not exist or is not in the expected location.');
+        }
+
+        if ($checkIsFile && !is_file($path)) {
+            throw new RuntimeException('Path is not a file: ' . $path);
         }
 
         return $path;
