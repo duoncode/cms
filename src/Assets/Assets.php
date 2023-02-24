@@ -13,7 +13,6 @@ class Assets
     public readonly string $publicDir;
     public readonly string $assetsDir;
     public readonly string $cacheDir;
-    protected \Conia\Sizer\Assets $sizerAssets;
 
     public function __construct(
         protected readonly Request $request,
@@ -27,13 +26,6 @@ class Assets
 
     public function image(string $path): Image
     {
-        if (!isset($this->sizerAssets)) {
-            $this->sizerAssets = new \Conia\Sizer\Assets(
-                $this->assetsDir,
-                $this->cacheDir,
-            );
-        }
-
         return new Image($this->request, $this, $path);
     }
 
