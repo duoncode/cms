@@ -55,6 +55,19 @@ abstract class Type
         return $this->get($fieldName);
     }
 
+    // TODO: should be optimized as this could result
+    //       in many ::get() calls
+    final public function __isset(string $fieldName): bool
+    {
+        if (isset($this->{$fieldName})) {
+            $value = $this->get($fieldName);
+
+            return isset($value);
+        }
+
+        return false;
+    }
+
     final public function get(string $fieldName): ?Value
     {
         if (!isset($this->{$fieldName})) {
