@@ -1,6 +1,10 @@
 TODO
 ====
 
+- Fallback URLs respectively parameterized URLs in the CMS
+  Like /url/path/...remainder
+       /url/path/{id}/{name}
+- Insert overwriting in Boiler
 - Improve Html::balanceTags. This is a very naive implementation and does not
   handle singlular tags like <br> or <hr class="whatever">
 - Improve Html::excerpt. Check if we're in the middle of an opening tag at the end.
