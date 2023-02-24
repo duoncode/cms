@@ -109,10 +109,8 @@ class Image
 
     protected function getCacheFilePath(Size $size, ResizeMode $mode, bool $enlarge): string
     {
-        error_log('relative ' . $this->relativeFile);
         $info = pathinfo($this->relativeFile);
         $relativeDir = $info['dirname'] ?? null;
-        error_log(print_r($relativeDir, true));
         // pathinfo does not handle multiple dots like .tar.gz well
         $filenameSegments = explode('.', $info['basename']);
         $cacheDir = $this->assets->cacheDir;
