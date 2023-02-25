@@ -8,12 +8,10 @@ use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Response;
 use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Node;
-use Throwable;
 
 class Page
 {
@@ -32,28 +30,11 @@ class Page
         }
 
         $class = $data['classname'];
-        error_log($class);
 
         if (is_subclass_of($class, Node::class)) {
             $page = new $class($context, $find, $data);
 
-            // Create a JSON response if the URL ends with .json
-            if (strtolower($extension ?? '') === 'json') {
-                return Response::fromFactory($this->factory)->json($page->json());
-            }
-
-            // try {
-            // Render the template
-            $render = new Render('template', $page::template());
-
-            return $render->response($this->registry, [
-                'page' => $page,
-                'find' => $find,
-                'locale' => $context->request->get('locale'),
-            ]);
-            // } catch (Throwable) {
-            //     throw new HttpBadRequest();
-            // }
+            return $page->response();
         }
 
         throw new HttpBadRequest();

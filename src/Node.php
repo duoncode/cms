@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
+use Conia\Chuck\Exception\HttpBadRequest;
+use Conia\Chuck\Registry;
+use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
+use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
@@ -27,12 +31,14 @@ use Conia\Quma\Database;
 use Generator;
 use ReflectionClass;
 use ReflectionProperty;
+use Throwable;
 
 abstract class Node
 {
     public readonly Request $request;
     public readonly Config $config;
     protected readonly Database $db;
+    protected readonly Registry $registry;
     protected static string $name = '';
     protected static string $template = '';
     protected static array $permissions = [];
@@ -40,7 +46,7 @@ abstract class Node
     protected array $list = [];
 
     final public function __construct(
-        protected readonly Context $context,
+        Context $context,
         protected readonly Finder $find,
         protected readonly array $data,
     ) {
@@ -49,6 +55,7 @@ abstract class Node
         $this->db = $context->db;
         $this->request = $context->request;
         $this->config = $context->config;
+        $this->registry = $context->registry;
     }
 
     final public function __get(string $fieldName): ?Value
@@ -164,7 +171,44 @@ abstract class Node
         return static::name();
     }
 
-    public function json(): array
+    public function response(): Response
+    {
+        $request = $this->request;
+
+        return match ($request->method()) {
+            'GET' => $this->get(),
+            'POST' => $this->post(),
+            'PUT' => $this->put(),
+            'DELETE' => $this->delete(),
+        };
+    }
+
+    public function get(array $context = []): Response
+    {
+        // Create a JSON response if the URL ends with .json
+        if ($this->request->get('isJson', false)) {
+            return Response::fromFactory($this->factory)->json($this->json($context));
+        }
+
+        return $this->render($context);
+    }
+
+    public function post(): Response
+    {
+        throw new RuntimeException('Not implemented');
+    }
+
+    public function put(): Response
+    {
+        throw new RuntimeException('Not implemented');
+    }
+
+    public function delete(): Response
+    {
+        throw new RuntimeException('Not implemented');
+    }
+
+    public function json(array $context = []): array
     {
         $data = $this->data;
 
@@ -174,7 +218,28 @@ abstract class Node
             'content' => $this->getJsonContent(),
         ];
 
-        return array_merge($data, $content);
+        return array_merge($data, $content, $context);
+    }
+
+    protected function render(array $context = []): Response
+    {
+        $context = array_merge([
+            'page' => $this,
+            'find' => $this->find,
+            'locale' => $this->request->get('locale'),
+        ], $context);
+
+        try {
+            $render = new Render('template', self::template());
+
+            return $render->response($this->registry, $context);
+        } catch (Throwable $e) {
+            if ($this->config->debug()) {
+                throw $e;
+            }
+
+            throw new HttpBadRequest();
+        }
     }
 
     protected function initFields(): void
