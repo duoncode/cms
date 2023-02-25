@@ -180,32 +180,33 @@ abstract class Node
             'POST' => $this->post(),
             'PUT' => $this->put(),
             'DELETE' => $this->delete(),
+            default => throw new HttpBadRequest(),
         };
     }
 
-    public function get(array $context = []): Response
+    public function get(): Response
     {
         // Create a JSON response if the URL ends with .json
         if ($this->request->get('isJson', false)) {
-            return Response::fromFactory($this->factory)->json($this->json($context));
+            return Response::fromFactory($this->factory)->json($this->json());
         }
 
-        return $this->render($context);
+        return $this->render();
     }
 
     public function post(): Response
     {
-        throw new RuntimeException('Not implemented');
+        throw new HttpBadRequest();
     }
 
     public function put(): Response
     {
-        throw new RuntimeException('Not implemented');
+        throw new HttpBadRequest();
     }
 
     public function delete(): Response
     {
-        throw new RuntimeException('Not implemented');
+        throw new HttpBadRequest();
     }
 
     public function json(array $context = []): array
