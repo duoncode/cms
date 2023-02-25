@@ -36,7 +36,7 @@ class Routes
         )->render('json');
 
         // Add catchall for page url paths. Must be the last one
-        $app->get(
+        $app->route(
             '/...slug',
             [Page::class, 'catchall'],
             'conia:catchall',
