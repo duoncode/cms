@@ -20,6 +20,7 @@ use Conia\Core\Field\Attr\TranslateImage;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Finder;
+use Conia\Core\Locale;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
 use Conia\Quma\Database;
@@ -259,5 +260,10 @@ abstract class Node
         }
 
         return $result;
+    }
+
+    protected function locale(): Locale
+    {
+        return $this->request->get('locale');
     }
 }
