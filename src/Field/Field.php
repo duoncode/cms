@@ -28,6 +28,11 @@ abstract class Field
         $this->type = $this::class;
     }
 
+    public function __toString(): string
+    {
+        return $this->value()->__toString();
+    }
+
     abstract public function value(): Value;
 
     public function validate(): bool
