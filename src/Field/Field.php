@@ -35,6 +35,11 @@ abstract class Field
 
     abstract public function value(): Value;
 
+    public function isset(): bool
+    {
+        return $this->value()->isset();
+    }
+
     public function validate(): bool
     {
         return true;
