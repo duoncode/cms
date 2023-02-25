@@ -45,7 +45,7 @@ class App extends \Conia\Chuck\App
     public function type(string $class, string $label = null, string $description = null): void
     {
         $this->registry
-            ->tag(Type::class)
+            ->tag(Node::class)
             ->add($class)
             ->args(label: $label, description: $description);
     }

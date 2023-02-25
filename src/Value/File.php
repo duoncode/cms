@@ -7,12 +7,12 @@ namespace Conia\Core\Value;
 use Conia\Core\Assets;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Field;
-use Conia\Core\Type;
+use Conia\Core\Node;
 
 class File extends Value
 {
     public function __construct(
-        Type $node,
+        Node $node,
         Field $field,
         ValueContext $context,
         protected int $index = 0,

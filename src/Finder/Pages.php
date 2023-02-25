@@ -6,7 +6,7 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Context;
 use Conia\Core\Finder;
-use Conia\Core\Type;
+use Conia\Core\Node;
 use Generator;
 use Iterator;
 
@@ -99,7 +99,7 @@ final class Pages implements Iterator
         $this->result->rewind();
     }
 
-    public function current(): Type
+    public function current(): Node
     {
         if (!isset($this->result)) {
             $this->fetchResult();
@@ -156,7 +156,7 @@ final class Pages implements Iterator
         $result = [];
 
         foreach ($types as $type) {
-            if (class_exists($type) && is_subclass_of($type, Type::class)) {
+            if (class_exists($type) && is_subclass_of($type, Node::class)) {
                 $result[] = 't.classname = ' . $this->context->db->quote($type);
             } else {
                 $result[] = 't.name = ' . $this->context->db->quote($type);

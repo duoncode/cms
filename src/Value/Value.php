@@ -8,7 +8,7 @@ use Conia\Core\Assets\Assets;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Field\Field;
 use Conia\Core\Locale;
-use Conia\Core\Type;
+use Conia\Core\Node;
 
 abstract class Value
 {
@@ -20,7 +20,7 @@ abstract class Value
     protected readonly bool $translate;
 
     public function __construct(
-        protected readonly Type $node,
+        protected readonly Node $node,
         protected readonly Field $field,
         protected readonly ValueContext $context,
     ) {

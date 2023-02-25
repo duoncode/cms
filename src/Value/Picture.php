@@ -6,11 +6,11 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Field;
-use Conia\Core\Type;
+use Conia\Core\Node;
 
 class Picture extends Image
 {
-    public function __construct(Type $node, Field $field, ValueContext $context)
+    public function __construct(Node $node, Field $field, ValueContext $context)
     {
         parent::__construct($node, $field, $context);
 

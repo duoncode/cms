@@ -16,7 +16,7 @@ class Fulltext
 
         $class = $data['classname'];
 
-        if (is_subclass_of($class, Type::class)) {
+        if (is_subclass_of($class, Node::class)) {
             $page = new $class($request, $config, $find, $data);
 
             // Create a JSON response if the URL ends with .json

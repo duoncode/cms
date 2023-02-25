@@ -8,11 +8,11 @@ use Conia\Chuck\Renderer\Render;
 use Conia\Core\Context;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Finder;
-use Conia\Core\Type;
+use Conia\Core\Node;
 
 class Block
 {
-    protected Type $block;
+    protected Node $block;
 
     public function __construct(
         private readonly Context $context,
@@ -31,7 +31,7 @@ class Block
 
         $class = $data['classname'];
 
-        if (!is_subclass_of($class, Type::class)) {
+        if (!is_subclass_of($class, Node::class)) {
             throw new RuntimeException('Invalid block class' . $class);
         }
 

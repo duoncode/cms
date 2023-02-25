@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Field;
 
 use Conia\Core\Field\Attr\FulltextWeight;
-use Conia\Core\Type;
+use Conia\Core\Node;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
 
@@ -22,7 +22,7 @@ abstract class Field
 
     public function __construct(
         protected readonly string $name,
-        protected readonly Type $node,
+        protected readonly Node $node,
         protected readonly ValueContext $valueContext
     ) {
         $this->type = $this::class;

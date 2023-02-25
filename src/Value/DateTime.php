@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Value;
 
 use Conia\Core\Field\Field;
-use Conia\Core\Type;
+use Conia\Core\Node;
 use DateTimeImmutable;
 use DateTimeZone;
 use IntlDateFormatter;
@@ -17,7 +17,7 @@ class DateTime extends Value
     public readonly ?DateTimeImmutable $datetime;
     public readonly ?DateTimeZone $timezone;
 
-    public function __construct(Type $node, Field $field, ValueContext $context)
+    public function __construct(Node $node, Field $field, ValueContext $context)
     {
         parent::__construct($node, $field, $context);
 

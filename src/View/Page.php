@@ -12,7 +12,7 @@ use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Response;
 use Conia\Core\Context;
 use Conia\Core\Finder;
-use Conia\Core\Type;
+use Conia\Core\Node;
 use Throwable;
 
 class Page
@@ -34,7 +34,7 @@ class Page
         $class = $data['classname'];
         error_log($class);
 
-        if (is_subclass_of($class, Type::class)) {
+        if (is_subclass_of($class, Node::class)) {
             $page = new $class($context, $find, $data);
 
             // Create a JSON response if the URL ends with .json

@@ -10,7 +10,7 @@ use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field\Grid as GridField;
 use Conia\Core\Field\Image as ImageField;
-use Conia\Core\Type;
+use Conia\Core\Node;
 use Conia\Core\Util\Html as HtmlUtil;
 use Generator;
 
@@ -18,7 +18,7 @@ class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Type $node, GridField $field, ValueContext $context)
+    public function __construct(Node $node, GridField $field, ValueContext $context)
     {
         parent::__construct($node, $field, $context);
 

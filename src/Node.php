@@ -27,7 +27,7 @@ use Generator;
 use ReflectionClass;
 use ReflectionProperty;
 
-abstract class Type
+abstract class Node
 {
     public readonly Request $request;
     public readonly Config $config;
