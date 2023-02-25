@@ -7,7 +7,7 @@ namespace Conia\Core;
 use RuntimeException;
 use ValueError;
 
-class Types
+class Nodes
 {
     protected array $types = [];
 

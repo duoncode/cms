@@ -11,7 +11,7 @@ use Conia\Core\Locales;
 class Config extends BaseConfig
 {
     public readonly Locales $locales;
-    public readonly Types $types;
+    public readonly Nodes $nodes;
     protected string $panelPath = 'panel';
     protected ?string $panelTheme = null;
     protected Closure $languageNegotiator;
@@ -36,7 +36,7 @@ class Config extends BaseConfig
         parent::__construct($app, $debug, $env, $settings);
 
         $this->locales = new Locales();
-        $this->types = new Types();
+        $this->nodes = new Nodes();
     }
 
     public function debugPanel(bool $debug = true): bool
