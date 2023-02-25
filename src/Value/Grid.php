@@ -56,11 +56,11 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return (new ImageField("Grid {$this->context->fieldName} Image Field"))
-                        ->value(
-                            $this->node,
-                            new ValueContext($this->context->fieldName, $value->data)
-                        );
+                    return (new ImageField(
+                        $this->context->fieldName,
+                        $this->node,
+                        new ValueContext($this->context->fieldName, $value->data)
+                    ))->value();
                 }
             }
         }
