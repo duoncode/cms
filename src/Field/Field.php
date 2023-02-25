@@ -12,6 +12,7 @@ use Conia\Core\Value\ValueContext;
 abstract class Field
 {
     public readonly string $type;
+    protected ?string $label = null;
     protected ?string $description = null;
     protected bool $translate = false;
     protected bool $required = false;
@@ -19,31 +20,36 @@ abstract class Field
     protected ?int $height = null;
     protected ?FulltextWeight $fulltextWeight = null;
 
-    public function __construct(protected string $label)
-    {
+    public function __construct(
+        protected readonly string $name,
+        protected readonly Type $node,
+        protected readonly array $data
+    ) {
         $this->type = $this::class;
     }
 
-    public static function new(string $label): static
-    {
-        return new static($label);
-    }
+    abstract public function value(Type $node, ValueContext $context): Value;
 
     public function validate(): bool
     {
         return true;
     }
 
-    public function description(string $description): static
+    public function label(string $label): static
     {
-        $this->description = $description;
+        $this->label = $label;
 
         return $this;
     }
 
-    public function label(string $label): static
+    public function getLabel(): ?string
     {
-        $this->label = $label;
+        return $this->label;
+    }
+
+    public function description(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -112,6 +118,4 @@ abstract class Field
     {
         return $this->height;
     }
-
-    abstract public function value(Type $node, ValueContext $context): Value;
 }
