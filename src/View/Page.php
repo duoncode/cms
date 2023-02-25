@@ -23,9 +23,12 @@ class Page
 
     public function catchall(Context $context, Finder $find): Response
     {
-        $data = $find->page->byPath($context->request->uri()->getPath());
+        $path = $context->request->uri()->getPath();
+        $data = $find->page->byPath($path);
 
         if (!$data) {
+            $this->redirectIfExists($context, $path);
+
             throw new HttpNotFound();
         }
 
@@ -38,5 +41,33 @@ class Page
         }
 
         throw new HttpBadRequest();
+    }
+
+    protected function redirectIfExists(Context $context, string $path): void
+    {
+        $db = $context->db;
+        $path = $db->paths->byPath(['path' => $path])->one();
+
+        if ($path && !is_null($path['inactive'])) {
+            $paths = $db->paths->activeByNode(['node' => $path['node']])->all();
+
+            $pathsByLocale = array_combine(
+                array_map(fn ($p) => $p['locale'], $paths),
+                array_map(fn ($p) => $p['path'], $paths),
+            );
+
+            $locale = $context->request->get('locale');
+
+            while ($locale) {
+                $path = $pathsByLocale[$locale->id] ?? null;
+
+                if ($path) {
+                    header('Location: ' . $path, true, 301);
+                    exit;
+                }
+
+                $locale = $locale->fallback();
+            }
+        }
     }
 }

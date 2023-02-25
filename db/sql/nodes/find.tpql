@@ -45,6 +45,7 @@ WHERE
 <?php endif ?>
 <?php if (isset($path)) : ?>
     AND up.path = :path
+    AND up.inactive IS NULL
 <?php endif ?>
 
 GROUP BY
