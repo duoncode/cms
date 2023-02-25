@@ -61,9 +61,7 @@ abstract class Node
     final public function __isset(string $fieldName): bool
     {
         if (isset($this->{$fieldName})) {
-            $value = $this->getValue($fieldName);
-
-            return isset($value);
+            return $this->{$fieldName}->value()->isset();
         }
 
         return false;
