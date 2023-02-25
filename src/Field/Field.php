@@ -23,12 +23,12 @@ abstract class Field
     public function __construct(
         protected readonly string $name,
         protected readonly Type $node,
-        protected readonly array $data
+        protected readonly ValueContext $valueContext
     ) {
         $this->type = $this::class;
     }
 
-    abstract public function value(Type $node, ValueContext $context): Value;
+    abstract public function value(): Value;
 
     public function validate(): bool
     {

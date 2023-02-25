@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\Core\Field;
 
-use Conia\Core\Type;
 use Conia\Core\Value\Html;
-use Conia\Core\Value\ValueContext;
 
 class Markdown extends Field
 {
-    public function value(Type $node, ValueContext $context): Html
+    public function value(): Html
     {
-        return new Html($node, $this, $context);
+        return new Html($this->node, $this, $this->valueContext);
     }
 }

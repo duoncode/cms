@@ -5,30 +5,28 @@ declare(strict_types=1);
 namespace Conia\Core\Field;
 
 use Conia\Core\Field\Field;
-use Conia\Core\Type;
 use Conia\Core\Value;
-use Conia\Core\Value\ValueContext;
 
 class Image extends Field
 {
     protected bool $multiple = false;
     protected bool $translateImage = false;
 
-    public function value(Type $node, ValueContext $context): Value\Images|Value\Image
+    public function value(): Value\Images|Value\Image
     {
         if ($this->multiple) {
             if ($this->translateImage) {
-                return new Value\TranslatedImages($node, $this, $context);
+                return new Value\TranslatedImages($this->node, $this, $this->valueContext);
             }
 
-            return new Value\Images($node, $this, $context);
+            return new Value\Images($this->node, $this, $this->valueContext);
         }
 
         if ($this->translateImage) {
-            return new Value\TranslatedImage($node, $this, $context);
+            return new Value\TranslatedImage($this->node, $this, $this->valueContext);
         }
 
-        return new Value\Image($node, $this, $context);
+        return new Value\Image($this->node, $this, $this->valueContext);
     }
 
     public function multiple(bool $multiple = true): static

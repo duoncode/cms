@@ -52,7 +52,7 @@ abstract class Type
 
     final public function __get(string $fieldName): ?Value
     {
-        return $this->get($fieldName);
+        return $this->getValue($fieldName);
     }
 
     // TODO: should be optimized as this could result
@@ -60,7 +60,7 @@ abstract class Type
     final public function __isset(string $fieldName): bool
     {
         if (isset($this->{$fieldName})) {
-            $value = $this->get($fieldName);
+            $value = $this->getValue($fieldName);
 
             return isset($value);
         }
@@ -68,18 +68,16 @@ abstract class Type
         return false;
     }
 
-    final public function get(string $fieldName): ?Value
+    final public function getValue(string $fieldName): ?Value
     {
         if (!isset($this->{$fieldName})) {
             $type = $this::class;
 
-            throw new NoSuchField("The field '{$fieldName}' does not exist on Type '{$type}'.");
+            throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
         }
 
-        $content = $this->data['content'][$fieldName] ?? [];
         $field = $this->{$fieldName};
-
-        $value = $field->value($this, new ValueContext($fieldName, $content));
+        $value = $field->value();
 
         if ($value->isset()) {
             return $value;
@@ -88,11 +86,20 @@ abstract class Type
         return null;
     }
 
+    /**
+     * Is called after self::initFields.
+     *
+     * Can be used to make adjustments the already initialized fields
+     */
     public function init(): void
     {
-        // can be overwritten
     }
 
+    /**
+     * Should return the general title of the node.
+     *
+     * Shown in the admin interface. But can also be used in the frontend.
+     */
     abstract public function title(): string;
 
     public function form(): Generator
@@ -173,8 +180,6 @@ abstract class Type
 
     protected function initFields(): void
     {
-        $this->init();
-
         $rc = new ReflectionClass(static::class);
 
         foreach ($rc->getProperties() as $property) {
@@ -194,11 +199,15 @@ abstract class Type
                 $this->{$name} = $this->initField($property, $fieldType);
             }
         }
+
+        $this->init();
     }
 
     protected function initField(ReflectionProperty $property, string $fieldType): Field
     {
-        $field = new $fieldType($property->getName());
+        $fieldName = $property->getName();
+        $content = $this->data['content'][$fieldName] ?? [];
+        $field = new $fieldType($fieldName, $this, new ValueContext($fieldName, $content));
 
         foreach ($property->getAttributes() as $attr) {
             switch ($attr->getName()) {

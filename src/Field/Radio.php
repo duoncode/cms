@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\Core\Field;
 
-use Conia\Core\Type;
 use Conia\Core\Value\Str;
-use Conia\Core\Value\ValueContext;
 
 class Radio extends Field
 {
-    public function value(Type $node, ValueContext $context): Str
+    public function value(): Str
     {
-        return new Str($node, $this, $context);
+        return new Str($this->node, $this, $this->valueContext);
     }
 }

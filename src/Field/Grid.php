@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Conia\Core\Field;
 
 use Conia\Core\Field\Field;
-use Conia\Core\Type;
 use Conia\Core\Value\Grid as GridValue;
 use Conia\Core\Value\Value;
-use Conia\Core\Value\ValueContext;
 use ValueError;
 
 class Grid extends Field
@@ -56,8 +54,8 @@ class Grid extends Field
         return $this->i18n;
     }
 
-    public function value(Type $node, ValueContext $context): Value
+    public function value(): Value
     {
-        return new GridValue($node, $this, $context);
+        return new GridValue($this->node, $this, $this->valueContext);
     }
 }
