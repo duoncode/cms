@@ -15,7 +15,7 @@ use Generator;
 
 class Grid extends Value
 {
-    protected readonly Generator $localizedData;
+    protected readonly ?Generator $localizedData;
 
     public function __construct(Node $node, Field\Grid $field, ValueContext $context)
     {
@@ -24,6 +24,7 @@ class Grid extends Value
         $this->localizedData = match ($this->data['i18n'] ?? null) {
             'separate' => $this->getSeparate($this->data),
             'mixed' => $this->getMixed($this->data),
+            null => null,
             default => throw new ValueError('Unknown i18n setting of Grid field'),
         };
     }
@@ -136,6 +137,10 @@ class Grid extends Value
 
     public function isset(): bool
     {
+        if (is_null($this->localizedData)) {
+            return false;
+        }
+
         return match ($this->data['i18n'] ?? null) {
             'separate' => count($this->data[$this->defaultLocale->id]) > 0,
             // TODO: correct?
