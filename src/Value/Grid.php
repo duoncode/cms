@@ -68,6 +68,19 @@ class Grid extends Value
         return null;
     }
 
+    public function images(): Generator
+    {
+        foreach ($this->localizedData as $value) {
+            if ($value->type === 'image') {
+                yield (new Field\Image(
+                    $this->context->fieldName,
+                    $this->node,
+                    new ValueContext($this->context->fieldName, $value->data)
+                ))->value();
+            }
+        }
+    }
+
     public function hasImage(int $index = 1): bool
     {
         $i = 0;
