@@ -159,6 +159,8 @@ abstract class Node
             $locale = $locale->fallback();
         }
 
+        error_log(print_r($this->data, true));
+
         throw new RuntimeException('No url path found');
     }
 
@@ -228,6 +230,7 @@ abstract class Node
             'page' => $this,
             'find' => $this->find,
             'locale' => $this->request->get('locale'),
+            'locales' => $this->config->locales,
         ], $context);
 
         try {
