@@ -8,8 +8,7 @@ use Conia\Core\Assets\ResizeMode;
 use Conia\Core\Assets\Size;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
-use Conia\Core\Field\Grid as GridField;
-use Conia\Core\Field\Image as ImageField;
+use Conia\Core\Field;
 use Conia\Core\Node;
 use Conia\Core\Util\Html as HtmlUtil;
 use Generator;
@@ -18,7 +17,7 @@ class Grid extends Value
 {
     protected readonly Generator $localizedData;
 
-    public function __construct(Node $node, GridField $field, ValueContext $context)
+    public function __construct(Node $node, Field\Grid $field, ValueContext $context)
     {
         parent::__construct($node, $field, $context);
 
@@ -56,7 +55,7 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return (new ImageField(
+                    return (new Field\Image(
                         $this->context->fieldName,
                         $this->node,
                         new ValueContext($this->context->fieldName, $value->data)
@@ -161,10 +160,20 @@ class Grid extends Value
             'h5' => '<h5>' . $value->data['value'] . '</h5>',
             'h6' => '<h6>' . $value->data['value'] . '</h6>',
             'image' => $this->renderImage($value->data, $args),
+            'youtube' => $this->getValueObject(Field\Youtube::class, $value)->__toString(),
         };
         $out .= '</div>';
 
         return $out;
+    }
+
+    protected function getValueObject(string $class, GridItem $item): Value
+    {
+        return (new $class(
+            $this->context->fieldName,
+            $this->node,
+            new ValueContext($this->context->fieldName, $item->data)
+        ))->value();
     }
 
     protected function renderImage(array $data, array $args): string
