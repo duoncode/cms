@@ -13,8 +13,8 @@ SELECT
     uc.uid AS creator,
     ue.uid AS editor,
     coalesce(
-        jsonb_object_agg(up.locale, up.path)
-            FILTER (WHERE up.inactive IS NULL AND up.path IS NOT NULL),
+        jsonb_object_agg(sup.locale, sup.path)
+            FILTER (WHERE up.inactive IS NULL AND sup.path IS NOT NULL),
         '{}')::jsonb AS paths
 FROM
     conia.nodes n
@@ -25,6 +25,16 @@ FROM
         ue.usr = n.editor
     LEFT JOIN conia.urlpaths up ON
         up.node = n.node
+    LEFT JOIN (
+        SELECT
+            sup.node,
+            sup.path,
+            sup.locale
+        FROM
+            conia.urlpaths sup
+        WHERE
+            sup.inactive IS NULL
+    ) sup ON sup.node = n.node
 WHERE
     t.kind = :kind
 <?php if (isset($uid)) : ?>
