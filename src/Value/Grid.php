@@ -223,9 +223,9 @@ class Grid extends Value
         $locale = $this->locale;
 
         while ($locale) {
-            $fields = $data[$this->locale->id] ?? null;
+            $fields = $data[$locale->id] ?? null;
 
-            if ($fields) {
+            if ($fields && count($fields) > 0) {
                 foreach ($fields as $field) {
                     yield new GridItem($field['type'], $field);
                 }
