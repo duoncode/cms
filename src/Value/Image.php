@@ -23,14 +23,15 @@ class Image extends File
     public function tag(bool $bust = true, string $class = null): string
     {
         return sprintf(
-            '<img %ssrc="%s" alt="%s">',
+            '<img %ssrc="%s" alt="%s" data-path-original="%s">',
             $class ? sprintf('class="%s" ', htmlspecialchars($class, ENT_QUOTES, 'UTF-8')) : '',
             $this->url($bust),
             htmlspecialchars(
                 $this->alt() ?: strip_tags($this->title()),
                 ENT_QUOTES,
                 'UTF-8'
-            )
+            ),
+            $this->path(),
         );
     }
 

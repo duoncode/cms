@@ -196,7 +196,7 @@ class Grid extends Value
         );
         $url = $resized->url(true);
 
-        return "<img src=\"{$url}\" alt=\"{$title}\">";
+        return "<img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\">";
     }
 
     // TODO: obviously
