@@ -51,47 +51,52 @@ class Image extends File
 
     public function width(int $width, bool $enlarge = false): static
     {
-        $this->size = new Assets\Size($width);
-        $this->resizeMode = Assets\ResizeMode::Width;
-        $this->enlarge = $enlarge;
+        $new = clone $this;
+        $new->size = new Assets\Size($width);
+        $new->resizeMode = Assets\ResizeMode::Width;
+        $new->enlarge = $enlarge;
 
-        return $this;
+        return $new;
     }
 
     public function height(int $height, bool $enlarge = false): static
     {
-        $this->size = new Assets\Size($height);
-        $this->resizeMode = Assets\ResizeMode::Height;
-        $this->enlarge = $enlarge;
+        $new = clone $this;
+        $new->size = new Assets\Size($height);
+        $new->resizeMode = Assets\ResizeMode::Height;
+        $new->enlarge = $enlarge;
 
-        return $this;
+        return $new;
     }
 
     public function longSide(int $size, bool $enlarge = false): static
     {
-        $this->size = new Assets\Size($size);
-        $this->resizeMode = Assets\ResizeMode::LongSide;
-        $this->enlarge = $enlarge;
+        $new = clone $this;
+        $new->size = new Assets\Size($size);
+        $new->resizeMode = Assets\ResizeMode::LongSide;
+        $new->enlarge = $enlarge;
 
-        return $this;
+        return $new;
     }
 
     public function shortSide(int $size, bool $enlarge = false): static
     {
-        $this->size = new Assets\Size($size);
-        $this->resizeMode = Assets\ResizeMode::ShortSide;
-        $this->enlarge = $enlarge;
+        $new = clone $this;
+        $new->size = new Assets\Size($size);
+        $new->resizeMode = Assets\ResizeMode::ShortSide;
+        $new->enlarge = $enlarge;
 
-        return $this;
+        return $new;
     }
 
     public function fit(int $width, int $height, bool $enlarge = false): static
     {
-        $this->size = new Assets\Size($width, $height);
-        $this->resizeMode = Assets\ResizeMode::Fit;
-        $this->enlarge = $enlarge;
+        $new = clone $this;
+        $new->size = new Assets\Size($width, $height);
+        $new->resizeMode = Assets\ResizeMode::Fit;
+        $new->enlarge = $enlarge;
 
-        return $this;
+        return $new;
     }
 
     public function crop(int $width, int $height, string $position = 'center'): static
@@ -107,25 +112,28 @@ class Image extends File
             default => throw new RuntimeException('Crop position not supported: ' . $position),
         };
 
-        $this->size = new Assets\Size($width, $height, $position);
-        $this->resizeMode = Assets\ResizeMode::Crop;
+        $new = clone $this;
+        $new->size = new Assets\Size($width, $height, $position);
+        $new->resizeMode = Assets\ResizeMode::Crop;
 
-        return $this;
+        return $new;
     }
 
     public function freecrop(int $width, int $height, int|false $x = false, int|false $y = false): static
     {
-        $this->size = new Assets\Size($width, $height, ['x' => $x, 'y' => $y]);
-        $this->resizeMode = Assets\ResizeMode::FreeCrop;
+        $new = clone $this;
+        $new->size = new Assets\Size($width, $height, ['x' => $x, 'y' => $y]);
+        $new->resizeMode = Assets\ResizeMode::FreeCrop;
 
-        return $this;
+        return $new;
     }
 
     public function quality(int $quality): static
     {
-        $this->quality = $quality;
+        $new = clone $this;
+        $new->quality = $quality;
 
-        return $this;
+        return $new;
     }
 
     public function link(): string
