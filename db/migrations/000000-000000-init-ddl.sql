@@ -5,7 +5,7 @@ CREATE EXTENSION unaccent;
 CREATE SCHEMA conia;
 CREATE SCHEMA audit;
 
-CREATE TYPE conia.contenttype AS ENUM ('page', 'block');
+CREATE TYPE conia.contenttype AS ENUM ('page', 'block', 'data');
 
 
 CREATE FUNCTION conia.update_changed_column()
