@@ -45,6 +45,11 @@ class Files extends Value implements Iterator
         return new File($this->node, $this->field, $this->context, $index);
     }
 
+    public function first(): File
+    {
+        return new File($this->node, $this->field, $this->context, 0);
+    }
+
     public function unwrap(): array
     {
         $locale = $this->locale;
