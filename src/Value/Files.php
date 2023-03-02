@@ -22,7 +22,7 @@ class Files extends Value implements Iterator
 
     public function current(): File
     {
-        return new File($this->node, $this->field, $this->context, $this->pointer);
+        return $this->get($this->pointer);
     }
 
     public function key(): int
@@ -38,6 +38,11 @@ class Files extends Value implements Iterator
     public function valid(): bool
     {
         return isset($this->data['files'][$this->pointer]);
+    }
+
+    public function get(int $index): File
+    {
+        return new File($this->node, $this->field, $this->context, $index);
     }
 
     public function unwrap(): array
