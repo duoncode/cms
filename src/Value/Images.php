@@ -22,8 +22,13 @@ class Images extends Files
         return $this->get($this->pointer);
     }
 
-    protected function get(int $index): Image
+    public function get(int $index): Image
     {
         return new Image($this->node, $this->field, $this->context, $index);
+    }
+
+    public function first(): Image
+    {
+        return new Image($this->node, $this->field, $this->context, 0);
     }
 }
