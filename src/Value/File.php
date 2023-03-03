@@ -22,7 +22,7 @@ class File extends Value
 
     public function __toString(): string
     {
-        return htmlspecialchars($this->file['file']);
+        return escape($this->file['file']);
     }
 
     public function title(): string

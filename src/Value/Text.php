@@ -10,7 +10,7 @@ class Text extends Value
 
     public function __toString(): string
     {
-        return htmlspecialchars($this->unwrap());
+        return escape($this->unwrap());
     }
 
     public function unwrap(): string

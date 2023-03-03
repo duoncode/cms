@@ -38,3 +38,10 @@ if (!function_exists('nanoid')) {
         );
     }
 }
+
+if (!function_exists('escape')) {
+    function escape(string $string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+    }
+}

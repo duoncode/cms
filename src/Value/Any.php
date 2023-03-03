@@ -8,7 +8,7 @@ class Any extends Value
 {
     public function __toString(): string
     {
-        return htmlspecialchars((string)$this->unwrap());
+        return escape((string)$this->unwrap());
     }
 
     public function unwrap(): mixed

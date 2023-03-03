@@ -20,7 +20,7 @@ class Picture extends Image
 
     public function tag(bool $bust = true, string $class = null): string
     {
-        $class = $class ? sprintf(' class="%s" ', htmlspecialchars($class, ENT_QUOTES, 'UTF-8')) : '';
+        $class = $class ? sprintf(' class="%s" ', escape($class, ENT_QUOTES, 'UTF-8')) : '';
         $sources = '';
 
         foreach ($this->data['files'] as $index => $image) {
@@ -35,11 +35,7 @@ class Picture extends Image
         $img = sprintf(
             '<img src="%s" alt="%s">',
             $this->url($bust, $index),
-            htmlspecialchars(
-                $this->alt() ?: strip_tags($this->title()),
-                ENT_QUOTES,
-                'UTF-8'
-            )
+            escape($this->alt() ?: strip_tags($this->title()))
         );
 
         return sprintf('<picture%s>%s%s</picture>', $class, $sources, $img);
@@ -74,11 +70,7 @@ class Picture extends Image
         if (isset($image['media'])) {
             return sprintf(
                 'media="%s"',
-                htmlspecialchars(
-                    $image['media'],
-                    ENT_QUOTES,
-                    'UTF-8'
-                )
+                escape($image['media'])
             );
         }
 
