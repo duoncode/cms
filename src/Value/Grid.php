@@ -166,8 +166,11 @@ class Grid extends Value
     {
         $colspan = $prefix . '-colspan-' . $value->data['colspan'];
         $rowspan = $prefix . '-rowspan-' . $value->data['rowspan'];
+        $styleClass = $value->styleClass();
+        $class = $styleClass ? ' ' . $styleClass : '';
 
-        $out = '<div class="' . $prefix . '-' . $value->type . " {$colspan} {$rowspan}" . '">';
+        $out = '<div class="' . $prefix . '-' . $value->type .
+            ' ' . $colspan . ' ' . $rowspan . $class . '">';
         $out .= match ($value->type) {
             'html' => $value->data['value'],
             'text' => $value->data['value'],
