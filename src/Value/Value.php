@@ -49,6 +49,16 @@ abstract class Value
 
     abstract public function unwrap(): mixed;
 
+    public function styleClass(): ?string
+    {
+        return $this->data['class'] ?? null;
+    }
+
+    public function elementId(): ?string
+    {
+        return $this->data['id'] ?? null;
+    }
+
     protected function assetsPath(): string
     {
         return 'node/' . $this->node->uid() . '/';
