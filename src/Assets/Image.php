@@ -27,7 +27,8 @@ class Image
 
     public function path(bool $bust = false): string
     {
-        $path = str_replace('\\', '/', $this->cacheFile ?: $this->file);
+        $encode = fn ($f) => implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $f))));
+        $path = $this->cacheFile ? $encode($this->cacheFile) : $encode($this->file);
 
         if ($bust) {
             $buster = hash('xxh32', (string)filemtime($this->file));

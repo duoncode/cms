@@ -33,16 +33,12 @@ class Image extends File
 
     public function url(bool $bust = false): string
     {
-        if ($url = filter_var($this->getImage($this->index)->url($bust), FILTER_VALIDATE_URL)) {
-            return $url;
-        }
-
-        throw new RuntimeException('Invalid image url');
+        return $this->getImage($this->index)->url($bust);
     }
 
     public function path(bool $bust = false): string
     {
-        return filter_var($this->getImage($this->index)->path($bust), FILTER_SANITIZE_URL);
+        return $this->getImage($this->index)->path($bust);
     }
 
     public function width(int $width, bool $enlarge = false): static

@@ -19,6 +19,7 @@ class File
     public function path(bool $bust = false): string
     {
         $path = Path::inside($this->assets->assetsDir, $this->file);
+        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $path))));
 
         if ($bust) {
             $path = $this->bust($path);
