@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
+use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Core\Context;
 use Conia\Core\Finder;
+use Conia\Core\Node;
 
 class Page
 {
@@ -15,20 +17,27 @@ class Page
     ) {
     }
 
-    public function byPath(string $path, ?bool $deleted = false, ?bool $published = true): ?array
+    public function byPath(string $path, ?bool $deleted = false, ?bool $published = true): ?Node
     {
-        $page = $this->context->db->nodes->find([
+        $data = $this->context->db->nodes->find([
             'path' => $path,
             'published' => $published,
             'deleted' => $deleted,
             'kind' => 'page',
         ])->one();
 
-        if ($page) {
-            $page['content'] = json_decode($page['content'], true);
+        if (!$data) {
+            return null;
         }
 
-        return $page;
+        $data['content'] = json_decode($data['content'], true);
+        $class = $data['classname'];
+
+        if (is_subclass_of($class, Node::class)) {
+            return new $class($this->context, $this->find, $data);
+        }
+
+        throw new HttpBadRequest();
     }
 
     public function find(

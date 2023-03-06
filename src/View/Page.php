@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Response;
 use Conia\Core\Context;
 use Conia\Core\Finder;
-use Conia\Core\Node;
 
 class Page
 {
@@ -24,23 +22,15 @@ class Page
     public function catchall(Context $context, Finder $find): Response
     {
         $path = $context->request->uri()->getPath();
-        $data = $find->page->byPath($path);
+        $page = $find->page->byPath($path);
 
-        if (!$data) {
+        if (!$page) {
             $this->redirectIfExists($context, $path);
 
             throw new HttpNotFound();
         }
 
-        $class = $data['classname'];
-
-        if (is_subclass_of($class, Node::class)) {
-            $page = new $class($context, $find, $data);
-
-            return $page->response();
-        }
-
-        throw new HttpBadRequest();
+        return $page->response();
     }
 
     protected function redirectIfExists(Context $context, string $path): void
