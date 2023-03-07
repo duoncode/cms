@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Router from 'svelte-spa-router';
     import { replace, location } from 'svelte-spa-router';
     import { wrap } from 'svelte-spa-router/wrap';
