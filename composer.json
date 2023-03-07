@@ -24,7 +24,7 @@
         "symfony/html-sanitizer": "^6.2"
     },
     "require-dev": {
-        "conia/boiler": "dev-main",
+        "conia/chuck-boiler": "dev-main",
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1",
         "pestphp/pest": "^1",
