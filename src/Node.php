@@ -17,7 +17,6 @@ use Conia\Core\Finder;
 use Conia\Core\Locale;
 use Conia\Core\Value\Value;
 use Conia\Quma\Database;
-use Generator;
 use Throwable;
 
 abstract class Node
@@ -32,6 +31,7 @@ abstract class Node
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
+    protected static array $fieldSets = [];
 
     final public function __construct(
         Context $context,
@@ -64,14 +64,26 @@ abstract class Node
 
     final public function getValue(string $fieldName): ?Value
     {
-        if (!isset($this->{$fieldName})) {
+        $field = null;
+
+        if (isset($this->{$fieldName})) {
             $type = $this::class;
 
-            throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
+            $field = $this->{$fieldName};
+            $value = $field->value();
+        } else {
+            foreach ($this->fieldSets as $fieldSet) {
+                if (isset($fieldSet->{$fieldName})) {
+                    $field = $fieldSet->{$fieldName};
+                    $value = $field->value();
+                    break;
+                }
+            }
         }
 
-        $field = $this->{$fieldName};
-        $value = $field->value();
+        if (is_null($field)) {
+            throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
+        }
 
         if ($value->isset()) {
             return $value;
