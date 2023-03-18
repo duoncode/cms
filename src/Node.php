@@ -32,7 +32,6 @@ abstract class Node
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
-    protected array $list = [];
 
     final public function __construct(
         Context $context,
@@ -96,13 +95,6 @@ abstract class Node
      * Shown in the admin interface. But can also be used in the frontend.
      */
     abstract public function title(): string;
-
-    public function form(): Generator
-    {
-        foreach ($this->list as $field) {
-            yield $this->fields[$field];
-        }
-    }
 
     public static function columns(): int
     {
@@ -233,17 +225,6 @@ abstract class Node
 
             throw new HttpBadRequest();
         }
-    }
-
-    protected function getJsonContent(): array
-    {
-        $result = [];
-
-        foreach ($this->list as $field) {
-            $result[$field] = $this->__get($field)->json();
-        }
-
-        return $result;
     }
 
     protected function locale(): Locale
