@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
+use Closure;
 use Conia\Chuck\Config;
 use Conia\Chuck\Error\Handler;
 use Conia\Chuck\Middleware;
@@ -18,11 +19,12 @@ use Psr\Http\Server\MiddlewareInterface as PsrMiddleware;
 
 class App extends \Conia\Chuck\App
 {
+    /** @psalm-param non-falsy-string|list{non-falsy-string, ...}|Closure|Middleware|PsrMiddleware|null $errorHandler */
     public function __construct(
         protected Config $config,
         protected Router $router,
         protected Registry $registry,
-        protected Middleware|PsrMiddleware|null $errorHandler = null,
+        protected string|array|Closure|Middleware|PsrMiddleware|null $errorHandler = null,
     ) {
         parent::__construct($config, $router, $registry, $errorHandler);
     }
@@ -35,11 +37,8 @@ class App extends \Conia\Chuck\App
 
         $registry = new Registry($container);
         $router = new Router();
-        $errorHandler = new Handler($config, $registry);
-        // The error handler should be the first middleware
-        $router->middleware($errorHandler);
 
-        return new self($config, $router, $registry, $errorHandler);
+        return new self($config, $router, $registry, Handler::class);
     }
 
     public function type(string $class, string $label = null, string $description = null): void
