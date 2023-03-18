@@ -48,7 +48,9 @@ trait InitializesFields
                     throw new RuntimeException('FieldSets cannot contain FieldSets');
                 }
 
-                $this->{$name} = $this->initFieldSet($property);
+                $fs = new $fieldType($this, $this->data);
+                $this->fieldSets[] = $fs;
+                $this->{$name} = $fs;
             }
         }
 
@@ -59,7 +61,9 @@ trait InitializesFields
     {
         $fieldName = $property->getName();
         $content = $this->data['content'][$fieldName] ?? [];
-        $field = new $fieldType($fieldName, $this, new ValueContext($fieldName, $content));
+        $node = $this instanceof Node ? $this : $this->node;
+
+        $field = new $fieldType($fieldName, $node, new ValueContext($fieldName, $content));
 
         foreach ($property->getAttributes() as $attr) {
             switch ($attr->getName()) {
