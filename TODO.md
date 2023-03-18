@@ -4,6 +4,9 @@ TODO
 - Fallback URLs respectively parameterized URLs in the CMS
   Like /url/path/...remainder
        /url/path/{id}/{name}
+- Add field type reference: reference a single node or a list of nodes
+- Initialize Nodes only once, feed the instance with data after it is initialized.
+  This way iteration over a list of nodes with the same type would be more performant.
 - Insert overwriting in Boiler
 - Improve Html::balanceTags. This is a very naive implementation and does not
   handle singlular tags like <br> or <hr class="whatever">
