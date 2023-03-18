@@ -8,6 +8,13 @@ abstract class Fieldset
 {
     use InitializesFields;
 
+    final public function __construct(
+        protected readonly Node $node,
+        protected readonly array $data,
+    ) {
+        $this->initFields();
+    }
+
     /**
      * Is called after self::initFields.
      *
@@ -18,9 +25,10 @@ abstract class Fieldset
     }
 
     /**
-     * Should return the general title of the node.
-     *
-     * Shown in the admin interface. But can also be used in the frontend.
+     * Should return the title of the Fieldset rendererd in the control panel.
      */
-    abstract public function title(): string;
+    public function title(): string
+    {
+        return '';
+    }
 }
