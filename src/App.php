@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Chuck\Config;
 use Conia\Chuck\Error\Handler;
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Router;
+use Conia\Core\Config;
 use Conia\Core\Routes;
 use Conia\Quma\Connection;
 use PDO;
@@ -26,10 +26,11 @@ class App extends \Conia\Chuck\App
         protected Registry $registry,
         protected string|array|Closure|Middleware|PsrMiddleware|null $errorHandler = null,
     ) {
-        parent::__construct($config, $router, $registry, $errorHandler);
+        $registry->add(Config::class, $config);
+        parent::__construct($router, $registry, $errorHandler);
     }
 
-    public static function create(?Config $config = null, ?PsrContainer $container = null): self
+    public static function new(?Config $config = null, ?PsrContainer $container = null): self
     {
         if (!$config) {
             $config = new Config('conia', debug: false);
