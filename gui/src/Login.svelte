@@ -1,5 +1,5 @@
 <script>
-    import { __ } from '$lib/locale';
+    import { _ } from '$lib/locale';
     import { loginUser } from '$lib/user';
     import Logo from '$shell/Logo.svelte';
 
@@ -10,7 +10,7 @@
 
     async function doLogin() {
         if (login === null || password === null) {
-            message = __('Please provide username and password');
+            message = _('Please provide username and password');
             return;
         }
 
@@ -30,7 +30,7 @@
         </div>
         <h2
             class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
+            {_('Sign in to your account')}
         </h2>
     </div>
 
@@ -41,7 +41,7 @@
                     <label
                         for="login"
                         class="block text-sm font-medium leading-6 text-gray-900">
-                        {__('Username or email')}
+                        {_('Username or email')}
                     </label>
                     <div class="mt-2">
                         <input
@@ -59,7 +59,7 @@
                     <label
                         for="password"
                         class="block text-sm font-medium leading-6 text-gray-900">
-                        Password
+                        {_('Password')}
                     </label>
                     <div class="mt-2">
                         <input
@@ -76,21 +76,21 @@
                     class="flex flex-col sm:flex-row items-center justify-between">
                     <div class="flex items-center">
                         <input
-                            id="remember-me"
-                            name="remember-me"
+                            id="rememberme"
+                            name="rememberme"
                             type="checkbox"
                             class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" />
                         <label
-                            for="remember-me"
+                            for="rememberme"
                             class="ml-3 block text-sm leading-6 text-gray-900"
-                            >Remember me</label>
+                            >{_('Remember me')}</label>
                     </div>
 
                     <div class="text-sm leading-6 mt-4 sm:mt-0">
                         <a
                             href="/forgot"
                             class="font-semibold text-gray-600 hover:text-gray-500">
-                            {__('Forgot your password?')}
+                            {_('Forgot your password?')}
                         </a>
                     </div>
                 </div>

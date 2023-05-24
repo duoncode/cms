@@ -1,3 +1,3 @@
-export function __(id: string) {
+export function _(id: string) {
     return id;
 }
