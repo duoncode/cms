@@ -3,7 +3,7 @@
     import NavToggle from './NavToggle.svelte';
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     #searchbar {
         justify-content: center;
     }

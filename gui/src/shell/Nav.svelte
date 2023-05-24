@@ -1,6 +1,6 @@
 <script>
     import { link } from 'svelte-spa-router';
-    import { system } from '../lib/boot';
+    import system from '../lib/sys';
     import { logoutUser } from '../lib/user';
     import { navVisible } from '../lib/ui';
     import Backdrop from './Backdrop.svelte';

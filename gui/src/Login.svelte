@@ -1,7 +1,7 @@
 <script>
-    import { __ } from './lib/locale';
-    import { loginUser } from './lib/user';
-    import Logo from './shell/Logo.svelte';
+    import { __ } from '$lib/locale';
+    import { loginUser } from '$lib/user';
+    import Logo from '$shell/Logo.svelte';
 
     let message = null;
     let login = null;

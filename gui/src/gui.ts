@@ -1,20 +1,17 @@
 // import '../../lib/unload';
 import './styles/main.css';
-import Gui from './Gui.svelte'
+import Gui from './Gui.svelte';
 
-import { loadSettings } from './lib/boot';
+import system from './lib/sys';
 import { loadUser } from './lib/user';
-import { initGettext } from './lib/locale'
-
 
 async function startApp() {
-    await loadSettings();
+    await system.loadSettings();
     await loadUser();
-    await initGettext();
 
     const gui = new Gui({
-        target: document.getElementById('panel')
-    })
+        target: document.getElementById('panel'),
+    });
 
     return gui;
 }

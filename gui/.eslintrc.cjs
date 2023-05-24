@@ -26,5 +26,16 @@ module.exports = {
 				parser: '@typescript-eslint/parser'
 			}
 		}
-	]
+	],
+    settings: {
+        'import/resolver': {
+            typescript: {},
+            alias: {
+                map: [
+                    ['$lib', './src/lib'],
+                    ['$shell', './src/shell'],
+                ],
+            },
+        },
+    },
 };

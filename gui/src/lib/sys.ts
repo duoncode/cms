@@ -1,28 +1,26 @@
 import req from './req';
 
-type Settings = {
+interface Settings {
     locales: string[];
     locale: string;
     debug: boolean;
     env: string;
     csrfToken: string;
-};
-type Section = {
-    title: string;
-};
-type Template = {
+}
+
+interface Section {
     title: string;
 }
 
+interface Template {
+    title: string;
+}
 
 class System {
-    path: string
+    path: string;
     settings: Settings;
     sections: Section[];
     templates: Template[];
-
-    constructor() {
-    }
 
     async loadSettings() {
         let response = await req.get('settings');
@@ -38,7 +36,7 @@ class System {
         let response = await req.get('boot');
 
         if (response.ok) {
-            let data = response.data;
+            const data = response.data;
 
             this.templates = data.templates as Template[];
             this.sections = data.sections as Section[];
@@ -46,9 +44,7 @@ class System {
             throw new Error('Fatal error while requesting settings');
         }
     }
-
 }
-
 
 const system = new System();
 
