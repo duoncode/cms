@@ -22,126 +22,83 @@
     }
 </script>
 
-<style lang="postcss">
-    .login {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        padding: 0 var(--s-6);
-        height: 100vh;
-        width: 100%;
-    }
-
-    .logo {
-        :global(svg) {
-            display: block;
-            height: var(--admin-logo-login-height, var(--s-20));
-            width: auto;
-            margin: 0 auto;
-        }
-    }
-
-    .fields {
-        background: var(--white);
-        margin-top: var(--s-6);
-        padding: var(--s-8) var(--s-4);
-        box-shadow: var(--shadow);
-    }
-
-    .remember-forgot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        a {
-            font-size: var(--text-sm);
-        }
-    }
-
-    .button-bar {
-        text-align: right;
-        margin-top: 1.5rem;
-    }
-
-    .message {
-        margin-top: var(--sz-6);
-        text-align: center;
-        padding: var(--s-6);
-        border: 1px solid black;
-        background-color: var(--white);
-        border-radius: var(--radius-md);
-    }
-
-    @media (--sm) {
-        .form {
-            margin-top: calc(var(--s-32) * -1);
-            width: 100%;
-            max-width: var(--s-md);
-        }
-
-        .fields {
-            border-radius: var(--radius-lg);
-            padding-left: var(--s-10);
-            padding-right: var(--s-10);
-        }
-    }
-
-    @media (--lg) {
-        .form {
-            padding-left: var(--s-8);
-            padding-right: var(--s-8);
-        }
-    }
-</style>
-
-<div class="login">
-    <div class="form">
-        <div class="logo">
+<div
+    class="flex min-h-full flex-col justify-center py-12 bg-gray-50 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">
+        <div class="mx-auto h-16 w-auto">
             <Logo />
         </div>
-        {#if message}
-            <div class="message">{message}</div>
-        {/if}
-        <div class="fields">
-            <form>
-                <div class="control">
-                    <label for="login">{__('Username or email')}</label>
-                    <input
-                        id="login"
-                        name="login"
-                        type="text"
-                        autocomplete="username"
-                        required
-                        bind:value={login} />
-                </div>
+        <h2
+            class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Sign in to your account
+        </h2>
+    </div>
 
-                <div class="control">
-                    <label for="password">{__('Password')}</label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        autocomplete="current-password"
-                        required
-                        bind:value={password} />
-                </div>
-
-                <div class="control remember-forgot">
-                    <div class="checkbox">
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+            <form class="space-y-6" action="#" method="POST">
+                <div>
+                    <label
+                        for="login"
+                        class="block text-sm font-medium leading-6 text-gray-900">
+                        {__('Username or email')}
+                    </label>
+                    <div class="mt-2">
                         <input
-                            id="rememberme"
-                            name="rememberme"
+                            id="login"
+                            name="login"
+                            type="text"
+                            autocomplete="username"
+                            required
+                            bind:value={login}
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
+                    </div>
+                </div>
+
+                <div>
+                    <label
+                        for="password"
+                        class="block text-sm font-medium leading-6 text-gray-900">
+                        Password
+                    </label>
+                    <div class="mt-2">
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-between">
+                    <div class="flex items-center">
+                        <input
+                            id="remember-me"
+                            name="remember-me"
                             type="checkbox"
-                            bind:checked={rememberme} />
-                        <label for="rememberme">{__('Remember me')}</label>
+                            class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" />
+                        <label
+                            for="remember-me"
+                            class="ml-3 block text-sm leading-6 text-gray-900"
+                            >Remember me</label>
                     </div>
 
-                    <a href="/forgot">{__('Forgot your password?')}</a>
+                    <div class="text-sm leading-6 mt-4 sm:mt-0">
+                        <a
+                            href="/forgot"
+                            class="font-semibold text-gray-600 hover:text-gray-500">
+                            {__('Forgot your password?')}
+                        </a>
+                    </div>
                 </div>
 
-                <div class="button-bar">
-                    <button type="button" on:click={doLogin}>
+                <div>
+                    <button
+                        type="submit"
+                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -153,7 +110,7 @@
                                 stroke-linejoin="round"
                                 d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
-                        {__('Sign in')}
+                        Sign in
                     </button>
                 </div>
             </form>

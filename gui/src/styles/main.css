@@ -1,23 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 @import './color.css';
 @import './vars.css';
 @import './util.css';
-@import './form.css';
 @import './button.css';
 
+html {
+    @apply bg-gray-50;
+
+    height: 100%;
+}
+
 body {
-    background-color: var(--gray-100);
+    height: 100%;
     font-family: var(--font);
     overflow: hidden;
 }
 
 #panel {
     position: relative;
-    display: flex;
-    flex-direction: row;
     width: 100%;
     height: 100vh;
     overflow: hidden;

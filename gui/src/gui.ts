@@ -6,8 +6,8 @@ import system from './lib/sys';
 import { loadUser } from './lib/user';
 
 async function startApp() {
-    await system.loadSettings();
-    await loadUser();
+    // await system.loadSettings();
+    // await loadUser();
 
     const gui = new Gui({
         target: document.getElementById('panel'),
