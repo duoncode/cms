@@ -7,6 +7,7 @@ namespace Conia\Core\View;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
+use Conia\Core\Middleware\Permission;
 use Conia\Sire\Schema;
 
 class LoginSchema extends Schema
@@ -27,6 +28,7 @@ class Auth
     ) {
     }
 
+    #[Permission('authenticated')]
     public function me()
     {
         return [
@@ -65,7 +67,6 @@ class Auth
             ),
             400
         );
-
 
         return $response;
     }

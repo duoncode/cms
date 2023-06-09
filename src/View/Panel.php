@@ -6,6 +6,7 @@ namespace Conia\Core\View;
 
 use Conia\Chuck\Request;
 use Conia\Core\Config;
+use Conia\Core\Middleware\Permission;
 
 class Panel
 {
@@ -26,6 +27,7 @@ class Panel
         ];
     }
 
+    #[Permission('panel')]
     public function boot(): array
     {
         $config = $this->config;
@@ -35,6 +37,7 @@ class Panel
         ];
     }
 
+    #[Permission('panel')]
     public function type(string $name): array
     {
         $type = $this->config->types->get($name);
