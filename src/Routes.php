@@ -7,7 +7,6 @@ namespace Conia\Core;
 use Conia\Chuck\Group;
 use Conia\Core\App;
 use Conia\Core\Middleware\InitRequest;
-use Conia\Core\Middleware\Permission;
 use Conia\Core\Middleware\Session;
 use Conia\Core\View\Auth;
 use Conia\Core\View\Page;
@@ -51,20 +50,17 @@ class Routes
 
     protected function addAuth(Group $api): void
     {
-        $api->get('/me', [Auth::class, 'me'], 'auth.user')
-            ->middleware(new Permission('authenticated'));
+        $api->get('/me', [Auth::class, 'me'], 'auth.user');
         $api->post('/login', [Auth::class, 'login'], 'auth.login');
         $api->post('/logout', [Auth::class, 'logout'], 'auth.logout')->render('json');
     }
 
     protected function addUser(Group $api): void
     {
-        $editUsers = new Permission('edit-users');
-
-        $api->get('users', [User::class, 'list'], 'users')->middleware($editUsers);
-        $api->get('user/{uid}', [User::class, 'get'], 'user.get')->middleware($editUsers);
-        $api->post('user', [User::class, 'create'], 'user.create')->middleware($editUsers);
-        $api->put('user/{uid}', [User::class, 'save'], 'user.save')->middleware($editUsers);
+        $api->get('users', [User::class, 'list'], 'users');
+        $api->get('user/{uid}', [User::class, 'get'], 'user.get');
+        $api->post('user', [User::class, 'create'], 'user.create');
+        $api->put('user/{uid}', [User::class, 'save'], 'user.save');
     }
 
     protected function addSettings(Group $api): void
@@ -74,10 +70,8 @@ class Routes
 
     protected function addSystem(Group $api): void
     {
-        $panel = new Permission('panel');
-
-        $api->get('/boot', [Panel::class, 'boot'], 'conia.boot')->middleware($panel);
-        $api->get('/type/{name}', [Panel::class, 'type'], 'conia.type')->middleware($panel);
+        $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
+        $api->get('/type/{name}', [Panel::class, 'type'], 'conia.type');
     }
 
     protected function addPanelApi(Group $api): void
