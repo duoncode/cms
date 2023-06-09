@@ -1,25 +1,19 @@
 import { success, error } from './state';
 import sys from './sys';
 
-
 const domain = `${window.location.protocol}//${window.location.host}`;
 
-// During development the pathname should be emtpy.
-// On the PHP side we use /panel in debug mode so we need to use it here as well.
-const panelPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-const panelApi = panelPath === '' ? '/panel/api' : `${panelPath}/api`;
+const panelApi = `${__CONIA_CONFIG__.panelPath}/api/`;
 
 class Response {
-    constructor(public ok: boolean, public data: any) {
-    }
+    constructor(public ok: boolean, public data: any) {}
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Headers = {
-    'X-Requested-With': 'xmlhttprequest',
-    'X-CSRF-Token'?: string
+    'X-Requested-With': 'xmlhttprequest';
+    'X-CSRF-Token'?: string;
 };
-
 
 function getDefaultOptions(): RequestInit {
     const headers: Headers = {
@@ -55,12 +49,16 @@ function getBodyOptions(method: Method, data?: any) {
     return options;
 }
 
-async function fetchit(path: string, params: Record<string, string>, options: RequestInit) {
+async function fetchit(
+    path: string,
+    params: Record<string, string>,
+    options: RequestInit,
+) {
     let url = new URL(`${panelApi}${path}`, domain);
 
     if (params) {
         // dynamically append GET params when value is set
-        Object.keys(params).forEach((key) => {
+        Object.keys(params).forEach(key => {
             if (params[key]) url.searchParams.append(key, params[key]);
         });
     }

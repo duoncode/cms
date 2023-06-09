@@ -2,12 +2,12 @@
 import './styles/main.css';
 import Gui from './Gui.svelte';
 
-import system from './lib/sys';
-import { loadUser } from './lib/user';
+// import system from '$lib/sys';
+import { loadUser } from '$lib/user';
 
 async function startApp() {
     // await system.loadSettings();
-    // await loadUser();
+    await loadUser();
 
     const gui = new Gui({
         target: document.getElementById('panel'),

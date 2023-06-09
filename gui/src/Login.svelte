@@ -36,7 +36,7 @@
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <form class="space-y-6" action="#" method="POST">
+            <form class="space-y-6">
                 <div>
                     <label
                         for="login"
@@ -98,7 +98,8 @@
                 <div>
                     <button
                         type="submit"
-                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                        on:click={doLogin}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
