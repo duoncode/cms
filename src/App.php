@@ -35,16 +35,18 @@ class App extends \Conia\Chuck\App
         $registry = new Registry($container);
         $router = new Router();
 
-        return new static($config, $router, $registry, null);
+        $app = new static($config, $router, $registry, null);
+
+        $app->add();
+
+        return $app;
     }
 
     public static function create(?PsrContainer $container = null): static
     {
         $config = new Config('conia', debug: false);
-        $registry = new Registry($container);
-        $router = new Router();
 
-        return new static($config, $router, $registry, Handler::class);
+        return static::fromConfig($config, $container);
     }
 
     public function type(string $class, string $label = null, string $description = null): void
