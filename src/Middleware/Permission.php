@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\Middleware;
 
+use Attribute;
 use Conia\Chuck\Di\Call;
 use Conia\Chuck\Exception\HttpForbidden;
 use Conia\Chuck\Exception\HttpUnauthorized;
@@ -15,7 +16,7 @@ use Conia\Core\Config;
 use Conia\Core\Permissions;
 use Conia\Core\Users;
 
-#[Call('init')]
+#[Attribute, Call('init')]
 class Permission implements Middleware
 {
     protected Users $users;
