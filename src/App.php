@@ -30,16 +30,21 @@ class App extends \Conia\Chuck\App
         parent::__construct($router, $registry, $errorHandler);
     }
 
-    public static function new(?Config $config = null, ?PsrContainer $container = null): self
+    public static function fromConfig(Config $config, ?PsrContainer $container = null): static
     {
-        if (!$config) {
-            $config = new Config('conia', debug: false);
-        }
-
         $registry = new Registry($container);
         $router = new Router();
 
-        return new self($config, $router, $registry, Handler::class);
+        return new static($config, $router, $registry, null);
+    }
+
+    public static function create(?PsrContainer $container = null): static
+    {
+        $config = new Config('conia', debug: false);
+        $registry = new Registry($container);
+        $router = new Router();
+
+        return new static($config, $router, $registry, Handler::class);
     }
 
     public function type(string $class, string $label = null, string $description = null): void
