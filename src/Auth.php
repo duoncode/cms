@@ -10,15 +10,6 @@ use Conia\Core\Permissions;
 use Conia\Core\Util\Time;
 use RuntimeException;
 
-class RememberDetails
-{
-    public function __construct(
-        public readonly Token $token,
-        public readonly int $expires
-    ) {
-    }
-}
-
 class Auth
 {
     public function __construct(
