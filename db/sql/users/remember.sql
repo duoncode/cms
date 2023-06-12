@@ -1,9 +1,11 @@
 INSERT INTO conia.loginsessions
-    (hash, uid, expires)
-VALUES
-    (:hash, :user, (:expires)::timestamptz)
+    (hash, usr, expires)
+SELECT
+    :hash, u.usr, (:expires)::timestamptz
+FROM conia.users u
+WHERE u.uid = :user
 
-ON CONFLICT (uid) DO
+ON CONFLICT (usr) DO
 
 UPDATE SET
     expires = (:expires)::timestamptz,
