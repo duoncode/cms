@@ -1,15 +1,21 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
-    import { loginUser } from '$lib/user';
     import Logo from '$shell/Logo.svelte';
+    import { loginUser } from '$lib/user';
 
-    let message = null;
-    let login = null;
-    let password = null;
-    let rememberme = false;
+    export let message = '';
 
-    async function doLogin() {
-        if (login === null || password === null) {
+    async function handleSubmit() {
+        const data = new FormData(this);
+        const login = data.get('login');
+        const password = data.get('password');
+        let rememberme = false;
+
+        if (data.get('rememberme') === 'true') {
+            rememberme = true;
+        }
+
+        if (!login || !password) {
             message = _('Please provide username and password');
             return;
         }
@@ -34,9 +40,16 @@
         </h2>
     </div>
 
+    {#if message}
+        <div>{message}</div>
+    {/if}
+
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <form class="space-y-6">
+            <form
+                method="POST"
+                on:submit|preventDefault={handleSubmit}
+                class="space-y-6">
                 <div>
                     <label
                         for="login"
@@ -50,7 +63,6 @@
                             type="text"
                             autocomplete="username"
                             required
-                            bind:value={login}
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
                     </div>
                 </div>
@@ -79,6 +91,7 @@
                             id="rememberme"
                             name="rememberme"
                             type="checkbox"
+                            value="true"
                             class="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600" />
                         <label
                             for="rememberme"
@@ -98,7 +111,7 @@
                 <div>
                     <button
                         class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-                        on:click={doLogin}>
+                        type="submit">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

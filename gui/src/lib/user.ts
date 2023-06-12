@@ -6,8 +6,8 @@ const authenticated = writable(false);
 const user = writable(null);
 const rememberedRoute = writable('/');
 
-async function loginUser(login, password, rememberme) {
-    const resp = await req.post('api/login', { login, password, rememberme });
+async function loginUser(login: string, password: string, rememberme: boolean) {
+    const resp = await req.post('login', { login, password, rememberme });
 
     if (resp.ok) {
         await loadUser();
