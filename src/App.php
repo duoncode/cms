@@ -35,11 +35,7 @@ class App extends \Conia\Chuck\App
         $registry = new Registry($container);
         $router = new Router();
 
-        $app = new static($config, $router, $registry, null);
-
-        $app->add();
-
-        return $app;
+        return new static($config, $router, $registry, Handler::class);
     }
 
     public static function create(?PsrContainer $container = null): static

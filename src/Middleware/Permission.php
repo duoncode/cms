@@ -28,7 +28,18 @@ class Permission implements Middleware
 
     public function __invoke(Request $request, callable $next): Response
     {
-        $auth = new Auth($request, $this->users, $this->config, $request->get('session'));
+        $session = $request->get('session', null);
+
+        if (!$session) {
+            throw new HttpUnauthorized();
+        }
+
+        $auth = new Auth(
+            $request,
+            $this->users,
+            $this->config,
+            $session,
+        );
         $user = $auth->user();
 
         if ($user) {

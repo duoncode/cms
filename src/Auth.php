@@ -19,7 +19,6 @@ class RememberDetails
     }
 }
 
-
 class Auth
 {
     public function __construct(
