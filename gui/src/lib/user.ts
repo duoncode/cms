@@ -7,7 +7,7 @@ const user = writable(null);
 const rememberedRoute = writable('/');
 
 async function loginUser(login, password, rememberme) {
-    let resp = await req.post('api/login', { login, password, rememberme });
+    const resp = await req.post('api/login', { login, password, rememberme });
 
     if (resp.ok) {
         await loadUser();
@@ -21,7 +21,7 @@ async function loginUser(login, password, rememberme) {
 
 async function logoutUser() {
     authenticated.set(false);
-    let resp = await req.post('logout');
+    const resp = await req.post('logout');
 
     if (resp.ok) {
         user.set(null);
@@ -33,13 +33,14 @@ async function logoutUser() {
 }
 
 async function loadUser() {
-    let resp = await req.get('me');
+    const resp = await req.get('me');
 
     if (resp.ok) {
         authenticated.set(true);
         user.set(resp.data);
     } else {
-        logoutUser();
+        user.set(null);
+        replace('/login');
     }
 }
 

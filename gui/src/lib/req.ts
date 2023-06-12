@@ -6,7 +6,7 @@ const domain = `${window.location.protocol}//${window.location.host}`;
 const panelApi = `${__CONIA_CONFIG__.panelPath}/api/`;
 
 class Response {
-    constructor(public ok: boolean, public data: any) {}
+    constructor(public ok: boolean, public data: any) { }
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -62,7 +62,7 @@ async function fetchit(
             if (params[key]) url.searchParams.append(key, params[key]);
         });
     }
-    let response = await fetch(url.href, options);
+    const response = await fetch(url.href, options);
 
     if (response.status >= 400 && response.status < 800) {
         let message: any;
@@ -88,7 +88,7 @@ async function fetchit(
     return new Response(true, await response.json());
 }
 
-async function get(url: string, params: Record<string, string>) {
+async function get(url: string, params?: Record<string, string>) {
     const options = getBodyOptions('GET');
 
     return fetchit(url, params, options);
