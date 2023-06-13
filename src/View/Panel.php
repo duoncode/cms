@@ -16,24 +16,18 @@ class Panel
     ) {
     }
 
-    public function settings(): array
+    #[Permission('panel')]
+    public function boot(): array
     {
         return [
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
+            'panelPath' => $this->config->getPanelPath(),
+            'types' => [['name' => 'Type 1'], ['name' => 'Type 2']],
+            'sections' => [['name' => 'Section 1'], ['name' => 'Section 2']],
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
-        ];
-    }
-
-    #[Permission('panel')]
-    public function boot(): array
-    {
-        $config = $this->config;
-
-        return [
-            'types' => $config->types,
         ];
     }
 

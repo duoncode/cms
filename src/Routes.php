@@ -49,9 +49,9 @@ class Routes
 
     protected function addAuth(Group $api): void
     {
-        $api->get('/me', [Auth::class, 'me'], 'auth.user')->render('json');
+        $api->get('/me', [Auth::class, 'me'], 'auth.user');
         $api->post('/login', [Auth::class, 'login'], 'auth.login');
-        $api->post('/logout', [Auth::class, 'logout'], 'auth.logout')->render('json');
+        $api->post('/logout', [Auth::class, 'logout'], 'auth.logout');
     }
 
     protected function addUser(Group $api): void
@@ -62,11 +62,6 @@ class Routes
         $api->put('user/{uid}', [User::class, 'save'], 'user.save');
     }
 
-    protected function addSettings(Group $api): void
-    {
-        $api->get('/settings', [Panel::class, 'settings'], 'conia.settings');
-    }
-
     protected function addSystem(Group $api): void
     {
         $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
@@ -75,9 +70,8 @@ class Routes
 
     protected function addPanelApi(Group $api): void
     {
-        $api->middleware(Middleware\Session::class);
+        $api->middleware(Middleware\Session::class)->render('json');
 
-        $this->addSettings($api);
         $this->addAuth($api);
         $this->addUser($api);
         $this->addSystem($api);
