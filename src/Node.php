@@ -152,8 +152,6 @@ abstract class Node
             $locale = $locale->fallback();
         }
 
-        error_log(print_r($this->data, true));
-
         throw new RuntimeException('No url path found');
     }
 

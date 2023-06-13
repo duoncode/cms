@@ -103,14 +103,14 @@ class Auth
         return $permissions->get($user['role']);
     }
 
-    protected function remember(string $userId): RememberDetails
+    protected function remember(string $userUid): RememberDetails
     {
-        $token = new Token($this->config->get('secret'));
-        $expires = time() + $this->config->get('session.expires');
+        $token = new Token($this->config->get('app.secret'));
+        $expires = time() + ($this->config->get('session.options', [])['cache_expire'] ?? 180);
 
         $remembered = $this->users->remember(
             $token->hash(),
-            $userId,
+            $userUid,
             Time::toIsoDateTime($expires),
         );
 
@@ -121,17 +121,17 @@ class Auth
         throw new RuntimeException('Could not remember user');
     }
 
-    protected function login(string $userId, bool $remember): void
+    protected function login(string $userUid, bool $remember): void
     {
         $session = $this->session;
 
         // Regenerate the session id before setting the user id
         // to mitigate session fixation attack.
         $session->regenerate();
-        $session->setUser($userId);
+        $session->setUser($userUid);
 
         if ($remember) {
-            $details = $this->remember($userId);
+            $details = $this->remember($userUid);
 
             if ($details) {
                 $session->remember(
@@ -146,7 +146,7 @@ class Auth
             $token = $session->getAuthToken();
 
             if ($token !== null) {
-                $this->users->forget($userId);
+                $this->users->forget($userUid);
             }
         }
     }

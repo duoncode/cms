@@ -1,5 +1,4 @@
 SELECT
-    u.usr,
     u.uid,
     u.username,
     u.email,

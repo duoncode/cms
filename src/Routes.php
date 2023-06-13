@@ -6,7 +6,7 @@ namespace Conia\Core;
 
 use Conia\Chuck\Group;
 use Conia\Core\App;
-use Conia\Core\Middleware\InitRequest;
+use Conia\Core\Middleware;
 use Conia\Core\View\Auth;
 use Conia\Core\View\Page;
 use Conia\Core\View\Panel;
@@ -38,7 +38,7 @@ class Routes
             '/...slug',
             [Page::class, 'catchall'],
             'conia:catchall',
-        )->middleware(InitRequest::class);
+        )->middleware(Middleware\InitRequest::class);
     }
 
     protected function addIndex(App $app): void
@@ -49,7 +49,7 @@ class Routes
 
     protected function addAuth(Group $api): void
     {
-        $api->get('/me', [Auth::class, 'me'], 'auth.user');
+        $api->get('/me', [Auth::class, 'me'], 'auth.user')->render('json');
         $api->post('/login', [Auth::class, 'login'], 'auth.login');
         $api->post('/logout', [Auth::class, 'logout'], 'auth.logout')->render('json');
     }
@@ -75,6 +75,8 @@ class Routes
 
     protected function addPanelApi(Group $api): void
     {
+        $api->middleware(Middleware\Session::class);
+
         $this->addSettings($api);
         $this->addAuth($api);
         $this->addUser($api);

@@ -8,17 +8,7 @@ use Conia\Chuck\Factory;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Middleware\Permission;
-use Conia\Sire\Schema;
-
-class LoginSchema extends Schema
-{
-    protected function rules(): void
-    {
-        $this->add('login', _('Username or email'), 'text', 'required', 'maxlen:254');
-        $this->add('password', _('Password'), 'text', 'required', 'maxlen:512');
-        $this->add('rememberme', _('remember me'), 'bool');
-    }
-}
+use Conia\Core\Schema;
 
 class Auth
 {
@@ -39,7 +29,7 @@ class Auth
 
     public function login(Request $request): Response
     {
-        $schema = new LoginSchema();
+        $schema = new Schema\Login();
         $response = Response::fromFactory($this->factory);
 
         if ($schema->validate($request->json())) {
