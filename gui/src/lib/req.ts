@@ -12,12 +12,14 @@ class Response {
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Headers = {
     'X-Requested-With': 'xmlhttprequest';
+    Accept: string;
     'X-CSRF-Token'?: string;
 };
 
 function getDefaultOptions(): RequestInit {
     const headers: Headers = {
         'X-Requested-With': 'xmlhttprequest',
+        Accept: 'application/json',
     };
 
     if (sys.settings) {
@@ -35,7 +37,7 @@ function getDefaultOptions(): RequestInit {
 }
 
 function getBodyOptions(method: Method, data?: any) {
-    let options = Object.assign(getDefaultOptions(), { method });
+    const options = Object.assign(getDefaultOptions(), { method });
 
     if (data) {
         if (!(data instanceof FormData)) {
@@ -54,7 +56,7 @@ async function fetchit(
     params: Record<string, string>,
     options: RequestInit,
 ) {
-    let url = new URL(`${panelApi}${path}`, domain);
+    const url = new URL(`${panelApi}${path}`, domain);
 
     if (params) {
         // dynamically append GET params when value is set
