@@ -3,18 +3,20 @@
     import Modal from 'svelte-simple-modal';
     import Router from 'svelte-spa-router';
 
-    import sys from './lib/sys';
-    import { authenticated } from './lib/user';
+    import { setup, system } from '$lib/sys';
+    import { authenticated } from '$lib/user';
     import Nav from './shell/Nav.svelte';
 
     import getRoutes from './routes';
 
-    onMount(sys.boot);
+    onMount(async () => {
+        await setup();
+    });
 </script>
 
-{#if $authenticated}
+{#if $authenticated && $system}
     <Modal>
-        <Nav />
+        <Nav sections={$system.sections} />
         <main>
             <Router routes={getRoutes().get()} />
         </main>

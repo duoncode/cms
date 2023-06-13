@@ -3,7 +3,7 @@
     import { navVisible } from '../lib/ui';
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     #backdrop {
         position: fixed;
         width: 100%;

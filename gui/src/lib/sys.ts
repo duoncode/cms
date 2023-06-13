@@ -1,44 +1,33 @@
 import req from './req';
+import { writable, type Writable } from 'svelte/store';
 
-interface Settings {
-    locales: string[];
-    locale: string;
+export interface Section {
+    name: string;
+}
+
+export interface Type {
+    name: string;
+}
+
+export class System {
     debug: boolean;
     env: string;
+    panelPath: string;
     csrfToken: string;
-}
-
-interface Section {
-    title: string;
-}
-
-interface Template {
-    title: string;
-}
-
-class System {
-    path: string;
-    settings: Settings;
     sections: Section[];
-    templates: Template[];
-
-    async loadSettings() {
-        let response = await req.get('settings');
-
-        if (response.ok) {
-            this.settings = response.data as Settings;
-        } else {
-            throw new Error('Fatal error while requesting settings');
-        }
-    }
+    types: Type[];
 
     async boot() {
-        let response = await req.get('boot');
+        const response = await req.get('boot');
 
         if (response.ok) {
             const data = response.data;
 
-            this.templates = data.templates as Template[];
+            this.debug = data.debug as boolean;
+            this.env = data.env as string;
+            this.panelPath = data.panelPath as string;
+            this.csrfToken = data.csrfToken as string;
+            this.types = data.types as Type[];
             this.sections = data.sections as Section[];
         } else {
             throw new Error('Fatal error while requesting settings');
@@ -46,6 +35,12 @@ class System {
     }
 }
 
-const system = new System();
+export const system: Writable<System | null> = writable(null);
 
-export default system;
+export const setup = async () => {
+    const sys = new System();
+
+    await sys.boot();
+
+    system.set(sys);
+};

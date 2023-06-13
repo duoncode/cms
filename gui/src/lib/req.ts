@@ -1,5 +1,6 @@
 import { success, error } from './state';
-import sys from './sys';
+import { get as getStore } from 'svelte/store';
+import { system } from '$lib/sys';
 
 const domain = `${window.location.protocol}//${window.location.host}`;
 
@@ -22,8 +23,10 @@ function getDefaultOptions(): RequestInit {
         Accept: 'application/json',
     };
 
-    if (sys.settings) {
-        headers['X-CSRF-Token'] = sys.settings.csrfToken;
+    const $system = getStore(system);
+
+    if ($system) {
+        headers['X-CSRF-Token'] = $system.csrfToken;
     }
 
     return {

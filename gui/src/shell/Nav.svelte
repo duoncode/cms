@@ -1,14 +1,17 @@
-<script>
+<script lang="ts">
     import { link } from 'svelte-spa-router';
-    import system from '../lib/sys';
-    import { logoutUser } from '../lib/user';
-    import { navVisible } from '../lib/ui';
+    import type { Section } from '$lib/sys';
+    import { logoutUser } from '$lib/user';
+    import { navVisible } from '$lib/ui';
     import Backdrop from './Backdrop.svelte';
     import NavClose from './NavClose.svelte';
+    import NavToggle from './NavToggle.svelte';
     import NavLogo from './NavLogo.svelte';
+
+    export let sections: Section[];
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     #nav {
         position: fixed;
         display: flex;
@@ -20,13 +23,10 @@
         padding: 0 var(--s-6) var(--s-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
+        margin-left: calc(var(--s-64) * -1);
 
         &.open {
             margin-left: 0;
-        }
-
-        &.close {
-            margin-left: calc(var(--s-64) * -1);
         }
     }
 
@@ -38,12 +38,14 @@
     }
 </style>
 
-<Backdrop />
-<div id="nav" class:open={$navVisible} class:close={!$navVisible}>
+{#if !$navVisible}
+    <NavToggle />
+{/if}
+<div id="nav" class:open={$navVisible}>
     <NavClose />
     <NavLogo />
-    {#each $system.sections as section}
-        <h2>{section.title}</h2>
+    {#each sections as section}
+        <h2>{section.name}</h2>
     {/each}
     <p>
         <a href="/" use:link>Dashboard</a> |
