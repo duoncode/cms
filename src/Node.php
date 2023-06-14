@@ -122,6 +122,11 @@ abstract class Node
         return basename(str_replace('\\', '/', static::class));
     }
 
+    public function type(): string
+    {
+        return static::className();
+    }
+
     public static function name(): ?string
     {
         if (!empty(static::$name)) {

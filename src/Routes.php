@@ -29,7 +29,7 @@ class Routes
             $this->apiPath,
             $this->addPanelApi(...),
             'conia.panel.',
-        )->render('json');
+        );
 
         $app->route('/panel/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')->middleware(Middleware\InitRequest::class);
         $app->route('/panel', [Panel::class, 'index'], 'conia.panel')->middleware(Middleware\InitRequest::class);
@@ -65,7 +65,7 @@ class Routes
 
     protected function addPanelApi(Group $api): void
     {
-        $api->middleware(Middleware\Session::class)->render('json');
+        $api->middleware(Middleware\InitRequest::class, Middleware\Session::class)->render('json');
 
         $this->addAuth($api);
         $this->addUser($api);

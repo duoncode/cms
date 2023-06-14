@@ -50,7 +50,7 @@ WHERE
 <?php if (isset($published)) : ?>
     AND n.published = :published
 <?php endif ?>
-<?php if (isset($condition)) : ?>
+<?php if (isset($condition) && !empty(trim($condition))) : ?>
     AND <?= $condition ?>
 <?php endif ?>
 <?php if (isset($path)) : ?>

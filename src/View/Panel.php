@@ -70,8 +70,8 @@ class Panel
     #[Permission('panel')]
     public function collection(string $collection): array
     {
-        error_log(print_r($this->registry->tag(Collection::class)->entries(), true));
+        $collection = $this->registry->tag(Collection::class)->get($collection);
 
-        return [];
+        return $collection->listing();
     }
 }

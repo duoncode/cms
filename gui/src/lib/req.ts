@@ -1,23 +1,18 @@
-import { success, error } from './state';
-
-import { browser } from '$app/environment'
+import { browser } from '$app/environment';
 import { get as getStore } from 'svelte/store';
 import { system } from '$lib/sys';
 
 let domain: string;
-let panelApi: string;
+const panelApi = '/panel/api/';
 
 if (browser) {
     domain = `${window.location.protocol}//${window.location.host}`;
-    panelApi = `${window.__CONIA_CONFIG__.panelPath}/api/`;
 } else {
     domain = '';
-    panelApi = '';
 }
 
-
 class Response {
-    constructor(public ok: boolean, public data: any) { }
+    constructor(public ok: boolean, public data: any) {}
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';

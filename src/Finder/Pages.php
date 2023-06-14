@@ -7,6 +7,7 @@ namespace Conia\Core\Finder;
 use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Node;
+use Exception;
 use Generator;
 use Iterator;
 
@@ -164,7 +165,7 @@ final class Pages implements Iterator
         }
 
         if (count($result) > 0) {
-            return '    ' . implode("\n    OR", $result);
+            return '    ' . implode("\n    OR ", $result);
         }
 
         return '';

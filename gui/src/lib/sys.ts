@@ -1,4 +1,4 @@
-import req from './req';
+import req from '$lib/req';
 import { writable, type Writable } from 'svelte/store';
 
 export interface Collection {
