@@ -2,7 +2,7 @@
     import Logo from './Logo.svelte';
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     .logo {
         display: flex;
         align-items: center;

@@ -41,6 +41,7 @@ export const setup = async () => {
     const sys = new System();
 
     await sys.boot();
-
     system.set(sys);
+
+    return sys;
 };

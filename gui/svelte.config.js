@@ -1,12 +1,20 @@
-import sveltePreprocess from 'svelte-preprocess'
+import adapter from '@sveltejs/adapter-static';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
-const prod = process.env.BUILD_ENV === 'production';
-
-export default {
-    preprocess: [
-        sveltePreprocess({
-            sourceMap: !prod,
-            postcss: true,
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+    preprocess: vitePreprocess(),
+    kit: {
+        paths: {
+            base: '',
+        },
+        adapter: adapter({
+            pages: 'build',
+            assets: 'build',
+            fallback: 'index.html',
         }),
-    ],
+        prerender: { entries: [] },
+    },
 };
+
+export default config;

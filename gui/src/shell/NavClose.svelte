@@ -2,7 +2,7 @@
     import { closeNav, navVisible } from '../lib/ui';
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     button.close {
         position: absolute;
         top: 15px;

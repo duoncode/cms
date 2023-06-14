@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { link } from 'svelte-spa-router';
     import type { Section } from '$lib/sys';
     import { logoutUser } from '$lib/user';
     import { navVisible } from '$lib/ui';
@@ -13,7 +12,6 @@
 
 <style lang="postcss">
     #nav {
-        position: fixed;
         display: flex;
         width: var(--s-64);
         flex-direction: column;
@@ -38,18 +36,14 @@
     }
 </style>
 
-{#if !$navVisible}
-    <NavToggle />
-{/if}
 <div id="nav" class:open={$navVisible}>
-    <NavClose />
     <NavLogo />
     {#each sections as section}
         <h2>{section.name}</h2>
     {/each}
     <p>
-        <a href="/" use:link>Dashboard</a> |
-        <a href="/pages" use:link>Pages</a>
+        <a href="/">Dashboard</a> |
+        <a href="/pages">Pages</a>
     </p>
     <button on:click={logoutUser}>Logout</button>
 </div>
