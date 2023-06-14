@@ -1,8 +1,9 @@
 import req from './req';
 import { writable, type Writable } from 'svelte/store';
 
-export interface Section {
-    name: string;
+export interface Collection {
+    title: string;
+    id: string;
 }
 
 export interface Type {
@@ -14,7 +15,7 @@ export class System {
     env: string;
     panelPath: string;
     csrfToken: string;
-    sections: Section[];
+    collections: Collection[];
     types: Type[];
 
     async boot() {
@@ -28,7 +29,7 @@ export class System {
             this.panelPath = data.panelPath as string;
             this.csrfToken = data.csrfToken as string;
             this.types = data.types as Type[];
-            this.sections = data.sections as Section[];
+            this.collections = data.collections as Collection[];
         } else {
             throw new Error('Fatal error while requesting settings');
         }

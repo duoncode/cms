@@ -51,8 +51,7 @@ body {
 }
 
 a, a:visited, a:focus {
-    text-decoration: underline;
-    color: var(--high);
+    text-decoration: none;
 }
 
 a:visited {

@@ -11,7 +11,7 @@
 {#if $authenticated && data}
     <Modal>
         <div class="flex flex-row">
-            <Nav sections={data.system.sections} />
+            <Nav collections={data.system.collections} />
             <main class="flex-grow">
                 <slot />
             </main>

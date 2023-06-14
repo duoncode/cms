@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from '$lib/sys';
+    import type { Collection } from '$lib/sys';
     import { logoutUser } from '$lib/user';
     import { navVisible } from '$lib/ui';
     import Backdrop from './Backdrop.svelte';
@@ -7,7 +7,7 @@
     import NavToggle from './NavToggle.svelte';
     import NavLogo from './NavLogo.svelte';
 
-    export let sections: Section[];
+    export let collections: Collection[];
 </script>
 
 <style lang="postcss">
@@ -34,16 +34,27 @@
             margin-left: 0;
         }
     }
+
+    h2 {
+        @apply font-bold mt-4;
+    }
 </style>
 
 <div id="nav" class:open={$navVisible}>
     <NavLogo />
-    {#each sections as section}
-        <h2>{section.name}</h2>
-    {/each}
-    <p>
-        <a href="/panel/">Dashboard</a> |
-        <a href="/panel/pages">Pages</a>
-    </p>
-    <button on:click={logoutUser}>Logout</button>
+
+    <p class="mt-8"><a href="/panel">Dashboard</a></p>
+    <h2>Inhalte</h2>
+    <ul>
+        {#each collections as collection}
+            <li>
+                <a href="/panel/collections/{collection.slug}">
+                    {collection.title}
+                </a>
+            </li>
+        {/each}
+    </ul>
+    <div class="mt-4">
+        <button on:click={logoutUser}>Logout</button>
+    </div>
 </div>

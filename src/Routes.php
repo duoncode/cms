@@ -60,7 +60,7 @@ class Routes
     protected function addSystem(Group $api): void
     {
         $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
-        $api->get('/type/{name}', [Panel::class, 'type'], 'conia.type');
+        $api->get('/collection/{collection}', [Panel::class, 'collection'], 'conia.collection');
     }
 
     protected function addPanelApi(Group $api): void

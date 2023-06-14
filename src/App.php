@@ -45,12 +45,11 @@ class App extends \Conia\Chuck\App
         return static::fromConfig($config, $container);
     }
 
-    public function type(string $class, string $label = null, string $description = null): void
+    public function collection(string $slug, string $class): void
     {
         $this->registry
-            ->tag(Node::class)
-            ->add($class)
-            ->args(label: $label, description: $description);
+            ->tag(Collection::class)
+            ->add($slug, $class);
     }
 
     public function database(

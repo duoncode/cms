@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Conia\Core\View;
 
 use Conia\Chuck\Factory;
+use Conia\Chuck\Registry;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
+use Conia\Core\Collection;
 use Conia\Core\Config;
 use Conia\Core\Middleware\Permission;
 
@@ -18,6 +20,7 @@ class Panel
     public function __construct(
         protected readonly Request $request,
         protected readonly Config $config,
+        protected readonly Registry $registry,
     ) {
         $this->publicPath = $config->get('path.public');
         $this->panelIndex = $this->publicPath . '/panel/index.html';
@@ -26,24 +29,25 @@ class Panel
     #[Permission('panel')]
     public function boot(): array
     {
+        $tag = $this->registry->tag(Collection::class);
+        $collections = [];
+
+        foreach ($tag->entries() as $id) {
+            $collection = $tag->get($id);
+            $collections[] = [
+                'slug' => $id,
+                'title' => $collection->title(),
+            ];
+        }
+
         return [
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
             'panelPath' => $this->config->getPanelPath(),
-            'types' => [['name' => 'Type 1'], ['name' => 'Type 2']],
-            'sections' => [['name' => 'Section 1'], ['name' => 'Section 2']],
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
-        ];
-    }
-
-    #[Permission('panel')]
-    public function type(string $name): array
-    {
-        return [
-            'name' => $name,
-            'label' => 'hans',
+            'collections' => $collections,
         ];
     }
 
@@ -61,5 +65,13 @@ class Panel
         }
 
         return Response::fromFactory($factory)->file($this->panelIndex);
+    }
+
+    #[Permission('panel')]
+    public function collection(string $collection): array
+    {
+        error_log(print_r($this->registry->tag(Collection::class)->entries(), true));
+
+        return [];
     }
 }
