@@ -4,9 +4,6 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [sveltekit()],
-    build: {
-        manifest: true,
-    },
     server: {
         port: 2009,
         strictPort: true,

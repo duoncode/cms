@@ -11,6 +11,7 @@ vite.config.ts.timestamp-*
 /coverage
 /data/
 /gui/.svelte-kit
+/gui/build/
 /gui/dist/
 /gui/package
 /gui/src/locale/

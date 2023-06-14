@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
+use Conia\Chuck\Factory;
 use Conia\Chuck\Request;
+use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Middleware\Permission;
 
 class Panel
 {
+    protected string $publicPath;
+    protected string $panelIndex;
+
     public function __construct(
         protected readonly Request $request,
         protected readonly Config $config,
     ) {
+        $this->publicPath = $config->get('path.public');
+        $this->panelIndex = $this->publicPath . '/panel/index.html';
     }
 
     #[Permission('panel')]
@@ -34,11 +41,25 @@ class Panel
     #[Permission('panel')]
     public function type(string $name): array
     {
-        $type = $this->config->types->get($name);
-
         return [
             'name' => $name,
-            'label' => $type->label,
+            'label' => 'hans',
         ];
+    }
+
+    public function index(Factory $factory): Response
+    {
+        return Response::fromFactory($factory)->file($this->panelIndex);
+    }
+
+    public function catchall(Factory $factory, string $slug): Response
+    {
+        $file = $this->publicPath . '/panel/' . $slug;
+
+        if (file_exists($file)) {
+            return Response::fromFactory($factory)->file($file);
+        }
+
+        return Response::fromFactory($factory)->file($this->panelIndex);
     }
 }

@@ -41,7 +41,10 @@
     </div>
 
     {#if message}
-        <div>{message}</div>
+        <div
+            class="sm:mx-auto sm:w-full sm:max-w-md px-4 py-2 text-center mt-8 text-red-600 bg-red-200 border border-red-600 rounded">
+            {message}
+        </div>
     {/if}
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
@@ -101,7 +104,7 @@
 
                     <div class="text-sm leading-6 mt-4 sm:mt-0">
                         <a
-                            href="/forgot"
+                            href="/panel/forgot"
                             class="font-semibold text-gray-600 hover:text-gray-500">
                             {_('Forgot your password?')}
                         </a>

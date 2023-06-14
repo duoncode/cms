@@ -24,8 +24,6 @@ class Routes
 
     public function add(App $app): void
     {
-        $this->addIndex($app);
-
         // All API routes
         $app->group(
             $this->apiPath,
@@ -33,18 +31,15 @@ class Routes
             'conia.panel.',
         )->render('json');
 
+        $app->route('/panel/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')->middleware(Middleware\InitRequest::class);
+        $app->route('/panel', [Panel::class, 'index'], 'conia.panel')->middleware(Middleware\InitRequest::class);
+
         // Add catchall for page url paths. Must be the last one
         $app->route(
             '/...slug',
             [Page::class, 'catchall'],
-            'conia:catchall',
+            'conia.catchall',
         )->middleware(Middleware\InitRequest::class);
-    }
-
-    protected function addIndex(App $app): void
-    {
-        $app->get($this->panelPath, fn () => '<h1>Panel not found in public directory</h1>')
-            ->render('text', contentType: 'text/html');
     }
 
     protected function addAuth(Group $api): void

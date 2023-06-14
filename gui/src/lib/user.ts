@@ -4,7 +4,7 @@ import req from './req';
 
 const authenticated = writable(false);
 const user = writable(null);
-const rememberedRoute = writable('/');
+const rememberedRoute = writable('/panel');
 
 async function loginUser(login: string, password: string, rememberme: boolean) {
     const resp = await req.post('login', { login, password, rememberme });
@@ -25,7 +25,7 @@ async function logoutUser() {
 
     if (resp.ok) {
         user.set(null);
-        goto('/login');
+        goto('/panel/login');
     } else {
         authenticated.set(true);
         throw 'Error while logging out';
@@ -39,8 +39,8 @@ async function loadUser() {
         authenticated.set(true);
         user.set(resp.data);
     } else {
+        authenticated.set(false);
         user.set(null);
-        goto('/login');
     }
 }
 

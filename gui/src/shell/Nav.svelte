@@ -42,8 +42,8 @@
         <h2>{section.name}</h2>
     {/each}
     <p>
-        <a href="/">Dashboard</a> |
-        <a href="/pages">Pages</a>
+        <a href="/panel/">Dashboard</a> |
+        <a href="/panel/pages">Pages</a>
     </p>
     <button on:click={logoutUser}>Logout</button>
 </div>

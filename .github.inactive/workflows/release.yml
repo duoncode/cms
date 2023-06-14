@@ -1,6 +1,6 @@
 name: Create Release
 
-on: 
+on:
   push:
     branches:
       - main
@@ -21,7 +21,7 @@ jobs:
         run: cd gui && npm run build
 
       - name: Create zip
-        run: cd gui && tar -czvf panel.tar.gz dist
+        run: cd gui && tar -czvf panel.tar.gz build
 
       - name: Release
         uses: softprops/action-gh-release@v1
