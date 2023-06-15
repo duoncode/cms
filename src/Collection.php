@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Core\Finder\Pages;
+use Conia\Core\Finder\Nodes;
 
 abstract class Collection
 {
@@ -13,7 +13,7 @@ abstract class Collection
     ) {
     }
 
-    abstract public function entries(): Pages;
+    abstract public function entries(): Nodes;
 
     public function title(): string
     {
