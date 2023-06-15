@@ -4,7 +4,7 @@
 </script>
 
 <style lang="postcss">
-    #searchbar {
+    .searchbar {
         justify-content: center;
     }
 
@@ -67,7 +67,7 @@
     }
 </style>
 
-<div id="searchbar" class="headerbar">
+<div class="headerbar searchbar">
     <NavToggle />
     <div class="controls">
         <div>
