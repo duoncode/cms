@@ -52,6 +52,8 @@ class Node
         }
 
         $data['content'] = json_decode($data['content'], true);
+        $data['editor_data'] = json_decode($data['editor_data'], true);
+        $data['creator_data'] = json_decode($data['creator_data'], true);
         $class = $data['classname'];
 
         if (is_subclass_of($class, \Conia\Core\Node::class)) {

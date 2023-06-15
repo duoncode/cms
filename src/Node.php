@@ -96,6 +96,11 @@ abstract class Node
         return $this->data[$fieldName];
     }
 
+    public function data(): array
+    {
+        return $this->data;
+    }
+
     /**
      * Is called after self::initFields.
      *

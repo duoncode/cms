@@ -144,7 +144,6 @@ final class Nodes implements Iterator
             'deleted' => $this->deleted,
             'published' => $this->published,
             'limit' => $this->limit,
-            'kind' => 'page',
         ];
 
         if ($this->order) {

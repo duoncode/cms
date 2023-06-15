@@ -48,7 +48,7 @@
     <ul>
         {#each collections as collection}
             <li>
-                <a href="/panel/collections/{collection.slug}">
+                <a href="/panel/collection/{collection.slug}">
                     {collection.title}
                 </a>
             </li>

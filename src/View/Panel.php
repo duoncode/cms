@@ -10,6 +10,7 @@ use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Collection;
 use Conia\Core\Config;
+use Conia\Core\Finder;
 use Conia\Core\Middleware\Permission;
 
 class Panel
@@ -82,6 +83,6 @@ class Panel
     #[Permission('panel')]
     public function node(Finder $find, string $uid): array
     {
-        $node = $find->node;
+        return $find->node->byUid($uid)->data();
     }
 }
