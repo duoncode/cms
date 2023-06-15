@@ -1,6 +1,7 @@
 import req from '$lib/req';
 
 interface Node {
+    uid: string;
     title: string;
     type: string;
     creator?: string;
@@ -11,6 +12,7 @@ interface Node {
 
 interface Collection {
     title: string;
+    slug: string;
     nodes: Node[];
 }
 

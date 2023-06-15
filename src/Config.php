@@ -13,7 +13,6 @@ use Throwable;
 class Config
 {
     public readonly Locales $locales;
-    public readonly Nodes $nodes;
     protected string $panelPath = 'panel';
     protected ?string $panelTheme = null;
     protected Closure $languageNegotiator;
@@ -38,7 +37,6 @@ class Config
 
         $this->validateApp($app);
         $this->locales = new Locales();
-        $this->nodes = new Nodes();
     }
 
     public function set(string $key, mixed $value): void

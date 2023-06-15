@@ -24,6 +24,7 @@ abstract class Collection
     {
         return array_map(function ($node) {
             return [
+                'uid' => $node->meta('uid'),
                 'title' => $node->title(),
                 'type' => $node->type(),
                 'changed' => $node->meta('changed'),
