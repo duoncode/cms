@@ -110,6 +110,8 @@ final class Pages implements Iterator
 
         $class = $page['classname'];
         $page['content'] = json_decode($page['content'], true);
+        $page['editor_data'] = json_decode($page['editor_data'], true);
+        $page['creator_data'] = json_decode($page['creator_data'], true);
         $context = $this->context;
 
         return new $class($context, $this->find, $page);

@@ -10,8 +10,14 @@ SELECT
     n.content,
     t.name AS type,
     t.classname,
-    uc.uid AS creator,
-    ue.uid AS editor,
+    uc.uid AS creator_uid,
+    uc.email AS creator_email,
+    uc.username AS creator_username,
+    uc.data AS creator_data,
+    ue.uid AS editor_uid,
+    ue.email AS editor_email,
+    ue.username AS editor_username,
+    ue.data AS editor_data,
     coalesce(
         jsonb_object_agg(sup.locale, sup.path)
             FILTER (WHERE up.inactive IS NULL AND sup.path IS NOT NULL),
@@ -61,7 +67,13 @@ WHERE
 GROUP BY
     n.node,
     uc.uid,
+    uc.email,
+    uc.username,
+    uc.data,
     ue.uid,
+    ue.email,
+    ue.username,
+    ue.data,
     t.name,
     t.classname
 <?php if (isset($order)) : ?>

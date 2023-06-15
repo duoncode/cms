@@ -5,8 +5,8 @@ SELECT
     u.pwhash,
     u.userrole AS role,
     u.active,
-    COALESCE(c.username, c.email) AS creator,
-    COALESCE(e.username, e.email) AS editor,
+    COALESCE(c.data->>'name', c.username, c.email) AS creator,
+    COALESCE(e.data->>'name', e.username, e.email) AS editor,
 <?php if (isset($sessionhash)) : ?>
     s.expires,
 <?php endif ?>

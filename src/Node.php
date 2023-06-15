@@ -25,13 +25,13 @@ abstract class Node
 
     public readonly Request $request;
     public readonly Config $config;
-    protected readonly Database $db;
-    protected readonly Registry $registry;
     protected static string $name = '';
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
-    protected static array $fieldSets = [];
+    protected readonly Database $db;
+    protected readonly Registry $registry;
+    protected array $fieldSets = [];
 
     final public function __construct(
         Context $context,
@@ -65,10 +65,9 @@ abstract class Node
     final public function getValue(string $fieldName): ?Value
     {
         $field = null;
+        $type = $this::class;
 
         if (isset($this->{$fieldName})) {
-            $type = $this::class;
-
             $field = $this->{$fieldName};
             $value = $field->value();
         } else {
@@ -90,6 +89,11 @@ abstract class Node
         }
 
         return null;
+    }
+
+    public function meta(string $fieldName): mixed
+    {
+        return $this->data[$fieldName];
     }
 
     /**

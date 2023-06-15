@@ -70,8 +70,12 @@ class Panel
     #[Permission('panel')]
     public function collection(string $collection): array
     {
-        $collection = $this->registry->tag(Collection::class)->get($collection);
+        $obj = $this->registry->tag(Collection::class)->get($collection);
 
-        return $collection->listing();
+        return [
+            'title' => $obj->title(),
+            'slug' => $collection,
+            'nodes' => $obj->listing(),
+        ];
     }
 }

@@ -22,10 +22,20 @@ abstract class Collection
 
     public function listing(): array
     {
-        return array_map(function ($page) {
+        return array_map(function ($node) {
             return [
-                'title' => $page->title(),
-                'type' => $page->type(),
+                'title' => $node->title(),
+                'type' => $node->type(),
+                'changed' => $node->meta('changed'),
+                'created' => $node->meta('created'),
+                'editor' => (
+                    $node->meta('editor_data')['name'] ??
+                    $node->meta('editor_username')
+                ) ?? $node->meta('editor_email'),
+                'creator' => (
+                    $node->meta('creator_data')['name'] ??
+                    $node->meta('creator_username')
+                ) ?? $node->meta('creator_email'),
             ];
         }, iterator_to_array($this->entries()));
     }
