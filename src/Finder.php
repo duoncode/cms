@@ -8,12 +8,12 @@ use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Finder\Block;
 use Conia\Core\Finder\Blocks;
 use Conia\Core\Finder\Menu;
-use Conia\Core\Finder\Page;
-use Conia\Core\Finder\Pages;
+use Conia\Core\Finder\Node;
+use Conia\Core\Finder\Nodes;
 
 /**
- * @psalm-property-read Pages  $pages
- * @psalm-property-read Page   $page
+ * @psalm-property-read Nodes  $nodes
+ * @psalm-property-read Node   $node
  * @psalm-property-read Blocks $blocks
  * @psalm-property-read Block  $block
  * @psalm-property-read Menu   $menu
@@ -24,29 +24,29 @@ class Finder
     {
     }
 
-    public function __get($key): Pages|Page|Blocks|Block|Menu
+    public function __get($key): Nodes|Node|Blocks|Block|Menu
     {
         return match ($key) {
-            'pages' => new Pages($this->context, $this),
-            'page' => new Page($this->context, $this),
+            'nodes' => new Nodes($this->context, $this),
+            'node' => new Node($this->context, $this),
             'blocks' => new Blocks($this->context, $this),
             default => throw new RuntimeException('Property not supported')
         };
     }
 
-    public function pages(
+    public function nodes(
         string $query = '',
-    ): Pages {
-        return (new Pages($this->context, $this))->filter($query);
+    ): Nodes {
+        return (new Nodes($this->context, $this))->filter($query);
     }
 
-    public function page(
+    public function node(
         string $query,
         array $types = [],
         int $limit = 0,
         string $order = '',
     ): array {
-        return (new Page($this->context, $this))->find($query, $types, $limit, $order);
+        return (new Node($this->context, $this))->find($query, $types, $limit, $order);
     }
 
     public function menu(string $menu): Menu

@@ -8,7 +8,6 @@ use Closure;
 use Conia\Chuck\Exception\OutOfBoundsException;
 use Conia\Chuck\Exception\ValueError;
 use Conia\Core\Locales;
-use Throwable;
 
 class Config
 {

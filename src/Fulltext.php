@@ -8,7 +8,7 @@ class Fulltext
 {
     public function __construct(string $type, array $content)
     {
-        $data = $find->page->byUrl($request->uri()->getPath());
+        $data = $find->node->byPath($request->uri()->getPath());
 
         if (!$data) {
             throw new HttpNotFound();

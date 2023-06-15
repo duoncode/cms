@@ -42,7 +42,10 @@ FROM
             sup.inactive IS NULL
     ) sup ON sup.node = n.node
 WHERE
-    t.kind = :kind
+    1 = 1
+<?php if (isset($kind)) : ?>
+    AND t.kind = :kind
+<?php endif ?>
 <?php if (isset($uid)) : ?>
     AND n.uid = :uid
 <?php endif ?>

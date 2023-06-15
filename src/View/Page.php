@@ -22,7 +22,7 @@ class Page
     public function catchall(Context $context, Finder $find): Response
     {
         $path = $context->request->uri()->getPath();
-        $page = $find->page->byPath($path);
+        $page = $find->node->byPath($path);
 
         if (!$page) {
             $this->redirectIfExists($context, $path);

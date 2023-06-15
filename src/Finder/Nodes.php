@@ -7,11 +7,10 @@ namespace Conia\Core\Finder;
 use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Node;
-use Exception;
 use Generator;
 use Iterator;
 
-final class Pages implements Iterator
+final class Nodes implements Iterator
 {
     private string $whereFields = '';
     private string $whereTypes = '';
@@ -38,6 +37,7 @@ final class Pages implements Iterator
             'published' => 'n.published',
             'type' => 't.name',
             'uid' => 'n.uid',
+            'kind' => 't.kind',
         ];
     }
 

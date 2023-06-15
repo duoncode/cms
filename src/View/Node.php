@@ -12,7 +12,7 @@ use Conia\Core\Collection;
 use Conia\Core\Config;
 use Conia\Core\Middleware\Permission;
 
-class Panel
+class Node
 {
     protected string $publicPath;
     protected string $panelIndex;
@@ -77,11 +77,5 @@ class Panel
             'slug' => $collection,
             'nodes' => $obj->listing(),
         ];
-    }
-
-    #[Permission('panel')]
-    public function node(Finder $find, string $uid): array
-    {
-        $node = $find->node;
     }
 }
