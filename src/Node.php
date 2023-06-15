@@ -211,11 +211,16 @@ abstract class Node
         throw new HttpBadRequest();
     }
 
+    public function order(): ?array
+    {
+        return $this->fields;
+    }
+
     public function fields(): array
     {
         $fields = [];
 
-        foreach ($this->fields as $fieldName) {
+        foreach ($this->order() as $fieldName) {
             $fields[] = $this->{$fieldName}->asArray();
         }
 
