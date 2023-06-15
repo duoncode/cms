@@ -128,4 +128,18 @@ abstract class Field
     {
         return $this->height;
     }
+
+    public function asArray(): array
+    {
+        return [
+            'height' => $this->height,
+            'width' => $this->width,
+            'translate' => $this->translate,
+            'required' => $this->required,
+            'description' => $this->description,
+            'label' => $this->label,
+            'name' => $this->name,
+            'type' => $this::class,
+        ];
+    }
 }

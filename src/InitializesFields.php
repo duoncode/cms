@@ -10,6 +10,7 @@ use Conia\Core\Field\Attr\Fulltext;
 use Conia\Core\Field\Attr\Height;
 use Conia\Core\Field\Attr\Label;
 use Conia\Core\Field\Attr\Multiple;
+use Conia\Core\Field\Attr\Options;
 use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Translate;
 use Conia\Core\Field\Attr\TranslateImage;
@@ -21,6 +22,8 @@ use ReflectionProperty;
 
 trait InitializesFields
 {
+    protected array $fields = [];
+
     protected function initFields(): void
     {
         $rc = new ReflectionClass(static::class);
@@ -41,9 +44,9 @@ trait InitializesFields
                 }
 
                 $this->{$name} = $this->initField($property, $fieldType);
-            }
 
-            if (is_subclass_of($fieldType, FieldSet::class)) {
+                $this->fields[] = $name;
+            } elseif (is_subclass_of($fieldType, FieldSet::class)) {
                 if ($isFieldSet) {
                     throw new RuntimeException('FieldSets cannot contain FieldSets');
                 }
@@ -90,7 +93,9 @@ trait InitializesFields
                     break;
                 case Multiple::class:
                     $field->multiple(true);
-
+                    break;
+                case Options::class:
+                    $field->options($attr->newInstance()->options);
                     break;
                 case TranslateImage::class:
                     if (!$field instanceof \Conia\Core\Field\Image) {

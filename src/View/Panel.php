@@ -83,6 +83,11 @@ class Panel
     #[Permission('panel')]
     public function node(Finder $find, string $uid): array
     {
-        return $find->node->byUid($uid)->data();
+        $node = $find->node->byUid($uid);
+
+        return [
+            'fields' => $node->fields(),
+            'data' => $node->data(),
+        ];
     }
 }

@@ -193,11 +193,6 @@ abstract class Node
 
     public function get(): Response
     {
-        // Create a JSON response if the URL ends with .json
-        if ($this->request->get('isJson', false)) {
-            return Response::fromFactory($this->factory)->json($this->json());
-        }
-
         return $this->render();
     }
 
@@ -216,17 +211,15 @@ abstract class Node
         throw new HttpBadRequest();
     }
 
-    public function json(array $context = []): array
+    public function fields(): array
     {
-        $data = $this->data;
+        $fields = [];
 
-        unset($data['classname']);
+        foreach ($this->fields as $fieldName) {
+            $fields[] = $this->{$fieldName}->asArray();
+        }
 
-        $content = [
-            'content' => $this->getJsonContent(),
-        ];
-
-        return array_merge($data, $content, $context);
+        return $fields;
     }
 
     protected function render(array $context = []): Response
