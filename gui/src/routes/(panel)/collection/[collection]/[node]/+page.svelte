@@ -29,41 +29,47 @@
     }
 </style>
 
-<NodeControlBar uid={data.node.uid} title={data.node.title} />
+<div class="flex flex-col h-full">
+    <NodeControlBar uid={data.node.uid} title={data.node.title} />
 
-<div
-    class="breadcrumbs max-w-7xl mx-auto mt-8 flex flex-row items-center gap-3">
-    <IcoDocumentTree />
-    <IcoChevronRight />
-    <span>
-        <a
-            href="/panel/collection/{data.collection.slug}"
-            class="hover:underline">
-            {data.collection.title}
-        </a>
-    </span>
-    <IcoChevronRight />
-    <span class="font-medium">{data.node.title}</span>
-</div>
+    <div
+        class="breadcrumbs w-full max-w-7xl mx-auto my-8 flex flex-row items-center gap-3">
+        <IcoDocumentTree />
+        <IcoChevronRight />
+        <span>
+            <a
+                href="/panel/collection/{data.collection.slug}"
+                class="hover:underline">
+                {data.collection.title}
+            </a>
+        </span>
+        <IcoChevronRight />
+        <span class="font-medium">{data.node.title}</span>
+    </div>
 
-<div
-    class="max-w-7xl bg-white border border-gray-200 shadow rounded mx-auto mt-8">
-    <div class="field-grid">
-        {#each data.node.fields as field}
-            <div
-                style="
+    <div class="flex-1 overflow-y-auto">
+        <div
+            class="max-w-7xl bg-white border border-gray-200 mb-12 shadow rounded mx-auto">
+            <div class="field-grid">
+                {#each data.node.fields as field}
+                    <div
+                        style="
                     grid-column: {fieldSpan(field.width)};
                     grid-row: {fieldSpan(field.rows)}">
-                {#if controls[field.type]}
-                    <svelte:component
-                        this={controls[field.type]}
-                        {field}
-                        node={data.node.data.uid}
-                        bind:data={data.node.data.content[field.name]} />
-                {:else}
-                    {field.type}
-                {/if}
+                        {#if controls[field.type]}
+                            <svelte:component
+                                this={controls[field.type]}
+                                {field}
+                                node={data.node.data.uid}
+                                bind:data={data.node.data.content[
+                                    field.name
+                                ]} />
+                        {:else}
+                            {field.type}
+                        {/if}
+                    </div>
+                {/each}
             </div>
-        {/each}
+        </div>
     </div>
 </div>
