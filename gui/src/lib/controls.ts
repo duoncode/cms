@@ -6,7 +6,7 @@ import Html from '$shell/controls/Html.svelte';
 // import Image from '$shell/controls/Image.svelte';
 // import Number from '$shell/controls/Number.svelte';
 // import Option from '$shell/controls/Option.svelte';
-// import Picture from '$shell/controls/Picture.svelte';
+import Picture from '$shell/controls/Picture.svelte';
 import Text from '$shell/controls/Text.svelte';
 // import Time from '$shell/controls/Time.svelte';
 
@@ -19,7 +19,7 @@ export default {
     // 'Conia\\Core\\Field\\Image': Image,
     // 'Conia\\Core\\Field\\Number': Number,
     // 'Conia\\Core\\Field\\Option': Option,
-    // 'Conia\\Core\\Field\\Picture': Picture,
+    'Conia\\Core\\Field\\Picture': Picture,
     'Conia\\Core\\Field\\Text': Text,
     // 'Conia\\Core\\Field\\Time': Time,
 };

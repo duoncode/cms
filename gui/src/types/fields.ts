@@ -1,4 +1,4 @@
-export interface Field {
+export interface SimpleField {
     rows: number | null;
     width: number | null;
     required: boolean;
@@ -6,8 +6,10 @@ export interface Field {
     label: string;
     name: string;
     type: string;
+    translate: boolean;
 }
 
-export interface TextField extends Field {
-    translate: boolean;
+export interface ImageField extends SimpleField {
+    multiple: boolean;
+    translateImage: boolean;
 }

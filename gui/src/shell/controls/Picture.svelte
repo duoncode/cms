@@ -2,32 +2,39 @@
     import { system } from '$lib/sys';
     import Field from '$shell/Field.svelte';
     import Upload from '$shell/Upload.svelte';
-    import LocaleTabs from '$shell/LocaleTabs.svelte';
-    import type { TextData } from '$types/data';
-    import type { TextField } from '$types/fields';
+    import Label from '$shell/Label.svelte';
+    import type { ImageData } from '$types/data';
+    import type { ImageField } from '$types/fields';
 
-    export let field: TextField;
-    export let data: TextData;
+    export let field: ImageField;
+    export let data: ImageData;
+    export let node: string;
 
     let lang = $system.locale;
 </script>
 
 <Field required={field.required}>
-    <label for={field.name}>
+    <Label of={field.name} translate={field.translate} bind:lang>
         {field.label}
-        {#if field.translate}
-            <LocaleTabs {lang} />
-        {/if}
-    </label>
+    </Label>
     {#if field.translate}
         <div class="mt-2">
-            {#each $system.locales as locale}
-                {#if locale.id === lang}
-                    <Upload
-                        image
-                        url="/assets/{doc.assetPath}/{doc.details.uid}"
-                        name="image_{content.content}"
-                        bind:asset={content.data.path} />
+            {#each data.files as file, i}
+                <Upload
+                    image
+                    url="/assets/node/{node}"
+                    name={field.name}
+                    bind:asset={file.file} />
+                <!-- As picture tags show only one image, we need only one alt definition -->
+                {#if i === 0}
+                    {#each $system.locales as locale}
+                        {#if locale.id === lang}
+                            <input
+                                type="text"
+                                name="{field.name}_alt_{locale.id}"
+                                bind:value={file.alt[locale.id]} />
+                        {/if}
+                    {/each}
                 {/if}
             {/each}
         </div>

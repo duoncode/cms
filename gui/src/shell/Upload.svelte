@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
     import { getContext, createEventDispatcher } from 'svelte';
 
     import IcoUpload from '$shell/icons/IcoUpload.svelte';
-    import { _, ngettext } from '$lib/locale';
+    import { _ } from '$lib/locale';
     import { setDirty, error } from '$lib/state';
     import toast from '$lib/toast';
     import Image from '$shell/Image.svelte';
@@ -11,9 +11,9 @@
     import Message from '$shell/Message.svelte';
     import req from '$lib/req.js';
 
-    export let url;
-    export let image; // if present thumbs will be rendered
-    export let name;
+    export let url: string;
+    export let image: boolean; // if present thumbs will be rendered
+    export let name: string;
     export let asset = null;
     export let label = null;
     export let altempty = null;
@@ -147,7 +147,7 @@
     }
 </script>
 
-<style type="postcss">
+<style lang="postcss">
     .upload {
         @apply flex flex-col w-full;
         @apply md:flex-row;
@@ -241,11 +241,7 @@
             on:dragleave|preventDefault={stopDragging}>
             <div>
                 <IcoUpload /><br />
-                {ngettext(
-                    '-dragndrop-file-',
-                    '-dragndrop-files-',
-                    multiple ? 2 : 1,
-                )}
+                {_('Drag and Drop Dateien')}
                 {@html _('or <u>browse</u>.')}
             </div>
             <input

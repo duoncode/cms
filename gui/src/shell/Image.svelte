@@ -1,12 +1,12 @@
 <script>
     import { getContext } from 'svelte';
+    import { _ } from '$lib/locale';
     import IcoCamera from '$shell/icons/IcoCamera.svelte';
     import IcoCircleSlash from '$shell/icons/IcoCircleSlash.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    import { _ } from '../locale';
     export let base;
     export let image;
     export let loading;

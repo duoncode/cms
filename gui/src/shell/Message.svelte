@@ -2,7 +2,7 @@
     import IcoOctagonTimes from '$shell/icons/IcoOctagonTimes.svelte';
     import IcoShieldCheck from '$shell/icons/IcoShieldCheck.svelte';
     import IcoCircleInfo from '$shell/icons/IcoCircleInfo.svelte';
-    import IcoTriangleExclatmation from '$shell/icons/IcoTriangleExclatmation.svelte';
+    import IcoTriangleExclamation from '$shell/icons/IcoTriangleExclamation.svelte';
 
     export let type;
     export let text = '';
@@ -58,7 +58,7 @@
                 {:else if type == 'info'}
                     <IcoCircleInfo />
                 {:else if type == 'warning'}
-                    <IcoTriangleExclatmation />
+                    <IcoTriangleExclamation />
                 {:else if type == 'error'}
                     <IcoOctagonTimes />
                 {:else}

@@ -3,9 +3,9 @@
     import Field from '$shell/Field.svelte';
     import Label from '$shell/Label.svelte';
     import type { TextData } from '$types/data';
-    import type { TextField } from '$types/fields';
+    import type { SimpleField } from '$types/fields';
 
-    export let field: TextField;
+    export let field: SimpleField;
     export let data: TextData;
 
     let lang = $system.locale;

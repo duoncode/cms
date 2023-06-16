@@ -58,6 +58,7 @@
                     <svelte:component
                         this={controls[field.type]}
                         {field}
+                        node={data.node.data.uid}
                         bind:data={data.node.data.content[field.name]} />
                 {:else}
                     {field.type}
