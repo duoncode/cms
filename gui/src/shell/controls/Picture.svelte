@@ -1,7 +1,8 @@
 <script lang="ts">
     import { system } from '$lib/sys';
     import Field from '$shell/Field.svelte';
-    import Label from '$shell/Label.svelte';
+    import Upload from '$shell/Upload.svelte';
+    import LocaleTabs from '$shell/LocaleTabs.svelte';
     import type { TextData } from '$types/data';
     import type { TextField } from '$types/fields';
 
@@ -12,19 +13,21 @@
 </script>
 
 <Field required={field.required}>
-    <Label of={field.name} translate={field.translate} bind:lang>
+    <label for={field.name}>
         {field.label}
-    </Label>
+        {#if field.translate}
+            <LocaleTabs {lang} />
+        {/if}
+    </label>
     {#if field.translate}
         <div class="mt-2">
             {#each $system.locales as locale}
                 {#if locale.id === lang}
-                    <input
-                        id={field.name}
-                        name={field.name}
-                        type="text"
-                        required={field.required}
-                        bind:value={data.value[locale.id]} />
+                    <Upload
+                        image
+                        url="/assets/{doc.assetPath}/{doc.details.uid}"
+                        name="image_{content.content}"
+                        bind:asset={content.data.path} />
                 {/if}
             {/each}
         </div>

@@ -2,6 +2,7 @@
     import { system } from '$lib/sys';
     import Field from '$shell/Field.svelte';
     import Wysiwyg from '$shell/Wysiwyg.svelte';
+    import Label from '$shell/Label.svelte';
     import type { TextData } from '$types/data';
     import type { TextField } from '$types/fields';
 
@@ -12,21 +13,9 @@
 </script>
 
 <Field required={field.required}>
-    <label for={field.name}>
+    <Label of={field.name} translate={field.translate} bind:lang>
         {field.label}
-        {#if field.translate}
-            <span class="lang-tabs">
-                {#each $system.locales as locale}
-                    <button
-                        class="lang-tab"
-                        class:active={locale.id === lang}
-                        on:click={() => (lang = locale.id)}>
-                        {locale.id.toUpperCase()}
-                    </button>
-                {/each}
-            </span>
-        {/if}
-    </label>
+    </Label>
     {#if field.translate}
         <div class="mt-2">
             {#each $system.locales as locale}

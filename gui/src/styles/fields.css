@@ -3,6 +3,11 @@
 
     label {
         @apply block font-medium leading-6 text-gray-900;
+        @apply flex flex-row items-center;
+
+        div {
+            @apply flex-1 flex-grow;
+        }
     }
 
     input[type=text],
@@ -17,25 +22,3 @@
     }
 }
 
-.lang-tabs {
-    float: right;
-    margin-top: 0.25rem;
-    margin-left: 1rem;
-}
-
-.lang-tab {
-    display: inline-block;
-    border: 0;
-    box-shadow: 0;
-    border-right: 1px solid #ccc;
-    padding: 0 0.5rem;
-    font-weight: normal;
-
-    &:last-child {
-        border-right: 0;
-    }
-
-    &.active {
-        @apply text-sky-600;
-    }
-}
