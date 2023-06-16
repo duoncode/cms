@@ -219,8 +219,11 @@ abstract class Node
     public function fields(): array
     {
         $fields = [];
+        $orderedFields = $this->order();
+        $missingFields = array_diff($this->fields, $orderedFields);
+        $allFields = array_merge($orderedFields, $missingFields);
 
-        foreach ($this->order() as $fieldName) {
+        foreach ($allFields as $fieldName) {
             $fields[] = $this->{$fieldName}->asArray();
         }
 
