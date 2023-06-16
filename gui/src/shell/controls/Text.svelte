@@ -15,8 +15,8 @@
     <Label of={field.name} translate={field.translate} bind:lang>
         {field.label}
     </Label>
-    {#if field.translate}
-        <div class="mt-2">
+    <div class="mt-2">
+        {#if field.translate}
             {#each $system.locales as locale}
                 {#if locale.id === lang}
                     <input
@@ -27,8 +27,13 @@
                         bind:value={data.value[locale.id]} />
                 {/if}
             {/each}
-        </div>
-    {:else}
-        {field.type}
-    {/if}
+        {:else}
+            <input
+                id={field.name}
+                name={field.name}
+                type="text"
+                required={field.required}
+                bind:value={data.value} />
+        {/if}
+    </div>
 </Field>
