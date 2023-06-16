@@ -17,6 +17,7 @@ export default defineConfig({
     resolve: {
         alias: {
             $lib: path.resolve('./src/lib'),
+            $types: path.resolve('./src/types'),
             $shell: path.resolve('./src/shell'),
         },
     },

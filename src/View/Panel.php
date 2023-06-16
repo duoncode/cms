@@ -41,9 +41,23 @@ class Panel
             ];
         }
 
+        $locales = $this->config->locales();
+        $localesList = array_map(
+            function ($locale) {
+                return [
+                    'id' => $locale->id,
+                    'title' => $locale->title,
+                    'fallback' => $locale->fallback,
+                ];
+            },
+            iterator_to_array($locales),
+            [] // Add an empty array to remove the assoc array keys
+            //    See: https://www.php.net/manual/en/function.array-map.php#refsect1-function.array-map-returnvalues
+        );
+
         return [
-            // 'locales' => $this->config->get('locales.list'),
-            // 'locale' => 'de',
+            'locales' => $localesList,
+            'locale' => $locales->getDefault()->id,
             'panelPath' => $this->config->getPanelPath(),
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
@@ -86,6 +100,8 @@ class Panel
         $node = $find->node->byUid($uid);
 
         return [
+            'title' => $node->title(),
+            'uid' => $node->meta('uid'),
             'fields' => $node->fields(),
             'data' => $node->data(),
         ];

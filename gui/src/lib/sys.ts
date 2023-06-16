@@ -10,6 +10,12 @@ export interface Type {
     name: string;
 }
 
+export interface Locale {
+    id: string;
+    title: string;
+    fallback?: string;
+}
+
 export class System {
     debug: boolean;
     env: string;
@@ -17,6 +23,8 @@ export class System {
     csrfToken: string;
     collections: Collection[];
     types: Type[];
+    locale: string;
+    locales: Locale[];
 
     async boot() {
         const response = await req.get('boot');
@@ -30,6 +38,8 @@ export class System {
             this.csrfToken = data.csrfToken as string;
             this.types = data.types as Type[];
             this.collections = data.collections as Collection[];
+            this.locale = data.locale as string;
+            this.locales = data.locales as Locale[];
         } else {
             throw new Error('Fatal error while requesting settings');
         }

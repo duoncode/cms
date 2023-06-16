@@ -1,0 +1,41 @@
+.field {
+    @apply p-8;
+
+    label {
+        @apply block font-medium leading-6 text-gray-900;
+    }
+
+    input[type=text],
+    input[type=number], {
+        @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ;
+        @apply ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 ;
+        @apply focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6
+    }
+
+    input[required] {
+        @apply border-l-orange-600 border-l-4;
+    }
+}
+
+.lang-tabs {
+    float: right;
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+}
+
+.lang-tab {
+    display: inline-block;
+    border: 0;
+    box-shadow: 0;
+    border-right: 1px solid #ccc;
+    padding: 0 0.5rem;
+    font-weight: normal;
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    &.active {
+        @apply text-sky-600;
+    }
+}

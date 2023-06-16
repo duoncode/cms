@@ -6,6 +6,7 @@
 @import './vars.css';
 @import './util.css';
 @import './button.css';
+@import './fields.css';
 
 html {
     @apply bg-gray-50;
