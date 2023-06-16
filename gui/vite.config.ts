@@ -12,6 +12,14 @@ export default defineConfig({
                 target: 'http://localhost:1983',
                 secure: false,
             },
+            '/assets': {
+                target: 'http://localhost:1983',
+                secure: false,
+            },
+            '/cache': {
+                target: 'http://localhost:1983',
+                secure: false,
+            },
         },
     },
     resolve: {
