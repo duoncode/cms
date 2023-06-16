@@ -165,10 +165,12 @@ final class Nodes implements Iterator
             }
         }
 
-        if (count($result) > 0) {
-            return '    ' . implode("\n    OR ", $result);
-        }
-
-        return '';
+        return match (count($result)) {
+            0 => '',
+            1 => '    ' . $result[0],
+            default => "    (\n        "
+                . implode("\n        OR ", $result)
+                . "\n    )"
+        };
     }
 }
