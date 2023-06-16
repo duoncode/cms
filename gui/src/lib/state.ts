@@ -1,8 +1,8 @@
 import { writable, derived, get } from 'svelte/store';
-import toast from './toast';
+import toast from '$lib/toast';
 
 const pristine = writable(true);
-const dirty = derived(pristine, ($pristine) => !$pristine);
+const dirty = derived(pristine, $pristine => !$pristine);
 
 function setDirty() {
     pristine.set(false);
@@ -12,7 +12,7 @@ function setPristine() {
     pristine.set(true);
 }
 
-function success(message) {
+function success(message: string) {
     setPristine();
     toast.reset();
 
@@ -24,18 +24,11 @@ function success(message) {
     }
 }
 
-function error(message) {
+function error(message: string) {
     toast.add({
         ...(Object(message) === message ? message : { message }),
         kind: 'error',
     });
 }
 
-export {
-    pristine,
-    dirty,
-    setDirty,
-    setPristine,
-    success,
-    error,
-};
+export { pristine, dirty, setDirty, setPristine, success, error };

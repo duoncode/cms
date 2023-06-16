@@ -1,17 +1,22 @@
 import { writable } from 'svelte/store';
 
-const { subscribe, update, set } = writable([]);
+const { subscribe, update, set } = writable([] as Toast[]);
 
-function remove(toast) {
-    update((toasts) =>
-        toasts.filter((item) => {
+export interface Toast {
+    kind: 'success' | 'error';
+    message: string;
+}
+
+export function remove(toast: Toast) {
+    update(toasts =>
+        toasts.filter(item => {
             return item !== toast;
         }),
     );
 }
 
-function add(toast, timeout) {
-    update((toasts) => [toast, ...toasts]);
+export function add(toast: Toast, timeout?: number) {
+    update(toasts => [toast, ...toasts]);
 
     if (!(toast.kind === 'error') || timeout) {
         setTimeout(() => {
@@ -20,8 +25,8 @@ function add(toast, timeout) {
     }
 }
 
-function reset() {
-    set([]);
+export function reset() {
+    set([] as Toast[]);
 }
 
-export default { subscribe, add, reset, remove };
+export default { subscribe, add, remove, reset };
