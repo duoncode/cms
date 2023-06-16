@@ -41,9 +41,9 @@
                 thumb = orig;
             } else {
                 if (base === '/') {
-                    thumb = `/thumbs/${image}`;
+                    thumb = `/${image}`;
                 } else {
-                    thumb = `${base}/thumbs/${image}`;
+                    thumb = `${base}/${image}`;
                 }
             }
         } else {
@@ -70,7 +70,13 @@
     .image.upload {
         @apply flex flex-shrink mx-auto w-full justify-center items-center;
         flex: 0 0 33%;
-        max-width: 300px;
+        max-width: 25rem;
+        max-height: 13rem;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
     }
 
     .overlay {
