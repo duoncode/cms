@@ -32,4 +32,12 @@ class Picture extends Field
 
          return $this;
      }
+
+    public function asArray(): array
+    {
+        return array_merge(parent::asArray(), [
+            'multiple' => $this->multiple,
+            'translateImage' => $this->translateImage,
+        ]);
+    }
 }
