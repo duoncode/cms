@@ -1,6 +1,6 @@
 <script lang="ts">
     import { toggleNav } from '../lib/ui';
-    import BarsCenterLeft from '$shell/BarsCenterLeft.svelte';
+    import IcoBarsCenterLeft from '$shell/icons/IcoBarsCenterLeft.svelte';
 </script>
 
 <style lang="postcss">
@@ -15,5 +15,5 @@
 </style>
 
 <button class="nav" on:click={toggleNav}>
-    <BarsCenterLeft />
+    <IcoBarsCenterLeft />
 </button>

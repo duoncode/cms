@@ -1,7 +1,7 @@
 <script lang="ts">
     import NodeControlBar from '$shell/NodeControlBar.svelte';
-    import ChevronRight from '$shell/icons/ChevronRight.svelte';
-    import DocumentTree from '$shell/icons/DocumentTree.svelte';
+    import IcoChevronRight from '$shell/icons/IcoChevronRight.svelte';
+    import IcoDocumentTree from '$shell/icons/IcoDocumentTree.svelte';
     import controls from '$lib/controls';
 
     export let data;
@@ -33,8 +33,8 @@
 
 <div
     class="breadcrumbs max-w-7xl mx-auto mt-8 flex flex-row items-center gap-3">
-    <DocumentTree />
-    <ChevronRight />
+    <IcoDocumentTree />
+    <IcoChevronRight />
     <span>
         <a
             href="/panel/collection/{data.collection.slug}"
@@ -42,7 +42,7 @@
             {data.collection.title}
         </a>
     </span>
-    <ChevronRight />
+    <IcoChevronRight />
     <span class="font-medium">{data.node.title}</span>
 </div>
 
