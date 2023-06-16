@@ -2,6 +2,10 @@
     import { getContext } from 'svelte';
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
+    import { _ } from '$lib/locale';
+    import { setDirty } from '$lib/state';
+    import ModalLink from '$shell/modals/ModalLink.svelte';
+
     import { Editor } from '@tiptap/core';
     import StarterKit from '@tiptap/starter-kit';
     import BubbleMenu from '@tiptap/extension-bubble-menu';
@@ -40,9 +44,6 @@
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoLineBreak from '$shell/icons/IcoLineBreak.svelte';
 
-    import { _ } from '$lib/locale';
-    import ModalLink from '$shell/modals/ModalLink.svelte';
-
     export let value;
     export let name;
     export let editSource = true;
@@ -62,6 +63,8 @@
 
     function fireUpdate(html) {
         dispatch('input', html);
+        setDirty();
+        dispatch('dirty');
     }
 
     const CustomParagraph = Paragraph.extend({
