@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import NavToggle from './NavToggle.svelte';
+
+    export let uid: string;
 </script>
 
 <style lang="postcss">

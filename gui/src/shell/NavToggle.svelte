@@ -1,14 +1,12 @@
-<script>
+<script lang="ts">
     import { toggleNav } from '../lib/ui';
 </script>
 
-<style>
+<style lang="postcss">
     button.nav {
+        @apply p-2 bg-white w-9 h-9;
         position: absolute;
         left: var(--s-2);
-        padding: var(--s-2);
-
-        background-color: var(--white);
         border: 0;
         box-shadow: none;
         cursor: pointer;

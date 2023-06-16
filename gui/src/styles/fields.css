@@ -1,5 +1,5 @@
 .field {
-    @apply p-8;
+    @apply p-6;
 
     label {
         @apply block font-medium leading-6 text-gray-900;
