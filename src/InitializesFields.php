@@ -7,11 +7,11 @@ namespace Conia\Core;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Attr\Description;
 use Conia\Core\Field\Attr\Fulltext;
-use Conia\Core\Field\Attr\Height;
 use Conia\Core\Field\Attr\Label;
 use Conia\Core\Field\Attr\Multiple;
 use Conia\Core\Field\Attr\Options;
 use Conia\Core\Field\Attr\Required;
+use Conia\Core\Field\Attr\Rows;
 use Conia\Core\Field\Attr\Translate;
 use Conia\Core\Field\Attr\TranslateImage;
 use Conia\Core\Field\Attr\Width;
@@ -88,8 +88,8 @@ trait InitializesFields
                 case Width::class:
                     $field->width($attr->newInstance()->width);
                     break;
-                case Height::class:
-                    $field->height($attr->newInstance()->height);
+                case Rows::class:
+                    $field->rows($attr->newInstance()->rows);
                     break;
                 case Multiple::class:
                     $field->multiple(true);

@@ -7,9 +7,9 @@ namespace Conia\Core\Field\Attr;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Height
+class Rows
 {
-    public function __construct(public readonly int $height)
+    public function __construct(public readonly int $rows)
     {
     }
 }

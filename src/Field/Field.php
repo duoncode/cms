@@ -17,7 +17,7 @@ abstract class Field
     protected bool $translate = false;
     protected bool $required = false;
     protected ?int $width = null;
-    protected ?int $height = null;
+    protected ?int $rows = null;
     protected ?FulltextWeight $fulltextWeight = null;
 
     public function __construct(
@@ -117,22 +117,22 @@ abstract class Field
         return $this->width;
     }
 
-    public function height(int $height): static
+    public function rows(int $rows): static
     {
-        $this->height = $height;
+        $this->rows = $rows;
 
         return $this;
     }
 
-    public function getHeight(): int
+    public function getRows(): int
     {
-        return $this->height;
+        return $this->rows;
     }
 
     public function asArray(): array
     {
         return [
-            'height' => $this->height,
+            'rows' => $this->rows,
             'width' => $this->width,
             'translate' => $this->translate,
             'required' => $this->required,
