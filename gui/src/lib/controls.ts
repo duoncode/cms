@@ -3,7 +3,7 @@
 // import Grid from '$shell/controls/Grid.svelte';
 // import Hidden from '$shell/controls/Hidden.svelte';
 import Html from '$shell/controls/Html.svelte';
-// import Image from '$shell/controls/Image.svelte';
+import Image from '$shell/controls/Image.svelte';
 // import Number from '$shell/controls/Number.svelte';
 // import Option from '$shell/controls/Option.svelte';
 import Picture from '$shell/controls/Picture.svelte';
@@ -16,7 +16,7 @@ export default {
     // 'Conia\\Core\\Field\\Grid': Grid,
     // 'Conia\\Core\\Field\\Hidden': Hidden,
     'Conia\\Core\\Field\\Html': Html,
-    // 'Conia\\Core\\Field\\Image': Image,
+    'Conia\\Core\\Field\\Image': Image,
     // 'Conia\\Core\\Field\\Number': Number,
     // 'Conia\\Core\\Field\\Option': Option,
     'Conia\\Core\\Field\\Picture': Picture,

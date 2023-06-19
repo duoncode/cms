@@ -30,6 +30,11 @@ class Files extends Value implements Iterator
         return $this->pointer;
     }
 
+    public function count(): int
+    {
+        return count($this->data['files']);
+    }
+
     public function next(): void
     {
         $this->pointer++;

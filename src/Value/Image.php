@@ -143,11 +143,6 @@ class Image extends File
         return $this->textValue('alt', $this->index);
     }
 
-    public function count(): int
-    {
-        return count($this->data['files']);
-    }
-
     protected function textValue(string $key, int $index): string
     {
         if ($this->translate) {

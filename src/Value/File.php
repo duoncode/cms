@@ -63,7 +63,12 @@ class File extends Value
 
     public function json(): mixed
     {
-        return [];
+        return $this->data;
+    }
+
+    public function count(): int
+    {
+        return count($this->data['files']);
     }
 
     public function isset(): bool

@@ -13,3 +13,5 @@ export interface ImageField extends SimpleField {
     multiple: boolean;
     translateImage: boolean;
 }
+
+export type Field = ImageField | SimpleField;
