@@ -122,24 +122,26 @@
     }
 
     /* Stacked Icon */
-    :global(.stacked-icons svg) {
-        display: block;
-    }
-    .ban .outer {
-        @apply text-red-300;
-    }
-    .ban .inner {
-        @apply text-gray-600;
-    }
-    .size-lg {
-        font-size: 200%;
-        width: 4rem;
-        height: 4rem;
-    }
-    .size-xl {
-        font-size: 300%;
+    :global(.stacked-icons) {
         width: 6rem;
         height: 6rem;
+        svg {
+            display: block;
+        }
+        &.ban .outer {
+            @apply text-red-300;
+
+            :global(svg) {
+                width: 100%;
+            }
+        }
+        &.ban .inner {
+            @apply text-gray-600;
+
+            :global(svg) {
+                width: 60%;
+            }
+        }
     }
 </style>
 
@@ -171,10 +173,7 @@
         </div>
     {:else}
         <div class="empty">
-            <div
-                class="stacked-icons inline-block relative"
-                class:size-lg={size == 'lg'}
-                class:size-xl={size == 'xl'}>
+            <div class="stacked-icons ban inline-block relative">
                 <div
                     class="inner absolute inset-0 flex justify-center items-center">
                     <IcoCamera />
@@ -186,5 +185,10 @@
             </div>
             <p>{_('No image')}</p>
         </div>
+    {/if}
+    {#if ext}
+        <span
+            class="absolute right-2 bottom-2 rounded text-white bg-orange-700 text-sm px-1"
+            >{ext.toUpperCase()}</span>
     {/if}
 </div>
