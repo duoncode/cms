@@ -12,6 +12,7 @@
     import req from '$lib/req.js';
 
     export let url: string;
+    export let cache: string;
     export let image: boolean; // if present thumbs will be rendered
     export let name: string;
     export let asset = null;
@@ -219,6 +220,7 @@
             <Image
                 upload
                 base={url}
+                {cache}
                 image={asset}
                 remove={() => remove(null)}
                 {querystring}

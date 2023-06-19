@@ -46,6 +46,18 @@ class Image extends Field
 
     public function asArray(): array
     {
+        // Generate thumbs
+        // TODO: add it to the api data. Currently we assume in the frontend that they are existing
+        if ($this->multiple) {
+            foreach ($this->value() as $image) {
+                $url = $image->width(400)->url();
+            }
+        } else {
+            $url = $this->value()->width(400)->url();
+        }
+
+        error_log($url);
+
         return array_merge(parent::asArray(), [
             'multiple' => $this->multiple,
             'translateImage' => $this->translateImage,

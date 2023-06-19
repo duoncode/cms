@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { getContext } from 'svelte';
     import { _ } from '$lib/locale';
     import IcoCamera from '$shell/icons/IcoCamera.svelte';
@@ -7,18 +7,19 @@
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    export let base;
-    export let image;
-    export let loading;
-    export let upload;
-    export let remove;
+    export let base: string;
+    export let cache: string;
+    export let image: string;
+    export let loading: boolean;
+    export let upload: boolean;
+    export let remove: () => void;
     export let size = 'xl';
     export let altempty = null; // alternative empty image placeholder
     export let useThumb = true;
     export let querystring = '';
 
-    let orig;
-    let thumb;
+    let orig: string;
+    let thumb: string;
     let hover = false;
 
     const { open } = getContext('simple-modal');
@@ -27,29 +28,31 @@
         open(ImagePreview, { image: orig });
     }
 
+    function thumbIt(image: string) {
+        const a = image.split('.');
+
+        return (
+            a.slice(0, a.length - 1).join('.') +
+            '-w400.' +
+            a.slice(a.length - 1)
+        );
+    }
+
     $: {
-        if (base && image) {
+        if (base && cache && image) {
             let ext = image.split('.').pop()?.toLowerCase();
 
-            if (base === '/') {
-                orig = `/${image}`;
-            } else {
-                orig = `${base}/${image}`;
-            }
+            orig = `${base}/${image}`;
 
             if (!useThumb || ext === 'svg') {
                 thumb = orig;
             } else {
-                if (base === '/') {
-                    thumb = `/${image}`;
-                } else {
-                    thumb = `${base}/${image}`;
-                }
+                thumb = `${cache}/${thumbIt(image)}`;
             }
         } else {
             if (image) {
                 orig = image;
-                thumb = image;
+                thumb = thumbIt(image);
             } else {
                 orig = null;
                 thumb = null;

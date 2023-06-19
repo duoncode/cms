@@ -22,6 +22,7 @@
             <Upload
                 image
                 url="/assets/node/{node}"
+                cache="/cache/node/{node}"
                 name={field.name}
                 bind:asset={file.file} />
             <!-- As picture tags show only one image, we need only one alt definition -->
