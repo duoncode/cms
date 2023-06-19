@@ -5,11 +5,15 @@ import type {
     File,
     Document,
     TextData,
+    NumberData,
     FileData,
     TranslatedFile,
 } from '$types/data';
 
 function fillTranslatedImageField(data: FileData, locales: Locale[]) {
+    if (!data) {
+        data = {} as FileData;
+    }
     if (data.files === undefined) {
         data.files = {} as Record<string, TranslatedFile>;
     }
@@ -59,6 +63,10 @@ function fillTranslatedAltField(data: FileData, locales: Locale[]) {
 }
 
 function fillImageField(data: FileData, field: ImageField, locales: Locale[]) {
+    if (!data) {
+        data = {} as FileData;
+    }
+
     if (field.translateImage) {
         return fillTranslatedImageField(data, locales);
     }
@@ -86,7 +94,24 @@ function fillImageField(data: FileData, field: ImageField, locales: Locale[]) {
     return data;
 }
 
+function fillNumberField(data: NumberData) {
+    if (!data) {
+        data = {
+            type: 'number',
+            value: null,
+        };
+    }
+    if (data.value === undefined) {
+        data.value = null;
+    }
+    return data;
+}
+
 function fillTextField(data: TextData, field: SimpleField, locales: Locale[]) {
+    if (!data) {
+        data = {} as TextData;
+    }
+
     if (field.translate) {
         if (data.value === undefined) {
             data.value = {};
@@ -124,11 +149,17 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
                 break;
             case 'Conia\\Core\\Field\\Text':
             case 'Conia\\Core\\Field\\Html':
+            case 'Conia\\Core\\Field\\Hidden':
+            case 'Conia\\Core\\Field\\Date':
+            case 'Conia\\Core\\Field\\Time':
                 content[field.name] = fillTextField(
                     fieldData as TextData,
                     field as SimpleField,
                     locales,
                 );
+                break;
+            case 'Conia\\Core\\Field\\Number':
+                content[field.name] = fillNumberField(fieldData as NumberData);
                 break;
         }
     });

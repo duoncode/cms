@@ -1,5 +1,5 @@
 export interface File {
-    file: string;
+    file?: string;
     alt?: string | Record<string, string>;
     title?: string | Record<string, string>;
 }
@@ -12,7 +12,12 @@ export interface TranslatedFile {
 
 export interface TextData {
     type: 'text' | 'html' | 'hidden' | 'date' | 'time';
-    value: string | Record<string, string>;
+    value?: string | Record<string, string>;
+}
+
+export interface NumberData {
+    type: 'number';
+    value?: number;
 }
 
 export interface FileData {
