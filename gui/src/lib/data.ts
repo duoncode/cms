@@ -5,11 +5,11 @@ import type {
     File,
     Document,
     TextData,
-    ImageData,
+    FileData,
     TranslatedFile,
 } from '$types/data';
 
-function fillTranslatedImageField(data: ImageData, locales: Locale[]) {
+function fillTranslatedImageField(data: FileData, locales: Locale[]) {
     if (data.files === undefined) {
         data.files = {} as Record<string, TranslatedFile>;
     }
@@ -32,12 +32,13 @@ function fillTranslatedImageField(data: ImageData, locales: Locale[]) {
     return data;
 }
 
-function fillTranslatedAltField(data: ImageData, locales: Locale[]) {
+function fillTranslatedAltField(data: FileData, locales: Locale[]) {
     if (data.files === undefined) {
         data.files = [] as File[];
     }
 
     (data.files as File[]).map((file: File) => {
+        console.log(file);
         if (file.alt === undefined) {
             file.alt = {};
         }
@@ -57,7 +58,7 @@ function fillTranslatedAltField(data: ImageData, locales: Locale[]) {
     return data;
 }
 
-function fillImageField(data: ImageData, field: ImageField, locales: Locale[]) {
+function fillImageField(data: FileData, field: ImageField, locales: Locale[]) {
     if (field.translateImage) {
         return fillTranslatedImageField(data, locales);
     }
@@ -110,14 +111,13 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
     const content = data.content;
 
     fields.map((field: Field) => {
-        console.log(field);
         const fieldData = content[field.name];
 
         switch (field.type) {
             case 'Conia\\Core\\Field\\Picture':
             case 'Conia\\Core\\Field\\Image':
                 content[field.name] = fillImageField(
-                    fieldData as ImageData,
+                    fieldData as FileData,
                     field as ImageField,
                     locales,
                 );
@@ -132,8 +132,6 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
                 break;
         }
     });
-
-    console.log(content);
 
     return content;
 }

@@ -15,9 +15,8 @@
     export let cache: string;
     export let image: boolean; // if present thumbs will be rendered
     export let name: string;
-    export let asset = null;
+    export let assets = null;
     export let label = null;
-    export let altempty = null;
     export let multiple = false;
     export let size = 'xl';
     export let useThumb = true;
@@ -35,7 +34,7 @@
 
     function remove(item) {
         if (item === null) {
-            asset = null;
+            assets[0] = null;
         } else {
             console.log('TODO delete from asset array');
         }
@@ -129,11 +128,11 @@
 
                 if (responses.length > 0) {
                     if (multiple) {
-                        asset = responses.map(item => getFileName(item));
+                        assets = responses.map(item => getFileName(item));
                     } else {
-                        asset = getFileName(responses[0]);
+                        assets[0] = getFileName(responses[0]);
                     }
-                    if (asset && callback) {
+                    if (assets && callback) {
                         callback();
                     }
                 } else {
@@ -152,6 +151,10 @@
     .upload {
         @apply flex flex-col w-full;
         @apply md:flex-row;
+
+        &.upload-multiple {
+            @apply flex-col;
+        }
     }
 
     .upload input {
@@ -162,6 +165,10 @@
         clip: rect(1px 1px 1px 1px);
         clip: rect(1px, 1px, 1px, 1px);
         white-space: nowrap;
+    }
+
+    .multiple-images {
+        @apply flex flex-row justify-start gap-4 py-4;
     }
 
     .form-label {
@@ -178,6 +185,10 @@
         &.asset,
         &.image {
             @apply md:ml-2;
+
+            &.multiple {
+                @apply md:ml-0;
+            }
         }
     }
     .dragdrop:hover {
@@ -214,28 +225,45 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline && !label}>
-        {#if multiple}
-            <p><b>TODO</b>: Multiple uploads</p>
-        {:else if image}
+        {#if multiple && image}
+            <div class="multiple-images">
+                {#if assets}
+                    {#each assets as asset}
+                        <Image
+                            upload
+                            {multiple}
+                            base={url}
+                            {cache}
+                            image={asset.file}
+                            remove={() => remove(asset)}
+                            {querystring}
+                            {useThumb}
+                            {loading}
+                            {size} />
+                    {/each}
+                {/if}
+            </div>
+        {:else if !multiple && image}
             <Image
                 upload
                 base={url}
                 {cache}
-                image={asset}
+                {multiple}
+                image={assets[0] && assets[0].file}
                 remove={() => remove(null)}
                 {querystring}
                 {useThumb}
-                {altempty}
                 {loading}
                 {size} />
-        {:else}
-            <File base={url} {asset} />
+        {:else if multiple && file}
+            TODO
+        {:else if !multiple && !image}
+            <File base={url} asset={assets[0]} />
         {/if}
         <label
             class="dragdrop"
             class:dragging
             class:multiple
-            class:asset
             class:image
             for={name}
             on:drop|preventDefault={onFile(getFilesFromDrop)}

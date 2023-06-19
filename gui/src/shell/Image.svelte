@@ -12,15 +12,16 @@
     export let image: string;
     export let loading: boolean;
     export let upload: boolean;
+    export let multiple: boolean;
     export let remove: () => void;
     export let size = 'xl';
-    export let altempty = null; // alternative empty image placeholder
     export let useThumb = true;
     export let querystring = '';
 
     let orig: string;
     let thumb: string;
     let hover = false;
+    let ext = '';
 
     const { open } = getContext('simple-modal');
 
@@ -37,10 +38,11 @@
             a.slice(a.length - 1)
         );
     }
+    console.log(base, cache, image);
 
     $: {
         if (base && cache && image) {
-            let ext = image.split('.').pop()?.toLowerCase();
+            ext = image.split('.').pop()?.toLowerCase();
 
             orig = `${base}/${image}`;
 
@@ -71,10 +73,16 @@
         opacity: 1;
     }
     .image.upload {
-        @apply flex flex-shrink mx-auto w-full justify-center items-center;
+        @apply flex flex-shrink w-full justify-center items-center;
         flex: 0 0 33%;
         max-width: 25rem;
         max-height: 13rem;
+    }
+    .image.multiple.upload {
+        height: 10rem;
+        width: 10rem;
+        max-width: 10rem;
+        max-height: 10rem;
     }
 
     img {
@@ -139,6 +147,7 @@
     class="image {$$props.class !== undefined ? $$props.class : ''}"
     class:empty={!image}
     class:upload
+    class:multiple
     class:hover>
     {#if loading}
         {_('Loading ...')}
@@ -160,8 +169,6 @@
                 <span class="icobtn">{_('View')}</span>
             </button>
         </div>
-    {:else if altempty}
-        <img src="{altempty}{querystring}" alt={_('Default image')} />
     {:else}
         <div class="empty">
             <div

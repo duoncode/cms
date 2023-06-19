@@ -1,7 +1,7 @@
 export interface File {
     file: string;
-    alt: string | Record<string, string>;
-    title: string | Record<string, string>;
+    alt?: string | Record<string, string>;
+    title?: string | Record<string, string>;
 }
 
 export interface TranslatedFile {
@@ -15,10 +15,10 @@ export interface TextData {
     value: string | Record<string, string>;
 }
 
-export interface ImageData {
+export interface FileData {
     type: 'picture' | 'image';
     files: File[] | Record<string, TranslatedFile>;
 }
 
-export type Data = TextData | ImageData;
+export type Data = TextData | FileData;
 export type Document = Record<string, Data>;

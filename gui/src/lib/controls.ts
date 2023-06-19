@@ -1,5 +1,5 @@
 import Date from '$shell/controls/Date.svelte';
-// import File from '$shell/controls/File.svelte';
+import File from '$shell/controls/File.svelte';
 // import Grid from '$shell/controls/Grid.svelte';
 import Hidden from '$shell/controls/Hidden.svelte';
 import Html from '$shell/controls/Html.svelte';
@@ -12,7 +12,7 @@ import Time from '$shell/controls/Time.svelte';
 
 export default {
     'Conia\\Core\\Field\\Date': Date,
-    // 'Conia\\Core\\Field\\File': File,
+    'Conia\\Core\\Field\\File': File,
     // 'Conia\\Core\\Field\\Grid': Grid,
     'Conia\\Core\\Field\\Hidden': Hidden,
     'Conia\\Core\\Field\\Html': Html,

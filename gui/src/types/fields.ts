@@ -9,9 +9,12 @@ export interface SimpleField {
     translate: boolean;
 }
 
-export interface ImageField extends SimpleField {
+export interface FileField extends SimpleField {
     multiple: boolean;
+}
+
+export interface ImageField extends FileField {
     translateImage: boolean;
 }
 
-export type Field = ImageField | SimpleField;
+export type Field = ImageField | FileField | SimpleField;
