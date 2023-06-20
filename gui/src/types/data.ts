@@ -25,5 +25,34 @@ export interface FileData {
     files: File[] | Record<string, TranslatedFile>;
 }
 
+export interface GridBase {
+    colspan: number;
+    rowspan: number;
+}
+
+export interface GridHtml extends GridBase {
+    type: 'html';
+    value: string;
+}
+
+export interface GridImage extends GridBase {
+    type: 'image';
+    files: TranslatedFile[];
+}
+
+export interface GridYoutube extends GridBase {
+    type: 'image';
+    files: TranslatedFile[];
+}
+
+export type GridItem = GridHtml | GridImage | GridYoutube;
+
+export interface GridData {
+    type: 'grid';
+    i18n: 'separate';
+    columns: number;
+    [key: string]: string | number | GridItem[];
+}
+
 export type Data = TextData | FileData;
 export type Document = Record<string, Data>;

@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { system, type Locale } from '$lib/sys';
-import type { Field, SimpleField, ImageField } from '$types/fields';
+import type { Field, SimpleField, ImageField, GridField } from '$types/fields';
 import type {
     File,
     Document,
@@ -8,6 +8,7 @@ import type {
     NumberData,
     FileData,
     TranslatedFile,
+    GridItem,
 } from '$types/data';
 
 function fillTranslatedImageField(data: FileData, locales: Locale[]) {
@@ -131,6 +132,24 @@ function fillTextField(data: TextData, field: SimpleField, locales: Locale[]) {
     return data;
 }
 
+function fillGridField(data: TextData, field: SimpleField, locales: Locale[]) {
+    if (!data) {
+        data = {
+            type: 'grid',
+            columns: 12,
+            i18n: 'separate',
+        } as GridData;
+    }
+
+    locales.map((locale: Locale) => {
+        if (data[locale.id] === undefined) {
+            data[locale.id] = [] as GridItem;
+        }
+    });
+
+    return data;
+}
+
 export function fillMissingAttrs(fields: Field[], data: Document) {
     const locales = get(system).locales;
     const content = data.content;
@@ -160,6 +179,13 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
                 break;
             case 'Conia\\Core\\Field\\Number':
                 content[field.name] = fillNumberField(fieldData as NumberData);
+                break;
+            case 'Conia\\Core\\Field\\Grid':
+                content[field.name] = fillGridField(
+                    fieldData as NumberData,
+                    field as GridField,
+                    locales,
+                );
                 break;
         }
     });

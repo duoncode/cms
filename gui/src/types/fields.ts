@@ -17,4 +17,9 @@ export interface ImageField extends FileField {
     translateImage: boolean;
 }
 
+export interface GridField extends SimpleField {
+    columns: number;
+    i18n: 'separate';
+}
+
 export type Field = ImageField | FileField | SimpleField;
