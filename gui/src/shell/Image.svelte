@@ -73,8 +73,6 @@
     }
     .image.upload {
         @apply flex flex-shrink w-full justify-center items-center;
-        flex: 0 0 33%;
-        max-width: 25rem;
         max-height: 13rem;
     }
     .image.multiple.upload {
@@ -90,7 +88,7 @@
     }
 
     .overlay {
-        @apply flex flex-row items-center justify-evenly;
+        @apply flex flex-row items-center justify-center gap-6;
         @apply invisible opacity-0;
         @apply absolute top-1 bottom-1 left-1 right-1;
         transition: visibility 0.1s, opacity 0.2s linear;
@@ -155,37 +153,23 @@
     class:hover>
     {#if loading}
         {_('Loading ...')}
-    {:else if orig}
-        <img src="{thumb}{querystring}" alt={_('-thumbnail-')} />
+    {:else}
+        <img src="{thumb}{querystring}" alt={_('Vorschau')} />
         <div class="overlay">
             {#if remove}
                 <button class="text-orange-600" on:click={remove}>
                     <span class="ico">
                         <IcoTrash />
                     </span>
-                    <span class="icobtn">{_('Delete')}</span>
+                    <span class="icobtn">{_('löschen')}</span>
                 </button>
             {/if}
             <button class="icon-sky-600" on:click={preview}>
                 <span class="ico">
                     <IcoEye /><br />
                 </span>
-                <span class="icobtn">{_('View')}</span>
+                <span class="icobtn">{_('anzeigen')}</span>
             </button>
-        </div>
-    {:else}
-        <div class="empty">
-            <div class="stacked-icons ban inline-block relative">
-                <div
-                    class="inner absolute inset-0 flex justify-center items-center">
-                    <IcoCamera />
-                </div>
-                <div
-                    class="outer absolute inset-0 flex justify-center items-center">
-                    <IcoCircleSlash />
-                </div>
-            </div>
-            <p>{_('No image')}</p>
         </div>
     {/if}
     {#if ext}

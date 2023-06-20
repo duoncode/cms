@@ -32,11 +32,12 @@
     const dispatch = createEventDispatcher();
     const { open, close } = getContext('simple-modal');
 
-    function remove(item) {
-        if (item === null) {
-            assets[0] = null;
+    function remove(index: number) {
+        if (index === null) {
+            assets = [];
         } else {
-            console.log('TODO delete from asset array');
+            assets.splice(index, 1);
+            assets = assets;
         }
         setDirty();
         dispatch('dirty');
@@ -177,15 +178,13 @@
 
     .dragdrop {
         @apply flex flex-1 justify-center items-center;
-        @apply bg-gray-100 py-4 px-2 mt-2;
+        @apply bg-gray-100 py-4 px-2;
         @apply border-2 border-dashed border-gray-300 rounded-md;
         @apply text-center align-middle;
         @apply md:mt-0 md:h-auto;
 
         &.asset,
         &.image {
-            @apply md:ml-2;
-
             &.multiple {
                 @apply md:ml-0;
             }
@@ -225,60 +224,64 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline && !label}>
-        {#if multiple && image}
-            <div class="multiple-images">
-                {#if assets}
-                    {#each assets as asset}
-                        <Image
-                            upload
-                            {multiple}
-                            base={url}
-                            {cache}
-                            image={asset.file}
-                            remove={() => remove(asset)}
-                            {querystring}
-                            {useThumb}
-                            {loading}
-                            {size} />
-                    {/each}
+        {#if assets}
+            {#if multiple && image}
+                {#if assets && assets.length > 0}
+                    <div class="multiple-images">
+                        {#each assets as asset, index}
+                            <Image
+                                upload
+                                {multiple}
+                                base={url}
+                                {cache}
+                                image={asset.file}
+                                remove={() => remove(index)}
+                                {querystring}
+                                {useThumb}
+                                {loading}
+                                {size} />
+                        {/each}
+                    </div>
                 {/if}
-            </div>
-        {:else if !multiple && image}
-            <Image
-                upload
-                base={url}
-                {cache}
-                {multiple}
-                image={assets[0] && assets[0].file}
-                remove={() => remove(null)}
-                {querystring}
-                {useThumb}
-                {loading}
-                {size} />
-        {:else if multiple && file}
-            TODO
-        {:else if !multiple && !image}
-            <File base={url} asset={assets[0]} />
+            {:else if !multiple && image && assets && assets.length > 0}
+                <Image
+                    upload
+                    base={url}
+                    {cache}
+                    {multiple}
+                    image={assets[0] && assets[0].file}
+                    remove={() => remove(null)}
+                    {querystring}
+                    {useThumb}
+                    {loading}
+                    {size} />
+            {:else if multiple && file}
+                TODO
+            {:else if !multiple && !image}
+                <File base={url} asset={assets[0]} />
+            {/if}
         {/if}
-        <label
-            class="dragdrop"
-            class:dragging
-            class:multiple
-            class:image
-            for={name}
-            on:drop|preventDefault={onFile(getFilesFromDrop)}
-            on:dragover|preventDefault={startDragging}
-            on:dragleave|preventDefault={stopDragging}>
-            <div>
-                <IcoUpload /><br />
-                {_('Drag and Drop Dateien')}
-                {@html _('or <u>browse</u>.')}
-            </div>
-            <input
-                type="file"
-                id={name}
-                {multiple}
-                on:input={onFile(getFilesFromInput)} />
-        </label>
+        {#if !assets || assets.length === 0 || multiple}
+            <label
+                class="dragdrop"
+                class:dragging
+                class:multiple
+                class:image
+                for={name}
+                on:drop|preventDefault={onFile(getFilesFromDrop)}
+                on:dragover|preventDefault={startDragging}
+                on:dragleave|preventDefault={stopDragging}>
+                <div>
+                    <span class="inline-block w-6 h-6 mt-4"><IcoUpload /></span>
+                    {_('Neue Dateien per Drag and Drop hier einfügen')}
+                    {@html _('oder <u>auswählen</u>.')}
+                </div>
+                <input
+                    type="file"
+                    id={name}
+                    {multiple}
+                    on:input={onFile(getFilesFromInput)} />
+            </label>
+        {/if}
     </div>
 {/if}

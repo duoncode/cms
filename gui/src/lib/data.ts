@@ -9,6 +9,7 @@ import type {
     FileData,
     TranslatedFile,
     GridItem,
+    GridData,
 } from '$types/data';
 
 function fillTranslatedImageField(data: FileData, locales: Locale[]) {
@@ -107,9 +108,22 @@ function fillNumberField(data: NumberData) {
     return data;
 }
 
-function fillTextField(data: TextData, field: SimpleField, locales: Locale[]) {
+function fillTextField(
+    data: TextData,
+    field: SimpleField,
+    locales: Locale[],
+    type: string,
+) {
     if (!data) {
-        data = {} as TextData;
+        data = {
+            type: {
+                'Conia\\Core\\Field\\Text': 'text',
+                'Conia\\Core\\Field\\Html': 'html',
+                'Conia\\Core\\Field\\Hidden': 'hidden',
+                'Conia\\Core\\Field\\Date': 'date',
+                'Conia\\Core\\Field\\Time': 'time',
+            }[type],
+        } as TextData;
     }
 
     if (field.translate) {
@@ -131,7 +145,7 @@ function fillTextField(data: TextData, field: SimpleField, locales: Locale[]) {
     return data;
 }
 
-function fillGridField(data: TextData, field: SimpleField, locales: Locale[]) {
+function fillGridField(data: GridData, field: SimpleField, locales: Locale[]) {
     if (!data) {
         data = {
             type: 'grid',
@@ -174,6 +188,7 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
                     fieldData as TextData,
                     field as SimpleField,
                     locales,
+                    field.type,
                 );
                 break;
             case 'Conia\\Core\\Field\\Number':
@@ -181,7 +196,7 @@ export function fillMissingAttrs(fields: Field[], data: Document) {
                 break;
             case 'Conia\\Core\\Field\\Grid':
                 content[field.name] = fillGridField(
-                    fieldData as NumberData,
+                    fieldData as GridData,
                     field as GridField,
                     locales,
                 );
