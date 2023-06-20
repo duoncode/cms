@@ -49,6 +49,10 @@
     }
 
     .wysiwyg-dropdown-button {
+        margin-left: 1px;
+    }
+
+    .wysiwyg-dropdown-button {
         @apply inline-flex justify-center w-full;
         @apply px-4 py-2 bg-white text-sm;
         @apply font-medium text-gray-700 hover:bg-gray-50;
