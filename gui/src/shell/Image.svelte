@@ -38,7 +38,6 @@
             a.slice(a.length - 1)
         );
     }
-    console.log(base, cache, image);
 
     $: {
         if (base && cache && image) {
@@ -98,22 +97,25 @@
         background: rgba(0, 0, 0, 0.3);
     }
 
-    div[class^='icon-'] {
+    button[class^='icon-'] {
         cursor: pointer;
-        flex: 0 0 3rem;
     }
 
     .ico {
-        display: block;
+        @apply flex justify-center items-center;
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 100%;
-        height: 3rem;
+        height: 2.5rem;
+        width: 2.5rem;
         font-size: 1.6rem;
-        padding-top: 0.3rem;
+
+        :global(svg) {
+            height: 1.25rem;
+        }
     }
 
     .icobtn {
-        @apply text-xs text-white;
+        @apply text-xs text-white text-center;
         text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
     }
 
