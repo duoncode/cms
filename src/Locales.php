@@ -136,10 +136,10 @@ class Locales implements Iterator
         }
 
         // From the locales the browser says the user accepts
-        $locale = $this->fromBrowser();
-        if ($locale && $this->exists($locale)) {
-            return $locales[$locale];
-        }
+        // $locale = $this->fromBrowser();
+        // if ($locale && $this->exists($locale)) {
+        //    return $locales[$locale];
+        // }
 
         return $default;
     }
