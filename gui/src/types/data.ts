@@ -43,7 +43,7 @@ export interface GridImage extends GridBase {
 
 export interface GridYoutube extends GridBase {
     type: 'youtube';
-    files: TranslatedFile[];
+    id: string;
 }
 
 export type GridItem = GridHtml | GridImage | GridYoutube;

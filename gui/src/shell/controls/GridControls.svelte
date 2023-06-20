@@ -24,7 +24,7 @@
     }
 
     function add() {
-        dispatch('addcontent', { doc, item });
+        dispatch('addcontent', { data, item });
     }
 
     function up() {
