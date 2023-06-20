@@ -1,6 +1,8 @@
 <script lang="ts">
+    import { flip } from 'svelte/animate';
     import type { GridItem } from '$types/data';
     import type { GridField } from '$types/fields';
+    import GridControls from './GridControls.svelte';
     import GridImage from './GridImage.svelte';
     import GridHtml from './GridHtml.svelte';
     import GridYoutube from './GridYoutube.svelte';
@@ -16,13 +18,18 @@
     };
 </script>
 
-<div class="grid grid-cols-12">
-    {#each data as item, index}
-        <svelte:component
-            this={controls[item.type]}
-            data={item}
-            {node}
-            {index}
-            {field} />
+<div class="grid grid-cols-12 gap-y-2 gap-x-6">
+    {#each data as item, index (item)}
+        <div
+            class="col-span-{item.colspan} row-span-{item.rowspan}"
+            animate:flip={{ duration: 300 }}>
+            <GridControls bind:data {index} {item} />
+            <svelte:component
+                this={controls[item.type]}
+                bind:item
+                {node}
+                {index}
+                {field} />
+        </div>
     {/each}
 </div>

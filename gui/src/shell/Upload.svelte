@@ -5,6 +5,7 @@
     import { _ } from '$lib/locale';
     import { setDirty, error } from '$lib/state';
     import toast from '$lib/toast';
+    import type { FileData } from '$types/data';
     import Image from '$shell/Image.svelte';
     import File from '$shell/File.svelte';
     import Dialog from '$shell/Dialog.svelte';
@@ -15,7 +16,7 @@
     export let cache: string;
     export let image: boolean; // if present thumbs will be rendered
     export let name: string;
-    export let assets = null;
+    export let assets: FileData[];
     export let label = null;
     export let multiple = false;
     export let size = 'xl';
