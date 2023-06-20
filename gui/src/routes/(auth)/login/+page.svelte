@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from '$lib/locale';
-    import Logo from '$shell/Logo.svelte';
+    // import Logo from '$shell/Logo.svelte';
     import { loginUser } from '$lib/user';
 
     export let message = '';
@@ -31,13 +31,11 @@
 <div
     class="flex min-h-full flex-col justify-center py-12 bg-gray-50 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">
-        <div class="mx-auto h-16 w-auto">
-            <Logo />
+        <div class="mx-auto w-auto">
+            <img
+                style="width: 10rem; display: block; margin: 0 auto;"
+                src="/images/logo.png" />
         </div>
-        <h2
-            class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            {_('Sign in to your account')}
-        </h2>
     </div>
 
     {#if message}
@@ -57,7 +55,7 @@
                     <label
                         for="login"
                         class="block text-sm font-medium leading-6 text-gray-900">
-                        {_('Username or email')}
+                        {_('Benutzername oder E-Mail-Adresse')}
                     </label>
                     <div class="mt-2">
                         <input
@@ -74,7 +72,7 @@
                     <label
                         for="password"
                         class="block text-sm font-medium leading-6 text-gray-900">
-                        {_('Password')}
+                        {_('Passwort')}
                     </label>
                     <div class="mt-2">
                         <input
@@ -99,14 +97,14 @@
                         <label
                             for="rememberme"
                             class="ml-3 block text-sm leading-6 text-gray-900"
-                            >{_('Remember me')}</label>
+                            >{_('Angemeldet bleiben')}</label>
                     </div>
 
                     <div class="text-sm leading-6 mt-4 sm:mt-0">
                         <a
                             href="/panel/forgot"
                             class="font-semibold text-gray-600 hover:text-gray-500">
-                            {_('Forgot your password?')}
+                            {_('Passwort vergessen?')}
                         </a>
                     </div>
                 </div>
@@ -120,13 +118,14 @@
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            class="w-6 h-6"
                             stroke-width="2">
                             <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
-                        Sign in
+                        Anmelden
                     </button>
                 </div>
             </form>

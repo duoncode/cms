@@ -12,6 +12,7 @@
 
 <style lang="postcss">
     #nav {
+        @apply ml-8;
         display: flex;
         width: var(--s-64);
         flex-direction: column;
@@ -21,33 +22,24 @@
         padding: 0 var(--s-6) var(--s-6);
         box-sizing: border-box;
         transition: all 0.25s ease-in-out;
-        margin-left: calc(var(--s-64) * -1);
 
         &.open {
             margin-left: 0;
         }
     }
 
-    @media (--lg) {
-        #nav {
-            position: relative;
-            margin-left: 0;
-        }
-    }
-
     h2 {
-        @apply font-bold mt-4;
+        @apply font-medium mt-8;
     }
 </style>
 
 <div id="nav" class:open={$navVisible}>
     <NavLogo />
 
-    <p class="mt-8"><a href="/panel">Dashboard</a></p>
     <h2>Inhalte</h2>
-    <ul>
+    <ul class="ml-4">
         {#each collections as collection}
-            <li>
+            <li class="my-3">
                 <a href="/panel/collection/{collection.slug}">
                     {collection.title}
                 </a>
@@ -55,6 +47,6 @@
         {/each}
     </ul>
     <div class="mt-4">
-        <button on:click={logoutUser}>Logout</button>
+        <button class="font-medium" on:click={logoutUser}>Logout</button>
     </div>
 </div>

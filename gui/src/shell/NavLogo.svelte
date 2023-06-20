@@ -26,6 +26,9 @@
 </style>
 
 <div class="logo">
-    <Logo width />
-    <span>CONIA</span>
+    <!--<Logo width />
+    <span>CONIA</span> -->
+    <img
+        style="width: 80%; display: inline-block; margin: 0 auto;"
+        src="/images/logo.png" />
 </div>
