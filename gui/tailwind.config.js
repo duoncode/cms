@@ -5,4 +5,5 @@ export default {
         extend: {},
     },
     plugins: [require('@tailwindcss/forms')],
+    safelist: [{ pattern: /^col-span-/ }, { pattern: /^row-span-/ }],
 };
