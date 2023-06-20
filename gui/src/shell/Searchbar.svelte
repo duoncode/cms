@@ -54,10 +54,12 @@
             margin-left: var(--s-2);
 
             border-radius: var(--radius-full);
+            @apply border text-gray-500 border-gray-400;
 
             svg {
                 margin: 0;
                 box-shadow: none;
+                @apply h-6 w-6;
             }
         }
     }
