@@ -38,7 +38,6 @@ class Node
             'uid' => $uid,
             'published' => $published,
             'deleted' => $deleted,
-            'kind' => 'page',
         ]);
     }
 

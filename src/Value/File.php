@@ -68,7 +68,7 @@ class File extends Value
 
     public function count(): int
     {
-        return count($this->data['files']);
+        return count($this->data['files'] ?? []);
     }
 
     public function isset(): bool
