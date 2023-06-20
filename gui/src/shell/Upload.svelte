@@ -168,7 +168,7 @@
     }
 
     .multiple-images {
-        @apply flex flex-row justify-start gap-4 py-4;
+        @apply flex flex-row flex-wrap justify-start gap-4 py-4;
     }
 
     .form-label {

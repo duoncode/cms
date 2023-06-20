@@ -26,6 +26,7 @@ export interface FileData {
 }
 
 export interface GridBase {
+    type: string;
     colspan: number;
     rowspan: number;
 }
@@ -41,7 +42,7 @@ export interface GridImage extends GridBase {
 }
 
 export interface GridYoutube extends GridBase {
-    type: 'image';
+    type: 'youtube';
     files: TranslatedFile[];
 }
 

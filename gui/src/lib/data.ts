@@ -43,7 +43,6 @@ function fillTranslatedAltField(data: FileData, locales: Locale[]) {
     }
 
     (data.files as File[]).map((file: File) => {
-        console.log(file);
         if (file.alt === undefined) {
             file.alt = {};
         }
