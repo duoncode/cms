@@ -3,6 +3,8 @@
 
     export let data;
 
+    let searchTerm = '';
+
     function fmtDate(d: string) {
         const date = new Date(d);
 
@@ -14,6 +16,20 @@
             minute: '2-digit',
         });
     }
+
+    function search(searchTerm: string) {
+        return node => {
+            if (searchTerm.length > 0) {
+                return node.title
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+            }
+
+            return true;
+        };
+    }
+
+    $: nodes = data.nodes.filter(search(searchTerm));
 </script>
 
 <style lang="postcss">
@@ -28,8 +44,11 @@
         @apply text-sm text-gray-900 sm:pl-6 lg:pl-8;
     }
 
-    tr:hover td {
-        @apply bg-white text-red-600;
+    tr:hover {
+        td,
+        td a {
+            @apply bg-white text-red-600;
+        }
     }
 
     svg {
@@ -40,7 +59,7 @@
 </style>
 
 <div class="flex flex-col h-full">
-    <Searchbar />
+    <Searchbar bind:searchTerm />
     <h1 class="py-4 px-8 text-xl font-medium">
         {data.title}
     </h1>
@@ -63,7 +82,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {#each data.nodes as node}
+                            {#each nodes as node}
                                 <tr>
                                     <td class="font-medium">
                                         <a
@@ -78,7 +97,7 @@
                                     <td class="relative">
                                         <a
                                             href="/panel/collection/{data.slug}/{node.uid}"
-                                            class="text-red-600 hover:text-red-900 flex flex-row items-center">
+                                            class="hover:text-red-900 flex flex-row items-center">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 height="1em"

@@ -14,6 +14,8 @@ export const load = async ({ params, parent }) => {
 
         return {
             collection,
+            title: response.data.title,
+            uid: response.data.uid,
             node: { fields, data },
         };
     }

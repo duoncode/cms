@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import NavToggle from './NavToggle.svelte';
+
+    export let searchTerm: string;
 </script>
 
 <style lang="postcss">
@@ -80,7 +82,10 @@
                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                     clip-rule="evenodd" />
             </svg>
-            <input type="text" placeholder={_('Suche')} />
+            <input
+                type="text"
+                placeholder={_('Suche')}
+                bind:value={searchTerm} />
         </div>
         <button>
             <svg

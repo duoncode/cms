@@ -30,8 +30,7 @@
 </style>
 
 <div class="flex flex-col h-full">
-    <NodeControlBar uid={data.node.uid} title={data.node.title} />
-
+    <NodeControlBar bind:uid={data.node.uid} />
     <div
         class="breadcrumbs w-full max-w-7xl mx-auto my-8 flex flex-row items-center gap-3">
         <IcoDocumentTree />
@@ -44,7 +43,7 @@
             </a>
         </span>
         <IcoChevronRight />
-        <span class="font-medium">{data.node.title}</span>
+        <span class="font-medium">{data.title}</span>
     </div>
 
     <div class="flex-1 overflow-y-auto">
