@@ -68,7 +68,7 @@
                                     <td class="font-medium">
                                         <a
                                             href="/panel/collection/{data.slug}/{node.uid}">
-                                            {node.title}
+                                            {@html node.title}
                                         </a>
                                     </td>
                                     <td>{node.type}</td>
