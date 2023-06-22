@@ -29,17 +29,6 @@ class Panel
 
     public function boot(): array
     {
-        $tag = $this->registry->tag(Collection::class);
-        $collections = [];
-
-        foreach ($tag->entries() as $id) {
-            $collection = $tag->get($id);
-            $collections[] = [
-                'slug' => $id,
-                'title' => $collection->title(),
-            ];
-        }
-
         $locales = $this->config->locales();
         $localesList = array_map(
             function ($locale) {
@@ -60,7 +49,6 @@ class Panel
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
-            'collections' => $collections,
             'logo' => $this->config->get('panel.logo', null),
         ];
     }
@@ -79,6 +67,23 @@ class Panel
         }
 
         return Response::fromFactory($factory)->file($this->panelIndex);
+    }
+
+    #[Permission('panel')]
+    public function collections(): array
+    {
+        $tag = $this->registry->tag(Collection::class);
+        $collections = [];
+
+        foreach ($tag->entries() as $id) {
+            $collection = $tag->get($id);
+            $collections[] = [
+                'slug' => $id,
+                'title' => $collection->title(),
+            ];
+        }
+
+        return $collections;
     }
 
     #[Permission('panel')]
