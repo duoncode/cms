@@ -12,7 +12,7 @@ if (browser) {
 }
 
 class Response {
-    constructor(public ok: boolean, public data: any) {}
+    constructor(public ok: boolean, public data: any) { }
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -63,8 +63,13 @@ async function fetchit(
     path: string,
     params: Record<string, string>,
     options: RequestInit,
+    fetchFn: typeof window.fetch,
 ) {
     const url = new URL(`${panelApi}${path}`, domain);
+
+    if (fetchFn === null) {
+        fetchFn = window.fetch;
+    }
 
     if (params) {
         // dynamically append GET params when value is set
@@ -72,7 +77,7 @@ async function fetchit(
             if (params[key]) url.searchParams.append(key, params[key]);
         });
     }
-    const response = await fetch(url.href, options);
+    const response = await fetchFn(url.href, options);
 
     if (response.status >= 400 && response.status < 800) {
         let message: any;
@@ -98,28 +103,40 @@ async function fetchit(
     return new Response(true, await response.json());
 }
 
-async function get(url: string, params?: Record<string, string>) {
+async function get(
+    url: string,
+    params?: Record<string, string>,
+    fetchFn: typeof window.fetch = null,
+) {
     const options = getBodyOptions('GET');
 
-    return fetchit(url, params, options);
+    return fetchit(url, params, options, fetchFn);
 }
 
-async function post(url: string, data = {}) {
+async function post(
+    url: string,
+    data = {},
+    fetchFn: typeof window.fetch = null,
+) {
     const options = getBodyOptions('POST', data);
 
-    return fetchit(url, {}, options);
+    return fetchit(url, {}, options, fetchFn);
 }
 
-async function put(url: string, data = {}) {
+async function put(
+    url: string,
+    data = {},
+    fetchFn: typeof window.fetch = null,
+) {
     const options = getBodyOptions('PUT', data);
 
-    return fetchit(url, {}, options);
+    return fetchit(url, {}, options, fetchFn);
 }
 
-async function del(url: string) {
+async function del(url: string, fetchFn: typeof window.fetch = null) {
     const options = getBodyOptions('DELETE');
 
-    return fetchit(url, {}, options);
+    return fetchit(url, {}, options, fetchFn);
 }
 
 export default {
