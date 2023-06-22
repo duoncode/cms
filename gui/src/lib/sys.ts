@@ -18,23 +18,31 @@ export interface Locale {
 }
 
 export interface System {
+    initialized: boolean;
     debug: boolean;
     env: string;
     csrfToken: string;
     collections: Collection[];
-    types: Type[];
     locale: string;
     locales: Locale[];
     logo?: string;
 }
 
-export const system: Writable<System | null> = writable(null);
+export const system: Writable<System> = writable({
+    initialized: false,
+    debug: false,
+    env: 'production',
+    csrfToken: '',
+    collections: [],
+    locale: 'en',
+    locales: [],
+});
 
-export const setup = async () => {
+export const setup = async (fetchFn: typeof window.fetch) => {
     const sys = get(system);
 
-    if (sys === null) {
-        const response = await req.get('boot');
+    if (!sys.initialized) {
+        const response = await req.get('boot', {}, fetchFn);
 
         if (!response.ok) {
             throw new Error('Fatal error while requesting settings');
@@ -42,10 +50,10 @@ export const setup = async () => {
 
         const data = response.data;
         const sys = {
+            initialized: true,
             debug: data.debug as boolean,
             env: data.env as string,
             csrfToken: data.csrfToken as string,
-            types: data.types as Type[],
             collections: data.collections as Collection[],
             locale: data.locale as string,
             locales: data.locales as Locale[],

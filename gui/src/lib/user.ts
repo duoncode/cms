@@ -10,7 +10,7 @@ async function loginUser(login: string, password: string, rememberme: boolean) {
     const resp = await req.post('login', { login, password, rememberme });
 
     if (resp.ok) {
-        await loadUser();
+        await loadUser(window.fetch);
         goto(get(rememberedRoute));
 
         return true;
@@ -32,8 +32,8 @@ async function logoutUser() {
     }
 }
 
-async function loadUser() {
-    const resp = await req.get('me');
+async function loadUser(fetchFn: typeof window.fetch) {
+    const resp = await req.get('me', {}, fetchFn);
 
     if (resp.ok) {
         authenticated.set(true);
