@@ -1,3 +1,4 @@
+import { get } from 'svelte/store';
 import req from '$lib/req';
 import { writable, type Writable } from 'svelte/store';
 
@@ -16,43 +17,45 @@ export interface Locale {
     fallback?: string;
 }
 
-export class System {
+export interface System {
     debug: boolean;
     env: string;
-    panelPath: string;
     csrfToken: string;
     collections: Collection[];
     types: Type[];
     locale: string;
     locales: Locale[];
-
-    async boot() {
-        const response = await req.get('boot');
-
-        if (response.ok) {
-            const data = response.data;
-
-            this.debug = data.debug as boolean;
-            this.env = data.env as string;
-            this.panelPath = data.panelPath as string;
-            this.csrfToken = data.csrfToken as string;
-            this.types = data.types as Type[];
-            this.collections = data.collections as Collection[];
-            this.locale = data.locale as string;
-            this.locales = data.locales as Locale[];
-        } else {
-            throw new Error('Fatal error while requesting settings');
-        }
-    }
+    logo?: string;
 }
 
 export const system: Writable<System | null> = writable(null);
 
 export const setup = async () => {
-    const sys = new System();
+    const sys = get(system);
 
-    await sys.boot();
-    system.set(sys);
+    if (sys === null) {
+        const response = await req.get('boot');
+
+        if (!response.ok) {
+            throw new Error('Fatal error while requesting settings');
+        }
+
+        const data = response.data;
+        const sys = {
+            debug: data.debug as boolean,
+            env: data.env as string,
+            csrfToken: data.csrfToken as string,
+            types: data.types as Type[],
+            collections: data.collections as Collection[],
+            locale: data.locale as string,
+            locales: data.locales as Locale[],
+            logo: data.logo as string,
+        };
+
+        system.set(sys);
+
+        return sys;
+    }
 
     return sys;
 };

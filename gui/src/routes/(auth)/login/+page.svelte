@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from '$lib/locale';
-    // import Logo from '$shell/Logo.svelte';
+    import { system } from '$lib/sys';
+    import Logo from '$shell/Logo.svelte';
     import { loginUser } from '$lib/user';
 
     export let message = '';
@@ -30,13 +31,22 @@
 
 <div
     class="flex min-h-full flex-col justify-center py-12 bg-gray-50 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">
-        <div class="mx-auto w-auto">
-            <img
-                style="width: 10rem; display: block; margin: 0 auto;"
-                src="/images/logo.png" />
+    {#if $system.logo}
+        <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">
+            <div class="mx-auto w-auto">
+                <img
+                    style="width: 10rem; display: block; margin: 0 auto;"
+                    src={$system.logo}
+                    alt="Panel Logo" />
+            </div>
         </div>
-    </div>
+    {:else}
+        <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">
+            <div class="mx-auto h-16 w-auto">
+                <Logo />
+            </div>
+        </div>
+    {/if}
 
     {#if message}
         <div

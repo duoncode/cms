@@ -21,3 +21,7 @@ Test database:
 to allow recreation via command RecreateDb:
 
     ALTER USER conia_user SUPERUSER;
+
+System Requirements:
+
+    apt install php8.2 php8.2-pgsql php8.2-gd php8.2-xml

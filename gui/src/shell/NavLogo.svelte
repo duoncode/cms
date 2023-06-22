@@ -1,5 +1,6 @@
 <script>
     import Logo from './Logo.svelte';
+    import { system } from '$lib/sys';
 </script>
 
 <style lang="postcss">
@@ -26,9 +27,13 @@
 </style>
 
 <div class="logo">
-    <!--<Logo width />
-    <span>CONIA</span> -->
-    <img
-        style="width: 80%; display: inline-block; margin: 0 auto;"
-        src="/images/logo.png" />
+    {#if $system.logo}
+        <img
+            style="width: 80%; display: inline-block; margin: 0 auto;"
+            src={$system.logo}
+            alt="Panel Logo" />
+    {:else}
+        <Logo width />
+        <span>CONIA</span>
+    {/if}
 </div>

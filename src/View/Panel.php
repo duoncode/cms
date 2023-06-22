@@ -27,7 +27,6 @@ class Panel
         $this->panelIndex = $this->publicPath . '/panel/index.html';
     }
 
-    #[Permission('panel')]
     public function boot(): array
     {
         $tag = $this->registry->tag(Collection::class);
@@ -58,11 +57,11 @@ class Panel
         return [
             'locales' => $localesList,
             'locale' => $locales->getDefault()->id,
-            'panelPath' => $this->config->getPanelPath(),
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
             'collections' => $collections,
+            'logo' => $this->config->get('panel.logo', null),
         ];
     }
 
