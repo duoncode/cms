@@ -6,8 +6,7 @@
     import NavClose from './NavClose.svelte';
     import NavToggle from './NavToggle.svelte';
     import NavLogo from './NavLogo.svelte';
-
-    export let collections: Collection[];
+    import { collections } from '$lib/collections';
 </script>
 
 <style lang="postcss">
@@ -38,7 +37,7 @@
 
     <h2>Inhalte</h2>
     <ul class="ml-4">
-        {#each collections as collection}
+        {#each $collections as collection}
             <li class="my-3">
                 <a href="/panel/collection/{collection.slug}">
                     {collection.title}
