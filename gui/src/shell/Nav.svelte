@@ -1,10 +1,6 @@
 <script lang="ts">
-    import type { Collection } from '$lib/sys';
     import { logoutUser } from '$lib/user';
     import { navVisible } from '$lib/ui';
-    import Backdrop from './Backdrop.svelte';
-    import NavClose from './NavClose.svelte';
-    import NavToggle from './NavToggle.svelte';
     import NavLogo from './NavLogo.svelte';
     import { collections } from '$lib/collections';
 </script>
