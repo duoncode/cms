@@ -92,6 +92,7 @@ class Panel
         return [
             'title' => $obj->title(),
             'slug' => $collection,
+            'headings' => $obj->headings(),
             'nodes' => $obj->listing(),
         ];
     }

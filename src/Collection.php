@@ -20,23 +20,40 @@ abstract class Collection
         return preg_replace('/(?<!^)[A-Z]/', ' $0', static::class);
     }
 
+    /**
+     * Returns an array of columns with column definitions.
+     *
+     * Each column array must have the fields `title` and `field`
+     */
+    public function columns(): array
+    {
+        return [
+            Column::new('Titel', 'title')->bold(),
+            Column::new('Seitentyp', 'type'),
+            Column::new('Editor', 'title'),
+            Column::new('Bearbeitet', 'title'),
+            Column::new('Erstellt', 'title'),
+        ];
+    }
+
+    public function headings(): array
+    {
+        return array_map(function (Column $column) {
+            return $column->title;
+        }, $this->columns());
+    }
+
     public function listing(): array
     {
         return array_map(function ($node) {
             return [
                 'uid' => $node->meta('uid'),
-                'title' => $node->title(),
-                'type' => $node->type(),
-                'changed' => $node->meta('changed'),
-                'created' => $node->meta('created'),
-                'editor' => (
-                    $node->meta('editor_data')['name'] ??
-                    $node->meta('editor_username')
-                ) ?? $node->meta('editor_email'),
-                'creator' => (
-                    $node->meta('creator_data')['name'] ??
-                    $node->meta('creator_username')
-                ) ?? $node->meta('creator_email'),
+                'columns' => array_map(
+                    function (Column $column) use ($node) {
+                        return $column->get($node);
+                    },
+                    $this->columns()
+                ),
             ];
         }, iterator_to_array($this->entries()));
     }
