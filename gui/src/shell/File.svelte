@@ -1,6 +1,7 @@
 <script>
     import { _ } from '$lib/locale';
     import IcoDownload from '$shell/icons/IcoDownload.svelte';
+    import Link from '$shell/Link.svelte';
 
     export let base;
     export let asset;
@@ -18,8 +19,8 @@
 </style>
 
 {#if asset}
-    <a class="file" href="{base}/{asset}" target="_blank">
+    <Link class="file" href="{base}/{asset}" target="_blank">
         <IcoDownload />
         <span>{_('Download file')}</span>
-    </a>
+    </Link>
 {/if}

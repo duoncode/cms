@@ -2,11 +2,6 @@ import { get } from 'svelte/store';
 import req from '$lib/req';
 import { writable, type Writable } from 'svelte/store';
 
-export interface Collection {
-    title: string;
-    id: string;
-}
-
 export interface Type {
     name: string;
 }
@@ -22,7 +17,6 @@ export interface System {
     debug: boolean;
     env: string;
     csrfToken: string;
-    collections: Collection[];
     locale: string;
     locales: Locale[];
     logo?: string;
@@ -33,7 +27,6 @@ export const system: Writable<System> = writable({
     debug: false,
     env: 'production',
     csrfToken: '',
-    collections: [],
     locale: 'en',
     locales: [],
 });
@@ -54,7 +47,6 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             debug: data.debug as boolean,
             env: data.env as string,
             csrfToken: data.csrfToken as string,
-            collections: data.collections as Collection[],
             locale: data.locale as string,
             locales: data.locales as Locale[],
             logo: data.logo as string,

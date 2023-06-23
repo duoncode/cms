@@ -2,6 +2,7 @@
     import NodeControlBar from '$shell/NodeControlBar.svelte';
     import IcoChevronRight from '$shell/icons/IcoChevronRight.svelte';
     import IcoDocumentTree from '$shell/icons/IcoDocumentTree.svelte';
+    import Link from '$shell/Link.svelte';
     import controls from '$lib/controls';
 
     export let data;
@@ -36,11 +37,11 @@
         <IcoDocumentTree />
         <IcoChevronRight />
         <span>
-            <a
-                href="/panel/collection/{data.collection.slug}"
+            <Link
+                href="collection/{data.collection.slug}"
                 class="hover:underline">
                 {data.collection.title}
-            </a>
+            </Link>
         </span>
         <IcoChevronRight />
         <span class="font-medium">{data.title}</span>

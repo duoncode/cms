@@ -1,8 +1,9 @@
 <script lang="ts">
     import { logoutUser } from '$lib/user';
     import { navVisible } from '$lib/ui';
-    import NavLogo from './NavLogo.svelte';
     import { collections } from '$lib/collections';
+    import NavLogo from '$shell/NavLogo.svelte';
+    import Link from '$shell/Link.svelte';
 </script>
 
 <style lang="postcss">
@@ -35,9 +36,9 @@
     <ul class="ml-4">
         {#each $collections as collection}
             <li class="my-3">
-                <a href="/panel/collection/{collection.slug}">
+                <Link href="collection/{collection.slug}">
                     {collection.title}
-                </a>
+                </Link>
             </li>
         {/each}
     </ul>

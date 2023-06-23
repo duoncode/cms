@@ -1,3 +1,4 @@
+import { base } from '$app/paths';
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { fetchCollections } from '$lib/collections';
@@ -7,8 +8,8 @@ export const load = async ({ fetch }) => {
     await loadUser(fetch);
 
     if (get(authenticated)) {
-        fetchCollections(fetch);
+        await fetchCollections(fetch);
     } else {
-        goto('/panel/login');
+        goto(`${base}/login`);
     }
 };

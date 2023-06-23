@@ -1,15 +1,12 @@
+import { base } from '$app/paths';
 import { browser } from '$app/environment';
 import { get as getStore } from 'svelte/store';
 import { system } from '$lib/sys';
 
-let domain: string;
-const panelApi = '/panel/api/';
-
-if (browser) {
-    domain = `${window.location.protocol}//${window.location.host}`;
-} else {
-    domain = '';
-}
+const panelApi = `${base}/api/`;
+const domain = browser
+    ? `${window.location.protocol}/${window.location.host}`
+    : '';
 
 class Response {
     constructor(public ok: boolean, public data: any) { }

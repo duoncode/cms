@@ -1,10 +1,11 @@
+import { base } from '$app/paths';
 import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import req from './req';
 
 const authenticated = writable(false);
 const user = writable(null);
-const rememberedRoute = writable('/panel');
+const rememberedRoute = writable(base);
 
 async function loginUser(login: string, password: string, rememberme: boolean) {
     const resp = await req.post('login', { login, password, rememberme });
@@ -25,7 +26,7 @@ async function logoutUser() {
 
     if (resp.ok) {
         user.set(null);
-        goto('/panel/login');
+        goto(`${base}/login`);
     } else {
         authenticated.set(true);
         throw 'Error while logging out';

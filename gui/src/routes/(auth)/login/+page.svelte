@@ -1,8 +1,9 @@
 <script lang="ts">
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
-    import Logo from '$shell/Logo.svelte';
     import { loginUser } from '$lib/user';
+    import Logo from '$shell/Logo.svelte';
+    import Link from '$shell/Link.svelte';
 
     export let message = '';
 
@@ -113,11 +114,11 @@
                     </div>
 
                     <div class="text-sm leading-6 mt-4 sm:mt-0">
-                        <a
-                            href="/panel/forgot"
+                        <Link
+                            href="forgot"
                             class="font-semibold text-gray-600 hover:text-gray-500">
                             {_('Passwort vergessen?')}
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
