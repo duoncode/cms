@@ -12,7 +12,7 @@ use Conia\Core\Locales;
 class Config
 {
     public readonly Locales $locales;
-    protected string $panelPath = 'panel';
+    protected string $panelPath = '/panel';
     protected ?string $panelTheme = null;
     protected Closure $languageNegotiator;
     private bool $debugPanel = false;

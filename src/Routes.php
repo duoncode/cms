@@ -31,8 +31,8 @@ class Routes
             'conia.panel.',
         );
 
-        $app->route('/panel/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')->middleware(Middleware\InitRequest::class);
-        $app->route('/panel', [Panel::class, 'index'], 'conia.panel')->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')->middleware(Middleware\InitRequest::class);
 
         // Add catchall for page url paths. Must be the last one
         $app->route(
@@ -51,10 +51,10 @@ class Routes
 
     protected function addUser(Group $api): void
     {
-        $api->get('users', [User::class, 'list'], 'users');
-        $api->get('user/{uid}', [User::class, 'get'], 'user.get');
-        $api->post('user', [User::class, 'create'], 'user.create');
-        $api->put('user/{uid}', [User::class, 'save'], 'user.save');
+        $api->get('/users', [User::class, 'list'], 'users');
+        $api->get('/user/{uid}', [User::class, 'get'], 'user.get');
+        $api->post('/user', [User::class, 'create'], 'user.create');
+        $api->put('/user/{uid}', [User::class, 'save'], 'user.save');
     }
 
     protected function addSystem(Group $api): void
