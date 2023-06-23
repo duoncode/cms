@@ -11,6 +11,7 @@ final class Column
     private bool|Closure $bold = false;
     private bool|Closure $italic = false;
     private bool|Closure $badge = false;
+    private bool $date = false;
     private string|Closure $color = '';
 
     public function __construct(
@@ -26,23 +27,30 @@ final class Column
         return new self($title, $field);
     }
 
-    public function bold(bool $bold = true): self
+    public function bold(bool|Closure $bold): self
     {
         $this->bold = $bold;
 
         return $this;
     }
 
-    public function italic(bool $italic = true): self
+    public function italic(bool|Closure $italic): self
     {
         $this->italic = $italic;
 
         return $this;
     }
 
-    public function badge(bool $badge = true): self
+    public function badge(bool|Closure $badge): self
     {
         $this->badge = $badge;
+
+        return $this;
+    }
+
+    public function date(bool|Closure $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
@@ -56,6 +64,7 @@ final class Column
             'bold' => is_bool($this->bold) ? $this->bold : ($this->bold)($node),
             'italic' => is_bool($this->italic) ? $this->italic : ($this->italic)($node),
             'badge' => is_bool($this->badge) ? $this->badge : ($this->badge)($node),
+            'date' => is_bool($this->date) ? $this->date : ($this->date)($node),
             'color' => is_string($this->color) ? $this->color : ($this->color)($node),
         ];
     }

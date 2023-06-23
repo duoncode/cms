@@ -28,15 +28,15 @@ abstract class Collection
     public function columns(): array
     {
         return [
-            Column::new('Titel', 'title')->bold(),
+            Column::new('Titel', 'title')->bold(true),
             Column::new('Seitentyp', 'type'),
             Column::new('Editor', 'title'),
-            Column::new('Bearbeitet', 'title'),
-            Column::new('Erstellt', 'title'),
+            Column::new('Bearbeitet', 'title')->date(true),
+            Column::new('Erstellt', 'title')->date(true),
         ];
     }
 
-    public function headings(): array
+    public function header(): array
     {
         return array_map(function (Column $column) {
             return $column->title;
