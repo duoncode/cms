@@ -57,3 +57,24 @@ export interface GridData {
 
 export type Data = TextData | FileData;
 export type Document = Record<string, Data>;
+
+export interface Column {
+    value: string | boolean | number;
+    bold: boolean;
+    italic: boolean;
+    badge: boolean;
+    date: boolean;
+    color: string;
+}
+
+export interface Node {
+    uid: string;
+    columns: Column[];
+}
+
+export interface Collection {
+    title: string;
+    slug: string;
+    header: string[];
+    nodes: Node[];
+}

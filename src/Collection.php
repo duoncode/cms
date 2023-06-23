@@ -31,8 +31,8 @@ abstract class Collection
             Column::new('Titel', 'title')->bold(true),
             Column::new('Seitentyp', 'type'),
             Column::new('Editor', 'title'),
-            Column::new('Bearbeitet', 'title')->date(true),
-            Column::new('Erstellt', 'title')->date(true),
+            Column::new('Bearbeitet', 'changed')->date(true),
+            Column::new('Erstellt', 'created')->date(true),
         ];
     }
 
