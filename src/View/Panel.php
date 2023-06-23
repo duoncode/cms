@@ -16,7 +16,6 @@ use Conia\Core\Middleware\Permission;
 class Panel
 {
     protected string $publicPath;
-    protected string $panelIndex;
 
     public function __construct(
         protected readonly Request $request,
@@ -24,7 +23,6 @@ class Panel
         protected readonly Registry $registry,
     ) {
         $this->publicPath = $config->get('path.public');
-        $this->panelIndex = $this->publicPath . '/panel/index.html';
     }
 
     public function boot(): array
@@ -55,7 +53,7 @@ class Panel
 
     public function index(Factory $factory): Response
     {
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::fromFactory($factory)->file($this->getPanelIndex());
     }
 
     public function catchall(Factory $factory, string $slug): Response
@@ -66,7 +64,7 @@ class Panel
             return Response::fromFactory($factory)->file($file);
         }
 
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::fromFactory($factory)->file($this->getPanelIndex());
     }
 
     #[Permission('panel')]
@@ -109,5 +107,10 @@ class Panel
             'fields' => $node->fields(),
             'data' => $node->data(),
         ];
+    }
+
+    protected function getPanelIndex(): string
+    {
+        return $this->publicPath . $config->getPanelPath() . '/index.html';
     }
 }
