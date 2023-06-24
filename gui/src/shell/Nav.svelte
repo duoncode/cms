@@ -8,16 +8,16 @@
 
 <style lang="postcss">
     #nav {
-        @apply ml-8;
+        width: 16rem;
+        margin-left: -16rem;
         display: flex;
-        width: var(--s-64);
         flex-direction: column;
         height: 100vh;
         background-color: var(--white);
         border-right: var(--border);
         padding: 0 var(--s-6) var(--s-6);
         box-sizing: border-box;
-        transition: all 0.25s ease-in-out;
+        transition: all 0.15s ease-in-out;
 
         &.open {
             margin-left: 0;
