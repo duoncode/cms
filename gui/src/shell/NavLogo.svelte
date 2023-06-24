@@ -1,5 +1,5 @@
-<script>
-    import Logo from './Logo.svelte';
+<script lang="ts">
+    import Logo from '$shell/Logo.svelte';
     import { system } from '$lib/sys';
 </script>
 
@@ -33,7 +33,7 @@
             src={$system.logo}
             alt="Panel Logo" />
     {:else}
-        <Logo width />
+        <Logo />
         <span>CONIA</span>
     {/if}
 </div>
