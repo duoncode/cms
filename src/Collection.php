@@ -14,6 +14,7 @@ abstract class Collection
     }
 
     abstract public function entries(): Nodes;
+    abstract public function newEntryNodes(): array;
 
     public function title(): string
     {
