@@ -26,6 +26,7 @@ abstract class Node
     public readonly Request $request;
     public readonly Config $config;
     protected static string $name = '';
+    protected static string $displayName = '';
     protected static string $template = '';
     protected static array $permissions = [];
     protected static int $columns = 12;
@@ -117,6 +118,11 @@ abstract class Node
      */
     abstract public function title(): string;
 
+    public static function displayName(): string
+    {
+        return static::$displayName ?: static::className();
+    }
+
     public static function columns(): int
     {
         if (static::$columns < 12 || static::$columns > 25) {
@@ -184,8 +190,8 @@ abstract class Node
 
         return match ($request->method()) {
             'GET' => $this->get(),
-            'POST' => $this->post(),
-            'PUT' => $this->put(),
+            'POST' => $this->create(),
+            'PUT' => $this->save(),
             'DELETE' => $this->delete(),
             default => throw new HttpBadRequest(),
         };
@@ -196,12 +202,12 @@ abstract class Node
         return $this->render();
     }
 
-    public function post(): Response
+    public function create(): Response
     {
         throw new HttpBadRequest();
     }
 
-    public function put(): Response
+    public function save(): Response
     {
         throw new HttpBadRequest();
     }
