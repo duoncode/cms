@@ -49,7 +49,7 @@
 
     <div class="flex-1 overflow-y-auto">
         <div
-            class="max-w-7xl bg-white border border-gray-200 mb-12 shadow rounded mx-auto">
+            class="max-w-7xl bg-white border border-gray-200 mb-12 shadow mx-auto">
             <div class="field-grid">
                 {#each data.node.fields as field}
                     <div
