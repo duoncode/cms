@@ -158,6 +158,25 @@ abstract class Node
         throw new RuntimeException('No url path found');
     }
 
+    public function order(): ?array
+    {
+        return $this->fields;
+    }
+
+    public function fields(): array
+    {
+        $fields = [];
+        $orderedFields = $this->order();
+        $missingFields = array_diff($this->fields, $orderedFields);
+        $allFields = array_merge($orderedFields, $missingFields);
+
+        foreach ($allFields as $fieldName) {
+            $fields[] = $this->{$fieldName}->asArray();
+        }
+
+        return $fields;
+    }
+
     public function response(): array|Response
     {
         $request = $this->request;
@@ -185,14 +204,9 @@ abstract class Node
         return $this->render();
     }
 
-    public function create(): Response
-    {
-        throw new HttpBadRequest();
-    }
-
     public function change(): array
     {
-        if ($this->request->header('Accept') !== 'application/json') {
+        if ($this->request->header('Content-Type') !== 'application/json') {
             throw new HttpBadRequest();
         }
 
@@ -229,23 +243,24 @@ abstract class Node
         ];
     }
 
-    public function order(): ?array
+    public function create(): Response
     {
-        return $this->fields;
+        $request = $this->request;
+
+        return match ($request->header('Content-Type')) {
+            'application/x-www-form-urlencoded' => $this->formPost($request->form()),
+            'application/json' => $this->jsonPost($request->json()),
+        };
     }
 
-    public function fields(): array
+    protected function jsonPost(?array $body): Response
     {
-        $fields = [];
-        $orderedFields = $this->order();
-        $missingFields = array_diff($this->fields, $orderedFields);
-        $allFields = array_merge($orderedFields, $missingFields);
+        return $this->read();
+    }
 
-        foreach ($allFields as $fieldName) {
-            $fields[] = $this->{$fieldName}->asArray();
-        }
-
-        return $fields;
+    protected function formPost(?array $body): Response
+    {
+        return $this->read();
     }
 
     protected function render(array $context = []): Response
