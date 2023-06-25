@@ -4,7 +4,8 @@ const { subscribe, update, set } = writable([] as Toast[]);
 
 export interface Toast {
     kind: 'success' | 'error';
-    message: string;
+    title?: string;
+    message?: string;
 }
 
 export function remove(toast: Toast) {

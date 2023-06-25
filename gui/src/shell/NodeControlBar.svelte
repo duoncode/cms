@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Document } from '$types/data';
     import { _ } from '$lib/locale';
+    import toast from '$lib/toast';
     import req from '$lib/req';
     import NavToggle from '$shell/NavToggle.svelte';
     import Button from '$shell/Button.svelte';
@@ -18,9 +19,21 @@
         if (uid === '-new-') {
             req.post(`node/${uid}`, doc);
         } else {
-            let data = await req.put(`node/${uid}`, doc);
+            let response = await req.put(`node/${uid}`, doc);
 
-            console.log(data);
+            if (response.ok) {
+                toast.add({
+                    kind: 'success',
+                    message: _('Dokument erfolgreich gespeichert!'),
+                });
+            } else {
+                toast.add({
+                    kind: 'success',
+                    message: _(
+                        'Fehler beim Speichern des Dokuments aufgetreten!',
+                    ),
+                });
+            }
         }
     }
 </script>

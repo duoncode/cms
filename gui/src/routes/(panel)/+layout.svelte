@@ -1,6 +1,7 @@
 <script>
     import Modal from 'svelte-simple-modal';
     import Nav from '$shell/Nav.svelte';
+    import Toasts from '$shell/Toasts.svelte';
 
     export let data;
 </script>
@@ -12,4 +13,5 @@
             <slot />
         </main>
     </div>
+    <Toasts />
 </Modal>
