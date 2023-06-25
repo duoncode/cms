@@ -8,6 +8,8 @@ use Conia\Core\Finder\Nodes;
 
 abstract class Collection
 {
+    protected static string $slug = '';
+
     public function __construct(
         public readonly Finder $find,
     ) {
@@ -57,5 +59,10 @@ abstract class Collection
                 ),
             ];
         }, iterator_to_array($this->entries()));
+    }
+
+    public static function slug(): string
+    {
+        return static::$slug ?: strtolower(basename(str_replace('\\', '/', static::class)));
     }
 }
