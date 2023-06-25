@@ -12,7 +12,6 @@ use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Exception\ValueError;
 use Conia\Core\Finder;
 use Conia\Core\Locale;
 use Conia\Core\Value\Value;
@@ -25,11 +24,16 @@ abstract class Node
 
     public readonly Request $request;
     public readonly Config $config;
-    protected static string $name = '';
-    protected static string $displayName = '';
+    protected static string $name = ''; // The public name of the node type
+    protected static string $route = '/{slug}'; // The route pattern of node instances
+    protected static string $slug = ''; // The slug which is used to address the node type in the panel
     protected static string $template = '';
-    protected static array $permissions = [];
-    protected static int $columns = 12;
+    protected static array $permissions = [
+        'read' => 'everyone',
+        'create' => 'authenticated',
+        'change' => 'authenticated',
+        'delete' => 'authenticated',
+    ];
     protected readonly Database $db;
     protected readonly Registry $registry;
     protected array $fieldSets = [];
@@ -111,6 +115,11 @@ abstract class Node
     {
     }
 
+    public static function className(): string
+    {
+        return basename(str_replace('\\', '/', static::class));
+    }
+
     /**
      * Should return the general title of the node.
      *
@@ -118,37 +127,23 @@ abstract class Node
      */
     abstract public function title(): string;
 
-    public static function displayName(): string
+    public static function name(): string
     {
-        return static::$displayName ?: static::className();
+        return static::$name ?: static::className();
     }
 
-    public static function columns(): int
+    public static function slug(): string
     {
-        if (static::$columns < 12 || static::$columns > 25) {
-            throw new ValueError('The value of $columns must be >= 12 and <= 25');
+        return static::$slug ?: strtolower(static::className());
+    }
+
+    public static function template(): ?string
+    {
+        if (!empty(static::$template)) {
+            return static::$template;
         }
 
-        return static::$columns;
-    }
-
-    public static function className(): string
-    {
-        return basename(str_replace('\\', '/', static::class));
-    }
-
-    public function type(): string
-    {
-        return static::className();
-    }
-
-    public static function name(): ?string
-    {
-        if (!empty(static::$name)) {
-            return static::$name;
-        }
-
-        return strtolower(static::className());
+        return static::slug();
     }
 
     public function uid(): string
@@ -175,29 +170,20 @@ abstract class Node
         throw new RuntimeException('No url path found');
     }
 
-    public static function template(): ?string
-    {
-        if (!empty(static::$template)) {
-            return static::$template;
-        }
-
-        return static::name();
-    }
-
     public function response(): Response
     {
         $request = $this->request;
 
         return match ($request->method()) {
-            'GET' => $this->get(),
+            'GET' => $this->read(),
             'POST' => $this->create(),
-            'PUT' => $this->save(),
+            'PUT' => $this->change(),
             'DELETE' => $this->delete(),
             default => throw new HttpBadRequest(),
         };
     }
 
-    public function get(): Response
+    public function read(): Response
     {
         return $this->render();
     }
@@ -207,7 +193,7 @@ abstract class Node
         throw new HttpBadRequest();
     }
 
-    public function save(): Response
+    public function change(): Response
     {
         throw new HttpBadRequest();
     }
