@@ -10,6 +10,7 @@ import type {
     TranslatedFile,
     GridItem,
     GridData,
+    Content,
 } from '$types/data';
 
 function fillTranslatedImageField(data: FileData, locales: Locale[]) {
@@ -165,7 +166,7 @@ function fillGridField(data: GridData, field: SimpleField, locales: Locale[]) {
 
 export function fillMissingAttrs(fields: Field[], data: Document) {
     const locales = get(system).locales;
-    const content = data.content;
+    const content: Content = data.content;
 
     fields.map((field: Field) => {
         const fieldData = content[field.name];

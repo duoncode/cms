@@ -1,3 +1,5 @@
+import type { Field } from '$types/fields';
+
 export interface File {
     file?: string;
     alt?: string | Record<string, string>;
@@ -55,8 +57,8 @@ export interface GridData {
     [key: string]: string | number | GridItem[];
 }
 
-export type Data = TextData | FileData;
-export type Document = Record<string, Data>;
+export type Data = TextData | FileData | GridData | NumberData;
+export type Content = Record<string, Data>;
 
 export interface Column {
     value: string | boolean | number;
@@ -67,7 +69,7 @@ export interface Column {
     color: string;
 }
 
-export interface Node {
+export interface ListedNode {
     uid: string;
     columns: Column[];
 }
@@ -76,5 +78,40 @@ export interface Collection {
     name: string;
     slug: string;
     header: string[];
-    nodes: Node[];
+    nodes: ListedNode[];
+}
+
+export interface Document {
+    uid: string;
+    published: boolean;
+    hidden: boolean;
+    locked: boolean;
+    created: string;
+    changed: string;
+    deleted: null | string;
+    type: string;
+    classname: string;
+    paths: Record<string, string>;
+    content: Content;
+    creator_uid: string;
+    creator_email: string;
+    creator_username: string;
+    creator_data: {
+        name: string;
+    };
+    editor_uid: string;
+    editor_email: string;
+    editor_username: string;
+    editor_data: {
+        name: string;
+    };
+}
+
+export interface Node {
+    collection: Collection;
+    title: string;
+    uid: string;
+    fields: Field[];
+    doc: Document;
+    routeId: string;
 }

@@ -1,8 +1,10 @@
-import { writable, derived, get } from 'svelte/store';
+import { writable, derived, type Writable } from 'svelte/store';
 import toast from '$lib/toast';
+import type { Node } from '$types/data';
 
 const pristine = writable(true);
 const dirty = derived(pristine, $pristine => !$pristine);
+const currentNode: Writable<null | Node> = writable(null);
 
 function setDirty() {
     pristine.set(false);
@@ -31,4 +33,4 @@ function error(message: string) {
     });
 }
 
-export { pristine, dirty, setDirty, setPristine, success, error };
+export { pristine, dirty, setDirty, setPristine, success, error, currentNode };

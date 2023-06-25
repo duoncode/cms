@@ -1,5 +1,5 @@
 SELECT
-    n.node,
+    -- n.node,
     n.uid,
     n.published,
     n.hidden,
