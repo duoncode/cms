@@ -102,12 +102,7 @@ class Panel
     {
         $node = $find->node->byUid($uid);
 
-        return [
-            'title' => $node->title(),
-            'uid' => $node->meta('uid'),
-            'fields' => $node->fields(),
-            'data' => $node->data(),
-        ];
+        return $node->response();
     }
 
     protected function getPanelIndex(): string

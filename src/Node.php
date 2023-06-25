@@ -158,7 +158,7 @@ abstract class Node
         throw new RuntimeException('No url path found');
     }
 
-    public function response(): Response
+    public function response(): array|Response
     {
         $request = $this->request;
 
@@ -171,8 +171,17 @@ abstract class Node
         };
     }
 
-    public function read(): Response
+    public function read(): array|Response
     {
+        if ($this->request->header('Accept') === 'application/json') {
+            return [
+                'title' => $this->title(),
+                'uid' => $this->meta('uid'),
+                'fields' => $this->fields(),
+                'data' => $this->data(),
+            ];
+        }
+
         return $this->render();
     }
 
@@ -183,7 +192,11 @@ abstract class Node
 
     public function change(): Response
     {
-        throw new HttpBadRequest();
+        if ($this->request->header('Accept') !== 'application/json') {
+            throw new HttpBadRequest();
+        }
+
+        error_log(print_r($this->request->json(), true));
     }
 
     public function delete(): Response
