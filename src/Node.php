@@ -190,13 +190,27 @@ abstract class Node
         throw new HttpBadRequest();
     }
 
-    public function change(): Response
+    public function change(): array
     {
         if ($this->request->header('Accept') !== 'application/json') {
             throw new HttpBadRequest();
         }
 
-        error_log(print_r($this->request->json(), true));
+        $data = $this->request->json();
+
+        $this->db->nodes->change([
+            'uid' => $data['uid'],
+            'hidden' => $data['hidden'],
+            'published' => $data['published'],
+            'locked' => $data['published'],
+            'content' => json_encode($data['content']),
+            'editor' => $this->request->get('session')->authenticatedUserId(),
+        ])->run();
+
+        return [
+            'success' => true,
+            'error' => false,
+        ];
     }
 
     public function delete(): Response

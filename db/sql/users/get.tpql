@@ -1,4 +1,5 @@
 SELECT
+    u.usr,
     u.uid,
     u.username,
     u.email,
@@ -32,12 +33,12 @@ WHERE
 
 <?php if (isset($login)) : ?>
     (u.email = :login OR u.username = :login)
-<?php else: ?>
-    <?php if (isset($sessionhash)) : ?>
+<?php elseif (isset($sessionhash)): ?>
     s.hash = :sessionhash
-    <?php else: ?>
+<?php elseif (isset($usr)): ?>
+    u.usr = :usr
+<?php else: ?>
     u.uid = :uid
-    <?php endif ?>
 <?php endif ?>
 
     AND u.userrole != 'system'

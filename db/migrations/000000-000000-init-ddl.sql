@@ -168,7 +168,7 @@ BEGIN
             FROM conia.menuitems mi
             WHERE
                 mi.data->>'type' = 'node'
-                AND mi.data->>'node' = OLD.node
+                AND mi.data->'node' = OLD.node
         ) > 0
     )
     THEN

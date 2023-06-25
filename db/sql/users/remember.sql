@@ -1,9 +1,7 @@
 INSERT INTO conia.loginsessions
     (hash, usr, expires)
-SELECT
-    :hash, u.usr, (:expires)::timestamptz
-FROM conia.users u
-WHERE u.uid = :user
+VALUES
+    (:hash, :user, (:expires)::timestamptz)
 
 ON CONFLICT (usr) DO
 

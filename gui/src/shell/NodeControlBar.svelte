@@ -1,18 +1,27 @@
 <script lang="ts">
+    import type { Document } from '$types/data';
     import { _ } from '$lib/locale';
+    import req from '$lib/req';
     import NavToggle from '$shell/NavToggle.svelte';
     import Button from '$shell/Button.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoSave from '$shell/icons/IcoSave.svelte';
 
+    export let doc: Document;
     export let uid: string;
 
     function remove() {
         console.log('remove' + uid);
     }
 
-    function save() {
-        console.log('save' + uid);
+    async function save() {
+        if (uid === '-new-') {
+            req.post(`node/${uid}`, doc);
+        } else {
+            let data = await req.put(`node/${uid}`, doc);
+
+            console.log(data);
+        }
     }
 </script>
 
