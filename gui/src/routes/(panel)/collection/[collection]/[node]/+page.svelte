@@ -10,7 +10,7 @@
 
     export let data: Node;
 
-    let activeTab = 'content';
+    let activeTab = 'settings';
 
     function changeTab(tab: string) {
         return () => {
