@@ -1,23 +1,16 @@
 <script lang="ts">
+    import type { Node } from '$types/data';
     import { _ } from '$lib/locale';
-    import controls from '$lib/controls';
     import NodeControlBar from '$shell/NodeControlBar.svelte';
     import IcoChevronRight from '$shell/icons/IcoChevronRight.svelte';
     import IcoDocumentTree from '$shell/icons/IcoDocumentTree.svelte';
     import Link from '$shell/Link.svelte';
+    import Content from './Content.svelte';
+    import Settings from './Settings.svelte';
 
-    export let data;
+    export let data: Node;
+
     let activeTab = 'content';
-
-    function fieldSpan(value: number | null) {
-        if (value) {
-            if (value > 100 || value <= 0) value = 100;
-
-            return `span ${value} / span ${value}`;
-        }
-
-        return 'span 100 / span 100';
-    }
 
     function changeTab(tab: string) {
         return () => {
@@ -80,28 +73,9 @@
             <div
                 class="max-w-7xl bg-white border border-gray-200 mb-12 shadow mx-auto">
                 {#if activeTab === 'content'}
-                    <div class="field-grid">
-                        {#each data.fields as field}
-                            <div
-                                style="
-                                    grid-column: {fieldSpan(field.width)};
-                                    grid-row: {fieldSpan(field.rows)}">
-                                {#if controls[field.type]}
-                                    <svelte:component
-                                        this={controls[field.type]}
-                                        {field}
-                                        node={data.doc.uid}
-                                        bind:data={data.doc.content[
-                                            field.name
-                                        ]} />
-                                {:else}
-                                    {field.type}
-                                {/if}
-                            </div>
-                        {/each}
-                    </div>
+                    <Content bind:fields={data.fields} bind:doc={data.doc} />
                 {:else}
-                    SETTINGS
+                    <Settings bind:doc={data.doc} />
                 {/if}
             </div>
         </div>
