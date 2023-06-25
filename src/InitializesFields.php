@@ -27,7 +27,6 @@ trait InitializesFields
     protected function initFields(): void
     {
         $rc = new ReflectionClass(static::class);
-        $isFieldSet = $this instanceof FieldSet;
 
         foreach ($rc->getProperties() as $property) {
             $name = $property->getName();
@@ -46,14 +45,6 @@ trait InitializesFields
                 $this->{$name} = $this->initField($property, $fieldType);
 
                 $this->fields[] = $name;
-            } elseif (is_subclass_of($fieldType, FieldSet::class)) {
-                if ($isFieldSet) {
-                    throw new RuntimeException('FieldSets cannot contain FieldSets');
-                }
-
-                $fs = new $fieldType($this, $this->data);
-                $this->fieldSets[] = $fs;
-                $this->{$name} = $fs;
             }
         }
 

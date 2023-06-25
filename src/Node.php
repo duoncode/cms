@@ -36,7 +36,6 @@ abstract class Node
     ];
     protected readonly Database $db;
     protected readonly Registry $registry;
-    protected array $fieldSets = [];
 
     final public function __construct(
         Context $context,
@@ -71,19 +70,8 @@ abstract class Node
     {
         $field = null;
         $type = $this::class;
-
-        if (isset($this->{$fieldName})) {
-            $field = $this->{$fieldName};
-            $value = $field->value();
-        } else {
-            foreach ($this->fieldSets as $fieldSet) {
-                if (isset($fieldSet->{$fieldName})) {
-                    $field = $fieldSet->{$fieldName};
-                    $value = $field->value();
-                    break;
-                }
-            }
-        }
+        $field = $this->{$fieldName};
+        $value = $field->value();
 
         if (is_null($field)) {
             throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
