@@ -28,7 +28,7 @@
     }
 
     .secondary {
-        @apply text-white bg-blue-800 border-blue-800;
+        @apply text-white bg-sky-800 border-sky-800;
     }
 </style>
 

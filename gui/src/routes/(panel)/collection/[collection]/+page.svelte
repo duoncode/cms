@@ -50,14 +50,8 @@
     tr:hover {
         td,
         td a {
-            @apply bg-green-100;
+            @apply bg-emerald-100;
         }
-    }
-
-    svg {
-        display: inline-block;
-        margin-right: 0.5rem;
-        color: red;
     }
 </style>
 

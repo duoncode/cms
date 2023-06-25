@@ -201,7 +201,7 @@
         @apply mb-2 inline;
     }
     :global(.dragdrop > div u) {
-        @apply text-blue-600;
+        @apply text-sky-700;
     }
     :global(.upload-image .preview) {
         @apply md:w-2/5;

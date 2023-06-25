@@ -55,7 +55,7 @@
 
     {#if message}
         <div
-            class="sm:mx-auto sm:w-full sm:max-w-md px-4 py-2 text-center mt-8 text-red-600 bg-red-200 border border-red-600 rounded">
+            class="sm:mx-auto sm:w-full sm:max-w-md px-4 py-2 text-center mt-8 text-rose-600 bg-rose-200 border border-rose-600 rounded">
             {message}
         </div>
     {/if}
@@ -118,7 +118,7 @@
                     <div class="text-sm leading-6 mt-4 sm:mt-0">
                         <Link
                             href="forgot"
-                            class="font-semibold text-gray-600 hover:text-gray-500">
+                            class="font-semibold text-emerald-700 underline">
                             {_('Passwort vergessen?')}
                         </Link>
                     </div>

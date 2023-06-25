@@ -14,7 +14,7 @@
     }
 
     button.active {
-        @apply bg-blue-600 text-white;
+        @apply bg-sky-700 text-white;
     }
 
     &.wysiwyg-inline {
@@ -57,7 +57,7 @@
         @apply px-4 py-2 bg-white text-sm;
         @apply font-medium text-gray-700 hover:bg-gray-50;
         @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-        @apply focus:ring-offset-gray-100 focus:ring-blue-500;
+        @apply focus:ring-offset-gray-100 focus:ring-sky-500;
     }
 
     .wysiwyg-dropdown-menu {

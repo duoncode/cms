@@ -129,7 +129,7 @@
             display: block;
         }
         &.ban .outer {
-            @apply text-red-300;
+            @apply text-rose-300;
 
             :global(svg) {
                 width: 100%;
@@ -157,14 +157,14 @@
         <img src="{thumb}{querystring}" alt={_('Vorschau')} />
         <div class="overlay">
             {#if remove}
-                <button class="text-orange-600" on:click={remove}>
+                <button class="text-rose-700" on:click={remove}>
                     <span class="ico">
                         <IcoTrash />
                     </span>
                     <span class="icobtn">{_('löschen')}</span>
                 </button>
             {/if}
-            <button class="icon-sky-600" on:click={preview}>
+            <button class="text-sky-700" on:click={preview}>
                 <span class="ico">
                     <IcoEye /><br />
                 </span>
@@ -174,7 +174,7 @@
     {/if}
     {#if ext}
         <span
-            class="absolute right-2 bottom-2 rounded text-white bg-orange-700 text-sm px-1"
+            class="absolute right-2 bottom-2 rounded text-white bg-rose-700 text-sm px-1"
             >{ext.toUpperCase()}</span>
     {/if}
 </div>

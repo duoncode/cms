@@ -9,8 +9,8 @@
 
 <style lang="postcss">
     a.file {
-        @apply bg-blue-100 border border-blue-300 p-1 text-center rounded-lg;
-        @apply relative flex flex-col items-center justify-center text-blue-600;
+        @apply bg-sky-100 border border-sky-300 p-1 text-center rounded-lg;
+        @apply relative flex flex-col items-center justify-center text-sky-600;
 
         span {
             @apply block mt-1 px-2;

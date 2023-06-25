@@ -26,7 +26,7 @@
     }
 
     input[required] {
-        @apply border-l-orange-600 border-l-4;
+        @apply border-l-rose-700 border-l-4;
     }
 }
 

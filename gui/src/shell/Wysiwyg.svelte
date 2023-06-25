@@ -277,8 +277,7 @@
                                 aria-expanded="true"
                                 aria-haspopup="true"
                                 on:click={clickDropdown(null)}>
-                                {_('Paragraph')}
-                                <!-- Heroicon name: solid/chevron-down -->
+                                {_('Absatz')}
                                 <svg
                                     class="-mr-1 ml-2 h-5 w-5"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -300,7 +299,6 @@
                                 aria-labelledby="menu-button"
                                 tabindex="-1">
                                 <div class="py-1" role="none">
-                                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                                     {#if toolbar === 'page'}
                                         <button
                                             on:click={clickDropdown(

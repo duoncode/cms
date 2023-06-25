@@ -11,28 +11,28 @@
     function getColor() {
         switch (type) {
             case 'success':
-                return 'bg-green-50 border-green-400';
+                return 'bg-emerald-50 border-emerald-400';
             case 'info':
-                return 'bg-blue-50 border-blue-400';
+                return 'bg-sky-50 border-sky-400';
             case 'hint':
             case 'warning':
                 return 'bg-yellow-50 border-yellow-400';
             case 'error':
-                return 'bg-red-50 border-red-400';
+                return 'bg-rose-50 border-rose-400';
         }
     }
 
     function getTextColor() {
         switch (type) {
             case 'success':
-                return 'text-green-700';
+                return 'text-emerald-700';
             case 'info':
-                return 'text-blue-700';
+                return 'text-sky-700';
             case 'hint':
             case 'warning':
                 return 'text-yellow-700';
             case 'error':
-                return 'text-red-700';
+                return 'text-rose-700';
         }
     }
 </script>
