@@ -77,7 +77,7 @@ class Panel
             $collection = $tag->get($id);
             $collections[] = [
                 'slug' => $id,
-                'title' => $collection->title(),
+                'name' => $collection->name(),
             ];
         }
 
@@ -90,7 +90,7 @@ class Panel
         $obj = $this->registry->tag(Collection::class)->get($collection);
 
         return [
-            'title' => $obj->title(),
+            'name' => $obj->name(),
             'slug' => $collection,
             'header' => $obj->header(),
             'nodes' => $obj->listing(),

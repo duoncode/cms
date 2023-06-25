@@ -3,7 +3,7 @@ import req from '$lib/req';
 
 export interface Collection {
     slug: string;
-    title: string;
+    name: string;
 }
 
 export const collections: Writable<Collection[]> = writable([]);

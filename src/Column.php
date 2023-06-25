@@ -85,7 +85,7 @@ final class Column
             case 'meta.deleted':
             case 'meta.content':
             case 'meta.type':
-                return $node->meta(explode('.', $field)[0]);
+                return $node->meta(explode('.', $field)[1]);
             case 'meta.class':
                 return $node::class;
             case 'meta.classname':

@@ -37,7 +37,7 @@
         {#each $collections as collection}
             <li class="my-3">
                 <Link href="collection/{collection.slug}">
-                    {collection.title}
+                    {collection.name}
                 </Link>
             </li>
         {/each}

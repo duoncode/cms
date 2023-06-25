@@ -23,8 +23,8 @@ class Grid extends Field
 
     public function columns(int $columns): static
     {
-        if ($columns < 12 || $columns > 25) {
-            throw new ValueError('The value of $columns must be >= 12 and <= 25');
+        if ($columns < 1 || $columns > 25) {
+            throw new ValueError('The value of $columns must be >= 1 and <= 25');
         }
 
         $this->columns = $columns;

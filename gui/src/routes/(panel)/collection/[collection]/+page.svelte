@@ -64,7 +64,7 @@
 <div class="flex flex-col h-full">
     <Searchbar bind:searchTerm />
     <h1 class="py-4 px-8 text-xl font-medium">
-        {data.title}
+        {data.name}
     </h1>
     <div class="flex-1 px-4 sm:px-6 lg:px-8 overflow-y-auto border-gray-200">
         <div class="flow-root">

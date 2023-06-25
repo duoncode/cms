@@ -73,7 +73,7 @@ export interface Node {
 }
 
 export interface Collection {
-    title: string;
+    name: string;
     slug: string;
     header: string[];
     nodes: Node[];

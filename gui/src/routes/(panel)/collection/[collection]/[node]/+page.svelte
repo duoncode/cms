@@ -40,7 +40,7 @@
             <Link
                 href="collection/{data.collection.slug}"
                 class="hover:underline">
-                {data.collection.title}
+                {data.collection.name}
             </Link>
         </span>
         <IcoChevronRight />

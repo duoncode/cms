@@ -8,6 +8,7 @@ use Conia\Core\Finder\Nodes;
 
 abstract class Collection
 {
+    protected static string $name = '';
     protected static string $slug = '';
 
     public function __construct(
@@ -18,9 +19,9 @@ abstract class Collection
     abstract public function entries(): Nodes;
     abstract public function newEntryNodes(): array;
 
-    public function title(): string
+    public function name(): string
     {
-        return preg_replace('/(?<!^)[A-Z]/', ' $0', static::class);
+        return static::$name ?: preg_replace('/(?<!^)[A-Z]/', ' $0', static::class);
     }
 
     /**
