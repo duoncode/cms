@@ -26,14 +26,21 @@ class Users
         ])->one();
     }
 
-    public function byId(string $uid): ?array
+    public function byUid(string $uid): ?array
     {
         return $this->db->users->get([
             'uid' => $uid,
         ])->one();
     }
 
-    public function remember(string $hash, string $userId, string $expires): bool
+    public function byId(int $id): ?array
+    {
+        return $this->db->users->get([
+            'usr' => $id,
+        ])->one();
+    }
+
+    public function remember(string $hash, int $userId, string $expires): bool
     {
         return $this->db->users->remember([
             'hash' => $hash,

@@ -21,12 +21,12 @@ class Session extends BaseSession
         $this->authCookie = $name ? $name . '_auth' : 'conia_auth';
     }
 
-    public function setUser(string $userId): void
+    public function setUser(int $userId): void
     {
         $_SESSION['user_id'] = $userId;
     }
 
-    public function authenticatedUserId(): ?string
+    public function authenticatedUserId(): ?int
     {
         return $_SESSION['user_id'] ?? null;
     }

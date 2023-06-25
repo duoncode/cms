@@ -23,13 +23,14 @@ class Auth
     public function logout(): void
     {
         $session = $this->session;
-        $session->forget();
         $hash = $this->getTokenHash();
 
         if ($hash) {
             $this->users->forget($hash);
             $session->forgetRemembered();
         }
+
+        $session->forget();
     }
 
     public function authenticate(
@@ -46,7 +47,7 @@ class Auth
 
         if (password_verify($password, $user['pwhash'])) {
             if ($initSession) {
-                $this->login($user['uid'], $remember);
+                $this->login($user['usr'], $remember);
             }
 
             unset($user['pwhash']);
@@ -80,7 +81,7 @@ class Auth
             $user = $this->users->bySession($hash);
 
             if ($user && !(strtotime($user['expires']) < time())) {
-                $this->login($user['uid'], false);
+                $this->login($user['usr'], false);
 
                 return $user;
             }
@@ -103,14 +104,14 @@ class Auth
         return $permissions->get($user['role']);
     }
 
-    protected function remember(string $userUid): RememberDetails
+    protected function remember(int $userId): RememberDetails
     {
         $token = new Token($this->config->get('app.secret'));
         $expires = time() + ($this->config->get('session.options', [])['cache_expire'] ?? 180);
 
         $remembered = $this->users->remember(
             $token->hash(),
-            $userUid,
+            $userId,
             Time::toIsoDateTime($expires),
         );
 
@@ -121,17 +122,17 @@ class Auth
         throw new RuntimeException('Could not remember user');
     }
 
-    protected function login(string $userUid, bool $remember): void
+    protected function login(int $userId, bool $remember): void
     {
         $session = $this->session;
 
         // Regenerate the session id before setting the user id
         // to mitigate session fixation attack.
         $session->regenerate();
-        $session->setUser($userUid);
+        $session->setUser($userId);
 
         if ($remember) {
-            $details = $this->remember($userUid);
+            $details = $this->remember($userId);
 
             if ($details) {
                 $session->remember(
@@ -146,7 +147,7 @@ class Auth
             $token = $session->getAuthToken();
 
             if ($token !== null) {
-                $this->users->forget($userUid);
+                $this->users->forget($token->hash());
             }
         }
     }
@@ -156,7 +157,7 @@ class Auth
         $token = $this->session->getAuthToken();
 
         if ($token) {
-            return (new Token($this->config->get('secret'), $token))->hash();
+            return (new Token($this->config->get('app.secret'), $token))->hash();
         }
 
         return null;
