@@ -213,9 +213,20 @@ abstract class Node
         ];
     }
 
-    public function delete(): Response
+    public function delete(): array
     {
-        throw new HttpBadRequest();
+        if ($this->request->header('Accept') !== 'application/json') {
+            throw new HttpBadRequest();
+        }
+
+        $this->db->nodes->delete([
+            'uid' => $this->uid(),
+        ])->run();
+
+        return [
+            'success' => true,
+            'error' => false,
+        ];
     }
 
     public function order(): ?array

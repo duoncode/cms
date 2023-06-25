@@ -49,7 +49,7 @@
             class="block toast pt-4 pb-5 px-4 mb-2 last:mb-4 relative"
             class:mr-4={!center}
             class:bg-emerald-600={toast.kind === 'success'}
-            class:bg-rose-600={toast.kind === 'error'}
+            class:bg-rose-700={toast.kind === 'error'}
             class:bg-yellow-500={toast.kind === 'warning'}
             animate:flip={{ duration: 150 }}
             in:receive={{ key: toast }}
@@ -57,7 +57,7 @@
             <Toast {toast} />
             {#if toast.kind === 'error'}
                 <span
-                    class="absolute top-2 right-3 rounded-full text-white cursor-pointer">
+                    class="absolute top-1 right-1 w-4 h-4 rounded-full text-white cursor-pointer">
                     <IcoTimes />
                 </span>
             {/if}

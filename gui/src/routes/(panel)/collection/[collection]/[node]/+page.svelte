@@ -34,7 +34,10 @@
     }
 </style>
 
-<NodeControlBar bind:uid={data.uid} bind:doc={data.doc} />
+<NodeControlBar
+    bind:uid={data.uid}
+    bind:doc={data.doc}
+    collectionPath="collection/{data.collection.slug}" />
 <div class="wrapper overflow-y-scroll">
     <div class="w-full max-w-7xl mx-auto px-8">
         <div class="breadcrumbs mt-8 mb-4 flex flex-row items-center gap-3">

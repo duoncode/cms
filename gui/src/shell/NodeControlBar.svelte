@@ -1,39 +1,41 @@
 <script lang="ts">
+    import { getContext } from 'svelte';
+    import type { Modal } from 'svelte-simple-modal';
     import type { Document } from '$types/data';
-    import { _ } from '$lib/locale';
-    import toast from '$lib/toast';
-    import req from '$lib/req';
     import NavToggle from '$shell/NavToggle.svelte';
     import Button from '$shell/Button.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoSave from '$shell/icons/IcoSave.svelte';
+    import ModalRemove from '$shell/modals/ModalRemove.svelte';
+    import node from '$lib/node';
 
     export let doc: Document;
     export let uid: string;
+    export let collectionPath: string;
 
-    function remove() {
-        console.log('remove' + uid);
+    const modal: Modal = getContext('simple-modal');
+
+    async function remove() {
+        modal.open(
+            ModalRemove,
+            {
+                close: modal.close,
+                proceed: () => {
+                    node.remove(uid, collectionPath);
+                    modal.close();
+                },
+            },
+            {
+                closeButton: false,
+            },
+        );
     }
 
     async function save() {
         if (uid === '-new-') {
-            req.post(`node/${uid}`, doc);
+            node.create(`node/${uid}`, doc);
         } else {
-            let response = await req.put(`node/${uid}`, doc);
-
-            if (response.ok) {
-                toast.add({
-                    kind: 'success',
-                    message: _('Dokument erfolgreich gespeichert!'),
-                });
-            } else {
-                toast.add({
-                    kind: 'success',
-                    message: _(
-                        'Fehler beim Speichern des Dokuments aufgetreten!',
-                    ),
-                });
-            }
+            node.save(uid, doc);
         }
     }
 </script>

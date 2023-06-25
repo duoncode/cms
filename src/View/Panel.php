@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
+use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Request;
@@ -102,7 +103,11 @@ class Panel
     {
         $node = $find->node->byUid($uid);
 
-        return $node->response();
+        if ($node) {
+            return $node->response();
+        }
+
+        throw new HttpNotFound();
     }
 
     protected function getPanelIndex(): string
