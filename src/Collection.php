@@ -32,10 +32,10 @@ abstract class Collection
     {
         return [
             Column::new('Titel', 'title')->bold(true),
-            Column::new('Seitentyp', 'type'),
-            Column::new('Editor', 'editor'),
-            Column::new('Bearbeitet', 'changed')->date(true),
-            Column::new('Erstellt', 'created')->date(true),
+            Column::new('Seitentyp', 'meta.name'),
+            Column::new('Editor', 'meta.editor'),
+            Column::new('Bearbeitet', 'meta.changed')->date(true),
+            Column::new('Erstellt', 'meta.created')->date(true),
         ];
     }
 

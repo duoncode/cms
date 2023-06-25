@@ -74,25 +74,28 @@ final class Column
         switch ($field) {
             case 'title':
                 return $node->title();
-            case 'type':
-                return $node->type();
-            case 'uid':
-            case 'published':
-            case 'hidden':
-            case 'locked':
-            case 'created':
-            case 'changed':
-            case 'deleted':
-            case 'content':
-            case 'type':
-            case 'classname':
-                return $node->meta($field);
-            case 'editor':
+            case 'meta.name':
+                return $node->name();
+            case 'meta.uid':
+            case 'meta.published':
+            case 'meta.hidden':
+            case 'meta.locked':
+            case 'meta.created':
+            case 'meta.changed':
+            case 'meta.deleted':
+            case 'meta.content':
+            case 'meta.type':
+                return $node->meta(explode('.', $field)[0]);
+            case 'meta.class':
+                return $node::class;
+            case 'meta.classname':
+                return $node::className();
+            case 'meta.editor':
                 return (
                     $node->meta('editor_data')['name'] ??
                     $node->meta('editor_username')
                 ) ?? $node->meta('editor_email');
-            case 'creator':
+            case 'meta.creator':
                 return (
                     $node->meta('creator_data')['name'] ??
                     $node->meta('creator_username')
