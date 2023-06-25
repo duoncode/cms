@@ -18,7 +18,7 @@
 
 <div class="headerbar">
     <NavToggle />
-    <div class="controls flex flex-row gap-4 justify-end px-4">
+    <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
         <Button class="danger" icon={IcoTrash} on:click={remove}>
             Löschen
         </Button>

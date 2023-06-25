@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Node } from '$types/data';
+    import type { ListedNode } from '$types/data';
     import Searchbar from '$shell/Searchbar.svelte';
     import Link from '$shell/Link.svelte';
 
@@ -20,7 +20,7 @@
     }
 
     function search(searchTerm: string) {
-        return (node: Node) => {
+        return (node: ListedNode) => {
             if (searchTerm.length > 0) {
                 return node.columns[0].value
                     .toString()

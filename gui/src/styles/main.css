@@ -8,6 +8,7 @@
 @import './button.css';
 @import './fields.css';
 @import './wysiwyg.css';
+@import './tabs.css';
 
 html {
     @apply bg-gray-50;
