@@ -31,7 +31,7 @@
 </style>
 
 <div class="flex flex-col h-full">
-    <NodeControlBar bind:uid={data.node.uid} />
+    <NodeControlBar bind:uid={data.uid} />
     <div
         class="breadcrumbs w-full max-w-7xl mx-auto my-8 flex flex-row items-center gap-3">
         <IcoDocumentTree />

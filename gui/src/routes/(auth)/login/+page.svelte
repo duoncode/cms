@@ -4,6 +4,8 @@
     import { loginUser } from '$lib/user';
     import Logo from '$shell/Logo.svelte';
     import Link from '$shell/Link.svelte';
+    import Button from '$shell/Button.svelte';
+    import IcoLogin from '$shell/icons/IcoLogin.svelte';
 
     export let message = '';
 
@@ -122,24 +124,13 @@
                     </div>
                 </div>
 
-                <div>
-                    <button
-                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-                        type="submit">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            class="w-6 h-6"
-                            stroke-width="2">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
+                <div class="flex justify-end">
+                    <Button
+                        class="primary w-full"
+                        type="submit"
+                        icon={IcoLogin}>
                         Anmelden
-                    </button>
+                    </Button>
                 </div>
             </form>
         </div>
