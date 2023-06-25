@@ -3,6 +3,7 @@
     let cls = 'primary';
 
     export let icon: ComponentType = null;
+    export let type: 'submit' | 'button' | 'reset' = 'button';
     export { cls as class };
 </script>
 
@@ -10,7 +11,7 @@
     button {
         @apply relative border font-medium rounded-md;
         @apply py-2 px-3 text-left focus:outline-none transition;
-        @apply flex flex-row items-center;
+        @apply flex flex-row items-center justify-center;
 
         span {
             @apply inline-block w-5 h-5 mr-2;
@@ -26,7 +27,14 @@
     }
 </style>
 
-<button class={cls} on:click on:mouseover on:mouseenter on:mouseleave on:focus>
+<button
+    class={cls}
+    {type}
+    on:click
+    on:mouseover
+    on:mouseenter
+    on:mouseleave
+    on:focus>
     {#if icon}
         <span>
             <svelte:component this={icon} />
