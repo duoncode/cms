@@ -9,6 +9,7 @@
 @import './fields.css';
 @import './wysiwyg.css';
 @import './tabs.css';
+@import './modal.css';
 
 html {
     @apply bg-gray-50;

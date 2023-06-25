@@ -15,7 +15,7 @@
     }
 </script>
 
-<div class="message">
+<div class="modal">
     <h2 class="text-xl font-bold">{_('Add link')}</h2>
     <div class="mt-4">
         {_('Please enter a valid URL')}
@@ -41,12 +41,12 @@
             </div>
         </div>
     </div>
-    <p class="mt-8 text-right">
+    <div class="controls">
         <button class="button danger" on:click={close}>
             {_('Cancel')}
         </button>
         <button class="button" on:click={clickAdd} disable={!value}>
             {_('Add link')}
         </button>
-    </p>
+    </div>
 </div>

@@ -32,7 +32,7 @@
     }
 </style>
 
-<div class="message">
+<div class="modal">
     <h2>{_('Inhaltstyp hinzufügen')}</h2>
     <div class="body">
         <div class="grid grid-cols-2 gap-4 mb-8">
@@ -51,7 +51,7 @@
             {/if}
         </div>
     </div>
-    <div class="flex flex-row justify-end gap-2">
+    <div class="controls">
         <Button class="danger" on:click={close}>{_('Abbrechen')}</Button>
         <Button class="primary" on:click={addContent(true)} {disabled}>
             {index === null ? _('Einfügen') : _('Davor einfügen')}
