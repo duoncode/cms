@@ -215,7 +215,7 @@ class Grid extends Value
             $locale = $this->locale;
 
             while ($locale) {
-                $fields = $data[$locale->id] ?? null;
+                $fields = $data['value'][$locale->id] ?? null;
 
                 if ($fields && count($fields) > 0) {
                     break;
