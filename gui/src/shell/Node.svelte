@@ -23,33 +23,35 @@
     }
 </script>
 
-<NodeControlBar
-    bind:uid={data.uid}
-    collectionPath="collection/{data.collection.slug}"
-    {allowDelete}
-    {save} />
-<Document>
-    <Breadcrumbs slug={data.collection.slug} name={data.collection.name} />
-    <Headline>{data.title}</Headline>
-    <Tabs>
-        <button
-            on:click={changeTab('content')}
-            class:active={activeTab === 'content'}
-            class="tab">
-            {_('Inhalt')}
-        </button>
-        <button
-            on:click={changeTab('settings')}
-            class:active={activeTab === 'settings'}
-            class="tab">
-            {_('Einstellungen')}
-        </button>
-    </Tabs>
-    <Pane>
-        {#if activeTab === 'content'}
-            <Content bind:fields={data.fields} bind:doc={data.doc} />
-        {:else}
-            <Settings bind:doc={data.doc} />
-        {/if}
-    </Pane>
-</Document>
+<div class="flex flex-col h-screen">
+    <NodeControlBar
+        bind:uid={data.uid}
+        collectionPath="collection/{data.collection.slug}"
+        {allowDelete}
+        {save} />
+    <Document>
+        <Breadcrumbs slug={data.collection.slug} name={data.collection.name} />
+        <Headline>{data.title}</Headline>
+        <Tabs>
+            <button
+                on:click={changeTab('content')}
+                class:active={activeTab === 'content'}
+                class="tab">
+                {_('Inhalt')}
+            </button>
+            <button
+                on:click={changeTab('settings')}
+                class:active={activeTab === 'settings'}
+                class="tab">
+                {_('Einstellungen')}
+            </button>
+        </Tabs>
+        <Pane>
+            {#if activeTab === 'content'}
+                <Content bind:fields={data.fields} bind:doc={data.doc} />
+            {:else}
+                <Settings bind:doc={data.doc} />
+            {/if}
+        </Pane>
+    </Document>
+</div>
