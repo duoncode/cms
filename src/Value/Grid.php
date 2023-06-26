@@ -65,7 +65,7 @@ class Grid extends Value
     public function images(bool $all = false): Generator
     {
         if ($all && $this->translate) {
-            foreach ($this->data['value'] as $data) {
+            foreach ($this->data['value'] ?? [] as $data) {
                 foreach ($data as $value) {
                     $item = new GridItem($value['type'], $value);
 

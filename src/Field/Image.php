@@ -44,6 +44,11 @@ class Image extends Field
         return $this;
     }
 
+    public function isFileTranslatable(): bool
+    {
+        return $this->translateFile;
+    }
+
     public function asArray(): array
     {
         // Generate thumbs

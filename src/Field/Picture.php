@@ -10,9 +10,9 @@ use Conia\Core\Value;
 class Picture extends Field
 {
     protected bool $multiple = false;
-    protected bool $translateImage = false;
+    protected bool $translateFile = false;
 
-    // TODO: translateImage and multiple
+    // TODO: translateFile and multiple
     public function value(): Value\Picture
     {
         return new Value\Picture($this->node, $this, $this->valueContext);
@@ -25,9 +25,9 @@ class Picture extends Field
         return $this;
     }
 
-     public function translateImage(bool $translate = true): static
+     public function translateFile(bool $translate = true): static
      {
-         $this->translateImage = $translate;
+         $this->translateFile = $translate;
          $this->translate = $translate;
 
          return $this;
@@ -46,7 +46,7 @@ class Picture extends Field
 
         return array_merge(parent::asArray(), [
             'multiple' => $this->multiple,
-            'translateImage' => $this->translateImage,
+            'translateFile' => $this->translateFile,
         ]);
     }
 

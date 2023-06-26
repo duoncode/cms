@@ -35,6 +35,11 @@ class File extends Field
         return $this;
     }
 
+    public function isFileTranslatable(): bool
+    {
+        return $this->translateFile;
+    }
+
     public function structure(): array
     {
         return $this->getFileStructure('file');

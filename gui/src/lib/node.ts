@@ -14,9 +14,13 @@ async function save(uid: string, doc: Document) {
             message: _('Dokument erfolgreich gespeichert!'),
         });
     } else {
+        const data = response.data;
+
         toast.add({
             kind: 'error',
-            message: _('Fehler beim Speichern des Dokuments aufgetreten!'),
+            message: data.description
+                ? data.description
+                : _('Fehler beim Speichern des Dokuments aufgetreten!'),
         });
     }
 }

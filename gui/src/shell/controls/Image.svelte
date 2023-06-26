@@ -18,7 +18,7 @@
         {field.label}
     </Label>
     <div class="mt-2">
-        {#if field.translateImage}
+        {#if field.translateFile}
             {#each $system.locales as locale}
                 {#if locale.id === lang}
                     <Upload

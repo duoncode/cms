@@ -14,7 +14,7 @@ export interface FileField extends SimpleField {
 }
 
 export interface ImageField extends FileField {
-    translateImage: boolean;
+    translateFile: boolean;
 }
 
 export interface GridField extends SimpleField {

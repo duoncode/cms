@@ -12,8 +12,10 @@ use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Field\Field;
 use Conia\Core\Finder;
 use Conia\Core\Locale;
+use Conia\Core\Schema\NodeSchemaFactory;
 use Conia\Core\Value\Value;
 use Conia\Quma\Database;
 use Throwable;
@@ -93,6 +95,11 @@ abstract class Node
         return null;
     }
 
+    final public function getField(string $fieldName): Field
+    {
+        return $this->{$fieldName};
+    }
+
     public function meta(string $fieldName): mixed
     {
         return $this->data[$fieldName];
@@ -107,7 +114,7 @@ abstract class Node
             $content = [];
 
             // Fill the field's value with missing keys from the structure and fix type
-            foreach ($this->fields as $fieldName) {
+            foreach ($this->fieldNames as $fieldName) {
                 $field = $this->{$fieldName};
                 $structure = $field->structure();
                 $content[$fieldName] = array_merge($structure, $result['content'][$fieldName] ?? []);
@@ -124,7 +131,7 @@ abstract class Node
     {
         $result = [];
 
-        foreach ($this->fields as $fieldName) {
+        foreach ($this->fieldNames as $fieldName) {
             $field = $this->{$fieldName};
             $result[$fieldName] = $field->structure();
         }
@@ -208,14 +215,19 @@ abstract class Node
 
     public function order(): ?array
     {
-        return $this->fields;
+        return $this->fieldNames;
+    }
+
+    public function fieldNames(): array
+    {
+        return $this->fieldNames;
     }
 
     public function fields(): array
     {
         $fields = [];
         $orderedFields = $this->order();
-        $missingFields = array_diff($this->fields, $orderedFields);
+        $missingFields = array_diff($this->fieldNames, $orderedFields);
         $allFields = array_merge($orderedFields, $missingFields);
 
         foreach ($allFields as $fieldName) {
@@ -262,6 +274,7 @@ abstract class Node
         }
 
         $data = $this->request->json();
+        $this->validate($data);
 
         $this->db->nodes->change([
             'uid' => $data['uid'],
@@ -302,6 +315,22 @@ abstract class Node
             'application/x-www-form-urlencoded' => $this->formPost($request->form()),
             'application/json' => $this->jsonPost($request->json()),
         };
+    }
+
+    protected function validate(array $data): bool
+    {
+        $factory = new NodeSchemaFactory($this, $this->config->locales());
+        $schema = $factory->create();
+        $result = $schema->validate($data['content']);
+
+        if (!$result) {
+            $exception = new HttpBadRequest('Bitte alle Pflichtfelder ausfüllen');
+            $exception->setPayload($schema->errors());
+
+            throw $exception;
+        }
+
+        return $result;
     }
 
     protected function jsonPost(array $body): array

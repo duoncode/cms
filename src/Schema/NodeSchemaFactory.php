@@ -1,0 +1,230 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Conia\Core\Schema;
+
+use Conia\Core\Field\Field;
+use Conia\Core\Field\File;
+use Conia\Core\Field\Image;
+use Conia\Core\Field\Picture;
+use Conia\Core\Locales;
+use Conia\Core\Node;
+use Conia\Sire\Schema;
+
+class NodeSchemaFactory
+{
+    protected readonly Schema $schema;
+
+    public function __construct(
+        protected readonly Node $node,
+        protected readonly Locales $locales,
+    ) {
+        $this->schema = new Schema();
+    }
+
+    public function create(): Schema
+    {
+        foreach ($this->node->fieldNames() as $fieldName) {
+            $this->add($fieldName, $this->node->getField($fieldName));
+        }
+
+        return $this->schema;
+    }
+
+    protected function add(string $fieldName, Field $field): void
+    {
+        $validators = [];
+        if ($field->isRequired()) {
+            $validators[] = 'required';
+        }
+
+        error_log($field::class);
+        $this->schema->add($fieldName, match ($field::class) {
+            \Conia\Core\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
+            \Conia\Core\Field\Date::class => $this->addText($field, 'date', $validators),
+            \Conia\Core\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
+            \Conia\Core\Field\Decmial::class => $this->addText($field, 'decimal', $validators),
+            \Conia\Core\Field\File::class => $this->addFile($field, 'file', $validators),
+            \Conia\Core\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
+            \Conia\Core\Field\Html::class => $this->addText($field, 'html', $validators),
+            \Conia\Core\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
+            \Conia\Core\Field\Image::class => $this->addImage($field, 'image', $validators),
+            \Conia\Core\Field\Number::class => $this->addNumber($field, 'number', $validators),
+            \Conia\Core\Field\Option::class => $this->addText($field, 'option', $validators),
+            \Conia\Core\Field\Picture::class => $this->addImage($field, 'picture', $validators),
+            \Conia\Core\Field\Radio::class => $this->addText($field, 'radio', $validators),
+            \Conia\Core\Field\Text::class => $this->addText($field, 'text', $validators),
+            \Conia\Core\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
+            \Conia\Core\Field\Time::class => $this->addText($field, 'time', $validators),
+            \Conia\Core\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
+        }, ...$validators);
+        error_log($field::class);
+    }
+
+    protected function getTypedSchema(string $type): Schema
+    {
+        $schema = new Schema();
+        $schema->add('type', 'text', 'required', 'in:' . $type);
+
+        return $schema;
+    }
+
+    protected function addText(Field $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+
+        if ($field->isTranslatable()) {
+            $schema->add(
+                'value',
+                $this->getTranslatableSchema($field->isRequired(), 'text'),
+                ...$validators
+            );
+        } else {
+            $schema->add('value', 'text', ...$validators);
+        }
+
+        return $schema;
+    }
+
+    protected function addNumber(Field $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+        $schema->add('value', 'float', ...$validators);
+
+        return $schema;
+    }
+
+    protected function addBool(Field $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+        $schema->add('value', 'bool', ...$validators);
+
+        return $schema;
+    }
+
+    protected function addFile(File $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+
+        if ($field->isFileTranslatable()) {
+            $schema->add(
+                'files',
+                $this->getTranslatableFileSchema(['file', 'title']),
+                ...$validators
+            );
+        } elseif ($field->isTranslatable()) {
+            $fileSchema = new Schema(list: true);
+            $fileSchema->add('file', 'text', 'required');
+            $fileSchema->add('title', $this->getTranslatableSchema(false));
+
+            $schema->add('files', $fileSchema, ...$validators);
+        } else {
+            $fileSchema = new Schema(list: true);
+            $fileSchema->add('file', 'text', 'required');
+            $fileSchema->add('title', 'text');
+            $schema->add('files', $fileSchema, ...$validators);
+        }
+
+        return $schema;
+    }
+
+    protected function addImage(Image|Picture $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+
+        if ($field->isFileTranslatable()) {
+            $schema->add(
+                'files',
+                $this->getTranslatableFileSchema(['file', 'title', 'alt']),
+                ...$validators
+            );
+        } elseif ($field->isTranslatable()) {
+            $fileSchema = new Schema(list: true);
+            $fileSchema->add('file', 'text', 'required');
+            $fileSchema->add('title', $this->getTranslatableSchema(false));
+            $fileSchema->add('alt', $this->getTranslatableSchema(false));
+
+            $schema->add('files', $fileSchema, ...$validators);
+        } else {
+            $fileSchema = new Schema(list: true);
+            $fileSchema->add('file', 'text', 'required');
+            $fileSchema->add('title', 'text');
+            $fileSchema->add('alt', 'text');
+            $schema->add('files', $fileSchema, ...$validators);
+        }
+
+        return $schema;
+    }
+
+    protected function addGrid(Field $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($type);
+        $schema->add('columns', 'int', 'required');
+
+        $itemSchema = new Schema(list: true);
+        $itemSchema->add('type', 'text', 'required', 'in:html,image,youtube');
+        $itemSchema->add('rowspan', 'int', 'required');
+        $itemSchema->add('colspan', 'int', 'required');
+        $itemSchema->add('value', 'text');
+        $fileSchema = new Schema(list: true);
+        $fileSchema->add('file', 'text', 'required');
+        $fileSchema->add('title', 'text');
+        $fileSchema->add('alt', 'text');
+        $itemSchema->add('files', $fileSchema);
+
+        if ($field->isTranslatable()) {
+            $defaultLocale = $this->locales->getDefault()->id;
+            $i18nSchema = new Schema();
+
+            foreach ($this->locales as $locale) {
+                $validators = [];
+                if ($field->isRequired() && $locale->id === $defaultLocale) {
+                    $validators[] = 'required';
+                }
+
+                $i18nSchema->add($locale->id, $itemSchema);
+            }
+
+            $schema->add('value', $i18nSchema, ...$validators);
+        } else {
+            $schema->add('value', $itemSchema, ...$validators);
+        }
+
+        return $schema;
+    }
+
+    protected function getTranslatableFileSchema(array $fields): Schema
+    {
+        $subSchema = new Schema();
+
+        foreach ($fields as $field) {
+            $subSchema->add($field, 'text');
+        }
+
+        $schema = new Schema(list: true);
+
+        foreach ($this->locales as $locale) {
+            $schema->add($locale->id, $subSchema);
+        }
+
+        return $schema;
+    }
+
+    protected function getTranslatableSchema(bool $required): Schema
+    {
+        $defaultLocale = $this->locales->getDefault()->id;
+        $schema = new Schema();
+
+        foreach ($this->locales as $locale) {
+            $validators = [];
+            if ($required && $locale->id === $defaultLocale) {
+                $validators[] = 'required';
+            }
+
+            $schema->add($locale->id, 'text', ...$validators);
+        }
+
+        return $schema;
+    }
+}
