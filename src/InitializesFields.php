@@ -13,7 +13,7 @@ use Conia\Core\Field\Attr\Options;
 use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Rows;
 use Conia\Core\Field\Attr\Translate;
-use Conia\Core\Field\Attr\TranslateImage;
+use Conia\Core\Field\Attr\TranslateFile;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Value\ValueContext;
@@ -22,7 +22,7 @@ use ReflectionProperty;
 
 trait InitializesFields
 {
-    protected array $fields = [];
+    protected array $fieldNames = [];
 
     protected function initFields(): void
     {
@@ -44,7 +44,7 @@ trait InitializesFields
 
                 $this->{$name} = $this->initField($property, $fieldType);
 
-                $this->fields[] = $name;
+                $this->fieldNames[] = $name;
             }
         }
 
@@ -87,12 +87,12 @@ trait InitializesFields
                 case Options::class:
                     $field->options($attr->newInstance()->options);
                     break;
-                case TranslateImage::class:
-                    if (!$field instanceof \Conia\Core\Field\Image) {
+                case TranslateFile::class:
+                    if (!($field instanceof \Conia\Core\Field\Image || !$field instanceof \Conia\Core\Field\File)) {
                         throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
                     }
 
-                    $field->translateImage(true);
+                    $field->translateFile(true);
 
                     break;
             }
