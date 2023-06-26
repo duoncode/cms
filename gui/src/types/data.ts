@@ -50,11 +50,14 @@ export interface GridYoutube extends GridBase {
 
 export type GridItem = GridHtml | GridImage | GridYoutube;
 
+export interface LocalizedGridValue {
+    [key: string]: GridItem[];
+}
+
 export interface GridData {
     type: 'grid';
-    i18n: 'separate';
     columns: number;
-    [key: string]: string | number | GridItem[];
+    value: GridItem[] | LocalizedGridValue;
 }
 
 export type Data = TextData | FileData | GridData | NumberData;
