@@ -9,6 +9,7 @@ use Conia\Core\Value;
 class File extends Field
 {
     protected bool $multiple = false;
+    protected bool $translateFile = false;
 
     public function value(): Value\File|Value\Files
     {
@@ -26,8 +27,24 @@ class File extends Field
         return $this;
     }
 
+    public function translateFile(bool $translate = true): static
+    {
+        $this->translateFile = $translate;
+        $this->translate = $translate;
+
+        return $this;
+    }
+
     public function structure(): array
     {
         return $this->getFileStructure('file');
+    }
+
+    public function asArray(): array
+    {
+        return array_merge(parent::asArray(), [
+            'multiple' => $this->multiple,
+            'translateFile' => $this->translateFile,
+        ]);
     }
 }

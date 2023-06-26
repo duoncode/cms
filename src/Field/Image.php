@@ -10,19 +10,19 @@ use Conia\Core\Value;
 class Image extends Field
 {
     protected bool $multiple = false;
-    protected bool $translateImage = false;
+    protected bool $translateFile = false;
 
     public function value(): Value\Images|Value\Image
     {
         if ($this->multiple) {
-            if ($this->translateImage) {
+            if ($this->translateFile) {
                 return new Value\TranslatedImages($this->node, $this, $this->valueContext);
             }
 
             return new Value\Images($this->node, $this, $this->valueContext);
         }
 
-        if ($this->translateImage) {
+        if ($this->translateFile) {
             return new Value\TranslatedImage($this->node, $this, $this->valueContext);
         }
 
@@ -36,13 +36,13 @@ class Image extends Field
         return $this;
     }
 
-     public function translateImage(bool $translate = true): static
-     {
-         $this->translateImage = $translate;
-         $this->translate = $translate;
+    public function translateFile(bool $translate = true): static
+    {
+        $this->translateFile = $translate;
+        $this->translate = $translate;
 
-         return $this;
-     }
+        return $this;
+    }
 
     public function asArray(): array
     {
@@ -61,7 +61,7 @@ class Image extends Field
 
         return array_merge(parent::asArray(), [
             'multiple' => $this->multiple,
-            'translateImage' => $this->translateImage,
+            'translateFile' => $this->translateFile,
         ]);
     }
 
