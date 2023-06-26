@@ -12,4 +12,9 @@ class Radio extends Field
     {
         return new Str($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        return $this->getSimpleStructure('radio');
+    }
 }

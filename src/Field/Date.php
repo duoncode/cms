@@ -12,4 +12,9 @@ class Date extends Field
     {
         return new DateValue($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        return $this->getSimpleStructure('date');
+    }
 }

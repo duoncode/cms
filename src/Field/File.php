@@ -25,4 +25,9 @@ class File extends Field
 
         return $this;
     }
+
+    public function structure(): array
+    {
+        return $this->getFileStructure('file');
+    }
 }

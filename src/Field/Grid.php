@@ -57,4 +57,19 @@ class Grid extends Field
     {
         return new GridValue($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        $result = ['type' => 'grid', 'columns' => 12];
+
+        if ($this->translate) {
+            foreach ($this->node->config->locales() as $locale) {
+                $result[$locale->id] = [];
+            }
+        } else {
+            $result['value'] = [];
+        }
+
+        return $result;
+    }
 }

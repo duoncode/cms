@@ -34,6 +34,7 @@ abstract class Field
     }
 
     abstract public function value(): Value;
+    abstract public function structure(): array;
 
     public function isset(): bool
     {
@@ -141,5 +142,31 @@ abstract class Field
             'name' => $this->name,
             'type' => $this::class,
         ];
+    }
+
+    public function getFileStructure(string $type): array
+    {
+        return ['type' => $type, 'files' => []];
+    }
+
+    public function getSimpleStructure(string $type): array
+    {
+        return ['type' => $type, 'value' => null];
+    }
+
+    protected function getTranslatableStructure(string $type): array
+    {
+        $result = ['type' => $type];
+
+        if ($this->translate) {
+            $result['value'] = [];
+            foreach ($this->node->config->locales() as $locale) {
+                $result['value'][$locale->id] = null;
+            }
+        } else {
+            $result['value'] = null;
+        }
+
+        return $result;
     }
 }

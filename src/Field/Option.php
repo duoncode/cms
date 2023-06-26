@@ -39,4 +39,9 @@ class Option extends Field
 
         return $result;
     }
+
+    public function structure(): array
+    {
+        return $this->getSimpleStructure('option');
+    }
 }

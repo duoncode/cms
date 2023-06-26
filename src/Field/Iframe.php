@@ -12,4 +12,9 @@ class Iframe extends Field
     {
         return new Html($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        return $this->getTranslatableStructure('iframe');
+    }
 }

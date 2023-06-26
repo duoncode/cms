@@ -64,4 +64,9 @@ class Image extends Field
             'translateImage' => $this->translateImage,
         ]);
     }
+
+    public function structure(): array
+    {
+        return $this->getFileStructure('image');
+    }
 }

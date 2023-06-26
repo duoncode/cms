@@ -37,18 +37,21 @@ class Picture extends Field
     {
         $value = $this->value();
         $count = $value->count();
-        error_log(print_r($count, true));
 
         // Generate thumbs
         // TODO: add it to the api data. Currently we assume in the frontend that they are existing
         for ($i = 0; $i < $count; $i++) {
-            $url = $value->width(400)->url(false, $i);
-            error_log($url);
+            $value->width(400)->url(false, $i);
         }
 
         return array_merge(parent::asArray(), [
             'multiple' => $this->multiple,
             'translateImage' => $this->translateImage,
         ]);
+    }
+
+    public function structure(): array
+    {
+        return $this->getFileStructure('picture');
     }
 }

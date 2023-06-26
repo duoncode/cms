@@ -12,4 +12,9 @@ class Html extends Field
     {
         return new HtmlValue($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        return $this->getTranslatableStructure('html');
+    }
 }

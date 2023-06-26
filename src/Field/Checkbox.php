@@ -12,4 +12,9 @@ class Checkbox extends Field
     {
         return new Boolean($this->node, $this, $this->valueContext);
     }
+
+    public function structure(): array
+    {
+        return $this->getSimpleStructure('checkbox');
+    }
 }
