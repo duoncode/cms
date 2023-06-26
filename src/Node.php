@@ -100,7 +100,24 @@ abstract class Node
 
     public function data(): array
     {
-        return $this->data;
+        static $result = null;
+
+        if ($result === null) {
+            $result = $this->data;
+            $content = [];
+
+            // Fill the field's value with missing keys from the structure and fix type
+            foreach ($this->fields as $fieldName) {
+                $field = $this->{$fieldName};
+                $structure = $field->structure();
+                $content[$fieldName] = array_merge($structure, $result['content'][$fieldName] ?? []);
+                $content[$fieldName]['type'] = $structure['type'];
+            }
+
+            $result['content'] = $content;
+        }
+
+        return $result;
     }
 
     public function blueprint(): array

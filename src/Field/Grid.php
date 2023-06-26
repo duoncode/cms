@@ -60,14 +60,12 @@ class Grid extends Field
 
     public function structure(): array
     {
-        $result = ['type' => 'grid', 'columns' => 12];
+        $result = ['type' => 'grid', 'columns' => 12, 'value' => []];
 
         if ($this->translate) {
             foreach ($this->node->config->locales() as $locale) {
-                $result[$locale->id] = [];
+                $result['value'][$locale->id] = [];
             }
-        } else {
-            $result['value'] = [];
         }
 
         return $result;

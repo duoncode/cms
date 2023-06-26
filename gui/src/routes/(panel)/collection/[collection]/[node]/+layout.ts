@@ -1,6 +1,5 @@
 import type { Field } from '$types/fields';
 import type { Document, Node } from '$types/data';
-import { fillMissingAttrs } from '$lib/data';
 import req from '$lib/req';
 
 export const load = async ({ params, parent, route, fetch }) => {
@@ -10,7 +9,6 @@ export const load = async ({ params, parent, route, fetch }) => {
     if (response.ok) {
         const fields = response.data.fields as Field[];
         const doc = response.data.data as Document;
-        doc.content = fillMissingAttrs(fields, doc);
 
         return {
             collection,
