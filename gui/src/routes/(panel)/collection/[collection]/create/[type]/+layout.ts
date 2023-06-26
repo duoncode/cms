@@ -4,7 +4,7 @@ import req from '$lib/req';
 
 export const load = async ({ params, fetch, parent, route }) => {
     const collection = await parent();
-    const response = await req.get(`blueprint/${params.slug}`, {}, fetch);
+    const response = await req.get(`blueprint/${params.type}`, {}, fetch);
 
     if (response.ok) {
         const fields = response.data.fields as Field[];
@@ -13,6 +13,7 @@ export const load = async ({ params, fetch, parent, route }) => {
         return {
             collection,
             title: response.data.title,
+            type: params.type,
             uid: response.data.uid,
             fields,
             doc,

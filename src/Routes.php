@@ -63,8 +63,8 @@ class Routes
         $api->get('/collections', [Panel::class, 'collections'], 'conia.collections');
         $api->get('/collection/{collection}', [Panel::class, 'collection'], 'conia.collection');
         $api->route('/node/{uid}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
-        $api->post('/node', [Panel::class, 'createNode'], 'conia.node.create');
-        $api->get('/blueprint/{slug}', [Panel::class, 'blueprint'], 'conia.blueprint');
+        $api->post('/node/{type}', [Panel::class, 'createNode'], 'conia.node.create');
+        $api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'conia.blueprint');
     }
 
     protected function addPanelApi(Group $api): void

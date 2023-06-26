@@ -107,18 +107,22 @@ class Panel
     }
 
     #[Permission('panel')]
-    public function blueprint(string $slug, Context $context, Finder $find): array
+    public function blueprint(string $type, Context $context, Finder $find): array
     {
-        $class = $this->registry->tag(Node::class)->entry($slug)->definition();
+        $class = $this->registry->tag(Node::class)->entry($type)->definition();
         $obj = new $class($context, $find, []);
 
         return $obj->blueprint();
     }
 
     #[Permission('panel')]
-    public function createNode(): array
+    public function createNode(string $type, Context $context, Finder $find): array
     {
-        return [];
+        $class = $this->registry->tag(Node::class)->entry($type)->definition();
+        $obj = new $class($context, $find, $this->request->json());
+        $obj->create();
+
+        return ['success' => true];
     }
 
     #[Permission('panel')]

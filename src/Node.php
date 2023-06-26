@@ -114,9 +114,12 @@ abstract class Node
 
         return [
             'title' => _('Neues Dokument'),
-            'uid' => nanoid(),
             'fields' => $this->fields(),
             'data' => [
+                'uid' => nanoid(),
+                'published' => false,
+                'hidden' => false,
+                'locked' => false,
                 'content' => $result,
             ],
         ];
@@ -221,11 +224,14 @@ abstract class Node
     public function read(): array|Response
     {
         if ($this->request->header('Accept') === 'application/json') {
+            $data = $this->data();
+            unset($data['classname']);
+
             return [
                 'title' => $this->title(),
                 'uid' => $this->meta('uid'),
                 'fields' => $this->fields(),
-                'data' => $this->data(),
+                'data' => $data,
             ];
         }
 
@@ -271,7 +277,7 @@ abstract class Node
         ];
     }
 
-    public function create(): Response
+    public function create(): array|Response
     {
         $request = $this->request;
 
@@ -281,9 +287,11 @@ abstract class Node
         };
     }
 
-    protected function jsonPost(?array $body): Response
+    protected function jsonPost(array $body): array
     {
-        throw new HttpBadRequest();
+        error_log(print_r($body, true));
+
+        return ['success' => true];
     }
 
     protected function formPost(?array $body): Response

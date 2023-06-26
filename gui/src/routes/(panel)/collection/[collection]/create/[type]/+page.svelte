@@ -6,7 +6,7 @@
     export let data: NodeType;
 
     async function save() {
-        node.create(data.uid, data.doc, `collection/${data.collection.slug}`);
+        node.create(data.doc, data.type, `collection/${data.collection.slug}`);
     }
 </script>
 

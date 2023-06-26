@@ -14,6 +14,7 @@ export const load = async ({ params, parent, route, fetch }) => {
 
         return {
             collection,
+            type: response.data.type,
             title: response.data.title,
             uid: response.data.uid,
             fields,

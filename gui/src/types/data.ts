@@ -99,7 +99,6 @@ export interface Document {
     changed: string;
     deleted: null | string;
     type: string;
-    classname: string;
     paths: Record<string, string>;
     content: Content;
     creator_uid: string;
@@ -118,6 +117,7 @@ export interface Document {
 
 export interface Node {
     collection: Collection;
+    type: string;
     title: string;
     uid: string;
     fields: Field[];
