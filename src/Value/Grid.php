@@ -6,7 +6,6 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Assets\ResizeMode;
 use Conia\Core\Assets\Size;
-use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Exception\ValueError;
 use Conia\Core\Field;
 use Conia\Core\Node;
@@ -15,13 +14,13 @@ use Generator;
 
 class Grid extends Value
 {
-    protected readonly ?Generator $localizedData;
+    protected readonly ?Generator $preparedData;
 
     public function __construct(Node $node, Field\Grid $field, ValueContext $context)
     {
         parent::__construct($node, $field, $context);
 
-        $this->localizedData = $this->getLocalizedData($this->data);
+        $this->preparedData = $this->prepareData($this->data);
     }
 
     public function __toString(): string
@@ -38,7 +37,7 @@ class Grid extends Value
     {
         return [
             'columns' => $this->data['columns'] ?? null,
-            'data' => $this->localizedData,
+            'data' => $this->preparedData,
         ];
     }
 
@@ -46,7 +45,7 @@ class Grid extends Value
     {
         $i = 0;
 
-        foreach ($this->localizedData as $value) {
+        foreach ($this->preparedData as $value) {
             if ($value->type === 'image') {
                 $i++;
 
@@ -65,7 +64,7 @@ class Grid extends Value
 
     public function images(): Generator
     {
-        foreach ($this->localizedData as $value) {
+        foreach ($this->preparedData as $value) {
             if ($value->type === 'image') {
                 yield (new Field\Image(
                     $this->context->fieldName,
@@ -79,7 +78,7 @@ class Grid extends Value
     public function hasImage(int $index = 1): bool
     {
         $i = 0;
-        foreach ($this->localizedData as $value) {
+        foreach ($this->preparedData as $value) {
             if ($value->type === 'image') {
                 $i++;
 
@@ -99,7 +98,7 @@ class Grid extends Value
     ): string {
         $i = 0;
 
-        foreach ($this->localizedData as $value) {
+        foreach ($this->preparedData as $value) {
             if ($value->type === 'html') {
                 $i++;
 
@@ -134,7 +133,7 @@ class Grid extends Value
         $out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix .
             '-grid-columns-' . $columns . $class . '">';
 
-        foreach ($this->localizedData as $value) {
+        foreach ($this->preparedData as $value) {
             $out .= $this->renderValue($prefix, $value, $args);
         }
 
@@ -145,7 +144,7 @@ class Grid extends Value
 
     public function isset(): bool
     {
-        if (is_null($this->localizedData)) {
+        if (is_null($this->preparedData)) {
             return false;
         }
 
@@ -210,22 +209,26 @@ class Grid extends Value
         return "<img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\">";
     }
 
-    protected function getLocalizedData(array $data): Generator
+    protected function prepareData(array $data): Generator
     {
-        $locale = $this->locale;
+        if ($this->translate) {
+            $locale = $this->locale;
 
-        while ($locale) {
-            $fields = $data[$locale->id] ?? null;
+            while ($locale) {
+                $fields = $data[$locale->id] ?? null;
 
-            if ($fields && count($fields) > 0) {
-                foreach ($fields as $field) {
-                    yield new GridItem($field['type'], $field);
+                if ($fields && count($fields) > 0) {
+                    break;
                 }
 
-                break;
+                $locale = $locale->fallback();
             }
+        } else {
+            $fields = $data['value'];
+        }
 
-            $locale = $locale->fallback();
+        foreach ($fields as $field) {
+            yield new GridItem($field['type'], $field);
         }
     }
 }
