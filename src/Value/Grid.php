@@ -21,12 +21,7 @@ class Grid extends Value
     {
         parent::__construct($node, $field, $context);
 
-        $this->localizedData = match ($this->data['i18n'] ?? null) {
-            'separate' => $this->getSeparate($this->data),
-            'mixed' => $this->getMixed($this->data),
-            null => null,
-            default => throw new ValueError('Unknown i18n setting of Grid field'),
-        };
+        $this->localizedData = $this->getLocalizedData($this->data);
     }
 
     public function __toString(): string
@@ -215,13 +210,7 @@ class Grid extends Value
         return "<img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\">";
     }
 
-    // TODO: obviously
-    protected function getMixed(array $data): array
-    {
-        throw new RuntimeException('Not implemented');
-    }
-
-    protected function getSeparate(array $data): Generator
+    protected function getLocalizedData(array $data): Generator
     {
         $locale = $this->locale;
 
