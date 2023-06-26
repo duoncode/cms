@@ -18,14 +18,19 @@
         {field.label}
     </Label>
     <div class="mt-2">
-        {#if field.translate}
-            {#each $system.locales as locale}
-                {#if locale.id === lang}
-                    <GridPanel data={data[lang]} {field} {node} />
-                {/if}
-            {/each}
-        {:else}
-            <GridPanel {data} />
+        {#if data.value}
+            {#if field.translate}
+                {#each $system.locales as locale}
+                    {#if locale.id === lang}
+                        <GridPanel
+                            bind:data={data.value[lang]}
+                            {field}
+                            {node} />
+                    {/if}
+                {/each}
+            {:else}
+                <GridPanel bind:data={data.value} />
+            {/if}
         {/if}
     </div>
 </Field>
