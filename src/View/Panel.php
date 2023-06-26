@@ -11,8 +11,10 @@ use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Collection;
 use Conia\Core\Config;
+use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Middleware\Permission;
+use Conia\Core\Node;
 
 class Panel
 {
@@ -89,13 +91,34 @@ class Panel
     public function collection(string $collection): array
     {
         $obj = $this->registry->tag(Collection::class)->get($collection);
+        $blueprints = [];
+
+        foreach ($obj->blueprints() as $blueprint) {
+            $blueprints[] = ['slug' => $blueprint::slug(), 'name' => $blueprint::name()];
+        }
 
         return [
             'name' => $obj->name(),
             'slug' => $collection,
             'header' => $obj->header(),
             'nodes' => $obj->listing(),
+            'blueprints' => $blueprints,
         ];
+    }
+
+    #[Permission('panel')]
+    public function blueprint(string $slug, Context $context, Finder $find): array
+    {
+        $class = $this->registry->tag(Node::class)->entry($slug)->definition();
+        $obj = new $class($context, $find, []);
+
+        return $obj->blueprint();
+    }
+
+    #[Permission('panel')]
+    public function createNode(): array
+    {
+        return [];
     }
 
     #[Permission('panel')]
@@ -112,6 +135,6 @@ class Panel
 
     protected function getPanelIndex(): string
     {
-        return $this->publicPath . $config->getPanelPath() . '/index.html';
+        return $this->publicPath . $this->config->getPanelPath() . '/index.html';
     }
 }

@@ -38,7 +38,7 @@ abstract class Node
     protected readonly Registry $registry;
 
     final public function __construct(
-        Context $context,
+        protected readonly Context $context,
         protected readonly Finder $find,
         protected readonly array $data,
     ) {
@@ -66,14 +66,23 @@ abstract class Node
         return false;
     }
 
+    final public static function fromForm(
+        Context $context,
+        Finder $find,
+        array $data,
+    ): static {
+        return new static($context, $find, $data);
+    }
+
     final public function getValue(string $fieldName): ?Value
     {
         $field = null;
-        $type = $this::class;
         $field = $this->{$fieldName};
         $value = $field->value();
 
         if (is_null($field)) {
+            $type = $this::class;
+
             throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
         }
 
@@ -92,6 +101,18 @@ abstract class Node
     public function data(): array
     {
         return $this->data;
+    }
+
+    public function blueprint(): array
+    {
+        $result = [];
+
+        foreach ($this->fields as $fieldName) {
+            $field = $this->{$fieldName};
+            $result[$fieldName] = $field->structure();
+        }
+
+        return $result;
     }
 
     /**
@@ -255,12 +276,12 @@ abstract class Node
 
     protected function jsonPost(?array $body): Response
     {
-        return $this->read();
+        throw new HttpBadRequest();
     }
 
     protected function formPost(?array $body): Response
     {
-        return $this->read();
+        throw new HttpBadRequest();
     }
 
     protected function render(array $context = []): Response

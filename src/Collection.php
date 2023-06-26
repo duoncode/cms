@@ -17,7 +17,7 @@ abstract class Collection
     }
 
     abstract public function entries(): Nodes;
-    abstract public function newEntryNodes(): array;
+    abstract public function blueprints(): array;
 
     public function name(): string
     {

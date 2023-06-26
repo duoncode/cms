@@ -56,7 +56,6 @@ trait InitializesFields
         $fieldName = $property->getName();
         $content = $this->data['content'][$fieldName] ?? [];
         $node = $this instanceof Node ? $this : $this->node;
-
         $field = new $fieldType($fieldName, $node, new ValueContext($fieldName, $content));
 
         foreach ($property->getAttributes() as $attr) {
