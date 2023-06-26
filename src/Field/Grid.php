@@ -58,6 +58,17 @@ class Grid extends Field
         return new GridValue($this->node, $this, $this->valueContext);
     }
 
+    public function asArray(): array
+    {
+        // Generate thumbs
+        // TODO: There should be a better place
+        foreach ($this->value()->images(all: true) as $image) {
+            $image->width(400)->url();
+        }
+
+        return parent::asArray();
+    }
+
     public function structure(): array
     {
         $result = ['type' => 'grid', 'columns' => 12, 'value' => []];

@@ -47,7 +47,7 @@ class Image extends Field
     public function asArray(): array
     {
         // Generate thumbs
-        // TODO: add it to the api data. Currently we assume in the frontend that they are existing
+        // TODO: There should be a better place
         if ($this->multiple) {
             foreach ($this->value() as $image) {
                 $image->width(400)->url();

@@ -62,15 +62,31 @@ class Grid extends Value
         return null;
     }
 
-    public function images(): Generator
+    public function images(bool $all = false): Generator
     {
-        foreach ($this->preparedData as $value) {
-            if ($value->type === 'image') {
-                yield (new Field\Image(
-                    $this->context->fieldName,
-                    $this->node,
-                    new ValueContext($this->context->fieldName, $value->data)
-                ))->value();
+        if ($all && $this->translate) {
+            foreach ($this->data['value'] as $data) {
+                foreach ($data as $value) {
+                    $item = new GridItem($value['type'], $value);
+
+                    if ($item->type === 'image') {
+                        yield (new Field\Image(
+                            $this->context->fieldName,
+                            $this->node,
+                            new ValueContext($this->context->fieldName, $item->data)
+                        ))->value();
+                    }
+                }
+            }
+        } else {
+            foreach ($this->preparedData as $item) {
+                if ($item->type === 'image') {
+                    yield (new Field\Image(
+                        $this->context->fieldName,
+                        $this->node,
+                        new ValueContext($this->context->fieldName, $item->data)
+                    ))->value();
+                }
             }
         }
     }
