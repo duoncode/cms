@@ -1,7 +1,8 @@
 <script lang="ts">
-    import type { Node } from '$types/data';
+    import type { Node as NodeType } from '$types/data';
+    import Node from '$shell/Node.svelte';
 
-    export let data: Node;
+    export let data: NodeType;
 </script>
 
-HANS KARL
+<Node bind:data />
