@@ -1,8 +1,30 @@
 <script lang="ts">
+    import type { Modal } from 'svelte-simple-modal';
+    import type { Blueprint } from '$types/data';
+    import { getContext } from 'svelte';
     import { _ } from '$lib/locale';
     import NavToggle from './NavToggle.svelte';
+    import ModalCreate from '$shell/modals/ModalCreate.svelte';
 
     export let searchTerm: string;
+    export let blueprints: Blueprint[];
+    export let collectionSlug: string;
+
+    const modal: Modal = getContext('simple-modal');
+
+    async function create() {
+        modal.open(
+            ModalCreate,
+            {
+                blueprints,
+                collectionSlug,
+                close: modal.close,
+            },
+            {
+                closeButton: false,
+            },
+        );
+    }
 </script>
 
 <style lang="postcss">
@@ -89,7 +111,7 @@
                 placeholder={_('Suche')}
                 bind:value={searchTerm} />
         </div>
-        <button>
+        <button on:click={create}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"

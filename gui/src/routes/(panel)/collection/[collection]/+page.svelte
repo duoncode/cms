@@ -56,7 +56,10 @@
 </style>
 
 <div class="flex flex-col h-full">
-    <Searchbar bind:searchTerm />
+    <Searchbar
+        bind:searchTerm
+        collectionSlug={data.slug}
+        blueprints={data.blueprints} />
     <h1 class="py-4 px-8 text-xl font-medium">
         {data.name}
     </h1>

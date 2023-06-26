@@ -77,11 +77,17 @@ export interface ListedNode {
     columns: Column[];
 }
 
+export interface Blueprint {
+    slug: string;
+    name: string;
+}
+
 export interface Collection {
     name: string;
     slug: string;
     header: string[];
     nodes: ListedNode[];
+    blueprints: Blueprint[];
 }
 
 export interface Document {
