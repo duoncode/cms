@@ -148,12 +148,15 @@ class Grid extends Value
             return false;
         }
 
-        return match ($this->data['i18n'] ?? null) {
-            'separate' => count($this->data[$this->defaultLocale->id]) > 0,
-            // TODO: correct?
-            'mixed' => count($this->data['value']) > 0,
-            default => throw new ValueError('Unknown i18n setting of Grid field'),
-        };
+        if (!($this->data['value'] ?? null)) {
+            return false;
+        }
+
+        if ($this->translate) {
+            return count($this->data['value'][$this->defaultLocale->id]) > 0;
+        }
+
+        return count($this->data['value']) > 0;
     }
 
     protected function renderValue(string $prefix, GridItem $value, array $args): string
