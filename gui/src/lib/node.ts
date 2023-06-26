@@ -21,10 +21,12 @@ async function save(uid: string, doc: Document) {
     }
 }
 
-async function create(uid: string, doc: Document) {
+async function create(uid: string, doc: Document, collectionPath: string) {
     const response = await req.post(`node/${uid}`, doc);
 
     if (response.ok) {
+        await goto(`${base}/${collectionPath}/${uid}`, { invalidateAll: true });
+
         toast.add({
             kind: 'success',
             message: _('Dokument erfolgreich erstellt!'),

@@ -1,8 +1,13 @@
 <script lang="ts">
     import type { Node as NodeType } from '$types/data';
+    import node from '$lib/node';
     import Node from '$shell/Node.svelte';
 
     export let data: NodeType;
+
+    async function save() {
+        node.save(data.uid, data.doc);
+    }
 </script>
 
-<Node bind:data />
+<Node bind:data allowDelete={true} {save} />

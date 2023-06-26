@@ -3,9 +3,9 @@ import type { Document, Node } from '$types/data';
 import { fillMissingAttrs } from '$lib/data';
 import req from '$lib/req';
 
-export const load = async ({ params, parent, route }) => {
+export const load = async ({ params, parent, route, fetch }) => {
     const collection = await parent();
-    const response = await req.get(`node/${params.node}`);
+    const response = await req.get(`node/${params.node}`, {}, fetch);
 
     if (response.ok) {
         const fields = response.data.fields as Field[];

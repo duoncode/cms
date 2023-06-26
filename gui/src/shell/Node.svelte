@@ -11,6 +11,8 @@
     import Settings from '$shell/Settings.svelte';
 
     export let data: Node;
+    export let allowDelete: boolean;
+    export let save: () => void;
 
     let activeTab = 'content';
 
@@ -23,8 +25,9 @@
 
 <NodeControlBar
     bind:uid={data.uid}
-    bind:doc={data.doc}
-    collectionPath="collection/{data.collection.slug}" />
+    collectionPath="collection/{data.collection.slug}"
+    {allowDelete}
+    {save} />
 <Document>
     <Breadcrumbs slug={data.collection.slug} name={data.collection.name} />
     <Headline>{data.title}</Headline>

@@ -112,7 +112,14 @@ abstract class Node
             $result[$fieldName] = $field->structure();
         }
 
-        return $result;
+        return [
+            'title' => _('Neues Dokument'),
+            'uid' => nanoid(),
+            'fields' => $this->fields(),
+            'data' => [
+                'content' => $result,
+            ],
+        ];
     }
 
     /**
