@@ -13,8 +13,8 @@ class Iframe extends Field
         return new Html($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getTranslatableStructure('iframe');
+        return $this->getTranslatableStructure('iframe', $value);
     }
 }

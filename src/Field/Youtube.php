@@ -14,8 +14,8 @@ class Youtube extends Field
         return new YoutubeValue($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getSimpleStructure('youtube');
+        return $this->getSimpleStructure('youtube', $value);
     }
 }

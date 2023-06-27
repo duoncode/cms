@@ -14,8 +14,8 @@ class Number extends Field
         return new NumberValue($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getSimpleStructure('number');
+        return $this->getSimpleStructure('number', $value);
     }
 }

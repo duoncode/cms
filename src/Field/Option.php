@@ -40,8 +40,8 @@ class Option extends Field
         return $result;
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getSimpleStructure('option');
+        return $this->getSimpleStructure('option', $value);
     }
 }

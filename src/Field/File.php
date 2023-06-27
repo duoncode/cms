@@ -40,9 +40,9 @@ class File extends Field
         return $this->translateFile;
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getFileStructure('file');
+        return $this->getFileStructure('file', $value);
     }
 
     public function asArray(): array

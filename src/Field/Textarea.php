@@ -6,8 +6,8 @@ namespace Conia\Core\Field;
 
 class Textarea extends Text
 {
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getTranslatableStructure('textarea');
+        return $this->getTranslatableStructure('textarea', $value);
     }
 }

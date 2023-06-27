@@ -34,7 +34,7 @@ abstract class Field
     }
 
     abstract public function value(): Value;
-    abstract public function structure(): array;
+    abstract public function structure(mixed $value = null): array;
 
     public function isset(): bool
     {
@@ -152,19 +152,29 @@ abstract class Field
         ];
     }
 
-    public function getFileStructure(string $type): array
+    public function getFileStructure(string $type, mixed $value = null): array
     {
-        return ['type' => $type, 'files' => []];
+        if (is_null($value)) {
+            $value = [];
+        }
+
+        return ['type' => $type, 'files' => $value];
     }
 
-    public function getSimpleStructure(string $type): array
+    public function getSimpleStructure(string $type, mixed $value = null): array
     {
-        return ['type' => $type, 'value' => null];
+        return ['type' => $type, 'value' => $value];
     }
 
-    protected function getTranslatableStructure(string $type): array
+    protected function getTranslatableStructure(string $type, mixed $value = null): array
     {
         $result = ['type' => $type];
+
+        if ($value) {
+            $result['value'] = $value;
+
+            return $result;
+        }
 
         if ($this->translate) {
             $result['value'] = [];

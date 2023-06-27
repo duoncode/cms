@@ -13,8 +13,8 @@ class Time extends Field
         return new TimeValue($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getSimpleStructure('time');
+        return $this->getSimpleStructure('time', $value);
     }
 }

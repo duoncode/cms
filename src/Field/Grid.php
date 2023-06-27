@@ -69,8 +69,12 @@ class Grid extends Field
         return parent::asArray();
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
+        if (is_array($value)) {
+            return ['type' => 'grid', 'columns' => 12, 'value' => $value];
+        }
+
         $result = ['type' => 'grid', 'columns' => 12, 'value' => []];
 
         if ($this->translate) {

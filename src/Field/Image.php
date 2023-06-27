@@ -70,8 +70,8 @@ class Image extends Field
         ]);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getFileStructure('image');
+        return $this->getFileStructure('image', $value);
     }
 }

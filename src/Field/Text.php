@@ -13,8 +13,8 @@ class Text extends Field
         return new TextValue($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getTranslatableStructure('text');
+        return $this->getTranslatableStructure('text', $value);
     }
 }
