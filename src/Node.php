@@ -42,7 +42,7 @@ abstract class Node
     final public function __construct(
         protected readonly Context $context,
         protected readonly Finder $find,
-        protected readonly array $data,
+        protected ?array $data = null,
     ) {
         $this->initFields();
 
@@ -68,12 +68,12 @@ abstract class Node
         return false;
     }
 
-    final public static function fromForm(
-        Context $context,
-        Finder $find,
-        array $data,
-    ): static {
-        return new static($context, $find, $data);
+    final public function setData(array $data): static
+    {
+        $this->data = $data;
+        $this->initFields();
+
+        return $this;
     }
 
     final public function getValue(string $fieldName): ?Value

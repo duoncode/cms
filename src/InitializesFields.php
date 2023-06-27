@@ -27,6 +27,8 @@ trait InitializesFields
 
     protected function initFields(): void
     {
+        $this->fieldNames = [];
+
         $rc = new ReflectionClass(static::class);
 
         foreach ($rc->getProperties() as $property) {
