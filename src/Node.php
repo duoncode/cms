@@ -79,15 +79,15 @@ abstract class Node
 
     final public function getValue(string $fieldName): ?Value
     {
-        $field = null;
         $field = $this->{$fieldName};
-        $value = $field->value();
 
         if (is_null($field)) {
             $type = $this::class;
 
             throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
         }
+
+        $value = $field->value();
 
         if ($value->isset()) {
             return $value;

@@ -91,17 +91,17 @@ final class Column
             case 'meta.classname':
                 return $node::className();
             case 'meta.editor':
-                return (
+                return escape(
                     $node->meta('editor_data')['name'] ??
                     $node->meta('editor_username')
                 ) ?? $node->meta('editor_email');
             case 'meta.creator':
-                return (
+                return escape(
                     $node->meta('creator_data')['name'] ??
                     $node->meta('creator_username')
                 ) ?? $node->meta('creator_email');
             default:
-                return $node->getValue($field);
+                return (string)$node->getValue($field);
         }
     }
 }
