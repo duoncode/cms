@@ -15,6 +15,10 @@ class Picture extends Field
     // TODO: translateFile and multiple
     public function value(): Value\Picture
     {
+        if ($this->translateFile) {
+            return new Value\TranslatedPicture($this->node, $this, $this->valueContext);
+        }
+
         return new Value\Picture($this->node, $this, $this->valueContext);
     }
 
@@ -25,13 +29,18 @@ class Picture extends Field
         return $this;
     }
 
-     public function translateFile(bool $translate = true): static
-     {
-         $this->translateFile = $translate;
-         $this->translate = $translate;
+    public function translateFile(bool $translate = true): static
+    {
+        $this->translateFile = $translate;
+        $this->translate = $translate;
 
-         return $this;
-     }
+        return $this;
+    }
+
+    public function isFileTranslatable(): bool
+    {
+        return $this->translateFile;
+    }
 
     public function asArray(): array
     {
