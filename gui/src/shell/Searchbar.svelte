@@ -2,6 +2,8 @@
     import type { Modal } from 'svelte-simple-modal';
     import type { Blueprint } from '$types/data';
     import { getContext } from 'svelte';
+    import { base } from '$app/paths';
+    import { goto } from '$app/navigation';
     import { _ } from '$lib/locale';
     import NavToggle from './NavToggle.svelte';
     import ModalCreate from '$shell/modals/ModalCreate.svelte';
@@ -13,17 +15,23 @@
     const modal: Modal = getContext('simple-modal');
 
     async function create() {
-        modal.open(
-            ModalCreate,
-            {
-                blueprints,
-                collectionSlug,
-                close: modal.close,
-            },
-            {
-                closeButton: false,
-            },
-        );
+        if (blueprints.length > 1) {
+            modal.open(
+                ModalCreate,
+                {
+                    blueprints,
+                    collectionSlug,
+                    close: modal.close,
+                },
+                {
+                    closeButton: false,
+                },
+            );
+        } else {
+            goto(
+                `${base}/collection/${collectionSlug}/create/${blueprints[0].slug}`,
+            );
+        }
     }
 </script>
 
