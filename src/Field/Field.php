@@ -15,9 +15,9 @@ abstract class Field
     protected ?string $label = null;
     protected ?string $description = null;
     protected bool $translate = false;
-    protected bool $required = false;
     protected ?int $width = null;
     protected ?int $rows = null;
+    protected array $validators = [];
     protected ?FulltextWeight $fulltextWeight = null;
 
     public function __construct(
@@ -39,11 +39,6 @@ abstract class Field
     public function isset(): bool
     {
         return $this->value()->isset();
-    }
-
-    public function validate(): bool
-    {
-        return true;
     }
 
     public function label(string $label): static
@@ -70,16 +65,28 @@ abstract class Field
         return $this->description;
     }
 
-    public function required(bool $required = true): static
+    public function required(): static
     {
-        $this->required = $required;
+        $this->validators[] = 'required';
 
         return $this;
     }
 
     public function isRequired(): bool
     {
-        return $this->required;
+        return in_array('required', $this->validators);
+    }
+
+    public function validate(string ...$validators): static
+    {
+        $this->validators = array_merge($this->validators, $validators);
+
+        return $this;
+    }
+
+    public function validators(): array
+    {
+        return array_values(array_unique($this->validators));
     }
 
     public function translate(bool $translate = true): static
@@ -136,11 +143,12 @@ abstract class Field
             'rows' => $this->rows,
             'width' => $this->width,
             'translate' => $this->translate,
-            'required' => $this->required,
+            'required' => $this->isRequired(),
             'description' => $this->description,
             'label' => $this->label,
             'name' => $this->name,
             'type' => $this::class,
+            'validators' => $this->validators,
         ];
     }
 

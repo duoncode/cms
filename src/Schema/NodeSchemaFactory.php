@@ -34,10 +34,7 @@ class NodeSchemaFactory
 
     protected function add(string $fieldName, Field $field): void
     {
-        $validators = [];
-        if ($field->isRequired()) {
-            $validators[] = 'required';
-        }
+        $validators = $field->validators();
 
         error_log($field::class);
         $this->schema->add($fieldName, match ($field::class) {
@@ -58,13 +55,13 @@ class NodeSchemaFactory
             \Conia\Core\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
             \Conia\Core\Field\Time::class => $this->addText($field, 'time', $validators),
             \Conia\Core\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
-        }, ...$validators);
+        }, ...$validators)->label($field->getLabel());
         error_log($field::class);
     }
 
-    protected function getTypedSchema(string $type): Schema
+    protected function getTypedSchema(string $title, string $type): Schema
     {
-        $schema = new Schema();
+        $schema = new Schema(title: $title);
         $schema->add('type', 'text', 'required', 'in:' . $type);
 
         return $schema;
@@ -72,12 +69,12 @@ class NodeSchemaFactory
 
     protected function addText(Field $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
 
         if ($field->isTranslatable()) {
             $schema->add(
                 'value',
-                $this->getTranslatableSchema($field->isRequired(), 'text'),
+                $this->getTranslatableSchema($field, $field->isRequired(), $validators),
                 ...$validators
             );
         } else {
@@ -89,7 +86,7 @@ class NodeSchemaFactory
 
     protected function addNumber(Field $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
         $schema->add('value', 'float', ...$validators);
 
         return $schema;
@@ -97,7 +94,7 @@ class NodeSchemaFactory
 
     protected function addBool(Field $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
         $schema->add('value', 'bool', ...$validators);
 
         return $schema;
@@ -105,18 +102,18 @@ class NodeSchemaFactory
 
     protected function addFile(File $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
 
         if ($field->isFileTranslatable()) {
             $schema->add(
                 'files',
-                $this->getTranslatableFileSchema(['file', 'title']),
+                $this->getTranslatableFileSchema($field, ['file', 'title']),
                 ...$validators
             );
         } elseif ($field->isTranslatable()) {
             $fileSchema = new Schema(list: true);
             $fileSchema->add('file', 'text', 'required');
-            $fileSchema->add('title', $this->getTranslatableSchema(false));
+            $fileSchema->add('title', $this->getTranslatableSchema($field, false, $validators));
 
             $schema->add('files', $fileSchema, ...$validators);
         } else {
@@ -131,19 +128,19 @@ class NodeSchemaFactory
 
     protected function addImage(Image|Picture $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
 
         if ($field->isFileTranslatable()) {
             $schema->add(
                 'files',
-                $this->getTranslatableFileSchema(['file', 'title', 'alt']),
+                $this->getTranslatableFileSchema($field, ['file', 'title', 'alt']),
                 ...$validators
             );
         } elseif ($field->isTranslatable()) {
             $fileSchema = new Schema(list: true);
             $fileSchema->add('file', 'text', 'required');
-            $fileSchema->add('title', $this->getTranslatableSchema(false));
-            $fileSchema->add('alt', $this->getTranslatableSchema(false));
+            $fileSchema->add('title', $this->getTranslatableSchema($field, false, $validators));
+            $fileSchema->add('alt', $this->getTranslatableSchema($field, false, $validators));
 
             $schema->add('files', $fileSchema, ...$validators);
         } else {
@@ -159,15 +156,16 @@ class NodeSchemaFactory
 
     protected function addGrid(Field $field, string $type, array $validators): Schema
     {
-        $schema = $this->getTypedSchema($type);
+        $title = $field->getLabel();
+        $schema = $this->getTypedSchema($title, $type);
         $schema->add('columns', 'int', 'required');
 
-        $itemSchema = new Schema(list: true);
+        $itemSchema = new Schema(list: true, title: $title);
         $itemSchema->add('type', 'text', 'required', 'in:html,image,youtube');
         $itemSchema->add('rowspan', 'int', 'required');
         $itemSchema->add('colspan', 'int', 'required');
         $itemSchema->add('value', 'text');
-        $fileSchema = new Schema(list: true);
+        $fileSchema = new Schema(list: true, title: $title);
         $fileSchema->add('file', 'text', 'required');
         $fileSchema->add('title', 'text');
         $fileSchema->add('alt', 'text');
@@ -175,7 +173,7 @@ class NodeSchemaFactory
 
         if ($field->isTranslatable()) {
             $defaultLocale = $this->locales->getDefault()->id;
-            $i18nSchema = new Schema();
+            $i18nSchema = new Schema(title: $title);
 
             foreach ($this->locales as $locale) {
                 $validators = [];
@@ -194,15 +192,15 @@ class NodeSchemaFactory
         return $schema;
     }
 
-    protected function getTranslatableFileSchema(array $fields): Schema
+    protected function getTranslatableFileSchema(Field $field, array $fields): Schema
     {
-        $subSchema = new Schema();
+        $subSchema = new Schema(title: $field->getLabel());
 
         foreach ($fields as $field) {
             $subSchema->add($field, 'text');
         }
 
-        $schema = new Schema(list: true);
+        $schema = new Schema(list: true, title: $field->getLabel());
 
         foreach ($this->locales as $locale) {
             $schema->add($locale->id, $subSchema);
@@ -211,10 +209,11 @@ class NodeSchemaFactory
         return $schema;
     }
 
-    protected function getTranslatableSchema(bool $required): Schema
+    protected function getTranslatableSchema(Field $field, bool $required, array $validators): Schema
     {
         $defaultLocale = $this->locales->getDefault()->id;
-        $schema = new Schema();
+        $validators = array_filter($validators, fn ($validator) => $validator !== 'required');
+        $schema = new Schema(title: $field->getLabel());
 
         foreach ($this->locales as $locale) {
             $validators = [];

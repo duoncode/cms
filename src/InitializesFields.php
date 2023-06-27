@@ -14,6 +14,7 @@ use Conia\Core\Field\Attr\Required;
 use Conia\Core\Field\Attr\Rows;
 use Conia\Core\Field\Attr\Translate;
 use Conia\Core\Field\Attr\TranslateFile;
+use Conia\Core\Field\Attr\Validate;
 use Conia\Core\Field\Attr\Width;
 use Conia\Core\Field\Field;
 use Conia\Core\Value\ValueContext;
@@ -83,6 +84,9 @@ trait InitializesFields
                     break;
                 case Multiple::class:
                     $field->multiple(true);
+                    break;
+                case Validate::class:
+                    $field->validate(...$attr->newInstance()->validators);
                     break;
                 case Options::class:
                     $field->options($attr->newInstance()->options);
