@@ -6,7 +6,13 @@
     export let field: GridField;
     export let item: GridHtml;
     export let index: number;
+
+    function edit() {
+        console.log('edit the HANS');
+    }
 </script>
+
+<slot {edit} />
 
 <Wysiwyg
     required={false}

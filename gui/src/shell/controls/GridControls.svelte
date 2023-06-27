@@ -14,6 +14,7 @@
     export let data: GridItem[];
     export let item: GridItem;
     export let index: number;
+    export let edit: () => void;
 
     let first = false;
     let last = false;
@@ -47,10 +48,6 @@
         setDirty();
     }
 
-    function edit() {
-        console.log('hans');
-    }
-
     const dirty = () => {
         setDirty();
     };
@@ -64,12 +61,14 @@
         @apply flex-shrink flex items-center justify-end ml-4 py-2 gap-x-3;
 
         &:hover button {
-            display: inline;
+            opacity: 1;
         }
     }
 
     button {
         @apply w-4 h-4;
+
+        transition: opacity 0.35s ease;
 
         &[disabled].up-down {
             @apply text-gray-300;
@@ -77,17 +76,17 @@
     }
 
     .up-down {
-        display: none;
+        opacity: 0.2;
     }
 
     .remove {
         @apply text-orange-700;
-        display: none;
+        opacity: 0.2;
     }
 
     .add {
         @apply text-sky-700;
-        display: none;
+        opacity: 0.2;
     }
 </style>
 

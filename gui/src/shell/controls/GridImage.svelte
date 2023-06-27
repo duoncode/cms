@@ -7,12 +7,24 @@
     export let item: GridImage;
     export let node: string;
     export let index: number;
+
+    let showSettings = false;
+
+    function edit() {
+        showSettings = !showSettings;
+    }
 </script>
 
-<Upload
-    image
-    multiple={false}
-    url="/assets/node/{node}"
-    cache="/cache/node/{node}"
-    name={field.name + '_' + index}
-    bind:assets={item.files} />
+<slot {edit} />
+
+{#if showSettings}
+    SETTINGS
+{:else}
+    <Upload
+        image
+        multiple={false}
+        url="/assets/node/{node}"
+        cache="/cache/node/{node}"
+        name={field.name + '_' + index}
+        bind:assets={item.files} />
+{/if}

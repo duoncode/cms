@@ -97,22 +97,25 @@
             <div
                 class="border rounded px-2 pb-2 border-gray-300 bg-white col-span-{item.colspan} row-span-{item.rowspan}"
                 animate:flip={{ duration: 300 }}>
-                <GridControls
-                    bind:data
-                    {index}
-                    bind:item
-                    on:addcontent={openAddModal(index)} />
                 <svelte:component
                     this={controls[item.type]}
                     bind:item
                     {node}
                     {index}
-                    {field} />
+                    {field}
+                    let:edit>
+                    <GridControls
+                        bind:data
+                        {index}
+                        bind:item
+                        {edit}
+                        on:addcontent={openAddModal(index)} />
+                </svelte:component>
             </div>
         {/each}
     {:else}
         <div class="p-4 col-span-{cols} flex flex-row justify-center">
-            <Button class="secondary" on:click={openAddModal(1)}>
+            <Button class="secondary" on:click={openAddModal(0)}>
                 <span class="h-5 w-5 mr-2">
                     <IcoCirclePlus />
                 </span>
