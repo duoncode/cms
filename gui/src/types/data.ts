@@ -45,7 +45,9 @@ export interface GridImage extends GridBase {
 
 export interface GridYoutube extends GridBase {
     type: 'youtube';
-    id: string;
+    value: string;
+    aspectRatioX: number;
+    aspectRatioY: number;
 }
 
 export type GridItem = GridHtml | GridImage | GridYoutube;
