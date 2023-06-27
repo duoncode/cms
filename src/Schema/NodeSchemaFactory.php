@@ -20,7 +20,7 @@ class NodeSchemaFactory
         protected readonly Node $node,
         protected readonly Locales $locales,
     ) {
-        $this->schema = new Schema();
+        $this->schema = new Schema(keepUnknown: true);
     }
 
     public function create(): Schema
@@ -36,7 +36,6 @@ class NodeSchemaFactory
     {
         $validators = $field->validators();
 
-        error_log($field::class);
         $this->schema->add($fieldName, match ($field::class) {
             \Conia\Core\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
             \Conia\Core\Field\Date::class => $this->addText($field, 'date', $validators),
@@ -56,12 +55,11 @@ class NodeSchemaFactory
             \Conia\Core\Field\Time::class => $this->addText($field, 'time', $validators),
             \Conia\Core\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
         }, ...$validators)->label($field->getLabel());
-        error_log($field::class);
     }
 
     protected function getTypedSchema(string $title, string $type): Schema
     {
-        $schema = new Schema(title: $title);
+        $schema = new Schema(title: $title, keepUnknown: true);
         $schema->add('type', 'text', 'required', 'in:' . $type);
 
         return $schema;
@@ -111,13 +109,13 @@ class NodeSchemaFactory
                 ...$validators
             );
         } elseif ($field->isTranslatable()) {
-            $fileSchema = new Schema(list: true);
+            $fileSchema = new Schema(list: true, keepUnknown: true);
             $fileSchema->add('file', 'text', 'required');
             $fileSchema->add('title', $this->getTranslatableSchema($field, false, $validators));
 
             $schema->add('files', $fileSchema, ...$validators);
         } else {
-            $fileSchema = new Schema(list: true);
+            $fileSchema = new Schema(list: true, keepUnknown: true);
             $fileSchema->add('file', 'text', 'required');
             $fileSchema->add('title', 'text');
             $schema->add('files', $fileSchema, ...$validators);
@@ -137,14 +135,14 @@ class NodeSchemaFactory
                 ...$validators
             );
         } elseif ($field->isTranslatable()) {
-            $fileSchema = new Schema(list: true);
+            $fileSchema = new Schema(list: true, keepUnknown: true);
             $fileSchema->add('file', 'text', 'required');
             $fileSchema->add('title', $this->getTranslatableSchema($field, false, $validators));
             $fileSchema->add('alt', $this->getTranslatableSchema($field, false, $validators));
 
             $schema->add('files', $fileSchema, ...$validators);
         } else {
-            $fileSchema = new Schema(list: true);
+            $fileSchema = new Schema(list: true, keepUnknown: true);
             $fileSchema->add('file', 'text', 'required');
             $fileSchema->add('title', 'text');
             $fileSchema->add('alt', 'text');
@@ -160,28 +158,20 @@ class NodeSchemaFactory
         $schema = $this->getTypedSchema($title, $type);
         $schema->add('columns', 'int', 'required');
 
-        $itemSchema = new Schema(list: true, title: $title);
-        $itemSchema->add('type', 'text', 'required', 'in:html,image,youtube');
-        $itemSchema->add('rowspan', 'int', 'required');
-        $itemSchema->add('colspan', 'int', 'required');
-        $itemSchema->add('value', 'text');
-        $fileSchema = new Schema(list: true, title: $title);
-        $fileSchema->add('file', 'text', 'required');
-        $fileSchema->add('title', 'text');
-        $fileSchema->add('alt', 'text');
-        $itemSchema->add('files', $fileSchema);
+        $itemSchema = new GridItemSchema(list: true, title: $title, keepUnknown: true);
 
         if ($field->isTranslatable()) {
             $defaultLocale = $this->locales->getDefault()->id;
-            $i18nSchema = new Schema(title: $title);
+            $i18nSchema = new Schema(title: $title, keepUnknown: true);
 
             foreach ($this->locales as $locale) {
-                $validators = [];
+                $innerValidators = [];
+
                 if ($field->isRequired() && $locale->id === $defaultLocale) {
-                    $validators[] = 'required';
+                    $innerValidators[] = 'required';
                 }
 
-                $i18nSchema->add($locale->id, $itemSchema);
+                $i18nSchema->add($locale->id, $itemSchema, ...$innerValidators);
             }
 
             $schema->add('value', $i18nSchema, ...$validators);
@@ -194,13 +184,13 @@ class NodeSchemaFactory
 
     protected function getTranslatableFileSchema(Field $field, array $fields): Schema
     {
-        $subSchema = new Schema(title: $field->getLabel());
+        $subSchema = new Schema(title: $field->getLabel(), keepUnknown: true);
 
         foreach ($fields as $field) {
             $subSchema->add($field, 'text');
         }
 
-        $schema = new Schema(list: true, title: $field->getLabel());
+        $schema = new Schema(list: true, title: $field->getLabel(), keepUnknown: true);
 
         foreach ($this->locales as $locale) {
             $schema->add($locale->id, $subSchema);
@@ -213,7 +203,7 @@ class NodeSchemaFactory
     {
         $defaultLocale = $this->locales->getDefault()->id;
         $validators = array_filter($validators, fn ($validator) => $validator !== 'required');
-        $schema = new Schema(title: $field->getLabel());
+        $schema = new Schema(title: $field->getLabel(), keepUnknown: true);
 
         foreach ($this->locales as $locale) {
             $validators = [];
