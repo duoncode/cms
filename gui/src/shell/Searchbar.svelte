@@ -1,10 +1,11 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
     import type { Blueprint } from '$types/data';
+
+    import { _ } from '$lib/locale';
     import { getContext } from 'svelte';
     import { base } from '$app/paths';
     import { goto } from '$app/navigation';
-    import { _ } from '$lib/locale';
     import NavToggle from './NavToggle.svelte';
     import ModalCreate from '$shell/modals/ModalCreate.svelte';
 

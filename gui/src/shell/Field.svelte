@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let required: boolean;
+    export let required = false;
 </script>
 
 <div class="field" class:required>

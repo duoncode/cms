@@ -1,8 +1,5 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
-    import { flip } from 'svelte/animate';
-    import { setDirty } from '$lib/state';
-    import ModalAdd from '$shell/modals/ModalAdd.svelte';
+    import type { Modal } from 'svelte-simple-modal';
     import type {
         GridItem,
         GridBase,
@@ -11,6 +8,14 @@
         GridYoutube as GridYoutubeData,
     } from '$types/data';
     import type { GridField } from '$types/fields';
+
+    import { _ } from '$lib/locale';
+    import { getContext } from 'svelte';
+    import { flip } from 'svelte/animate';
+    import { setDirty } from '$lib/state';
+    import IcoCirclePlus from '$shell/icons/IcoCirclePlus.svelte';
+    import Button from '$shell/Button.svelte';
+    import ModalAdd from '$shell/modals/ModalAdd.svelte';
     import GridControls from './GridControls.svelte';
     import GridImage from './GridImage.svelte';
     import GridHtml from './GridHtml.svelte';
@@ -19,6 +24,7 @@
     export let field: GridField;
     export let data: GridItem[];
     export let node: string;
+    export let cols = 12;
 
     const controls = {
         image: GridImage,
@@ -30,7 +36,7 @@
         { id: 'image', label: 'Bild' },
         { id: 'youtube', label: 'Youtube-Video' },
     ];
-    const { open, close } = getContext('simple-modal');
+    const modal: Modal = getContext('simple-modal');
 
     function add(
         index: number,
@@ -47,7 +53,7 @@
         } else if (type === 'image') {
             (content as GridImageData).files = [];
         } else {
-            (content as GridYoutubeData).id = '';
+            (content as GridYoutubeData).value = '';
         }
 
         if (before) {
@@ -66,12 +72,12 @@
 
     function openAddModal(index: number) {
         return () => {
-            open(
+            modal.open(
                 ModalAdd,
                 {
                     index,
                     add,
-                    close,
+                    close: modal.close,
                     types,
                 },
                 {
@@ -84,22 +90,34 @@
     }
 </script>
 
-<div class="grid grid-cols-12 gap-y-2 gap-x-6">
-    {#each data as item, index (item)}
-        <div
-            class="col-span-{item.colspan} row-span-{item.rowspan}"
-            animate:flip={{ duration: 300 }}>
-            <GridControls
-                bind:data
-                {index}
-                bind:item
-                on:addcontent={openAddModal(index)} />
-            <svelte:component
-                this={controls[item.type]}
-                bind:item
-                {node}
-                {index}
-                {field} />
+<div
+    class="grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
+    {#if data.length > 0}
+        {#each data as item, index (item)}
+            <div
+                class="border rounded px-2 pb-2 border-gray-300 bg-white col-span-{item.colspan} row-span-{item.rowspan}"
+                animate:flip={{ duration: 300 }}>
+                <GridControls
+                    bind:data
+                    {index}
+                    bind:item
+                    on:addcontent={openAddModal(index)} />
+                <svelte:component
+                    this={controls[item.type]}
+                    bind:item
+                    {node}
+                    {index}
+                    {field} />
+            </div>
+        {/each}
+    {:else}
+        <div class="p-4 col-span-{cols} flex flex-row justify-center">
+            <Button class="secondary" on:click={openAddModal(1)}>
+                <span class="h-5 w-5 mr-2">
+                    <IcoCirclePlus />
+                </span>
+                {_('Inhalt hinzfügen')}
+            </Button>
         </div>
-    {/each}
+    {/if}
 </div>
