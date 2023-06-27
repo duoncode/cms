@@ -1,6 +1,4 @@
-.field {
-    @apply p-4 sm:p-6 md:p-8;
-
+.field, .setting {
     label {
         @apply block font-medium leading-6 text-gray-900;
         @apply flex flex-row items-center;
@@ -19,6 +17,7 @@
         @apply ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 ;
         @apply focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6;
     }
+
     input[type=number],
     input[type=date],
     input[type=time] {
@@ -28,4 +27,12 @@
     input[required] {
         @apply border-l-rose-700 border-l-4;
     }
+}
+
+.field {
+    @apply p-4 sm:p-6 md:p-8;
+}
+
+.setting {
+    @apply py-2 text-sm;
 }
