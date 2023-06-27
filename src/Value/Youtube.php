@@ -8,10 +8,17 @@ class Youtube extends Value
 {
     public function __toString(): string
     {
-        return '<div class="video-container aspect-ratio-' . $this->data['aspect-ratio'] . '">' .
-            '<iframe class="video" src="https://www.youtube.com/embed/' . $this->data['id'] .
+        $x = (float)$this->data['aspectRatioX'];
+        $y = (float)$this->data['aspectRatioY'];
+        $percent = number_format($y / $x * 100, 2, '.', '');
+        $iframeStyle = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%';
+
+        return '<div class="youtube-container">' .
+            '<div style="position: relative; padding-top: ' . $percent . '%">' .
+            '<iframe class="youtube" style="' . $iframeStyle . '" ' .
+            'src="https://www.youtube.com/embed/' . $this->data['id'] .
             '" allowfullscreen></iframe>' .
-        '</div>';
+        '</div></div>';
     }
 
     public function unwrap(): mixed
