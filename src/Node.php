@@ -137,7 +137,7 @@ abstract class Node
         }
 
         return [
-            'title' => _('Neues Dokument'),
+            'title' => _('Neues Dokument:') . ' ' . $this->name(),
             'fields' => $this->fields(),
             'data' => [
                 'uid' => nanoid(),
