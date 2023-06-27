@@ -128,7 +128,7 @@ class Panel
     #[Permission('panel')]
     public function node(Finder $find, string $uid): array
     {
-        $node = $find->node->byUid($uid);
+        $node = $find->node->byUid($uid, published: null);
 
         if ($node) {
             return $node->response();

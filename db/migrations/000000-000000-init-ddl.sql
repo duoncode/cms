@@ -107,11 +107,10 @@ CREATE TABLE conia.loginsessions (
 
 CREATE TABLE conia.types (
     type integer GENERATED ALWAYS AS IDENTITY,
-    name text NOT NULL CHECK (char_length(name) <= 64),
-    classname text NOT NULL CHECK (char_length(classname) <= 256),
+    slug text NOT NULL CHECK (char_length(slug) <= 64),
     kind conia.contenttype NOT NULL,
     CONSTRAINT pk_types PRIMARY KEY (type),
-    CONSTRAINT uc_types_name UNIQUE (name)
+    CONSTRAINT uc_types_name UNIQUE (slug)
 );
 
 

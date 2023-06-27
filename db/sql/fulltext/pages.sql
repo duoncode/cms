@@ -1,6 +1,6 @@
 SELECT
     n.content,
-    t.classname
+    t.slug
 FROM
     conia.nodes n
 JOIN conia.types t

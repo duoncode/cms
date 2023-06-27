@@ -14,7 +14,7 @@ class Fulltext
             throw new HttpNotFound();
         }
 
-        $class = $data['classname'];
+        $class = $data['slug'];
 
         if (is_subclass_of($class, Node::class)) {
             $page = new $class($request, $config, $find, $data);

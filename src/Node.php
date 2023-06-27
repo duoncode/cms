@@ -254,7 +254,6 @@ abstract class Node
     {
         if ($this->request->header('Accept') === 'application/json') {
             $data = $this->data();
-            unset($data['classname']);
 
             return [
                 'title' => $this->title(),
@@ -269,26 +268,7 @@ abstract class Node
 
     public function change(): array
     {
-        if ($this->request->header('Content-Type') !== 'application/json') {
-            throw new HttpBadRequest();
-        }
-
-        $data = $this->request->json();
-        $this->validate($data);
-
-        $this->db->nodes->change([
-            'uid' => $data['uid'],
-            'hidden' => $data['hidden'],
-            'published' => $data['published'],
-            'locked' => $data['published'],
-            'content' => json_encode($data['content']),
-            'editor' => $this->request->get('session')->authenticatedUserId(),
-        ])->run();
-
-        return [
-            'success' => true,
-            'error' => false,
-        ];
+        return $this->save();
     }
 
     public function delete(): array
@@ -313,7 +293,7 @@ abstract class Node
 
         return match ($request->header('Content-Type')) {
             'application/x-www-form-urlencoded' => $this->formPost($request->form()),
-            'application/json' => $this->jsonPost($request->json()),
+            'application/json' => $this->save(),
         };
     }
 
@@ -324,7 +304,7 @@ abstract class Node
         $result = $schema->validate($data['content']);
 
         if (!$result) {
-            $exception = new HttpBadRequest('Bitte alle Pflichtfelder ausfüllen');
+            $exception = new HttpBadRequest(_('Unvollständige oder fehlerhafte Daten'));
             $exception->setPayload($schema->errors());
 
             throw $exception;
@@ -333,13 +313,35 @@ abstract class Node
         return $result;
     }
 
-    protected function jsonPost(array $body): array
+    protected function save(): array
     {
-        error_log(print_r($body, true));
+        if ($this->request->header('Content-Type') !== 'application/json') {
+            throw new HttpBadRequest();
+        }
 
-        return ['success' => true];
+        $data = $this->request->json();
+        $this->validate($data);
+
+        $this->db->nodes->save([
+            'uid' => $data['uid'],
+            'hidden' => $data['hidden'],
+            'published' => $data['published'],
+            'locked' => $data['published'],
+            'type' => $this->slug(),
+            'content' => json_encode($data['content']),
+            'editor' => $this->request->get('session')->authenticatedUserId(),
+        ])->run();
+
+        return [
+            'success' => true,
+            'error' => false,
+        ];
     }
 
+    /**
+     * Usually overwritten in the app. Used to handle form posts
+     * from the fronend.
+     */
     protected function formPost(?array $body): Response
     {
         throw new HttpBadRequest();

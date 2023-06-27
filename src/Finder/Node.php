@@ -53,7 +53,12 @@ class Node
         $data['content'] = json_decode($data['content'], true);
         $data['editor_data'] = json_decode($data['editor_data'], true);
         $data['creator_data'] = json_decode($data['creator_data'], true);
-        $class = $data['classname'];
+        $class = $this
+            ->context
+            ->registry
+            ->tag(\Conia\Core\Node::class)
+            ->entry($data['typeslug'])
+            ->definition();
 
         if (is_subclass_of($class, \Conia\Core\Node::class)) {
             return new $class($this->context, $this->find, $data);

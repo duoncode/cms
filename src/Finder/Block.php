@@ -28,8 +28,12 @@ class Block
             'deleted' => $deleted,
             'kind' => 'block',
         ])->one();
-
-        $class = $data['classname'];
+        $class = $this
+            ->context
+            ->registry
+            ->tag(Node::class)
+            ->entry($data['typeslug'])
+            ->definition();
 
         if (!is_subclass_of($class, Node::class)) {
             throw new RuntimeException('Invalid block class' . $class);

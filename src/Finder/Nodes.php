@@ -16,8 +16,8 @@ final class Nodes implements Iterator
     private string $whereTypes = '';
     private string $order = '';
     private ?int $limit = null;
-    private ?bool $deleted = false;
-    private ?bool $published = true;
+    private ?bool $deleted = false; // defaults to false, if all nodes are needed set $deleted to null
+    private ?bool $published = true; // ditto
     private readonly array $builtins;
     private Generator $result;
 
@@ -27,7 +27,6 @@ final class Nodes implements Iterator
     ) {
         $this->builtins = [
             'changed' => 'n.changed',
-            'classname' => 't.classname',
             'created' => 'n.created',
             'creator' => 'uc.uid',
             'editor' => 'ue.uid',
@@ -35,7 +34,8 @@ final class Nodes implements Iterator
             'id' => 'n.uid',
             'locked' => 'n.locked',
             'published' => 'n.published',
-            'type' => 't.name',
+            'type' => 't.slug',
+            'typeslug' => 't.slug',
             'uid' => 'n.uid',
             'kind' => 't.kind',
         ];
@@ -108,11 +108,15 @@ final class Nodes implements Iterator
 
         $page = $this->result->current();
 
-        $class = $page['classname'];
         $page['content'] = json_decode($page['content'], true);
         $page['editor_data'] = json_decode($page['editor_data'], true);
         $page['creator_data'] = json_decode($page['creator_data'], true);
         $context = $this->context;
+        $class = $context
+            ->registry
+            ->tag(Node::class)
+            ->entry($page['typeslug'])
+            ->definition();
 
         return new $class($context, $this->find, $page);
     }
@@ -141,10 +145,16 @@ final class Nodes implements Iterator
 
         $params = [
             'condition' => $conditions,
-            'deleted' => $this->deleted,
-            'published' => $this->published,
             'limit' => $this->limit,
         ];
+
+        if (is_bool($this->deleted)) {
+            $params['deleted'] = $this->deleted;
+        }
+
+        if (is_bool($this->published)) {
+            $params['published'] = $this->published;
+        }
 
         if ($this->order) {
             $params['order'] = $this->order;
@@ -158,11 +168,7 @@ final class Nodes implements Iterator
         $result = [];
 
         foreach ($types as $type) {
-            if (class_exists($type) && is_subclass_of($type, Node::class)) {
-                $result[] = 't.classname = ' . $this->context->db->quote($type);
-            } else {
-                $result[] = 't.name = ' . $this->context->db->quote($type);
-            }
+            $result[] = 't.slug = ' . $this->context->db->quote($type);
         }
 
         return match (count($result)) {

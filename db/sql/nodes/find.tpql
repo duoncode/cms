@@ -8,8 +8,7 @@ SELECT
     n.changed,
     n.deleted,
     n.content,
-    t.name AS type,
-    t.classname,
+    t.slug AS typeslug,
     uc.uid AS creator_uid,
     uc.email AS creator_email,
     uc.username AS creator_username,
@@ -77,8 +76,7 @@ GROUP BY
     ue.email,
     ue.username,
     ue.data,
-    t.name,
-    t.classname
+    t.slug
 <?php if (isset($order)) : ?>
 ORDER BY <?= $order ?>
 <?php endif ?>
