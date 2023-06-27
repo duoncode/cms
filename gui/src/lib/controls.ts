@@ -8,6 +8,7 @@ import Number from '$shell/controls/Number.svelte';
 import Option from '$shell/controls/Option.svelte';
 import Picture from '$shell/controls/Picture.svelte';
 import Text from '$shell/controls/Text.svelte';
+import Textarea from '$shell/controls/Textarea.svelte';
 import Time from '$shell/controls/Time.svelte';
 
 export default {
@@ -21,5 +22,6 @@ export default {
     'Conia\\Core\\Field\\Option': Option,
     'Conia\\Core\\Field\\Picture': Picture,
     'Conia\\Core\\Field\\Text': Text,
+    'Conia\\Core\\Field\\Textarea': Textarea,
     'Conia\\Core\\Field\\Time': Time,
 };
