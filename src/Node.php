@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Conia\Chuck\Exception\HttpBadRequest;
+use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
@@ -127,13 +128,13 @@ abstract class Node
         return $result;
     }
 
-    public function blueprint(): array
+    public function blueprint(array $values = []): array
     {
         $result = [];
 
         foreach ($this->fieldNames as $fieldName) {
             $field = $this->{$fieldName};
-            $result[$fieldName] = $field->structure();
+            $result[$fieldName] = $field->structure($values[$fieldName] ?? null);
         }
 
         return [
@@ -147,6 +148,11 @@ abstract class Node
                 'content' => $result,
             ],
         ];
+    }
+
+    public function fillData(array $data): array
+    {
+        return $this->blueprint($data)['data'];
     }
 
     /**
@@ -268,7 +274,7 @@ abstract class Node
 
     public function change(): array
     {
-        return $this->save();
+        return $this->saveRequest();
     }
 
     public function delete(): array
@@ -293,8 +299,35 @@ abstract class Node
 
         return match ($request->header('Content-Type')) {
             'application/x-www-form-urlencoded' => $this->formPost($request->form()),
-            'application/json' => $this->save(),
+            'application/json' => $this->saveRequest(),
         };
+    }
+
+    public function save(array $data): array
+    {
+        $this->validate($data);
+
+        // TODO: check permissions
+        try {
+            $editor = $this->request->get('session')->authenticatedUserId();
+        } catch (\Throwable) {
+            $editor = 1; // The System user
+        }
+
+        $this->db->nodes->save([
+            'uid' => $data['uid'],
+            'hidden' => $data['hidden'],
+            'published' => $data['published'],
+            'locked' => $data['published'],
+            'type' => $this->slug(),
+            'content' => json_encode($data['content']),
+            'editor' => $editor,
+        ])->run();
+
+        return [
+            'success' => true,
+            'error' => false,
+        ];
     }
 
     protected function validate(array $data): bool
@@ -313,29 +346,15 @@ abstract class Node
         return $result;
     }
 
-    protected function save(): array
+    protected function saveRequest(): array
     {
         if ($this->request->header('Content-Type') !== 'application/json') {
             throw new HttpBadRequest();
         }
 
         $data = $this->request->json();
-        $this->validate($data);
 
-        $this->db->nodes->save([
-            'uid' => $data['uid'],
-            'hidden' => $data['hidden'],
-            'published' => $data['published'],
-            'locked' => $data['published'],
-            'type' => $this->slug(),
-            'content' => json_encode($data['content']),
-            'editor' => $this->request->get('session')->authenticatedUserId(),
-        ])->run();
-
-        return [
-            'success' => true,
-            'error' => false,
-        ];
+        return $this->save($data);
     }
 
     /**
@@ -372,5 +391,12 @@ abstract class Node
     protected function locale(): Locale
     {
         return $this->request->get('locale');
+    }
+
+    protected function getResponse(): Response
+    {
+        $factory = $this->registry->get(Factory::class);
+
+        return Response::fromFactory($factory);
     }
 }
