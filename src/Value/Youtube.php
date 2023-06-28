@@ -16,7 +16,7 @@ class Youtube extends Value
         return '<div class="youtube-container">' .
             '<div style="position: relative; padding-top: ' . $percent . '%">' .
             '<iframe class="youtube" style="' . $iframeStyle . '" ' .
-            'src="https://www.youtube.com/embed/' . $this->data['id'] .
+            'src="https://www.youtube.com/embed/' . $this->data['value'] .
             '" allowfullscreen></iframe>' .
         '</div></div>';
     }
