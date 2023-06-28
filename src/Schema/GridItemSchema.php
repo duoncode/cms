@@ -13,6 +13,7 @@ class GridItemSchema extends Schema
         $this->add('type', 'text', 'required', 'in:html,image,youtube');
         $this->add('rowspan', 'int', 'required');
         $this->add('colspan', 'int', 'required');
+        $this->add('colstart', 'int');
     }
 
     protected function review(): void

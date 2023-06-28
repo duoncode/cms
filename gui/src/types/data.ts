@@ -31,6 +31,7 @@ export interface GridBase {
     type: string;
     colspan: number;
     rowspan: number;
+    colstart?: number;
 }
 
 export interface GridHtml extends GridBase {

@@ -47,6 +47,7 @@
             type,
             colspan: 12,
             rowspan: 1,
+            colstart: null,
         };
         if (type === 'html') {
             (content as GridHtmlData).value = '';

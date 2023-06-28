@@ -14,8 +14,8 @@ class Decimal extends Field
         return new DecimalValue($this->node, $this, $this->valueContext);
     }
 
-    public function structure(): array
+    public function structure(mixed $value = null): array
     {
-        return $this->getSimpleStructure('decimal');
+        return $this->getSimpleStructure('decimal', $value);
     }
 }
