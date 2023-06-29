@@ -122,6 +122,17 @@ class Image extends File
         return $new;
     }
 
+    public function resize(int $width, int $height, bool $enlarge = false): static
+    {
+        $new = clone $this;
+        $new->size = new Assets\Size($width, $height);
+        $new->resizeMode = Assets\ResizeMode::Resize;
+        $new->enlarge = $enlarge;
+        $new->queryString = "?resize=resize&w={$width}&h={$height}" . ($enlarge ? '&enlarge=true' : '');
+
+        return $new;
+    }
+
     public function crop(int $width, int $height, string $position = 'center'): static
     {
         $pos = match ($position) {

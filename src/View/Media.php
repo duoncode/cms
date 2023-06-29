@@ -35,6 +35,7 @@ class Media
                 ResizeMode::LongSide->value => [new Size((int)$qs['size']), ResizeMode::LongSide],
                 ResizeMode::ShortSide->value => [new Size((int)$qs['size']), ResizeMode::ShortSide],
                 ResizeMode::Fit->value => [new Size((int)$qs['w'], (int)$qs['h']), ResizeMode::Fit],
+                ResizeMode::Resize->value => [new Size((int)$qs['w'], (int)$qs['h']), ResizeMode::Resize],
                 ResizeMode::FreeCrop->value => [new Size((int)$qs['w'], (int)$qs['h'], [
                     'x' => $qs['x'] ? (int)$qs['x'] : false,
                     'y' => $qs['y'] ? (int)$qs['y'] : false,
