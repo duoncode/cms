@@ -1,8 +1,7 @@
 <script lang="ts">
+    import type { Modal } from 'svelte-simple-modal';
     import { getContext } from 'svelte';
     import { _ } from '$lib/locale';
-    import IcoCamera from '$shell/icons/IcoCamera.svelte';
-    import IcoCircleSlash from '$shell/icons/IcoCircleSlash.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
@@ -14,7 +13,6 @@
     export let upload: boolean;
     export let multiple: boolean;
     export let remove: () => void;
-    export let size = 'xl';
     export let useThumb = true;
     export let querystring = '';
 
@@ -23,20 +21,14 @@
     let hover = false;
     let ext = '';
 
-    const { open } = getContext('simple-modal');
+    const modal: Modal = getContext('simple-modal');
 
     function preview() {
-        open(ImagePreview, { image: orig });
+        modal.open(ImagePreview, { image: orig });
     }
 
     function thumbIt(image: string) {
-        const a = image.split('.');
-
-        return (
-            a.slice(0, a.length - 1).join('.') +
-            '-w400.' +
-            a.slice(a.length - 1)
-        );
+        return image + '?resize=width&w=400';
     }
 
     $: {

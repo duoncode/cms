@@ -60,12 +60,6 @@ class Grid extends Field
 
     public function asArray(): array
     {
-        // Generate thumbs
-        // TODO: There should be a better place
-        foreach ($this->value()->images(all: true) as $image) {
-            $image->width(400)->url();
-        }
-
         return parent::asArray();
     }
 

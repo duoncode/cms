@@ -24,7 +24,7 @@
         image
         multiple={false}
         url="/assets/node/{node}"
-        cache="/cache/node/{node}"
+        cache="/media/image/node/{node}"
         name={field.name + '_' + index}
         bind:assets={item.files} />
 {/if}

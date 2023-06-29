@@ -20,6 +20,10 @@ export default defineConfig({
                 target: 'http://localhost:1983',
                 secure: false,
             },
+            '/media': {
+                target: 'http://localhost:1983',
+                secure: false,
+            },
             '/images': {
                 target: 'http://localhost:1983',
                 secure: false,

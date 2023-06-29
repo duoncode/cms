@@ -51,19 +51,6 @@ class Image extends Field
 
     public function asArray(): array
     {
-        // Generate thumbs
-        // TODO: There should be a better place
-        if ($this->multiple) {
-            foreach ($this->value() as $image) {
-                $image->width(400)->url();
-            }
-        } else {
-            $value = $this->value();
-            if ($value->count() > 0) {
-                $value->width(400)->url();
-            }
-        }
-
         return array_merge(parent::asArray(), [
             'multiple' => $this->multiple,
             'translateFile' => $this->translateFile,

@@ -22,7 +22,7 @@
             image
             multiple={true}
             url="/assets/node/{node}"
-            cache="/cache/node/{node}"
+            cache="/media/image/node/{node}"
             name={field.name}
             bind:assets={data.files} />
         <!-- As picture tags show only one image, we need only one alt definition

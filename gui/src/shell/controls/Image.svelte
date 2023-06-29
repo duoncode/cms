@@ -24,7 +24,7 @@
                     <Upload
                         image
                         url="/assets/node/{node}"
-                        cache="/cache/node/{node}"
+                        cache="/media/image/node/{node}"
                         name={field.name}
                         bind:assets={data.files[locale.id]} />
                 {/if}
@@ -34,7 +34,7 @@
                 image
                 multiple={field.multiple}
                 url="/assets/node/{node}"
-                cache="/cache/node/{node}"
+                cache="/media/image/node/{node}"
                 name={field.name}
                 bind:assets={data.files} />
         {/if}
