@@ -13,6 +13,7 @@ class Image extends File
     protected ?Assets\Size $size = null;
     protected ?Assets\ResizeMode $resizeMode = null;
     protected bool $enlarge = false;
+    protected bool $lazy = false;
     protected ?int $quality = null;
 
     public function __toString(): string
@@ -39,6 +40,14 @@ class Image extends File
     public function path(bool $bust = false): string
     {
         return $this->getImage($this->index)->path($bust);
+    }
+
+    public function lazy($lazy = true): static
+    {
+        $new = clone $this;
+        $new->lazy = $lazy;
+
+        return $new;
     }
 
     public function width(int $width, bool $enlarge = false): static
@@ -174,7 +183,13 @@ class Image extends File
         $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$index]['file']);
 
         if ($this->size) {
-            $image = $image->resize($this->size, $this->resizeMode, $this->enlarge, $this->quality);
+            $image = $image->resize(
+                $this->size,
+                $this->resizeMode,
+                $this->enlarge,
+                $this->lazy,
+                $this->quality,
+            );
         }
 
         return $image;

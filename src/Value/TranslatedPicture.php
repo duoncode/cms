@@ -36,7 +36,13 @@ class TranslatedPicture extends Picture
         $image = $this->getAssets()->image($this->assetsPath() . $file);
 
         if ($this->size) {
-            $image = $image->resize($this->size, $this->resizeMode, $this->enlarge, $this->quality);
+            $image = $image->resize(
+                $this->size,
+                $this->resizeMode,
+                $this->enlarge,
+                $this->lazy,
+                $this->quality
+            );
         }
 
         return $image;
