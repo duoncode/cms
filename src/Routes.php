@@ -8,6 +8,7 @@ use Conia\Chuck\Group;
 use Conia\Core\App;
 use Conia\Core\Middleware;
 use Conia\Core\View\Auth;
+use Conia\Core\View\Media;
 use Conia\Core\View\Page;
 use Conia\Core\View\Panel;
 
@@ -31,8 +32,13 @@ class Routes
             'conia.panel.',
         );
 
-        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')->middleware(Middleware\InitRequest::class);
-        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')
+            ->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')
+            ->middleware(Middleware\InitRequest::class);
+
+        $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image')
+            ->middleware(Middleware\InitRequest::class);
 
         // Add catchall for page url paths. Must be the last one
         $app->route(
