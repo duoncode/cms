@@ -221,7 +221,6 @@ class Grid extends Value
             new Size((int)($maxWidth / $this->columns()) * (int)($data['colspan'] ?? 12)),
             ResizeMode::Width,
             enlarge: false,
-            lazy: true,
             quality: null,
         );
         $url = $resized->url(true);

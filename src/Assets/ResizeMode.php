@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Core\Assets;
 
-enum ResizeMode
+enum ResizeMode: string
 {
-    case Crop;
-    case Fit;
-    case FreeCrop;
-    case Height;
-    case LongSide;
-    case Resize;
-    case ShortSide;
-    case Width;
+    case Crop = 'crop';
+    case Fit = 'fit';
+    case FreeCrop = 'freecrop';
+    case Height = 'height';
+    case LongSide = 'longside';
+    case Resize = 'resize';
+    case ShortSide = 'shortside';
+    case Width = 'width';
 }

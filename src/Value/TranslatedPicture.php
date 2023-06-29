@@ -40,7 +40,6 @@ class TranslatedPicture extends Picture
                 $this->size,
                 $this->resizeMode,
                 $this->enlarge,
-                $this->lazy,
                 $this->quality
             );
         }

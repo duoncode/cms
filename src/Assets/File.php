@@ -16,10 +16,14 @@ class File
     ) {
     }
 
-    public function path(bool $bust = false): string
+    public function path(): string
     {
-        $path = Path::inside($this->assets->assetsDir, $this->file);
-        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $path))));
+        return Path::inside($this->assets->assetsDir, $this->file);
+    }
+
+    public function publicPath(bool $bust = false): string
+    {
+        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $this->path()))));
 
         if ($bust) {
             $path = $this->bust($path);
@@ -30,7 +34,7 @@ class File
 
     public function url(bool $bust = true): string
     {
-        return $this->request->origin() . $this->path($bust);
+        return $this->request->origin() . $this->publicPath($bust);
     }
 
     protected function bust(string $path): string

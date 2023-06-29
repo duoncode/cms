@@ -51,9 +51,9 @@ class File extends Value
         throw new RuntimeException('Invalid file url');
     }
 
-    public function path(bool $bust = false): string
+    public function publicPath(bool $bust = false): string
     {
-        return filter_var($this->getFile($this->index)->path($bust), FILTER_SANITIZE_URL);
+        return filter_var($this->getFile($this->index)->publicPath($bust), FILTER_SANITIZE_URL);
     }
 
     public function unwrap(): ?array

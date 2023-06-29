@@ -14,8 +14,7 @@ class Image
 {
     public readonly string $relativeFile;
     public readonly string $file;
-    protected ?array $outPath = null;
-    protected bool $lazy = false;
+    protected ?string $cacheFile = null;
 
     public function __construct(
         protected readonly Request $request,
@@ -26,27 +25,18 @@ class Image
         $this->relativeFile = substr($this->file, strlen($assets->assetsDir));
     }
 
-    public function path(bool $bust = false): string
+    public function path(): string
     {
-        $encode = fn ($f) => implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $f))));
-        if ($this->outPath) {
-            $path = $encode($this->outPath['path']);
-            $path .= $this->outPath['path'];
-        } else {
-            $path = $encode($this->file);
-        }
+        return $this->cacheFile ?: $this->file;
+    }
+
+    public function publicPath(bool $bust = false): string
+    {
+        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $this->path()))));
 
         if ($bust) {
             $buster = hash('xxh32', (string)filemtime($this->file));
-            if ($this->lazy) {
-                $path .= '&v=' . $buster;
-            } else {
-                $path .= '?v=' . $buster;
-            }
-        }
-
-        if ($this->lazy) {
-            return $path;
+            $path .= '?v=' . $buster;
         }
 
         return substr($path, strlen($this->assets->publicDir));
@@ -54,28 +44,22 @@ class Image
 
     public function url(bool $bust = false): string
     {
-        return $this->request->origin() . $this->path($bust);
+        return $this->request->origin() . $this->publicPath($bust);
     }
 
-    public function resize(Size $size, ResizeMode $mode, bool $enlarge, bool $lazy, int $quality = null): static
+    public function resize(Size $size, ResizeMode $mode, bool $enlarge, ?int $quality): static
     {
-        $this->lazy = $lazy;
+        $this->cacheFile = $this->getCacheFilePath($size, $mode, $enlarge);
 
-        if ($lazy) {
-            $this->outPath = $this->getLazyPath($size, $mode, $enlarge);
-        } else {
-            $this->outPath = $this->getCacheFilePath($size, $mode, $enlarge);
+        if (is_file($this->cacheFile)) {
+            $fileMtime = filemtime($this->file);
+            $cacheMtime = filemtime($this->cacheFile);
 
-            if (is_file($this->outPath['path'])) {
-                $fileMtime = filemtime($this->file);
-                $cacheMtime = filemtime($this->outPath['path']);
-
-                if ($fileMtime > $cacheMtime) {
-                    $this->createCacheFile($size, $mode, $enlarge, $quality);
-                }
-            } else {
+            if ($fileMtime > $cacheMtime) {
                 $this->createCacheFile($size, $mode, $enlarge, $quality);
             }
+        } else {
+            $this->createCacheFile($size, $mode, $enlarge, $quality);
         }
 
         return $this;
@@ -122,13 +106,13 @@ class Image
                 ),
             };
 
-            $image->save($this->outPath, quality: $quality);
+            $image->save($this->cacheFile, quality: $quality);
         } catch (ImageResizeException $e) {
             throw new RuntimeException('Assets error: ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    protected function getCacheFilePath(Size $size, ResizeMode $mode, bool $enlarge): array
+    protected function getCacheFilePath(Size $size, ResizeMode $mode, bool $enlarge): string
     {
         $info = pathinfo($this->relativeFile);
         $relativeDir = $info['dirname'] ?? null;
@@ -164,17 +148,9 @@ class Image
             $suffix .= '-enl';
         }
 
-        $outFile = $cacheDir . '/' . $filenameSegments[0] . $suffix;
+        $cacheFile = $cacheDir . '/' . $filenameSegments[0] . $suffix;
 
-        return [
-            // Add extension
-            'path' => $outFile . '.' . implode('.', array_slice($filenameSegments, 1)),
-            'qs' => '',
-        ];
-    }
-
-    protected function getLazyPath(Size $size, ResizeMode $mode, bool $enlarge): array
-    {
-        return [];
+        // Add extension
+        return $cacheFile . '.' . implode('.', array_slice($filenameSegments, 1));
     }
 }

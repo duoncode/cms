@@ -13,8 +13,9 @@ class Image extends File
     protected ?Assets\Size $size = null;
     protected ?Assets\ResizeMode $resizeMode = null;
     protected bool $enlarge = false;
-    protected bool $lazy = false;
+    protected bool $lazy = true;
     protected ?int $quality = null;
+    protected string $queryString = '';
 
     public function __toString(): string
     {
@@ -28,24 +29,40 @@ class Image extends File
             $class ? sprintf('class="%s" ', escape($class)) : '',
             $this->url($bust),
             escape($this->alt() ?: strip_tags($this->title())),
-            $this->path(),
+            $this->publicPath(),
         );
     }
 
     public function url(bool $bust = false): string
     {
+        if ($this->lazy) {
+            return $this->getMediaUrl($this->index);
+        }
+
         return $this->getImage($this->index)->url($bust);
     }
 
-    public function path(bool $bust = false): string
+    public function publicPath(bool $bust = false): string
     {
-        return $this->getImage($this->index)->path($bust);
+        if ($this->lazy) {
+            return $this->getMediaPath($this->index);
+        }
+
+        return $this->getImage($this->index)->publicPath($bust);
     }
 
-    public function lazy($lazy = true): static
+    public function lazy(): static
     {
         $new = clone $this;
-        $new->lazy = $lazy;
+        $new->lazy = true;
+
+        return $new;
+    }
+
+    public function nonlazy(): static
+    {
+        $new = clone $this;
+        $new->lazy = false;
 
         return $new;
     }
@@ -56,6 +73,7 @@ class Image extends File
         $new->size = new Assets\Size($width);
         $new->resizeMode = Assets\ResizeMode::Width;
         $new->enlarge = $enlarge;
+        $new->queryString = "?resize=width&w={$width}" . ($enlarge ? '&enlarge=true' : '');
 
         return $new;
     }
@@ -66,6 +84,7 @@ class Image extends File
         $new->size = new Assets\Size($height);
         $new->resizeMode = Assets\ResizeMode::Height;
         $new->enlarge = $enlarge;
+        $new->queryString = "?resize=height&h={$height}" . ($enlarge ? '&enlarge=true' : '');
 
         return $new;
     }
@@ -76,6 +95,7 @@ class Image extends File
         $new->size = new Assets\Size($size);
         $new->resizeMode = Assets\ResizeMode::LongSide;
         $new->enlarge = $enlarge;
+        $new->queryString = "?resize=longside&size={$size}" . ($enlarge ? '&enlarge=true' : '');
 
         return $new;
     }
@@ -86,6 +106,7 @@ class Image extends File
         $new->size = new Assets\Size($size);
         $new->resizeMode = Assets\ResizeMode::ShortSide;
         $new->enlarge = $enlarge;
+        $new->queryString = "?resize=shortside&size={$size}" . ($enlarge ? '&enlarge=true' : '');
 
         return $new;
     }
@@ -96,13 +117,14 @@ class Image extends File
         $new->size = new Assets\Size($width, $height);
         $new->resizeMode = Assets\ResizeMode::Fit;
         $new->enlarge = $enlarge;
+        $new->queryString = "?resize=fit&w={$width}&h={$height}" . ($enlarge ? '&enlarge=true' : '');
 
         return $new;
     }
 
     public function crop(int $width, int $height, string $position = 'center'): static
     {
-        $position = match ($position) {
+        $pos = match ($position) {
             'top' => ImageResize::CROPTOP,
             'centre' => ImageResize::CROPCENTRE,
             'center' => ImageResize::CROPCENTER,
@@ -114,8 +136,9 @@ class Image extends File
         };
 
         $new = clone $this;
-        $new->size = new Assets\Size($width, $height, $position);
+        $new->size = new Assets\Size($width, $height, $pos);
         $new->resizeMode = Assets\ResizeMode::Crop;
+        $new->queryString = "?resize=crop&w={$width}&h={$height}&pos={$position}";
 
         return $new;
     }
@@ -125,6 +148,9 @@ class Image extends File
         $new = clone $this;
         $new->size = new Assets\Size($width, $height, ['x' => $x, 'y' => $y]);
         $new->resizeMode = Assets\ResizeMode::FreeCrop;
+        $new->queryString = "?resize=freecrop&w={$width}&h={$height}" .
+            ($x ? "&x={$x}" : '') .
+            ($y ? "&y={$y}" : '');
 
         return $new;
     }
@@ -178,18 +204,26 @@ class Image extends File
         return '';
     }
 
+    protected function getMediaPath(int $index): string
+    {
+        return '/media/image/' .
+            $this->assetsPath() .
+            $this->data['files'][$index]['file'] .
+            $this->queryString .
+            ($this->quality ? "&quality={$this->quality}" : '');
+    }
+
+    protected function getMediaUrl(int $index): string
+    {
+        return $this->node->request->origin() . $this->getMediaPath($index);
+    }
+
     protected function getImage(int $index): Assets\Image
     {
         $image = $this->getAssets()->image($this->assetsPath() . $this->data['files'][$index]['file']);
 
         if ($this->size) {
-            $image = $image->resize(
-                $this->size,
-                $this->resizeMode,
-                $this->enlarge,
-                $this->lazy,
-                $this->quality,
-            );
+            $image = $image->resize($this->size, $this->resizeMode, $this->enlarge, $this->quality);
         }
 
         return $image;
