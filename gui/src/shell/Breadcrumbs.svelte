@@ -7,13 +7,6 @@
     export let name: string;
 </script>
 
-<style lang="postcss">
-    .breadcrumbs :global(svg) {
-        color: #999;
-        display: inline-block;
-    }
-</style>
-
 <div class="breadcrumbs mt-8 mb-4 flex flex-row items-center gap-3">
     <IcoDocumentTree />
     <IcoChevronRight />
@@ -23,3 +16,10 @@
         </Link>
     </span>
 </div>
+
+<style lang="postcss">
+    .breadcrumbs :global(svg) {
+        color: #999;
+        display: inline-block;
+    }
+</style>

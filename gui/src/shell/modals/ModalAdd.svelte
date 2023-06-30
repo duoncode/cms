@@ -26,12 +26,6 @@
     $: disabled = type === null;
 </script>
 
-<style lang="postcss">
-    h2 {
-        @apply font-medium mb-4;
-    }
-</style>
-
 <div class="modal">
     <h2>{_('Inhaltstyp hinzufügen')}</h2>
     <div class="body">
@@ -63,3 +57,9 @@
         {/if}
     </div>
 </div>
+
+<style lang="postcss">
+    h2 {
+        @apply font-medium mb-4;
+    }
+</style>

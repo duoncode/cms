@@ -9,7 +9,7 @@ const domain = browser
     : '';
 
 class Response {
-    constructor(public ok: boolean, public data: any) { }
+    constructor(public ok: boolean, public data: any) {}
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';

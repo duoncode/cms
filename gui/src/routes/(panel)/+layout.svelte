@@ -6,13 +6,6 @@
     export let data;
 </script>
 
-<style lang="postcss">
-    main {
-        height: 100vh;
-        overflow: hidden;
-    }
-</style>
-
 <Modal>
     <div class="flex flex-row">
         <Nav collections={data.system.collections} />
@@ -22,3 +15,10 @@
     </div>
     <Toasts />
 </Modal>
+
+<style lang="postcss">
+    main {
+        height: 100vh;
+        overflow: hidden;
+    }
+</style>

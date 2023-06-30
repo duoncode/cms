@@ -35,26 +35,6 @@
     $: nodes = data.nodes.filter(search(searchTerm));
 </script>
 
-<style lang="postcss">
-    th {
-        @apply sticky top-0 z-10 border-b border-gray-300 bg-gray-100;
-        @apply bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold;
-        @apply text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 border-t border-black border-opacity-10;
-    }
-
-    td {
-        @apply whitespace-nowrap border-b border-gray-200 py-4 pl-4 pr-3;
-        @apply text-sm text-gray-900 sm:pl-6 lg:pl-8;
-    }
-
-    tr:hover {
-        td,
-        td a {
-            @apply bg-emerald-100;
-        }
-    }
-</style>
-
 <div class="flex flex-col h-full">
     <Searchbar
         bind:searchTerm
@@ -107,3 +87,23 @@
         </div>
     </div>
 </div>
+
+<style lang="postcss">
+    th {
+        @apply sticky top-0 z-10 border-b border-gray-300 bg-gray-100;
+        @apply bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold;
+        @apply text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 border-t border-black border-opacity-10;
+    }
+
+    td {
+        @apply whitespace-nowrap border-b border-gray-200 py-4 pl-4 pr-3;
+        @apply text-sm text-gray-900 sm:pl-6 lg:pl-8;
+    }
+
+    tr:hover {
+        td,
+        td a {
+            @apply bg-emerald-100;
+        }
+    }
+</style>

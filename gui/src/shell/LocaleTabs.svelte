@@ -4,6 +4,17 @@
     export let lang: string;
 </script>
 
+<span class="locale-tabs">
+    {#each $system.locales as locale}
+        <button
+            class="locale-tab"
+            class:active={locale.id === lang}
+            on:click={() => (lang = locale.id)}>
+            {locale.id.toUpperCase()}
+        </button>
+    {/each}
+</span>
+
 <style lang="postcss">
     .locale-tabs {
         @apply flex-shrink;
@@ -22,14 +33,3 @@
         }
     }
 </style>
-
-<span class="locale-tabs">
-    {#each $system.locales as locale}
-        <button
-            class="locale-tab"
-            class:active={locale.id === lang}
-            on:click={() => (lang = locale.id)}>
-            {locale.id.toUpperCase()}
-        </button>
-    {/each}
-</span>

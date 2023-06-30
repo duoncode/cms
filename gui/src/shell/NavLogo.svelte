@@ -3,6 +3,18 @@
     import { system } from '$lib/sys';
 </script>
 
+<div class="logo">
+    {#if $system.logo}
+        <img
+            style="width: 80%; display: inline-block; margin: 0 auto;"
+            src={$system.logo}
+            alt="Panel Logo" />
+    {:else}
+        <Logo />
+        <span>CONIA</span>
+    {/if}
+</div>
+
 <style lang="postcss">
     .logo {
         display: flex;
@@ -25,15 +37,3 @@
         }
     }
 </style>
-
-<div class="logo">
-    {#if $system.logo}
-        <img
-            style="width: 80%; display: inline-block; margin: 0 auto;"
-            src={$system.logo}
-            alt="Panel Logo" />
-    {:else}
-        <Logo />
-        <span>CONIA</span>
-    {/if}
-</div>

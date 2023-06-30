@@ -5,12 +5,6 @@
     export let data;
 </script>
 
-<style lang="postcss">
-    .logo-wrapper {
-        margin-top: 28vh;
-    }
-</style>
-
 {#key data.pathname}
     <div
         class="logo-wrapper max-w-xl mx-auto"
@@ -19,3 +13,9 @@
         <NavLogo />
     </div>
 {/key}
+
+<style lang="postcss">
+    .logo-wrapper {
+        margin-top: 28vh;
+    }
+</style>

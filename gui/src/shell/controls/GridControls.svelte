@@ -56,6 +56,24 @@
     $: last = data.indexOf(item) === data.length - 1;
 </script>
 
+<div class="content-actions flex flex-row items-center justify-end">
+    <button class="up-down" disabled={last} on:click={down}>
+        <IcoArrowDown />
+    </button>
+    <button class="up-down" disabled={first} on:click={up}>
+        <IcoArrowUp />
+    </button>
+    <button class="add" on:click={add}>
+        <IcoCirclePlus />
+    </button>
+    <button class="remove" on:click={remove}>
+        <IcoTrash />
+    </button>
+    <button class="edit" on:click={edit}>
+        <IcoThreeDots />
+    </button>
+</div>
+
 <style lang="postcss">
     .content-actions {
         @apply flex-shrink flex items-center justify-end ml-4 py-2 gap-x-3;
@@ -89,21 +107,3 @@
         opacity: 0.2;
     }
 </style>
-
-<div class="content-actions flex flex-row items-center justify-end">
-    <button class="up-down" disabled={last} on:click={down}>
-        <IcoArrowDown />
-    </button>
-    <button class="up-down" disabled={first} on:click={up}>
-        <IcoArrowUp />
-    </button>
-    <button class="add" on:click={add}>
-        <IcoCirclePlus />
-    </button>
-    <button class="remove" on:click={remove}>
-        <IcoTrash />
-    </button>
-    <button class="edit" on:click={edit}>
-        <IcoThreeDots />
-    </button>
-</div>

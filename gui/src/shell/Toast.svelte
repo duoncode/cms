@@ -4,6 +4,15 @@
     export let toast: Toast;
 </script>
 
+<div class="text-white">
+    {#if toast.title}
+        <h3>{toast.title}</h3>
+    {/if}
+    {#if toast.message}
+        <p>{toast.message}</p>
+    {/if}
+</div>
+
 <style lang="postcss">
     h3,
     h4 {
@@ -22,12 +31,3 @@
         @apply ml-4 mt-2 list-disc;
     }
 </style>
-
-<div class="text-white">
-    {#if toast.title}
-        <h3>{toast.title}</h3>
-    {/if}
-    {#if toast.message}
-        <p>{toast.message}</p>
-    {/if}
-</div>

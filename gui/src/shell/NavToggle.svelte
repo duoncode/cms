@@ -3,6 +3,10 @@
     import IcoBarsCenterLeft from '$shell/icons/IcoBarsCenterLeft.svelte';
 </script>
 
+<button class="nav" on:click={toggleNav}>
+    <IcoBarsCenterLeft />
+</button>
+
 <style lang="postcss">
     button.nav {
         @apply p-2 bg-white w-9 h-9;
@@ -13,7 +17,3 @@
         cursor: pointer;
     }
 </style>
-
-<button class="nav" on:click={toggleNav}>
-    <IcoBarsCenterLeft />
-</button>

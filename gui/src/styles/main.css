@@ -57,7 +57,9 @@ body {
     border-bottom: var(--border);
 }
 
-a, a:visited, a:focus {
+a,
+a:visited,
+a:focus {
     text-decoration: none;
 }
 

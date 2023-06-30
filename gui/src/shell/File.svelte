@@ -7,6 +7,13 @@
     export let asset;
 </script>
 
+{#if asset}
+    <Link class="file" href="{path}/{asset}" target="_blank">
+        <IcoDownload />
+        <span>{_('Download file')}</span>
+    </Link>
+{/if}
+
 <style lang="postcss">
     a.file {
         @apply bg-sky-100 border border-sky-300 p-1 text-center rounded-lg;
@@ -17,10 +24,3 @@
         }
     }
 </style>
-
-{#if asset}
-    <Link class="file" href="{path}/{asset}" target="_blank">
-        <IcoDownload />
-        <span>{_('Download file')}</span>
-    </Link>
-{/if}

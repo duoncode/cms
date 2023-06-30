@@ -33,12 +33,6 @@
     }
 </script>
 
-<style lang="postcss">
-    .pos-bottom {
-        @apply bottom-0 right-0 pr-8;
-    }
-</style>
-
 <div
     class="toasts fixed text-sm z-50"
     class:pos-bottom={!center}
@@ -64,3 +58,9 @@
         </button>
     {/each}
 </div>
+
+<style lang="postcss">
+    .pos-bottom {
+        @apply bottom-0 right-0 pr-8;
+    }
+</style>

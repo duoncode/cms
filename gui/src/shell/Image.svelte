@@ -42,6 +42,40 @@
     }
 </script>
 
+<div
+    class="image {$$props.class !== undefined ? $$props.class : ''}"
+    class:empty={!image}
+    class:upload
+    class:multiple
+    class:hover>
+    {#if loading}
+        {_('Loading ...')}
+    {:else}
+        <img src="{thumb}{querystring}" alt={_('Vorschau')} />
+        <div class="overlay">
+            {#if remove}
+                <button class="text-rose-700" on:click={remove}>
+                    <span class="ico">
+                        <IcoTrash />
+                    </span>
+                    <span class="icobtn">{_('löschen')}</span>
+                </button>
+            {/if}
+            <button class="text-sky-700" on:click={preview}>
+                <span class="ico">
+                    <IcoEye /><br />
+                </span>
+                <span class="icobtn">{_('anzeigen')}</span>
+            </button>
+        </div>
+    {/if}
+    {#if ext}
+        <span
+            class="absolute right-2 bottom-2 rounded text-white bg-rose-700 text-sm px-1"
+            >{ext.toUpperCase()}</span>
+    {/if}
+</div>
+
 <style lang="postcss">
     .image {
         @apply bg-gray-100 border border-gray-300 p-1 text-center relative;
@@ -97,37 +131,3 @@
         text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
     }
 </style>
-
-<div
-    class="image {$$props.class !== undefined ? $$props.class : ''}"
-    class:empty={!image}
-    class:upload
-    class:multiple
-    class:hover>
-    {#if loading}
-        {_('Loading ...')}
-    {:else}
-        <img src="{thumb}{querystring}" alt={_('Vorschau')} />
-        <div class="overlay">
-            {#if remove}
-                <button class="text-rose-700" on:click={remove}>
-                    <span class="ico">
-                        <IcoTrash />
-                    </span>
-                    <span class="icobtn">{_('löschen')}</span>
-                </button>
-            {/if}
-            <button class="text-sky-700" on:click={preview}>
-                <span class="ico">
-                    <IcoEye /><br />
-                </span>
-                <span class="icobtn">{_('anzeigen')}</span>
-            </button>
-        </div>
-    {/if}
-    {#if ext}
-        <span
-            class="absolute right-2 bottom-2 rounded text-white bg-rose-700 text-sm px-1"
-            >{ext.toUpperCase()}</span>
-    {/if}
-</div>

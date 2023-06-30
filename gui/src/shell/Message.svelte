@@ -37,12 +37,6 @@
     }
 </script>
 
-<style type="postcss">
-    :global(.message em) {
-        @apply font-medium italic whitespace-nowrap;
-    }
-</style>
-
 {#if type}
     <div
         class="message border-l-4 {getColor()}"
@@ -77,3 +71,9 @@
         </div>
     </div>
 {/if}
+
+<style type="postcss">
+    :global(.message em) {
+        @apply font-medium italic whitespace-nowrap;
+    }
+</style>

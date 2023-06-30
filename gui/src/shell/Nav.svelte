@@ -6,6 +6,24 @@
     import Link from '$shell/Link.svelte';
 </script>
 
+<div id="nav" class:open={$navVisible}>
+    <NavLogo />
+
+    <h2>Inhalte</h2>
+    <ul class="ml-4">
+        {#each $collections as collection}
+            <li class="my-3">
+                <Link href="collection/{collection.slug}">
+                    {collection.name}
+                </Link>
+            </li>
+        {/each}
+    </ul>
+    <div class="mt-4">
+        <button class="font-medium" on:click={logoutUser}>Logout</button>
+    </div>
+</div>
+
 <style lang="postcss">
     #nav {
         width: 16rem;
@@ -28,21 +46,3 @@
         @apply font-medium mt-8;
     }
 </style>
-
-<div id="nav" class:open={$navVisible}>
-    <NavLogo />
-
-    <h2>Inhalte</h2>
-    <ul class="ml-4">
-        {#each $collections as collection}
-            <li class="my-3">
-                <Link href="collection/{collection.slug}">
-                    {collection.name}
-                </Link>
-            </li>
-        {/each}
-    </ul>
-    <div class="mt-4">
-        <button class="font-medium" on:click={logoutUser}>Logout</button>
-    </div>
-</div>

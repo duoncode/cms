@@ -11,7 +11,7 @@
     --gray-800: #2a2524;
     --gray-900: #1b1917;
 
-    --red: #DC2626;
+    --red: #dc2626;
 
     --high-light: var(--theme-high-light, var(--gray-100));
     --high-dull: var(--theme-high-dull, var(--gray-300));

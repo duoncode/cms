@@ -17,13 +17,6 @@
     }
 </script>
 
-<style lang="postcss">
-    .field-grid {
-        display: grid;
-        grid-template-columns: repeat(100, minmax(0, 1fr));
-    }
-</style>
-
 <div class="field-grid">
     {#each fields as field}
         <div
@@ -42,3 +35,10 @@
         </div>
     {/each}
 </div>
+
+<style lang="postcss">
+    .field-grid {
+        display: grid;
+        grid-template-columns: repeat(100, minmax(0, 1fr));
+    }
+</style>

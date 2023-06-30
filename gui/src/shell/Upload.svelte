@@ -148,65 +148,6 @@
     }
 </script>
 
-<style lang="postcss">
-    .upload {
-        @apply flex flex-col w-full;
-        @apply md:flex-row;
-
-        &.upload-multiple {
-            @apply flex-col;
-        }
-    }
-
-    .upload input {
-        position: absolute !important;
-        height: 1px;
-        width: 1px;
-        overflow: hidden;
-        clip: rect(1px 1px 1px 1px);
-        clip: rect(1px, 1px, 1px, 1px);
-        white-space: nowrap;
-    }
-
-    .multiple-images {
-        @apply flex flex-row flex-wrap justify-start gap-4 py-4;
-    }
-
-    .form-label {
-        @apply mb-1;
-    }
-
-    .dragdrop {
-        @apply flex flex-1 justify-center items-center;
-        @apply bg-gray-100 py-4 px-2;
-        @apply border-2 border-dashed border-gray-300 rounded-md;
-        @apply text-center align-middle;
-        @apply md:mt-0 md:h-auto;
-
-        &.asset,
-        &.image {
-            &.multiple {
-                @apply md:ml-0;
-            }
-        }
-    }
-    .dragdrop:hover {
-        cursor: pointer;
-    }
-    .dragdrop > div {
-        @apply text-gray-600 text-center md:-mt-2.5;
-    }
-    :global(.dragdrop > div svg) {
-        @apply mb-2 inline;
-    }
-    :global(.dragdrop > div u) {
-        @apply text-sky-700;
-    }
-    :global(.upload-image .preview) {
-        @apply md:w-2/5;
-    }
-</style>
-
 {#if label}
     <label class="form-label" for={name}>
         {label}
@@ -281,3 +222,62 @@
         {/if}
     </div>
 {/if}
+
+<style lang="postcss">
+    .upload {
+        @apply flex flex-col w-full;
+        @apply md:flex-row;
+
+        &.upload-multiple {
+            @apply flex-col;
+        }
+    }
+
+    .upload input {
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px 1px 1px 1px);
+        clip: rect(1px, 1px, 1px, 1px);
+        white-space: nowrap;
+    }
+
+    .multiple-images {
+        @apply flex flex-row flex-wrap justify-start gap-4 py-4;
+    }
+
+    .form-label {
+        @apply mb-1;
+    }
+
+    .dragdrop {
+        @apply flex flex-1 justify-center items-center;
+        @apply bg-gray-100 py-4 px-2;
+        @apply border-2 border-dashed border-gray-300 rounded-md;
+        @apply text-center align-middle;
+        @apply md:mt-0 md:h-auto;
+
+        &.asset,
+        &.image {
+            &.multiple {
+                @apply md:ml-0;
+            }
+        }
+    }
+    .dragdrop:hover {
+        cursor: pointer;
+    }
+    .dragdrop > div {
+        @apply text-gray-600 text-center md:-mt-2.5;
+    }
+    :global(.dragdrop > div svg) {
+        @apply mb-2 inline;
+    }
+    :global(.dragdrop > div u) {
+        @apply text-sky-700;
+    }
+    :global(.upload-image .preview) {
+        @apply md:w-2/5;
+    }
+</style>

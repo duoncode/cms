@@ -8,6 +8,23 @@
     export { cls as class };
 </script>
 
+<button
+    class={cls}
+    {type}
+    on:click
+    on:mouseover
+    on:mouseenter
+    on:mouseleave
+    on:focus
+    {disabled}>
+    {#if icon}
+        <span>
+            <svelte:component this={icon} />
+        </span>
+    {/if}
+    <slot />
+</button>
+
 <style lang="postcss">
     button {
         @apply relative border font-medium rounded-md;
@@ -31,20 +48,3 @@
         @apply text-white bg-sky-800 border-sky-800;
     }
 </style>
-
-<button
-    class={cls}
-    {type}
-    on:click
-    on:mouseover
-    on:mouseenter
-    on:mouseleave
-    on:focus
-    {disabled}>
-    {#if icon}
-        <span>
-            <svelte:component this={icon} />
-        </span>
-    {/if}
-    <slot />
-</button>

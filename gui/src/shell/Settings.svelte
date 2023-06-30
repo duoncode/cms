@@ -6,9 +6,6 @@
     export let doc: Document;
 </script>
 
-<style lang="postcss">
-</style>
-
 <div class="p-4 sm:p-6 md:p-8">
     <div class="max-w-xl">
         <div class="mb-4">
@@ -37,3 +34,6 @@
         </div>
     </div>
 </div>
+
+<style lang="postcss">
+</style>

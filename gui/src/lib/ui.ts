@@ -32,10 +32,4 @@ function toggleNav() {
     });
 }
 
-export {
-    openNav,
-    closeNav,
-    toggleNav,
-    navVisible,
-};
-
+export { openNav, closeNav, toggleNav, navVisible };
