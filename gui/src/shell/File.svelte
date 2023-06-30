@@ -3,7 +3,7 @@
     import IcoDownload from '$shell/icons/IcoDownload.svelte';
     import Link from '$shell/Link.svelte';
 
-    export let base;
+    export let sourceDir;
     export let asset;
 </script>
 
@@ -19,7 +19,7 @@
 </style>
 
 {#if asset}
-    <Link class="file" href="{base}/{asset}" target="_blank">
+    <Link class="file" href="{sourceDir}/{asset}" target="_blank">
         <IcoDownload />
         <span>{_('Download file')}</span>
     </Link>

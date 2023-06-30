@@ -20,8 +20,8 @@
     <div class="mt-2">
         <Upload
             image={false}
-            url="/assets/node/{node}"
-            cache="/media/image/node/{node}"
+            sourceDir="/assets/node/{node}"
+            thumbsDir="/media/image/node/{node}"
             name={field.name}
             bind:asset={data.files} />
     </div>

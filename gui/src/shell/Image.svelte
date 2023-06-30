@@ -6,8 +6,8 @@
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    export let base: string;
-    export let cache: string;
+    export let sourceDir: string;
+    export let thumbsDir: string;
     export let image: string;
     export let loading: boolean;
     export let upload: boolean;
@@ -32,15 +32,15 @@
     }
 
     $: {
-        if (base && cache && image) {
+        if (sourceDir && thumbsDir && image) {
             ext = image.split('.').pop()?.toLowerCase();
 
-            orig = `${base}/${image}`;
+            orig = `${sourceDir}/${image}`;
 
             if (!useThumb || ext === 'svg') {
                 thumb = orig;
             } else {
-                thumb = `${cache}/${thumbIt(image)}`;
+                thumb = `${thumbsDir}/${thumbIt(image)}`;
             }
         } else {
             if (image) {

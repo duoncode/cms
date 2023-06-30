@@ -12,8 +12,8 @@
     import Message from '$shell/Message.svelte';
     import req from '$lib/req.js';
 
-    export let url: string;
-    export let cache: string;
+    export let sourceDir: string;
+    export let thumbsDir: string;
     export let image: boolean; // if present thumbs will be rendered
     export let name: string;
     export let assets: FileData[];
@@ -89,7 +89,7 @@
 
         formData.append('file', file);
         try {
-            return await req.post(url, formData);
+            return await req.post(uploadDir, formData);
         } catch (e) {
             if (e instanceof req.FetchError) {
                 error(e.data);
@@ -233,8 +233,8 @@
                             <Image
                                 upload
                                 {multiple}
-                                base={url}
-                                {cache}
+                                {sourceDir}
+                                {thumbsDir}
                                 image={asset.file}
                                 remove={() => remove(index)}
                                 {querystring}
@@ -247,8 +247,8 @@
             {:else if !multiple && image && assets && assets.length > 0}
                 <Image
                     upload
-                    base={url}
-                    {cache}
+                    {sourceDir}
+                    {thumbsDir}
                     {multiple}
                     image={assets[0] && assets[0].file}
                     remove={() => remove(null)}
@@ -259,7 +259,7 @@
             {:else if multiple && file}
                 TODO
             {:else if !multiple && !image}
-                <File base={url} asset={assets[0]} />
+                <File {sourceDir} asset={assets[0]} />
             {/if}
         {/if}
         {#if !assets || assets.length === 0 || multiple}

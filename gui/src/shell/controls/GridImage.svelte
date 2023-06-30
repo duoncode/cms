@@ -23,8 +23,8 @@
     <Upload
         image
         multiple={false}
-        url="/assets/node/{node}"
-        cache="/media/image/node/{node}"
+        sourceDir="/assets/node/{node}"
+        thumbsDir="/media/image/node/{node}"
         name={field.name + '_' + index}
         bind:assets={item.files} />
 {/if}

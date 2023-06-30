@@ -23,8 +23,8 @@
                 {#if locale.id === lang}
                     <Upload
                         image
-                        url="/assets/node/{node}"
-                        cache="/media/image/node/{node}"
+                        sourceDir="/assets/node/{node}"
+                        thumbsDir="/media/image/node/{node}"
                         name={field.name}
                         bind:assets={data.files[locale.id]} />
                 {/if}
