@@ -30,6 +30,7 @@ class Config
             'path.assets' => '/assets',
             'path.cache' => '/cache',
             'session.options' => [],
+            'media.fileserver' => null,
             // 'password.algorithm' => PASSWORD_* PHP constant
             // 'password.entropy' => float
         ], $settings);

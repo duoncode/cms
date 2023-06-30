@@ -57,7 +57,48 @@ class Media
             $image->resize($size, $mode, $qs['enlarge'] ?? false, $quality);
         }
 
+        $fileServer = $this->config->get('media.fileserver', null);
+
+        if ($fileServer) {
+            return $this->sendFile($fileServer, $image->path());
+        }
+
         return Response::fromFactory($this->factory)->file($image->path());
+    }
+
+    protected function sendFile(string $fileServer, string $file): Response
+    {
+        $response = Response::fromFactory($this->factory);
+        $response->header('Content-Type', mime_content_type($file));
+
+        switch ($fileServer) {
+            case 'apache':
+                // apt install libapache2-mod-xsendfile
+                // a2enmod xsendfile
+                // Apache config:
+                //    XSendFile On
+                //    XSendFilePath "/path/to/files"
+                $response->header('X-Sendfile', $file);
+                break;
+            case 'nginx':
+                // Nginx config
+                //   location /path/to/files/ {
+                //       internal;
+                //           alias   /some/path/; # note the trailing slash
+                //       }
+                //   }
+
+                $response->header('X-Accel-Redirect', $file);
+                break;
+            default:
+                throw new RuntimeException(
+                    'File server not supported: `' .
+                    $fileServer .
+                    '`. Supported values `nginx`, `apache`.'
+                );
+        }
+
+        return $response;
     }
 
     protected function getAssets(): Assets
