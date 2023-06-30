@@ -1,37 +1,13 @@
-button.button {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-
-    user-select: none;
-    padding: var(--s-2) var(--s-4);
-
-    border-radius: var(--radius);
-    border: 1px solid var(--gray-300);
-    border-bottom-color: #bfb8b1;
-
-    background-color: #f6f5f4;
-    box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.07);
-
-    font-size: var(--text-sm);
-    font-weight: 500;
-    white-space: nowrap;
-
-    &.primary {
-        color: var(--theme-primary-button-color, var(--white));
-        border: var(--theme-primary-button-border, 1px solid var(--gray-900));
-        box-shadow: var(
-            --theme-primary-button-shadow,
-            inset 0 1px var(--gray-500)
-        );
-        background-color: var(
-            --theme-primary-button-background,
-            var(--gray-600)
-        );
+button {
+    &.danger {
+        @apply text-white bg-rose-800 hover:bg-rose-700 focus-visible:outline-rose-600;
     }
 
-    svg {
-        height: 1.15rem;
-        margin-right: var(--s-2);
+    &.primary {
+        @apply text-white bg-emerald-800 focus-visible:outline-emerald-800;
+    }
+
+    &.secondary {
+        @apply text-white bg-sky-800 focus-visible:outline-sky-800;
     }
 }
