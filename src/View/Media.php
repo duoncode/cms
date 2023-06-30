@@ -12,6 +12,7 @@ use Conia\Core\Assets\ResizeMode;
 use Conia\Core\Assets\Size;
 use Conia\Core\Config;
 use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Middleware\Permission;
 use Gumlet\ImageResize;
 
 class Media
@@ -23,6 +24,50 @@ class Media
     ) {
     }
 
+    /**
+     * TODO: sanitize filename.
+     */
+    public function upload(string $type, string $uid): Response
+    {
+        $response = Response::fromFactory($this->factory);
+
+        $public = $this->config->get('path.public');
+        $assets = $this->config->get('path.assets');
+        $maxSize = $this->config->get('upload.maxsize');
+        $mimeTypes = $this->config->get('upload.mimetypes');
+
+        $file = $this->request->files()['file'];
+        $stream = $file->getStream();
+        $tmpFile = $stream->getMetadata('uri');
+        $stream->close();
+        $fileSize = filesize($tmpFile);
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($fileInfo, $tmpFile);
+        $fileName = $file->getClientFilename();
+        $pathInfo = pathinfo($fileName);
+        $ext = $pathInfo['extension'] ?? null;
+
+        if ($fileSize > $maxSize) {
+            return $response->json(['ok' => false, 'error' => 'File too large'], 400);
+        }
+
+        $allowedExtensions = $mimeTypes[$mimeType] ?? null;
+
+        if (!$allowedExtensions) {
+            return $response->json(['ok' => false, 'error' => 'File type not allowed: ' . $mimeType], 400);
+        }
+
+        if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
+            return $response->json([
+                'ok' => false,
+                'error' => 'Wrong file extension. Allowed are: ' . join(', ', $allowedExtensions),
+            ], 400);
+        }
+
+        $file->moveTo("{$public}/{$assets}/{$type}/{$uid}/{$fileName}");
+
+        return $response->json(['ok' => true, 'file' => $fileName]);
+    }
     public function image(string $slug): Response
     {
         $image = $this->getAssets()->image($slug);

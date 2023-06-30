@@ -37,6 +37,8 @@ class Routes
         $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')
             ->middleware(Middleware\InitRequest::class);
 
+        $app->post('/media/image/{type:(node|menu)}/{uid:[a-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload')
+            ->middleware(Middleware\InitRequest::class);
         $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image')
             ->middleware(Middleware\InitRequest::class);
 
@@ -58,9 +60,9 @@ class Routes
     protected function addUser(Group $api): void
     {
         $api->get('/users', [User::class, 'list'], 'users');
-        $api->get('/user/{uid}', [User::class, 'get'], 'user.get');
+        $api->get('/user/{uid:[a-z0-9-]{1,64}}', [User::class, 'get'], 'user.get');
         $api->post('/user', [User::class, 'create'], 'user.create');
-        $api->put('/user/{uid}', [User::class, 'save'], 'user.save');
+        $api->put('/user/{uid:[a-z0-9-]{1,64}}', [User::class, 'save'], 'user.save');
     }
 
     protected function addSystem(Group $api): void
@@ -68,7 +70,7 @@ class Routes
         $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
         $api->get('/collections', [Panel::class, 'collections'], 'conia.collections');
         $api->get('/collection/{collection}', [Panel::class, 'collection'], 'conia.collection');
-        $api->route('/node/{uid}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
+        $api->route('/node/{uid:[a-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
         $api->post('/node/{type}', [Panel::class, 'createNode'], 'conia.node.create');
         $api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'conia.blueprint');
     }

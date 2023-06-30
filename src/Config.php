@@ -31,6 +31,14 @@ class Config
             'path.cache' => '/cache',
             'session.options' => [],
             'media.fileserver' => null,
+            'upload.mimetypes' => [
+                'application/pdf' => ['pdf'],
+                'image/gif' => ['gif'],
+                'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
+                'image/png' => ['png'],
+                'image/webp' => ['webp'],
+            ],
+            'upload.maxsize' => 10 * 1024 * 1024,
             // 'password.algorithm' => PASSWORD_* PHP constant
             // 'password.entropy' => float
         ], $settings);

@@ -88,13 +88,9 @@
 
         formData.append('file', file);
         try {
-            return await req.post(uploadDir, formData);
+            return await req.post(path, formData);
         } catch (e) {
-            if (e instanceof req.FetchError) {
-                error(e.data);
-            } else {
-                throw e;
-            }
+            throw e;
         }
     }
 
@@ -102,8 +98,10 @@
         if (!item) {
             return;
         }
+
+console.log(item);
         if (item.ok) {
-            return item.renamed || item.file;
+            return item.file;
         }
 
         toast.add({ kind: 'error', message: item.error });
@@ -121,18 +119,18 @@
 
                 let responses = await Promise.all(
                     files.map(file => {
-                        return upload(file).then(resp =>
-                            resp ? resp.json() : null,
-                        );
+                        return upload(file).then(resp => resp.ok ? resp.data : null);
                     }),
                 );
 
                 if (responses.length > 0) {
                     if (multiple) {
-                        assets = responses.map(item => getFileName(item));
+                        responses.map(item => assets.push({alt: {}, file: getFileName(item)}));
                     } else {
                         assets[0] = getFileName(responses[0]);
                     }
+
+                    console.log(assets);
                     if (assets && callback) {
                         callback();
                     }
@@ -209,6 +207,7 @@
                 on:dragover|preventDefault={startDragging}
                 on:dragleave|preventDefault={stopDragging}>
                 <div>
+
                     <span class="inline-block w-6 h-6 mt-4"><IcoUpload /></span>
                     {_('Neue Dateien per Drag and Drop hier einfügen')}
                     {@html _('oder <u>auswählen</u>.')}

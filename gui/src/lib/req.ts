@@ -9,7 +9,7 @@ const domain = browser
     : '';
 
 class Response {
-    constructor(public ok: boolean, public data: any) {}
+    constructor(public ok: boolean, public data: any) { }
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -62,7 +62,9 @@ async function fetchit(
     options: RequestInit,
     fetchFn: typeof window.fetch,
 ) {
-    const url = new URL(`${panelApi}${path}`, domain);
+    const url = path.startsWith('/')
+        ? new URL(path, domain)
+        : new URL(`${panelApi}${path}`, domain);
 
     if (fetchFn === null) {
         fetchFn = window.fetch;
