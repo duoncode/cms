@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+    import type { Modal } from 'svelte-simple-modal';
     import { getContext } from 'svelte';
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
@@ -53,7 +54,7 @@
     export let embed = false;
 
     const dispatch = createEventDispatcher();
-    const { open, close } = getContext('simple-modal');
+    const { open, close }: Modal = getContext('simple-modal');
 
     let ref;
     let bubble;

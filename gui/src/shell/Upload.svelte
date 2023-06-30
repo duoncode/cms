@@ -1,16 +1,17 @@
 <script lang="ts">
-    import { getContext, createEventDispatcher } from 'svelte';
+    import type { Modal } from 'svelte-simple-modal';
+    import type { FileData } from '$types/data';
 
-    import IcoUpload from '$shell/icons/IcoUpload.svelte';
+    import { getContext, createEventDispatcher } from 'svelte';
     import { _ } from '$lib/locale';
     import { setDirty, error } from '$lib/state';
     import toast from '$lib/toast';
-    import type { FileData } from '$types/data';
+    import req from '$lib/req.js';
     import Image from '$shell/Image.svelte';
     import File from '$shell/File.svelte';
+    import IcoUpload from '$shell/icons/IcoUpload.svelte';
     import Dialog from '$shell/Dialog.svelte';
     import Message from '$shell/Message.svelte';
-    import req from '$lib/req.js';
 
     export let path: string;
     export let image: boolean; // if present thumbs will be rendered
@@ -29,7 +30,7 @@
     let dragging = false;
 
     const dispatch = createEventDispatcher();
-    const { open, close } = getContext('simple-modal');
+    const { open, close }: Modal = getContext('simple-modal');
 
     function remove(index: number) {
         if (index === null) {
