@@ -6,14 +6,12 @@
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    export let sourceDir: string;
-    export let thumbsDir: string;
+    export let path: string;
     export let image: string;
     export let loading: boolean;
     export let upload: boolean;
     export let multiple: boolean;
     export let remove: () => void;
-    export let useThumb = true;
     export let querystring = '';
 
     let orig: string;
@@ -32,24 +30,14 @@
     }
 
     $: {
-        if (sourceDir && thumbsDir && image) {
-            ext = image.split('.').pop()?.toLowerCase();
+        ext = image.split('.').pop()?.toLowerCase();
 
-            orig = `${sourceDir}/${image}`;
+        orig = `${path}/${image}`;
 
-            if (!useThumb || ext === 'svg') {
-                thumb = orig;
-            } else {
-                thumb = `${thumbsDir}/${thumbIt(image)}`;
-            }
+        if (ext === 'svg') {
+            thumb = orig;
         } else {
-            if (image) {
-                orig = image;
-                thumb = thumbIt(image);
-            } else {
-                orig = null;
-                thumb = null;
-            }
+            thumb = `${path}/${thumbIt(image)}`;
         }
     }
 </script>
@@ -107,33 +95,6 @@
     .icobtn {
         @apply text-xs text-white text-center;
         text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
-    }
-
-    p {
-        @apply text-gray-400;
-    }
-
-    /* Stacked Icon */
-    :global(.stacked-icons) {
-        width: 6rem;
-        height: 6rem;
-        svg {
-            display: block;
-        }
-        &.ban .outer {
-            @apply text-rose-300;
-
-            :global(svg) {
-                width: 100%;
-            }
-        }
-        &.ban .inner {
-            @apply text-gray-600;
-
-            :global(svg) {
-                width: 60%;
-            }
-        }
     }
 </style>
 

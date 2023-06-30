@@ -12,15 +12,13 @@
     import Message from '$shell/Message.svelte';
     import req from '$lib/req.js';
 
-    export let sourceDir: string;
-    export let thumbsDir: string;
+    export let path: string;
     export let image: boolean; // if present thumbs will be rendered
     export let name: string;
     export let assets: FileData[];
     export let label = null;
     export let multiple = false;
     export let size = 'xl';
-    export let useThumb = true;
     export let querystring = '';
     export let disabled = false;
     export let disabledMsg = null;
@@ -233,12 +231,10 @@
                             <Image
                                 upload
                                 {multiple}
-                                {sourceDir}
-                                {thumbsDir}
+                                {path}
                                 image={asset.file}
                                 remove={() => remove(index)}
                                 {querystring}
-                                {useThumb}
                                 {loading}
                                 {size} />
                         {/each}
@@ -247,19 +243,17 @@
             {:else if !multiple && image && assets && assets.length > 0}
                 <Image
                     upload
-                    {sourceDir}
-                    {thumbsDir}
+                    {path}
                     {multiple}
                     image={assets[0] && assets[0].file}
                     remove={() => remove(null)}
                     {querystring}
-                    {useThumb}
                     {loading}
                     {size} />
             {:else if multiple && file}
                 TODO
             {:else if !multiple && !image}
-                <File {sourceDir} asset={assets[0]} />
+                <File {path} asset={assets[0]} />
             {/if}
         {/if}
         {#if !assets || assets.length === 0 || multiple}

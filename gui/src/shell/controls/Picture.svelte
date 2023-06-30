@@ -21,8 +21,7 @@
         <Upload
             image
             multiple={true}
-            sourceDir="/assets/node/{node}"
-            thumbsDir="/media/image/node/{node}"
+            path="/media/image/node/{node}"
             name={field.name}
             bind:assets={data.files} />
         <!-- As picture tags show only one image, we need only one alt definition

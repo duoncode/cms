@@ -23,8 +23,7 @@
                 {#if locale.id === lang}
                     <Upload
                         image
-                        sourceDir="/assets/node/{node}"
-                        thumbsDir="/media/image/node/{node}"
+                        path="/media/image/node/{node}"
                         name={field.name}
                         bind:assets={data.files[locale.id]} />
                 {/if}
@@ -33,8 +32,7 @@
             <Upload
                 image
                 multiple={field.multiple}
-                url="/assets/node/{node}"
-                cache="/media/image/node/{node}"
+                path="/media/image/node/{node}"
                 name={field.name}
                 bind:assets={data.files} />
         {/if}
