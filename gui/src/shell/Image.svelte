@@ -21,7 +21,15 @@
     const modal: Modal = getContext('simple-modal');
 
     function preview() {
-        modal.open(ImagePreview, { image: orig });
+        modal.open(
+            ImagePreview,
+            {
+                image: orig,
+            },
+            {
+                styleWindow: { width: '100%', maxWidth: '70rem' },
+            },
+        );
     }
 
     function thumbIt(image: string) {
@@ -90,10 +98,10 @@
         min-height: 6rem;
     }
     .image.multiple.upload {
-        height: 10rem;
-        width: 10rem;
-        max-width: 10rem;
-        max-height: 10rem;
+        height: 11.13rem;
+        width: 11.13rem;
+        max-width: 11.13rem;
+        max-height: 11.13rem;
     }
 
     img {

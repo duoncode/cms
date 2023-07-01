@@ -5,5 +5,8 @@
 </script>
 
 <div class="image-preview flex justify-center items-center">
-    <img src={image} alt={_('Preview')} style="max-height: 90vh" />
+    <img
+        src="{image}?resize=width&w=1280"
+        alt={_('Preview')}
+        style="max-height: 90vh" />
 </div>

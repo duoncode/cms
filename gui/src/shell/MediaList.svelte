@@ -4,8 +4,8 @@
 
     import Sortable from 'sortablejs';
     import { onMount } from 'svelte';
-    import ImageValue from '$shell/Image.svelte';
-    import FileValue from '$shell/File.svelte';
+    import Image from '$shell/Image.svelte';
+    import File from '$shell/File.svelte';
 
     export let assets: FileItem[];
     export let multiple: boolean;
@@ -37,7 +37,7 @@
     {#if multiple && image}
         <div class="multiple-images" bind:this={sorter}>
             {#each assets as asset, index}
-                <ImageValue
+                <Image
                     upload
                     {multiple}
                     {path}
@@ -47,7 +47,7 @@
             {/each}
         </div>
     {:else if !multiple && image}
-        <ImageValue
+        <Image
             upload
             {path}
             {multiple}
@@ -57,7 +57,7 @@
     {:else if multiple && file}
         <div class="multiple-files flex flex-col gap-3 mb-3" bind:this={sorter}>
             {#each assets as asset, index}
-                <FileValue
+                <File
                     {path}
                     {loading}
                     asset={asset.file}
@@ -65,7 +65,7 @@
             {/each}
         </div>
     {:else}
-        <FileValue
+        <File
             {path}
             {loading}
             asset={assets[0].file}
