@@ -19,7 +19,19 @@ html {
 }
 
 body {
-    height: 100%;
+    /**
+     * In Chrome, there is an issue with Upload components that
+     * are rendered further down the page. When they are clicked
+     * on to choose a file, the page gets either completely white
+     * or the body moves up like it has a negative margin.
+     * When we position the body fixed it does not occur.
+     */
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    /* fix end */
     font-family: var(--font);
     overflow: hidden;
 }
