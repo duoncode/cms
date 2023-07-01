@@ -20,7 +20,6 @@
     export let name: string;
     export let translate: boolean;
     export let assets: FileItem[];
-    export let label = null;
     export let multiple = false;
     export let size = 'xl';
     export let querystring = '';
@@ -175,11 +174,6 @@
     }
 </script>
 
-{#if label}
-    <label class="form-label" for={name}>
-        {label}
-    </label>
-{/if}
 {#if disabled}
     {#if disabledMsg}
         <Message type="warning" text={disabledMsg} />
@@ -191,7 +185,7 @@
         class="upload"
         class:upload-image={image}
         class:upload-multiple={multiple}
-        class:mt-6={inline && !label}>
+        class:mt-6={inline}>
         {#if assets}
             {#if multiple && image}
                 {#if assets && assets.length > 0}
@@ -271,10 +265,6 @@
 
     .multiple-images {
         @apply flex flex-row flex-wrap justify-start gap-4 py-4;
-    }
-
-    .form-label {
-        @apply mb-1;
     }
 
     .dragdrop {
