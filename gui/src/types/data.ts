@@ -1,6 +1,6 @@
 import type { Field } from '$types/fields';
 
-export interface File {
+export interface FileItem {
     file?: string;
     alt?: string | Record<string, string>;
     title?: string | Record<string, string>;
@@ -24,7 +24,13 @@ export interface NumberData {
 
 export interface FileData {
     type: 'picture' | 'image';
-    files: File[] | Record<string, TranslatedFile>;
+    files: FileItem[] | Record<string, TranslatedFile>;
+}
+
+export interface UploadResponse {
+    ok: boolean;
+    file?: string;
+    error?: string;
 }
 
 export interface GridBase {

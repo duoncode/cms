@@ -22,6 +22,7 @@
             image={false}
             path="/media/image/node/{node}"
             name={field.name}
+            translate={field.translate}
             bind:asset={data.files} />
     </div>
 </Field>

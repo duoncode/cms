@@ -23,6 +23,7 @@
             multiple={true}
             path="/media/image/node/{node}"
             name={field.name}
+            translate={field.translateFile ? false : field.translate}
             bind:assets={data.files} />
         <!-- As picture tags show only one image, we need only one alt definition
             {#if i === 0}

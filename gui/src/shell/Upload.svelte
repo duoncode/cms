@@ -1,22 +1,25 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
-    import type { FileData } from '$types/data';
+    import type { FileItem, UploadResponse } from '$types/data';
 
     import { getContext, createEventDispatcher } from 'svelte';
     import { _ } from '$lib/locale';
-    import { setDirty, error } from '$lib/state';
+    import { system } from '$lib/sys';
+    import { setDirty } from '$lib/state';
     import toast from '$lib/toast';
     import req from '$lib/req.js';
-    import Image from '$shell/Image.svelte';
-    import File from '$shell/File.svelte';
+    import ImageValue from '$shell/Image.svelte';
+    import FileValue from '$shell/File.svelte';
     import IcoUpload from '$shell/icons/IcoUpload.svelte';
     import Dialog from '$shell/Dialog.svelte';
     import Message from '$shell/Message.svelte';
 
     export let path: string;
-    export let image: boolean; // if present thumbs will be rendered
+    export let image = false; // if present thumbs will be rendered
+    export let file = false; // if present thumbs will be rendered
     export let name: string;
-    export let assets: FileData[];
+    export let translate: boolean;
+    export let assets: FileItem[];
     export let label = null;
     export let multiple = false;
     export let size = 'xl';
@@ -43,12 +46,20 @@
         dispatch('dirty');
     }
 
-    function getFilesFromDrop({ dataTransfer: { files, items } }) {
-        let result = files.length
-            ? [...files]
-            : items
-                  .filter(({ kind }) => kind === 'file')
-                  .map(({ getAsFile }) => getAsFile());
+    function readItems(items: DataTransferItemList) {
+        let result = [];
+
+        for (const item of items) {
+            if (item.kind === 'file') {
+                result.push(item.getAsFile());
+            }
+        }
+
+        return result;
+    }
+
+    function getFilesFromDrop({ dataTransfer: { files, items } }: DragEvent) {
+        let result = files.length ? [...files] : readItems(items);
 
         if (!multiple && result.length > 1) {
             open(
@@ -69,8 +80,10 @@
         }
     }
 
-    function getFilesFromInput({ target }) {
+    function getFilesFromInput(event: Event) {
+        const target = event.target as HTMLInputElement;
         const files = target.files ? [...target.files] : [];
+
         target.value = '';
         return files;
     }
@@ -83,23 +96,14 @@
         dragging = false;
     }
 
-    async function upload(file) {
+    async function upload(file: File) {
         let formData = new FormData();
 
         formData.append('file', file);
-        try {
-            return await req.post(path, formData);
-        } catch (e) {
-            throw e;
-        }
+        return await req.post(path, formData);
     }
 
-    function getFileName(item) {
-        if (!item) {
-            return;
-        }
-
-console.log(item);
+    function getFileName(item: UploadResponse) {
         if (item.ok) {
             return item.file;
         }
@@ -109,8 +113,18 @@ console.log(item);
         return null;
     }
 
-    function onFile(getFilesFunction) {
-        return async event => {
+    function getTitleAltValue() {
+        if (translate) {
+            const result: Record<string, string> = {};
+            $system.locales.map(locale => (result[locale.id] = ''));
+            return result;
+        }
+
+        return '';
+    }
+
+    function onFile(getFilesFunction: (event: DragEvent | Event) => File[]) {
+        return async (event: Event) => {
             stopDragging();
             let files = getFilesFunction(event);
 
@@ -118,19 +132,34 @@ console.log(item);
                 loading = true;
 
                 let responses = await Promise.all(
-                    files.map(file => {
-                        return upload(file).then(resp => resp.ok ? resp.data : null);
+                    files.map(async (file: File) => {
+                        return upload(file).then(resp =>
+                            resp.ok ? resp.data : null,
+                        );
                     }),
                 );
 
                 if (responses.length > 0) {
+                    const value = getTitleAltValue();
+
                     if (multiple) {
-                        responses.map(item => assets.push({alt: {}, file: getFileName(item)}));
+                        responses.map((item: UploadResponse) => {
+                            assets.push({
+                                alt: value,
+                                title: value,
+                                file: getFileName(item),
+                            });
+                        });
                     } else {
-                        assets[0] = getFileName(responses[0]);
+                        assets = [
+                            {
+                                alt: value,
+                                title: value,
+                                file: getFileName(responses[0]),
+                            },
+                        ];
                     }
 
-                    console.log(assets);
                     if (assets && callback) {
                         callback();
                     }
@@ -168,7 +197,7 @@ console.log(item);
                 {#if assets && assets.length > 0}
                     <div class="multiple-images">
                         {#each assets as asset, index}
-                            <Image
+                            <ImageValue
                                 upload
                                 {multiple}
                                 {path}
@@ -181,7 +210,7 @@ console.log(item);
                     </div>
                 {/if}
             {:else if !multiple && image && assets && assets.length > 0}
-                <Image
+                <ImageValue
                     upload
                     {path}
                     {multiple}
@@ -193,24 +222,22 @@ console.log(item);
             {:else if multiple && file}
                 TODO
             {:else if !multiple && !image}
-                <File {path} asset={assets[0]} />
+                <FileValue {path} asset={assets[0]} />
             {/if}
         {/if}
         {#if !assets || assets.length === 0 || multiple}
             <label
                 class="dragdrop"
                 class:dragging
-                class:multiple
                 class:image
                 for={name}
                 on:drop|preventDefault={onFile(getFilesFromDrop)}
                 on:dragover|preventDefault={startDragging}
                 on:dragleave|preventDefault={stopDragging}>
                 <div>
-
                     <span class="inline-block w-6 h-6 mt-4"><IcoUpload /></span>
-                    {_('Neue Dateien per Drag and Drop hier einfügen')}
-                    {@html _('oder <u>auswählen</u>.')}
+                    {_('Neue Dateien per Drag and Drop hier einfügen oder')}
+                    <u>{_('auswählen')}</u>
                 </div>
                 <input
                     type="file"
@@ -256,13 +283,6 @@ console.log(item);
         @apply border-2 border-dashed border-gray-300 rounded-md;
         @apply text-center align-middle;
         @apply md:mt-0 md:h-auto;
-
-        &.asset,
-        &.image {
-            &.multiple {
-                @apply md:ml-0;
-            }
-        }
     }
     .dragdrop:hover {
         cursor: pointer;

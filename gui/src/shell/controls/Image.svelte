@@ -25,6 +25,9 @@
                         image
                         path="/media/image/node/{node}"
                         name={field.name}
+                        translate={field.translateFile
+                            ? false
+                            : field.translate}
                         bind:assets={data.files[locale.id]} />
                 {/if}
             {/each}
@@ -34,6 +37,7 @@
                 multiple={field.multiple}
                 path="/media/image/node/{node}"
                 name={field.name}
+                translate={field.translateFile ? false : field.translate}
                 bind:assets={data.files} />
         {/if}
     </div>

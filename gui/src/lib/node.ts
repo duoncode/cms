@@ -26,7 +26,6 @@ async function save(uid: string, doc: Document) {
 }
 
 async function create(doc: Document, type: string, collectionPath: string) {
-    console.log(type, doc);
     const response = await req.post(`node/${type}`, doc);
 
     if (response.ok) {
