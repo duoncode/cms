@@ -36,6 +36,8 @@ class Media
         $assets = $this->config->get('path.assets');
         $maxSize = $this->config->get('upload.maxsize');
         $mimeTypes = $this->config->get('upload.mimetypes');
+        error_log(print_r($_FILES, true));
+        error_log($public);
 
         $file = $_FILES['file'];
         $tmpFile = $file['tmp_name'];
@@ -47,6 +49,7 @@ class Media
         $pathInfo = pathinfo($fileName);
         $ext = $pathInfo['extension'] ?? null;
         $allowedExtensions = $mimeTypes[$mimeType] ?? null;
+        $dir = "{$public}{$assets}/{$type}/{$uid}";
 
         if ($file['error'] ?? null !== UPLOAD_ERR_OK) {
             return $response->json(['ok' => false, 'error' => 'Upload failed.'], 400);
@@ -67,7 +70,11 @@ class Media
             ], 400);
         }
 
-        move_uploaded_file($tmpFile, "{$public}/{$assets}/{$type}/{$uid}/{$fileName}");
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        move_uploaded_file($tmpFile, "{$dir}/{$fileName}");
 
         return $response->json(['ok' => true, 'file' => $fileName]);
     }
