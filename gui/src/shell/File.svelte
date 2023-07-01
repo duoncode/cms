@@ -1,22 +1,26 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoDownload from '$shell/icons/IcoDownload.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
 
-    export let path;
-    export let asset;
-    export let remove;
+    export let path: string;
+    export let asset: string;
+    export let remove: () => void;
+    export let loading: boolean;
 </script>
 
 {#if asset}
     <div class="file pl-4">
         <IcoDocument />
         <div class="flex-grow text-left pl-3 truncate">
-            <b class="font-medium">{asset.file}</b>
+            <b class="font-medium">{asset}</b>
         </div>
+        {#if loading}
+            <div>Loading ...</div>
+        {/if}
         <IcoDownload />
-        <a href="{path}/{asset.file}" target="_blank" class="inline-block pl-2">
+        <a href="{path}/{asset}" target="_blank" class="inline-block pl-2">
             {_('Datei herunterladen')}
         </a>
 

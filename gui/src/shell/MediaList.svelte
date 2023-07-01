@@ -1,6 +1,9 @@
 <script lang="ts">
     import type { FileItem } from '$types/data';
+    import type { SortableEvent } from 'sortablejs';
 
+    import Sortable from 'sortablejs';
+    import { onMount } from 'svelte';
     import ImageValue from '$shell/Image.svelte';
     import FileValue from '$shell/File.svelte';
 
@@ -12,11 +15,27 @@
     export let remove: (index: number) => void;
 
     const file = !image;
+
+    let sorter: HTMLElement;
+
+    onMount(() => {
+        if (sorter) {
+            Sortable.create(sorter, {
+                animation: 200,
+                onUpdate: function (event: SortableEvent) {
+                    const tmp = assets[event.oldIndex];
+
+                    assets.splice(event.oldIndex, 1);
+                    assets.splice(event.newIndex, 0, tmp);
+                },
+            });
+        }
+    });
 </script>
 
 {#if assets && assets.length > 0}
     {#if multiple && image}
-        <div class="multiple-images">
+        <div class="multiple-images" bind:this={sorter}>
             {#each assets as asset, index}
                 <ImageValue
                     upload
@@ -36,13 +55,21 @@
             remove={() => remove(null)}
             {loading} />
     {:else if multiple && file}
-        <div class="multiple-files flex flex-col gap-3 mb-3">
+        <div class="multiple-files flex flex-col gap-3 mb-3" bind:this={sorter}>
             {#each assets as asset, index}
-                <FileValue {path} {asset} remove={() => remove(index)} />
+                <FileValue
+                    {path}
+                    {loading}
+                    asset={asset.file}
+                    remove={() => remove(index)} />
             {/each}
         </div>
     {:else}
-        <FileValue {path} asset={assets[0]} remove={() => remove(null)} />
+        <FileValue
+            {path}
+            {loading}
+            asset={assets[0].file}
+            remove={() => remove(null)} />
     {/if}
 {/if}
 
