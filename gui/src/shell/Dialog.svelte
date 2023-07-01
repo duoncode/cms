@@ -1,5 +1,6 @@
 <script>
     import { _ } from '$lib/locale';
+    import Button from '$shell/Button.svelte';
 
     export let title = null;
     export let body;
@@ -7,7 +8,7 @@
     export let close;
 </script>
 
-<div class="message {type}">
+<div class="modal {type}">
     {#if title}
         <h2>{title}</h2>
     {/if}
@@ -15,6 +16,6 @@
         {body}
     </div>
     <div class="controls">
-        <button class="button" on:click={close}>{_('Close')}</button>
+        <Button class="secondary" on:click={close}>{_('OK')}</Button>
     </div>
 </div>
