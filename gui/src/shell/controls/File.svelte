@@ -19,7 +19,6 @@
     </Label>
     <div class="mt-2">
         <Upload
-            file
             path="/media/file/node/{node}"
             multiple={field.multiple}
             name={field.name}

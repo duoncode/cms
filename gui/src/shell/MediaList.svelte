@@ -1,0 +1,53 @@
+<script lang="ts">
+    import type { FileItem } from '$types/data';
+
+    import ImageValue from '$shell/Image.svelte';
+    import FileValue from '$shell/File.svelte';
+
+    export let assets: FileItem[];
+    export let multiple: boolean;
+    export let image: boolean;
+    export let loading: boolean;
+    export let path: string;
+    export let remove: (index: number) => void;
+
+    const file = !image;
+</script>
+
+{#if assets && assets.length > 0}
+    {#if multiple && image}
+        <div class="multiple-images">
+            {#each assets as asset, index}
+                <ImageValue
+                    upload
+                    {multiple}
+                    {path}
+                    image={asset.file}
+                    remove={() => remove(index)}
+                    {loading} />
+            {/each}
+        </div>
+    {:else if !multiple && image}
+        <ImageValue
+            upload
+            {path}
+            {multiple}
+            image={assets[0] && assets[0].file}
+            remove={() => remove(null)}
+            {loading} />
+    {:else if multiple && file}
+        <div class="multiple-files flex flex-col gap-3 mb-3">
+            {#each assets as asset, index}
+                <FileValue {path} {asset} remove={() => remove(index)} />
+            {/each}
+        </div>
+    {:else}
+        <FileValue {path} asset={assets[0]} remove={() => remove(null)} />
+    {/if}
+{/if}
+
+<style lang="postcss">
+    .multiple-images {
+        @apply flex flex-row flex-wrap justify-start gap-4 py-4;
+    }
+</style>

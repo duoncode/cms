@@ -12,7 +12,6 @@
     export let upload: boolean;
     export let multiple: boolean;
     export let remove: () => void;
-    export let querystring = '';
 
     let orig: string;
     let thumb: string;
@@ -51,7 +50,7 @@
     {#if loading}
         {_('Loading ...')}
     {:else}
-        <img src="{thumb}{querystring}" alt={_('Vorschau')} />
+        <img src={thumb} alt={_('Vorschau')} />
         <div class="overlay">
             {#if remove}
                 <button class="text-rose-700" on:click={remove}>

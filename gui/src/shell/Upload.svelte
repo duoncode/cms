@@ -9,21 +9,17 @@
     import { setDirty } from '$lib/state';
     import toast from '$lib/toast';
     import req from '$lib/req.js';
-    import ImageValue from '$shell/Image.svelte';
-    import FileValue from '$shell/File.svelte';
     import IcoUpload from '$shell/icons/IcoUpload.svelte';
     import Dialog from '$shell/Dialog.svelte';
     import Message from '$shell/Message.svelte';
+    import MediaList from '$shell/MediaList.svelte';
 
     export let path: string;
     export let image = false; // if present thumbs will be rendered
-    export let file = false; // if present a files list will be rendered
     export let name: string;
     export let translate: boolean;
     export let assets: FileItem[];
     export let multiple = false;
-    export let size = 'xl';
-    export let querystring = '';
     export let disabled = false;
     export let disabledMsg = null;
     export let callback = null;
@@ -192,47 +188,7 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
-        {#if assets && assets.length > 0}
-            {#if multiple && image}
-                <div class="multiple-images">
-                    {#each assets as asset, index}
-                        <ImageValue
-                            upload
-                            {multiple}
-                            {path}
-                            image={asset.file}
-                            remove={() => remove(index)}
-                            {querystring}
-                            {loading}
-                            {size} />
-                    {/each}
-                </div>
-            {:else if !multiple && image}
-                <ImageValue
-                    upload
-                    {path}
-                    {multiple}
-                    image={assets[0] && assets[0].file}
-                    remove={() => remove(null)}
-                    {querystring}
-                    {loading}
-                    {size} />
-            {:else if multiple && file}
-                <div class="multiple-files flex flex-col gap-3 mb-3">
-                    {#each assets as asset, index}
-                        <FileValue
-                            {path}
-                            {asset}
-                            remove={() => remove(index)} />
-                    {/each}
-                </div>
-            {:else}
-                <FileValue
-                    {path}
-                    asset={assets[0]}
-                    remove={() => remove(null)} />
-            {/if}
-        {/if}
+        <MediaList bind:assets {multiple} {image} {path} {remove} {loading} />
         {#if !assets || assets.length === 0 || multiple}
             <label
                 class="dragdrop"
@@ -275,10 +231,6 @@
         clip: rect(1px 1px 1px 1px);
         clip: rect(1px, 1px, 1px, 1px);
         white-space: nowrap;
-    }
-
-    .multiple-images {
-        @apply flex flex-row flex-wrap justify-start gap-4 py-4;
     }
 
     .dragdrop {
