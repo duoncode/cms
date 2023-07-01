@@ -47,7 +47,7 @@ class NodeSchemaFactory
             \Conia\Core\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
             \Conia\Core\Field\Image::class => $this->addImage($field, 'image', $validators),
             \Conia\Core\Field\Number::class => $this->addNumber($field, 'number', $validators),
-            \Conia\Core\Field\Option::class => $this->addText($field, 'option', $validators),
+            \Conia\Core\Field\Option::class => $this->addOption($field, 'option', $validators),
             \Conia\Core\Field\Picture::class => $this->addImage($field, 'picture', $validators),
             \Conia\Core\Field\Radio::class => $this->addText($field, 'radio', $validators),
             \Conia\Core\Field\Text::class => $this->addText($field, 'text', $validators),
@@ -78,6 +78,14 @@ class NodeSchemaFactory
         } else {
             $schema->add('value', 'text', ...$validators);
         }
+
+        return $schema;
+    }
+
+    protected function addOption(Field $field, string $type, array $validators): Schema
+    {
+        $schema = $this->getTypedSchema($field->getLabel(), $type);
+        $schema->add('value', 'text', ...$validators);
 
         return $schema;
     }
