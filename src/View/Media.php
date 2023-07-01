@@ -28,7 +28,7 @@ class Media
      * TODO: sanitize filename.
      */
     #[Permission('panel')]
-    public function upload(string $type, string $uid): Response
+    public function upload(string $doctype, string $uid): Response
     {
         $response = Response::fromFactory($this->factory);
         $file = $_FILES['file'] ?? null;
@@ -40,7 +40,7 @@ class Media
         }
         $public = $this->config->get('path.public');
         $assets = $this->config->get('path.assets');
-        $dir = "{$public}{$assets}/{$type}/{$uid}";
+        $dir = "{$public}{$assets}/{$doctype}/{$uid}";
 
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
@@ -92,6 +92,18 @@ class Media
         }
 
         return Response::fromFactory($this->factory)->file($image->path());
+    }
+
+    public function file(string $slug): Response
+    {
+        $file = $this->getAssets()->file($slug);
+        $fileServer = $this->config->get('media.fileserver', null);
+
+        if ($fileServer) {
+            return $this->sendFile($fileServer, $file->path());
+        }
+
+        return Response::fromFactory($this->factory)->file($file->path());
     }
 
     protected function validateUploadedFile(?array $file): array

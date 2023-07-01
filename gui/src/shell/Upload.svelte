@@ -17,10 +17,9 @@
 
     export let path: string;
     export let image = false; // if present thumbs will be rendered
-    export let file = false; // if present thumbs will be rendered
+    export let file = false; // if present a files list will be rendered
     export let name: string;
     export let translate: boolean;
-    export let required: boolean;
     export let assets: FileItem[];
     export let multiple = false;
     export let size = 'xl';
@@ -193,24 +192,22 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
-        {#if assets}
+        {#if assets && assets.length > 0}
             {#if multiple && image}
-                {#if assets && assets.length > 0}
-                    <div class="multiple-images">
-                        {#each assets as asset, index}
-                            <ImageValue
-                                upload
-                                {multiple}
-                                {path}
-                                image={asset.file}
-                                remove={() => remove(index)}
-                                {querystring}
-                                {loading}
-                                {size} />
-                        {/each}
-                    </div>
-                {/if}
-            {:else if !multiple && image && assets && assets.length > 0}
+                <div class="multiple-images">
+                    {#each assets as asset, index}
+                        <ImageValue
+                            upload
+                            {multiple}
+                            {path}
+                            image={asset.file}
+                            remove={() => remove(index)}
+                            {querystring}
+                            {loading}
+                            {size} />
+                    {/each}
+                </div>
+            {:else if !multiple && image}
                 <ImageValue
                     upload
                     {path}
@@ -221,9 +218,19 @@
                     {loading}
                     {size} />
             {:else if multiple && file}
-                TODO
-            {:else if !multiple && !image}
-                <FileValue {path} asset={assets[0]} />
+                <div class="multiple-files flex flex-col gap-3 mb-3">
+                    {#each assets as asset, index}
+                        <FileValue
+                            {path}
+                            {asset}
+                            remove={() => remove(index)} />
+                    {/each}
+                </div>
+            {:else}
+                <FileValue
+                    {path}
+                    asset={assets[0]}
+                    remove={() => remove(null)} />
             {/if}
         {/if}
         {#if !assets || assets.length === 0 || multiple}

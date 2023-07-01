@@ -37,9 +37,11 @@ class Routes
         $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')
             ->middleware(Middleware\InitRequest::class);
 
-        $app->post('/media/image/{type:(node|menu)}/{uid:[a-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload')
+        $app->post('/media/{type:(image|file)}/{doctype:(node|menu)}/{uid:[a-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload')
             ->middleware(Middleware\InitRequest::class, Middleware\Session::class);
         $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image')
+            ->middleware(Middleware\InitRequest::class);
+        $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file')
             ->middleware(Middleware\InitRequest::class);
 
         // Add catchall for page url paths. Must be the last one

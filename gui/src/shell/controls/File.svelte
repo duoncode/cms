@@ -19,10 +19,11 @@
     </Label>
     <div class="mt-2">
         <Upload
-            image={false}
-            path="/media/image/node/{node}"
+            file
+            path="/media/file/node/{node}"
+            multiple={field.multiple}
             name={field.name}
             translate={field.translate}
-            bind:asset={data.files} />
+            bind:assets={data.files} />
     </div>
 </Field>
