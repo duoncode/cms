@@ -21,7 +21,7 @@ abstract class Field
     protected ?FulltextWeight $fulltextWeight = null;
 
     public function __construct(
-        protected readonly string $name,
+        public readonly string $name,
         protected readonly Node $node,
         protected readonly ValueContext $valueContext
     ) {

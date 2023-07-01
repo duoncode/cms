@@ -26,9 +26,11 @@
         max-width: 10rem;
     }
 
+    &.required label.dragdrop,
     input[required],
     textarea[required] {
         @apply border-l-rose-700 border-l-4;
+        border-left-style: solid;
     }
 }
 

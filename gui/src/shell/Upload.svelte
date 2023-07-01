@@ -20,6 +20,7 @@
     export let file = false; // if present thumbs will be rendered
     export let name: string;
     export let translate: boolean;
+    export let required: boolean;
     export let assets: FileItem[];
     export let multiple = false;
     export let size = 'xl';
