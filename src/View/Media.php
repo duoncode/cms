@@ -27,6 +27,7 @@ class Media
     /**
      * TODO: sanitize filename.
      */
+    #[Permission('panel')]
     public function upload(string $type, string $uid): Response
     {
         $response = Response::fromFactory($this->factory);
@@ -36,38 +37,41 @@ class Media
         $maxSize = $this->config->get('upload.maxsize');
         $mimeTypes = $this->config->get('upload.mimetypes');
 
-        $file = $this->request->files()['file'];
-        $stream = $file->getStream();
-        $tmpFile = $stream->getMetadata('uri');
-        $stream->close();
+        $file = $_FILES['file'];
+        $tmpFile = $file['tmp_name'];
         $fileSize = filesize($tmpFile);
         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($fileInfo, $tmpFile);
-        $fileName = $file->getClientFilename();
+        finfo_close($fileInfo);
+        $fileName = $file['full_path'];
         $pathInfo = pathinfo($fileName);
         $ext = $pathInfo['extension'] ?? null;
-
-        if ($fileSize > $maxSize) {
-            return $response->json(['ok' => false, 'error' => 'File too large'], 400);
-        }
-
         $allowedExtensions = $mimeTypes[$mimeType] ?? null;
 
+        if ($file['error'] ?? null !== UPLOAD_ERR_OK) {
+            return $response->json(['ok' => false, 'error' => 'Upload failed.'], 400);
+        }
+
+        if ($fileSize > $maxSize) {
+            return $response->json(['ok' => false, 'error' => 'File too large.'], 400);
+        }
+
         if (!$allowedExtensions) {
-            return $response->json(['ok' => false, 'error' => 'File type not allowed: ' . $mimeType], 400);
+            return $response->json(['ok' => false, 'error' => "File type not allowed: {$mimeType}."], 400);
         }
 
         if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
             return $response->json([
                 'ok' => false,
-                'error' => 'Wrong file extension. Allowed are: ' . join(', ', $allowedExtensions),
+                'error' => 'Wrong file extension. Allowed are: ' . join(', ', $allowedExtensions) . '.',
             ], 400);
         }
 
-        $file->moveTo("{$public}/{$assets}/{$type}/{$uid}/{$fileName}");
+        move_uploaded_file($tmpFile, "{$public}/{$assets}/{$type}/{$uid}/{$fileName}");
 
         return $response->json(['ok' => true, 'file' => $fileName]);
     }
+
     public function image(string $slug): Response
     {
         $image = $this->getAssets()->image($slug);

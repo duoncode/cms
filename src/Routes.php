@@ -38,7 +38,7 @@ class Routes
             ->middleware(Middleware\InitRequest::class);
 
         $app->post('/media/image/{type:(node|menu)}/{uid:[a-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload')
-            ->middleware(Middleware\InitRequest::class);
+            ->middleware(Middleware\InitRequest::class, Middleware\Session::class);
         $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image')
             ->middleware(Middleware\InitRequest::class);
 
