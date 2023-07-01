@@ -84,6 +84,7 @@
         const files = target.files ? [...target.files] : [];
 
         target.value = '';
+
         return files;
     }
 

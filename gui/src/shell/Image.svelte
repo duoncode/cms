@@ -88,6 +88,7 @@
     .image.upload {
         @apply flex flex-shrink w-full justify-center items-center;
         max-height: 13rem;
+        min-height: 6rem;
     }
     .image.multiple.upload {
         height: 10rem;

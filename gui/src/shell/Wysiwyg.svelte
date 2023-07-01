@@ -48,7 +48,6 @@
     export let value;
     export let name;
     export let editSource = true;
-    export let label = null;
     export let required = false;
     export let toolbar = 'default';
     export let embed = false;
@@ -247,11 +246,6 @@
     </div>
 {/if}
 
-{#if label}
-    <label for={name} class="form-label">
-        {label}
-    </label>
-{/if}
 <div class="wysiwyg wysiwyg-{toolbar}" class:required class:embed>
     {#if editor}
         {#if toolbar !== 'inline'}

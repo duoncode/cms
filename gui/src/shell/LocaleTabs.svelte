@@ -18,7 +18,6 @@
 <style lang="postcss">
     .locale-tabs {
         @apply flex-shrink;
-        float: right;
     }
 
     .locale-tab {

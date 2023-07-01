@@ -5,8 +5,8 @@
     export let lang: string | null = null;
 </script>
 
-<div class="form-label">
-    <div><slot /></div>
+<div class="label flex flex-row">
+    <div class="flex-grow"><slot /></div>
     {#if translate}
         <LocaleTabs bind:lang />
     {/if}

@@ -1,6 +1,6 @@
 .field,
 .setting {
-    label {
+    label, .form-label {
         @apply block font-medium leading-6 text-gray-900;
         @apply flex flex-row items-center;
 
