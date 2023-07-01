@@ -1,12 +1,42 @@
 <script lang="ts">
     import type { Document } from '$types/data';
+    import type { Locale } from '$lib/sys';
     import { _ } from '$lib/locale';
+    import { system } from '$lib/sys';
     import ToggleLine from '$shell/ToggleLine.svelte';
 
     export let doc: Document;
+
+    function getPathPlaceholder(locale: Locale) {
+        while (locale) {
+            const value = doc.paths[locale.id];
+
+            if (value) {
+                return value;
+            }
+
+            locale = $system.locales.find(l => l.id === locale.fallback);
+        }
+
+        return '';
+    }
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
+    <div class="paths mb-8">
+        {#each $system.locales as locale}
+            <div class="path">
+                <div class="label">{locale.title}:</div>
+                <div class="value">
+                    <input
+                        type="text"
+                        bind:value={doc.paths[locale.id]}
+                        placeholder={getPathPlaceholder(locale)}
+                        required={locale.id === $system.defaultLocale} />
+                </div>
+            </div>
+        {/each}
+    </div>
     <div class="max-w-xl">
         <div class="mb-4">
             <ToggleLine
@@ -36,4 +66,21 @@
 </div>
 
 <style lang="postcss">
+    .paths {
+        display: table;
+        width: 100%;
+    }
+
+    .path {
+        display: table-row;
+
+        & > div {
+            @apply p-2;
+            display: table-cell;
+        }
+
+        .value {
+            width: 100%;
+        }
+    }
 </style>

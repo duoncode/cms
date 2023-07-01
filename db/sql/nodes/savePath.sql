@@ -1,12 +1,7 @@
-INSERT INTO conia.nodes (
-    uid,
-    type,
-    published,
-    locked,
-    hidden,
-    editor,
-    creator,
-    content
+INSERT INTO conia.urlpaths (
+    node,
+    path,
+    locale
 )
 SELECT
     :uid,
@@ -31,6 +26,4 @@ UPDATE SET
     editor = :editor,
     content = :content
 WHERE
-    conia.nodes.uid = :uid
-
-RETURNING node;
+    conia.nodes.uid = :uid;

@@ -314,15 +314,41 @@ abstract class Node
             $editor = 1; // The System user
         }
 
-        $this->db->nodes->save([
-            'uid' => $data['uid'],
-            'hidden' => $data['hidden'],
-            'published' => $data['published'],
-            'locked' => $data['published'],
-            'type' => $this->slug(),
-            'content' => json_encode($data['content']),
-            'editor' => $editor,
-        ])->run();
+        try {
+            $db = $this->db;
+            $db->begin();
+            $node = $db->nodes->save([
+                'uid' => $data['uid'],
+                'hidden' => $data['hidden'],
+                'published' => $data['published'],
+                'locked' => $data['published'],
+                'type' => $this->slug(),
+                'content' => json_encode($data['content']),
+                'editor' => $editor,
+            ])->one()['node'];
+
+            $defaultLocale = $this->config->locales->getDefault();
+            $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
+
+            if (!$defaultPath) {
+                throw new RuntimeException(_("Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein"));
+            }
+
+            error_log(print_r($data['paths'], true));
+            // foreach ($data['paths'] as $locale => $path) {
+            //     if ($path) {
+            //         $db->nodes->deleteInactivePath(['path' => $path])->run();
+            //     }
+            // }
+
+            $currentPaths = $db->nodes->getPaths(['node' => $node])->all();
+            error_log(print_r($currentPaths, true));
+            $db->commit();
+        } catch (Throwable $e) {
+            $db->rollback();
+
+            throw new RuntimeException(_('Fehler beim Speichern: ') . $e->getMessage(), (int)$e->getCode(), $e);
+        }
 
         return [
             'success' => true,

@@ -18,6 +18,7 @@ export interface System {
     env: string;
     csrfToken: string;
     locale: string;
+    defaultLocale: string;
     locales: Locale[];
     logo?: string;
 }
@@ -28,6 +29,7 @@ export const system: Writable<System> = writable({
     env: 'production',
     csrfToken: '',
     locale: 'en',
+    defaultLocale: 'en',
     locales: [],
 });
 
@@ -48,6 +50,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             env: data.env as string,
             csrfToken: data.csrfToken as string,
             locale: data.locale as string,
+            defaultLocale: data.defaultLocale as string,
             locales: data.locales as Locale[],
             logo: data.logo as string,
         };

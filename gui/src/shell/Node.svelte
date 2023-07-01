@@ -14,7 +14,7 @@
     export let allowDelete: boolean;
     export let save: () => void;
 
-    let activeTab = 'content';
+    let activeTab = 'settings';
 
     function changeTab(tab: string) {
         return () => {

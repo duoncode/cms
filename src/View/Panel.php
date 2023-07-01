@@ -46,7 +46,8 @@ class Panel
 
         return [
             'locales' => $localesList,
-            'locale' => $locales->getDefault()->id,
+            'locale' => $locales->getDefault()->id, // TODO: set the correct user locale
+            'defaultLocale' => $locales->getDefault()->id,
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
