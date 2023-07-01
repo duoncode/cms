@@ -4,7 +4,7 @@
     export let toast: Toast;
 </script>
 
-<div class="text-white">
+<div class="text-white text-left">
     {#if toast.title}
         <h3>{toast.title}</h3>
     {/if}

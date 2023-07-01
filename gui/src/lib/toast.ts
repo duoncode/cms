@@ -23,10 +23,6 @@ export function add(toast: Toast, timeout?: number) {
         setTimeout(() => {
             remove(toast);
         }, timeout || 3000);
-    } else {
-        setTimeout(() => {
-            remove(toast);
-        }, timeout || 10000);
     }
 }
 

@@ -31,52 +31,24 @@ class Media
     public function upload(string $type, string $uid): Response
     {
         $response = Response::fromFactory($this->factory);
+        $file = $_FILES['file'] ?? null;
 
+        $result = $this->validateUploadedFile($file);
+
+        if (!$result['ok']) {
+            return $response->json($result, 400);
+        }
         $public = $this->config->get('path.public');
         $assets = $this->config->get('path.assets');
-        $maxSize = $this->config->get('upload.maxsize');
-        $mimeTypes = $this->config->get('upload.mimetypes');
-        error_log(print_r($_FILES, true));
-        error_log($public);
-
-        $file = $_FILES['file'];
-        $tmpFile = $file['tmp_name'];
-        $fileSize = filesize($tmpFile);
-        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($fileInfo, $tmpFile);
-        finfo_close($fileInfo);
-        $fileName = $file['full_path'];
-        $pathInfo = pathinfo($fileName);
-        $ext = $pathInfo['extension'] ?? null;
-        $allowedExtensions = $mimeTypes[$mimeType] ?? null;
         $dir = "{$public}{$assets}/{$type}/{$uid}";
-
-        if ($file['error'] ?? null !== UPLOAD_ERR_OK) {
-            return $response->json(['ok' => false, 'error' => 'Upload failed.'], 400);
-        }
-
-        if ($fileSize > $maxSize) {
-            return $response->json(['ok' => false, 'error' => 'File too large.'], 400);
-        }
-
-        if (!$allowedExtensions) {
-            return $response->json(['ok' => false, 'error' => "File type not allowed: {$mimeType}."], 400);
-        }
-
-        if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
-            return $response->json([
-                'ok' => false,
-                'error' => 'Wrong file extension. Allowed are: ' . join(', ', $allowedExtensions) . '.',
-            ], 400);
-        }
 
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
-        move_uploaded_file($tmpFile, "{$dir}/{$fileName}");
+        move_uploaded_file($file['tmp_name'], "{$dir}/{$result['file']}");
 
-        return $response->json(['ok' => true, 'file' => $fileName]);
+        return $response->json($result);
     }
 
     public function image(string $slug): Response
@@ -120,6 +92,60 @@ class Media
         }
 
         return Response::fromFactory($this->factory)->file($image->path());
+    }
+
+    protected function validateUploadedFile(?array $file): array
+    {
+        if (!$file) {
+            return [
+                'ok' => false,
+                'error' => _('Upload fehlgeschlagen. Datei konnte am Server nicht verabeitet werden.'),
+                'file' => _(' Dateiname unbekannt'),
+            ];
+        }
+        $mimeTypes = $this->config->get('upload.mimetypes');
+        $maxSize = $this->config->get('upload.maxsize');
+
+        $tmpFile = $file['tmp_name'];
+        $fileSize = filesize($tmpFile);
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($fileInfo, $tmpFile);
+        finfo_close($fileInfo);
+        $fileName = $file['full_path'];
+        $pathInfo = pathinfo($fileName);
+        $ext = $pathInfo['extension'] ?? null;
+        $allowedExtensions = $mimeTypes[$mimeType] ?? null;
+        $result = [
+            'ok' => true,
+            'file' => $fileName,
+            'error' => '',
+            'code' => 0,
+        ];
+
+        if (($file['error'] ?? null === UPLOAD_ERR_INI_SIZE) || ($fileSize > $maxSize)) {
+            $size = number_format((float)($fileSize / 1024 / 1024), 2, '.', '');
+            $allowed = number_format((float)($maxSize / 1024 / 1024), 2, '.', '');
+
+            return array_merge($result, ['ok' => false,
+                'error' => "Die Datei ist zu groß: {$size} MB. Erlaubt sind {$allowed} MB", ]);
+        }
+
+        if ($file['error'] ?? null !== UPLOAD_ERR_OK) {
+            return array_merge($result, ['ok' => false, 'error' => _('Der Dateiupload ist aufgrund eines Serverfehlers fehlgeschlagen.')]);
+        }
+
+        if (!$allowedExtensions) {
+            return array_merge($result, ['ok' => false, 'error' => _("Der Dateityp ist nicht erlaubt: {$mimeType}.")]);
+        }
+
+        if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
+            return array_merge($result, [
+                'ok' => false,
+                'error' => _("Falsche Dateiendung: {$ext}. Für diesen Dateityp sind folgende Endungen erlaubt: " . join(', ', $allowedExtensions) . '.'),
+            ]);
+        }
+
+        return $result;
     }
 
     protected function sendFile(string $fileServer, string $file): Response

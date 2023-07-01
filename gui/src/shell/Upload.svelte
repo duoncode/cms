@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
     import type { FileItem, UploadResponse } from '$types/data';
+    import type { Toast } from '$lib/toast';
 
     import { getContext, createEventDispatcher } from 'svelte';
     import { _ } from '$lib/locale';
@@ -64,8 +65,10 @@
             open(
                 Dialog,
                 {
-                    title: _('Error'),
-                    body: _('-error-upload-only-one-file-'),
+                    title: _('Fehler'),
+                    body: _(
+                        'In diesem Feld ist nur eine einzelne Datei erlaubt.',
+                    ),
                     type: 'error',
                     close,
                 },
@@ -74,9 +77,9 @@
                 },
             );
             return [];
-        } else {
-            return result;
         }
+
+        return result;
     }
 
     function getFilesFromInput(event: Event) {
@@ -103,16 +106,6 @@
         return await req.post(path, formData);
     }
 
-    function getFileName(item: UploadResponse) {
-        if (item.ok) {
-            return item.file;
-        }
-
-        toast.add({ kind: 'error', message: item.error });
-
-        return null;
-    }
-
     function getTitleAltValue() {
         if (translate) {
             const result: Record<string, string> = {};
@@ -121,6 +114,14 @@
         }
 
         return '';
+    }
+
+    function getError(item: UploadResponse): Toast {
+        return {
+            kind: 'error',
+            title: _('Datei:') + ' ' + item.file,
+            message: item.error,
+        };
     }
 
     function onFile(getFilesFunction: (event: DragEvent | Event) => File[]) {
@@ -133,38 +134,42 @@
 
                 let responses = await Promise.all(
                     files.map(async (file: File) => {
-                        return upload(file).then(resp =>
-                            resp.ok ? resp.data : null,
-                        );
+                        return upload(file).then(resp => resp.data);
                     }),
                 );
 
-                if (responses.length > 0) {
-                    const value = getTitleAltValue();
+                const value = getTitleAltValue();
 
-                    if (multiple) {
-                        responses.map((item: UploadResponse) => {
+                if (multiple) {
+                    responses.map((item: UploadResponse) => {
+                        if (item.ok) {
                             assets.push({
                                 alt: value,
                                 title: value,
-                                file: getFileName(item),
+                                file: item.file,
                             });
-                        });
-                    } else {
+                        } else {
+                            toast.add(getError(item));
+                        }
+                    });
+                } else {
+                    const item = responses[0] as UploadResponse;
+
+                    if (item.ok) {
                         assets = [
                             {
                                 alt: value,
                                 title: value,
-                                file: getFileName(responses[0]),
+                                file: item.file,
                             },
                         ];
+                    } else {
+                        toast.add(getError(item));
                     }
+                }
 
-                    if (assets && callback) {
-                        callback();
-                    }
-                } else {
-                    console.log('TODO: error handling');
+                if (assets && callback) {
+                    callback();
                 }
             }
 

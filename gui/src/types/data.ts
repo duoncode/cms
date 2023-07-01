@@ -29,8 +29,8 @@ export interface FileData {
 
 export interface UploadResponse {
     ok: boolean;
-    file?: string;
-    error?: string;
+    file: string;
+    error: string;
 }
 
 export interface GridBase {
