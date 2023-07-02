@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Field\Attr\DefaultVal;
 use Conia\Core\Field\Attr\Description;
 use Conia\Core\Field\Attr\Fulltext;
 use Conia\Core\Field\Attr\Label;
@@ -92,6 +93,9 @@ trait InitializesFields
                     break;
                 case Options::class:
                     $field->options($attr->newInstance()->options);
+                    break;
+                case DefaultVal::class:
+                    $field->default($attr->newInstance()->get());
                     break;
                 case TranslateFile::class:
                     if (!($field instanceof \Conia\Core\Field\Image || !$field instanceof \Conia\Core\Field\File)) {

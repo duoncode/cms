@@ -65,6 +65,8 @@ class Grid extends Field
 
     public function structure(mixed $value = null): array
     {
+        $value = $value ?: $this->default;
+
         if (is_array($value)) {
             return ['type' => 'grid', 'columns' => 12, 'value' => $value];
         }

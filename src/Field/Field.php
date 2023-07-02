@@ -18,6 +18,7 @@ abstract class Field
     protected ?int $width = null;
     protected ?int $rows = null;
     protected array $validators = [];
+    protected mixed $default = null;
     protected ?FulltextWeight $fulltextWeight = null;
 
     public function __construct(
@@ -44,6 +45,13 @@ abstract class Field
     public function label(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function default(mixed $default): static
+    {
+        $this->default = $default;
 
         return $this;
     }
@@ -155,7 +163,11 @@ abstract class Field
     public function getFileStructure(string $type, mixed $value = null): array
     {
         if (is_null($value)) {
-            $value = [];
+            if (is_null($this->default)) {
+                $value = [];
+            } else {
+                $value = $this->default;
+            }
         }
 
         return ['type' => $type, 'files' => $value];
@@ -163,11 +175,15 @@ abstract class Field
 
     public function getSimpleStructure(string $type, mixed $value = null): array
     {
+        $value = $value ?: $this->default;
+
         return ['type' => $type, 'value' => $value];
     }
 
     protected function getTranslatableStructure(string $type, mixed $value = null): array
     {
+        $value = $value ?: $this->default;
+
         $result = ['type' => $type];
 
         if ($value) {

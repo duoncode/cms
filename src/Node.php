@@ -146,6 +146,7 @@ abstract class Node
                 'hidden' => false,
                 'locked' => false,
                 'content' => $result,
+                'paths' => [],
             ],
         ];
     }
@@ -202,7 +203,7 @@ abstract class Node
 
     public function path(Locale $locale = null): string
     {
-        $paths = json_decode($this->data['paths'], true);
+        $paths = $this->data['paths'] ?? [];
 
         if (!$locale) {
             $locale = $this->request->get('locale');
