@@ -27,7 +27,7 @@
                 image: orig,
             },
             {
-                styleWindow: { width: '100%', maxWidth: '70rem' },
+                styleWindow: { width: 'fit-content', maxWidth: '70rem' },
             },
         );
     }
