@@ -21,6 +21,7 @@ use Conia\Core\Field\Field;
 use Conia\Core\Value\ValueContext;
 use ReflectionClass;
 use ReflectionProperty;
+use ReflectionUnionType;
 
 trait InitializesFields
 {
@@ -39,14 +40,20 @@ trait InitializesFields
                 continue;
             }
 
-            $fieldType = $property->getType()->getName();
+            $fieldType = $property->getType();
 
-            if (is_subclass_of($fieldType, Field::class)) {
+            if ($fieldType::class === ReflectionUnionType::class) {
+                continue;
+            }
+
+            $fieldTypeName = $fieldType->getName();
+
+            if (is_subclass_of($fieldTypeName, Field::class)) {
                 if (isset($this->{$name})) {
                     continue;
                 }
 
-                $this->{$name} = $this->initField($property, $fieldType);
+                $this->{$name} = $this->initField($property, $fieldTypeName);
 
                 $this->fieldNames[] = $name;
             }

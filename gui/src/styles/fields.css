@@ -30,6 +30,7 @@ input[type='time'] {
 
 &.required label.dragdrop,
 input[required],
+select[required],
 textarea[required] {
     @apply border-l-rose-700 border-l-4;
     border-left-style: solid;

@@ -21,6 +21,7 @@ export interface System {
     defaultLocale: string;
     locales: Locale[];
     logo?: string;
+    transliterate?: Record<string, string>;
 }
 
 export const system: Writable<System> = writable({
@@ -32,6 +33,14 @@ export const system: Writable<System> = writable({
     defaultLocale: 'en',
     locales: [],
 });
+
+export function localesMap(locales: Locale[]) {
+    const map = {};
+
+    locales.map(locale => (map[locale.id] = locale));
+
+    return map;
+}
 
 export const setup = async (fetchFn: typeof window.fetch) => {
     const sys = get(system);
@@ -53,6 +62,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             defaultLocale: data.defaultLocale as string,
             locales: data.locales as Locale[],
             logo: data.logo as string,
+            transliterate: data.transliterate as Record<string, string> | null,
         };
 
         system.set(sys);

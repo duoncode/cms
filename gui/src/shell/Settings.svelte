@@ -8,6 +8,8 @@
     export let doc: Document;
 
     function getPathPlaceholder(locale: Locale) {
+        const localeId = locale.id;
+
         while (locale) {
             const value = doc.paths[locale.id];
 
@@ -17,6 +19,12 @@
 
             locale = $system.locales.find(l => l.id === locale.fallback);
         }
+
+        const value = doc.generatedPaths[localeId];
+
+            if (value) {
+                return value;
+            }
 
         return '';
     }

@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { Node } from '$types/data';
     import { _ } from '$lib/locale';
+    import { system } from '$lib/sys';
+    import { generatePaths } from '$lib/urlpaths';
     import NodeControlBar from '$shell/NodeControlBar.svelte';
     import Breadcrumbs from '$shell/Breadcrumbs.svelte';
     import Headline from '$shell/Headline.svelte';
@@ -21,6 +23,12 @@
             activeTab = tab;
         };
     }
+
+    $: {
+        if (data.doc.route) {
+            data.doc.generatedPaths = generatePaths(data.doc, data.doc.route, $system);
+        }
+    };
 </script>
 
 <div class="flex flex-col h-screen">

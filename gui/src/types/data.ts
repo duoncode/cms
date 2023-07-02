@@ -13,7 +13,7 @@ export interface TranslatedFile {
 }
 
 export interface TextData {
-    type: 'text' | 'html' | 'hidden' | 'date' | 'time';
+    type: 'text' | 'html' | 'hidden' | 'date' | 'time' | 'datetime' | 'option';
     value?: string | Record<string, string>;
 }
 
@@ -71,6 +71,7 @@ export interface GridData {
 
 export type Data = TextData | FileData | GridData | NumberData;
 export type Content = Record<string, Data>;
+export type Route = string | Record<string, string>;
 
 export interface Column {
     value: string | boolean | number;
@@ -109,6 +110,8 @@ export interface Document {
     deleted: null | string;
     type: string;
     paths: Record<string, string>;
+    generatedPaths: Record<string, string>;
+    route?: Route;
     content: Content;
     creator_uid: string;
     creator_email: string;

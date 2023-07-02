@@ -30,6 +30,7 @@ class Config
             'path.assets' => '/assets',
             'path.cache' => '/cache',
             'session.options' => [],
+            'slug.transliterate' => null,
             'media.fileserver' => null,
             'upload.mimetypes' => [
                 'application/pdf' => ['pdf'],

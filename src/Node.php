@@ -28,7 +28,7 @@ abstract class Node
     public readonly Request $request;
     public readonly Config $config;
     protected static string $name = ''; // The public name of the node type
-    protected static string $route = '/{slug}'; // The route pattern of node instances
+    protected static string|array $route = ''; // The route pattern of node instances
     protected static string $slug = ''; // The slug which is used to address the node type in the panel
     protected static string $template = '';
     protected static array $permissions = [
@@ -142,6 +142,7 @@ abstract class Node
             'fields' => $this->fields(),
             'data' => [
                 'uid' => nanoid(),
+                'route' => static::$route,
                 'published' => false,
                 'hidden' => false,
                 'locked' => false,
