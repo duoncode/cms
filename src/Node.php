@@ -203,7 +203,7 @@ abstract class Node
 
     public function path(Locale $locale = null): string
     {
-        $paths = $this->data['paths'] ?? [];
+        $paths = $this->data['paths'];
 
         if (!$locale) {
             $locale = $this->request->get('locale');

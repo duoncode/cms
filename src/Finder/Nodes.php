@@ -111,6 +111,7 @@ final class Nodes implements Iterator
         $page['content'] = json_decode($page['content'], true);
         $page['editor_data'] = json_decode($page['editor_data'], true);
         $page['creator_data'] = json_decode($page['creator_data'], true);
+        $page['paths'] = json_decode($page['paths'], true);
         $context = $this->context;
         $class = $context
             ->registry
