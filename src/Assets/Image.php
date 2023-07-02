@@ -15,6 +15,7 @@ class Image
     public readonly string $relativeFile;
     public readonly string $file;
     protected ?string $cacheFile = null;
+    protected bool $isAnimated = false;
 
     public function __construct(
         protected readonly Request $request,
@@ -49,6 +50,10 @@ class Image
 
     public function resize(Size $size, ResizeMode $mode, bool $enlarge, ?int $quality): static
     {
+        if (Util::isAnimatedGif($this->file)) {
+            return $this;
+        }
+
         $this->cacheFile = $this->getCacheFilePath($size, $mode, $enlarge);
 
         if (is_file($this->cacheFile)) {
