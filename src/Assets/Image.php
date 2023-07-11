@@ -50,10 +50,6 @@ class Image
 
     public function resize(Size $size, ResizeMode $mode, bool $enlarge, ?int $quality): static
     {
-        if (Util::isAnimatedGif($this->file)) {
-            return $this;
-        }
-
         $this->cacheFile = $this->getCacheFilePath($size, $mode, $enlarge);
 
         if (is_file($this->cacheFile)) {
@@ -64,6 +60,10 @@ class Image
                 $this->createCacheFile($size, $mode, $enlarge, $quality);
             }
         } else {
+            if (Util::isAnimatedGif($this->file)) {
+                return $this;
+            }
+
             $this->createCacheFile($size, $mode, $enlarge, $quality);
         }
 
