@@ -13,6 +13,17 @@ class TranslatedImage extends Image
         return $this->translated($key, $index);
     }
 
+    protected function getMediaPath(int $index): string
+    {
+        $locale = $this->locale;
+
+        return '/media/image/' .
+            $this->assetsPath() .
+            $this->data['files'][$index][$locale->id]['file'] .
+            $this->queryString .
+            ($this->quality ? "&quality={$this->quality}" : '');
+    }
+
     protected function translated(string $key, int $index): string
     {
         $locale = $this->locale;
