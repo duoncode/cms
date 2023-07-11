@@ -13,18 +13,21 @@ use Conia\Chuck\Response;
 use Conia\Core\Config;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Field\Attr;
 use Conia\Core\Field\Field;
 use Conia\Core\Finder;
 use Conia\Core\Locale;
 use Conia\Core\Schema\NodeSchemaFactory;
 use Conia\Core\Value\Value;
+use Conia\Core\Value\ValueContext;
 use Conia\Quma\Database;
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionUnionType;
 use Throwable;
 
 abstract class Node
 {
-    use InitializesFields;
-
     public readonly Request $request;
     public readonly Config $config;
     protected static string $name = ''; // The public name of the node type
@@ -39,6 +42,7 @@ abstract class Node
     ];
     protected readonly Database $db;
     protected readonly Registry $registry;
+    protected array $fieldNames = [];
 
     final public function __construct(
         protected readonly Context $context,
@@ -332,9 +336,9 @@ abstract class Node
             $defaultLocale = $this->config->locales->getDefault();
             $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
 
-            if (!$defaultPath) {
-                throw new RuntimeException(_("Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein"));
-            }
+            // if (!$defaultPath) {
+            //     throw new RuntimeException(_("Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein"));
+            // }
 
             error_log(print_r($data['paths'], true));
             // foreach ($data['paths'] as $locale => $path) {
@@ -426,5 +430,96 @@ abstract class Node
         $factory = $this->registry->get(Factory::class);
 
         return Response::fromFactory($factory);
+    }
+
+    protected function initFields(): void
+    {
+        $this->fieldNames = [];
+
+        $rc = new ReflectionClass(static::class);
+
+        foreach ($rc->getProperties() as $property) {
+            $name = $property->getName();
+
+            if (!$property->hasType()) {
+                continue;
+            }
+
+            $fieldType = $property->getType();
+
+            if ($fieldType::class === ReflectionUnionType::class) {
+                continue;
+            }
+
+            $fieldTypeName = $fieldType->getName();
+
+            if (is_subclass_of($fieldTypeName, Field::class)) {
+                if (isset($this->{$name})) {
+                    continue;
+                }
+
+                $this->{$name} = $this->initField($property, $fieldTypeName);
+
+                $this->fieldNames[] = $name;
+            }
+        }
+
+        $this->init();
+    }
+
+    protected function initField(ReflectionProperty $property, string $fieldType): Field
+    {
+        $fieldName = $property->getName();
+        $content = $this->data['content'][$fieldName] ?? [];
+        $node = $this instanceof Node ? $this : $this->node;
+        $field = new $fieldType($fieldName, $node, new ValueContext($fieldName, $content));
+
+        foreach ($property->getAttributes() as $attr) {
+            switch ($attr->getName()) {
+                case Attr\Required::class:
+                    $field->required(true);
+                    break;
+                case Attr\Translate::class:
+                    $field->translate(true);
+                    break;
+                case Attr\Label::class:
+                    $field->label($attr->newInstance()->label);
+                    break;
+                case Attr\Description::class:
+                    $field->description($attr->newInstance()->description);
+                    break;
+                case Attr\Fulltext::class:
+                    $field->fulltext($attr->newInstance()->fulltextWeight);
+                    break;
+                case Attr\Width::class:
+                    $field->width($attr->newInstance()->width);
+                    break;
+                case Attr\Rows::class:
+                    $field->rows($attr->newInstance()->rows);
+                    break;
+                case Attr\Multiple::class:
+                    $field->multiple(true);
+                    break;
+                case Attr\Validate::class:
+                    $field->validate(...$attr->newInstance()->validators);
+                    break;
+                case Attr\Options::class:
+                    $field->options($attr->newInstance()->options);
+                    break;
+                case Attr\DefaultVal::class:
+                    $field->default($attr->newInstance()->get());
+                    break;
+                case Attr\TranslateFile::class:
+                    if (!($field instanceof \Conia\Core\Field\Image || !$field instanceof \Conia\Core\Field\File)) {
+                        throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
+                    }
+
+                    $field->translateFile(true);
+
+                    break;
+            }
+        }
+
+        return $field;
     }
 }
