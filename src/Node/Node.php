@@ -32,9 +32,7 @@ abstract class Node
     public readonly Request $request;
     public readonly Config $config;
     protected static string $name = ''; // The public name of the node type
-    protected static string|array $route = ''; // The route pattern of node instances
     protected static string $slug = ''; // The slug which is used to address the node type in the panel
-    protected static string $template = '';
     protected static array $permissions = [
         'read' => 'everyone',
         'create' => 'authenticated',
@@ -147,7 +145,6 @@ abstract class Node
             'fields' => $this->fields(),
             'data' => [
                 'uid' => nanoid(),
-                'route' => static::$route,
                 'published' => false,
                 'hidden' => false,
                 'locked' => false,
@@ -193,37 +190,9 @@ abstract class Node
         return static::$slug ?: strtolower(static::className());
     }
 
-    public static function template(): ?string
-    {
-        if (!empty(static::$template)) {
-            return static::$template;
-        }
-
-        return static::slug();
-    }
-
     public function uid(): string
     {
         return $this->data['uid'];
-    }
-
-    public function path(Locale $locale = null): string
-    {
-        $paths = $this->data['paths'];
-
-        if (!$locale) {
-            $locale = $this->request->get('locale');
-        }
-
-        while ($locale) {
-            if (isset($paths[$locale->id])) {
-                return $paths[$locale->id];
-            }
-
-            $locale = $locale->fallback();
-        }
-
-        throw new RuntimeException('No url path found');
     }
 
     public function order(): ?array
@@ -263,6 +232,9 @@ abstract class Node
         };
     }
 
+    /**
+     * Called on GET request.
+     */
     public function read(): array|Response
     {
         if ($this->request->header('Accept') === 'application/json') {
@@ -279,11 +251,17 @@ abstract class Node
         return $this->render();
     }
 
+    /**
+     * Called on PUT request.
+     */
     public function change(): array
     {
-        return $this->saveRequest();
+        return $this->save($this->getRequestData());
     }
 
+    /**
+     * Called on DELETE request.
+     */
     public function delete(): array
     {
         if ($this->request->header('Accept') !== 'application/json') {
@@ -300,19 +278,26 @@ abstract class Node
         ];
     }
 
+    /**
+     * Called on POST request.
+     */
     public function create(): array|Response
     {
         $request = $this->request;
 
         return match ($request->header('Content-Type')) {
+            // TODO: prepare form data and send it to save
             'application/x-www-form-urlencoded' => $this->formPost($request->form()),
-            'application/json' => $this->saveRequest(),
+            'application/json' => $this->save($this->getRequestData()),
         };
     }
 
+    /**
+     * Validates the data and persists it in the database.
+     */
     public function save(array $data): array
     {
-        $this->validate($data);
+        $data = $this->validate($data);
 
         // TODO: check permissions
         try {
@@ -324,32 +309,9 @@ abstract class Node
         try {
             $db = $this->db;
             $db->begin();
-            $node = $db->nodes->save([
-                'uid' => $data['uid'],
-                'hidden' => $data['hidden'],
-                'published' => $data['published'],
-                'locked' => $data['published'],
-                'type' => $this->slug(),
-                'content' => json_encode($data['content']),
-                'editor' => $editor,
-            ])->one()['node'];
 
-            $defaultLocale = $this->config->locales->getDefault();
-            $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
+            $this->persist($db, $data, $editor);
 
-            // if (!$defaultPath) {
-            //     throw new RuntimeException(_("Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein"));
-            // }
-
-            error_log(print_r($data['paths'], true));
-            // foreach ($data['paths'] as $locale => $path) {
-            //     if ($path) {
-            //         $db->nodes->deleteInactivePath(['path' => $path])->run();
-            //     }
-            // }
-
-            $currentPaths = $db->nodes->getPaths(['node' => $node])->all();
-            error_log(print_r($currentPaths, true));
             $db->commit();
         } catch (Throwable $e) {
             $db->rollback();
@@ -363,31 +325,46 @@ abstract class Node
         ];
     }
 
-    protected function validate(array $data): bool
+    protected function persist(Database $db, array $data, int $editor): void
+    {
+        $this->persistNode($db, $data, $editor);
+    }
+
+    protected function persistNode(Database $db, array $data, int $editor): int
+    {
+        return (int)$db->nodes->save([
+            'uid' => $data['uid'],
+            'hidden' => $data['hidden'],
+            'published' => $data['published'],
+            'locked' => $data['published'],
+            'type' => $this->slug(),
+            'content' => json_encode($data['content']),
+            'editor' => $editor,
+        ])->one()['node'];
+    }
+
+    protected function validate(array $data): array
     {
         $factory = new NodeSchemaFactory($this, $this->config->locales());
         $schema = $factory->create();
-        $result = $schema->validate($data['content']);
 
-        if (!$result) {
+        if (!$schema->validate($data['content'])) {
             $exception = new HttpBadRequest(_('Unvollständige oder fehlerhafte Daten'));
             $exception->setPayload($schema->errors());
 
             throw $exception;
         }
 
-        return $result;
+        return $schema->values();
     }
 
-    protected function saveRequest(): array
+    protected function getRequestData(): array
     {
         if ($this->request->header('Content-Type') !== 'application/json') {
             throw new HttpBadRequest();
         }
 
-        $data = $this->request->json();
-
-        return $this->save($data);
+        return $this->request->json();
     }
 
     /**
