@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Field;
 
 use Conia\Core\Field\Attr\FulltextWeight;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 use Conia\Core\Value\Value;
 use Conia\Core\Value\ValueContext;
 

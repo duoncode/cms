@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Core\Node;
 
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Factory;
@@ -11,6 +11,7 @@ use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Config;
+use Conia\Core\Context;
 use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Attr;

@@ -6,7 +6,7 @@ namespace Conia\Core\Finder;
 
 use Conia\Core\Context;
 use Conia\Core\Finder;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 use Generator;
 use Iterator;
 

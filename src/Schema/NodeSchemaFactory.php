@@ -9,7 +9,7 @@ use Conia\Core\Field\File;
 use Conia\Core\Field\Image;
 use Conia\Core\Field\Picture;
 use Conia\Core\Locales;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 use Conia\Sire\Schema;
 
 class NodeSchemaFactory

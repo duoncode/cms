@@ -7,7 +7,7 @@ namespace Conia\Core\Value;
 use Conia\Core\Assets;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Field;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 
 class File extends Value
 {

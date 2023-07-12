@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Value;
 
 use Conia\Core\Field\Field;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 use NumberFormatter;
 
 class Decimal extends Value

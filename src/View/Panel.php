@@ -14,7 +14,7 @@ use Conia\Core\Config;
 use Conia\Core\Context;
 use Conia\Core\Finder;
 use Conia\Core\Middleware\Permission;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 
 class Panel
 {

@@ -6,9 +6,8 @@ namespace Conia\Core\Value;
 
 use Conia\Core\Assets\ResizeMode;
 use Conia\Core\Assets\Size;
-use Conia\Core\Exception\ValueError;
 use Conia\Core\Field;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 use Conia\Core\Util\Html as HtmlUtil;
 use Generator;
 

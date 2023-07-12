@@ -8,7 +8,7 @@ use Conia\Core\Assets\Assets;
 use Conia\Core\Exception\NoSuchProperty;
 use Conia\Core\Field\Field;
 use Conia\Core\Locale;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 
 abstract class Value
 {

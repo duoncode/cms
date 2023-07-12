@@ -10,6 +10,7 @@ use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Router;
 use Conia\Core\Config;
+use Conia\Core\Node\Node;
 use Conia\Core\Routes;
 use Conia\Quma\Connection;
 use PDO;

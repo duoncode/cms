@@ -8,7 +8,7 @@ use Conia\Chuck\Renderer\Render;
 use Conia\Core\Context;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Finder;
-use Conia\Core\Node;
+use Conia\Core\Node\Node;
 
 class Block
 {

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Conia\Core\Context;
 use Conia\Core\Exception\ParserOutputException;
-use Conia\Core\Finder\Context;
 use Conia\Core\Finder\QueryCompiler;
 use Conia\Core\Tests\Setup\TestCase;
 

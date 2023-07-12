@@ -7,6 +7,7 @@ namespace Conia\Core\Finder;
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Core\Context;
 use Conia\Core\Finder;
+use Conia\Core\Node\Node as CoreNode;
 
 class Node
 {
@@ -20,7 +21,7 @@ class Node
         string $path,
         ?bool $deleted = false,
         ?bool $published = true
-    ): ?\Conia\Core\Node {
+    ): ?CoreNode {
         return $this->get([
             'path' => $path,
             'published' => $published,
@@ -33,7 +34,7 @@ class Node
         string $uid,
         ?bool $deleted = false,
         ?bool $published = true
-    ): ?\Conia\Core\Node {
+    ): ?CoreNode {
         return $this->get([
             'uid' => $uid,
             'published' => $published,
@@ -43,7 +44,7 @@ class Node
 
     public function get(
         array $params,
-    ): ?\Conia\Core\Node {
+    ): ?CoreNode {
         $data = $this->context->db->nodes->find($params)->one();
 
         if (!$data) {
@@ -57,11 +58,11 @@ class Node
         $class = $this
             ->context
             ->registry
-            ->tag(\Conia\Core\Node::class)
+            ->tag(CoreNode::class)
             ->entry($data['typeslug'])
             ->definition();
 
-        if (is_subclass_of($class, \Conia\Core\Node::class)) {
+        if (is_subclass_of($class, CoreNode::class)) {
             return new $class($this->context, $this->find, $data);
         }
 
