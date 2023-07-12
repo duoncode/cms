@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { browser } from '$app/environment';
 import { get as getStore } from 'svelte/store';
@@ -9,7 +10,7 @@ const domain = browser
     : '';
 
 class Response {
-    constructor(public ok: boolean, public data: any) { }
+    constructor(public ok: boolean, public data: any) {}
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -77,6 +78,11 @@ async function fetchit(
         });
     }
     const response = await fetchFn(url.href, options);
+
+    if (response.status === 401) {
+        goto(`${base}/login`);
+        return null;
+    }
 
     if (response.status >= 400 && response.status < 800) {
         let message: any;

@@ -27,8 +27,7 @@ class App extends \Conia\Chuck\App
         protected string|array|Closure|Middleware|PsrMiddleware|null $errorHandler = null,
     ) {
         $registry->add(Config::class, $config);
-        // parent::__construct($router, $registry, $errorHandler);
-        parent::__construct($router, $registry);
+        parent::__construct($router, $registry, $errorHandler);
     }
 
     public static function fromConfig(Config $config, ?PsrContainer $container = null): static
