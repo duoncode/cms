@@ -12,7 +12,7 @@ use Conia\Chuck\Response;
 use Conia\Core\Collection;
 use Conia\Core\Config;
 use Conia\Core\Context;
-use Conia\Core\Finder;
+use Conia\Core\Finder\Finder;
 use Conia\Core\Middleware\Permission;
 use Conia\Core\Node\Node;
 

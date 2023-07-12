@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Finder;
 
 use Conia\Core\Context;
-use Conia\Core\Finder;
+use Conia\Core\Finder\Finder;
 use Conia\Core\Node\Node;
 use Generator;
 use Iterator;

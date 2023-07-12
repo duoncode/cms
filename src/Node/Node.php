@@ -16,7 +16,7 @@ use Conia\Core\Exception\NoSuchField;
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Field\Attr;
 use Conia\Core\Field\Field;
-use Conia\Core\Finder;
+use Conia\Core\Finder\Finder;
 use Conia\Core\Locale;
 use Conia\Core\Schema\NodeSchemaFactory;
 use Conia\Core\Value\Value;

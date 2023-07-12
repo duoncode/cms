@@ -9,7 +9,7 @@ use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Response;
 use Conia\Core\Context;
-use Conia\Core\Finder;
+use Conia\Core\Finder\Finder;
 
 class Page
 {

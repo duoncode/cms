@@ -6,7 +6,7 @@ namespace Conia\Core\Finder;
 
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Core\Context;
-use Conia\Core\Finder;
+use Conia\Core\Finder\Finder;
 use Conia\Core\Node\Node as CoreNode;
 
 class Node

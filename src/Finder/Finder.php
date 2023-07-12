@@ -2,14 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Core\Finder;
 
+use Conia\Core\Context;
 use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Finder\Block;
-use Conia\Core\Finder\Blocks;
-use Conia\Core\Finder\Menu;
-use Conia\Core\Finder\Node;
-use Conia\Core\Finder\Nodes;
 
 /**
  * @psalm-property-read Nodes  $nodes
