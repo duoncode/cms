@@ -6,4 +6,5 @@ namespace Conia\Core\Node;
 
 abstract class Block extends Node
 {
+    use RendersTemplate;
 }

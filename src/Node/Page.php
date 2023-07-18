@@ -10,17 +10,9 @@ use Conia\Quma\Database;
 
 abstract class Page extends Node
 {
+    use RendersTemplate;
+
     protected static string|array $route = ''; // The route pattern of node instances
-    protected static string $template = '';
-
-    public static function template(): ?string
-    {
-        if (!empty(static::$template)) {
-            return static::$template;
-        }
-
-        return static::slug();
-    }
 
     public function path(Locale $locale = null): string
     {

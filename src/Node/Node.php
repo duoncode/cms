@@ -237,18 +237,14 @@ abstract class Node
      */
     public function read(): array|Response
     {
-        if ($this->request->header('Accept') === 'application/json') {
-            $data = $this->data();
+        $data = $this->data();
 
-            return [
-                'title' => $this->title(),
-                'uid' => $this->meta('uid'),
-                'fields' => $this->fields(),
-                'data' => $data,
-            ];
-        }
-
-        return $this->render();
+        return [
+            'title' => $this->title(),
+            'uid' => $this->meta('uid'),
+            'fields' => $this->fields(),
+            'data' => $data,
+        ];
     }
 
     /**
