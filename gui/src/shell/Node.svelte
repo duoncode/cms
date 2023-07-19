@@ -12,11 +12,11 @@
     import Content from '$shell/Content.svelte';
     import Settings from '$shell/Settings.svelte';
 
-    export let data: Node;
+    export let node: Node;
     export let allowDelete: boolean;
     export let save: () => void;
 
-    let activeTab = 'settings';
+    let activeTab = 'content';
 
     function changeTab(tab: string) {
         return () => {
@@ -25,21 +25,21 @@
     }
 
     $: {
-        if (data.doc.route) {
-            data.doc.generatedPaths = generatePaths(data.doc, data.doc.route, $system);
+        if (node.doc.route) {
+            node.doc.generatedPaths = generatePaths(node.doc, node.doc.route, $system);
         }
     };
 </script>
 
 <div class="flex flex-col h-screen">
     <NodeControlBar
-        bind:uid={data.uid}
-        collectionPath="collection/{data.collection.slug}"
+        bind:uid={node.uid}
+        collectionPath="collection/{node.collection.slug}"
         {allowDelete}
         {save} />
     <Document>
-        <Breadcrumbs slug={data.collection.slug} name={data.collection.name} />
-        <Headline>{data.title}</Headline>
+        <Breadcrumbs slug={node.collection.slug} name={node.collection.name} />
+        <Headline>{node.title}</Headline>
         <Tabs>
             <button
                 on:click={changeTab('content')}
@@ -47,18 +47,20 @@
                 class="tab">
                 {_('Inhalt')}
             </button>
+            {#if node.doc.nodetype === 'page'}
             <button
                 on:click={changeTab('settings')}
                 class:active={activeTab === 'settings'}
                 class="tab">
                 {_('Einstellungen')}
             </button>
+            {/if}
         </Tabs>
         <Pane>
             {#if activeTab === 'content'}
-                <Content bind:fields={data.fields} bind:doc={data.doc} />
+                <Content bind:fields={node.fields} bind:doc={node.doc} />
             {:else}
-                <Settings bind:doc={data.doc} />
+                <Settings bind:doc={node.doc} />
             {/if}
         </Pane>
     </Document>

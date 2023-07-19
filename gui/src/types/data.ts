@@ -109,6 +109,7 @@ export interface Document {
     changed: string;
     deleted: null | string;
     type: string;
+    nodetype: string;
     paths: Record<string, string>;
     generatedPaths: Record<string, string>;
     route?: Route;

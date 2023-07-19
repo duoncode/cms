@@ -31,46 +31,48 @@
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
-    <div class="paths mb-8">
-        {#each $system.locales as locale}
-            <div class="path">
-                <div class="label">{locale.title}:</div>
-                <div class="value">
-                    <input
-                        type="text"
-                        bind:value={doc.paths[locale.id]}
-                        placeholder={getPathPlaceholder(locale)}
-                        required={locale.id === $system.defaultLocale} />
+    {#if doc.nodetype === 'page'}
+        <div class="paths mb-8">
+            {#each $system.locales as locale}
+                <div class="path">
+                    <div class="label">{locale.title}:</div>
+                    <div class="value">
+                        <input
+                            type="text"
+                            bind:value={doc.paths[locale.id]}
+                            placeholder={getPathPlaceholder(locale)}
+                            required={locale.id === $system.defaultLocale} />
+                    </div>
                 </div>
+            {/each}
+        </div>
+        <div class="max-w-xl">
+            <div class="mb-4">
+                <ToggleLine
+                    title={_('Veröffentlicht')}
+                    subtitle={_(
+                        'Legt fest, ob die Seite für alle Besucher erreichbar ist.',
+                    )}
+                    bind:value={doc.published} />
             </div>
-        {/each}
-    </div>
-    <div class="max-w-xl">
-        <div class="mb-4">
-            <ToggleLine
-                title={_('Veröffentlicht')}
-                subtitle={_(
-                    'Legt fest, ob die Seite für alle Besucher erreichbar ist.',
-                )}
-                bind:value={doc.published} />
+            <div class="my-4">
+                <ToggleLine
+                    title={_('Gesperrt')}
+                    subtitle={_(
+                        'Seiten die gesperrt sind, können nicht verändert werden.',
+                    )}
+                    bind:value={doc.locked} />
+            </div>
+            <div class="mt-4">
+                <ToggleLine
+                    title={_('Versteckt')}
+                    subtitle={_(
+                        'Versteckte Seiten werden in Auflistungen ignoriert.',
+                    )}
+                    bind:value={doc.hidden} />
+            </div>
         </div>
-        <div class="my-4">
-            <ToggleLine
-                title={_('Gesperrt')}
-                subtitle={_(
-                    'Seiten die gesperrt sind, können nicht verändert werden.',
-                )}
-                bind:value={doc.locked} />
-        </div>
-        <div class="mt-4">
-            <ToggleLine
-                title={_('Versteckt')}
-                subtitle={_(
-                    'Versteckte Seiten werden in Auflistungen ignoriert.',
-                )}
-                bind:value={doc.hidden} />
-        </div>
-    </div>
+    {/if}
 </div>
 
 <style lang="postcss">
