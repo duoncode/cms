@@ -202,8 +202,8 @@ class NodeSchemaFactory
     {
         $subSchema = new Schema(title: $field->getLabel(), keepUnknown: true);
 
-        foreach ($fields as $field) {
-            $subSchema->add($field, 'text');
+        foreach ($fields as $fieldName) {
+            $subSchema->add($fieldName, 'text');
         }
 
         $schema = new Schema(list: true, title: $field->getLabel(), keepUnknown: true);
