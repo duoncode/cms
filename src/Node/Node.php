@@ -354,6 +354,7 @@ abstract class Node
         if (!$schema->validate($data)) {
             $exception = new HttpBadRequest(_('Unvollständige oder fehlerhafte Daten'));
             $exception->setPayload($schema->errors());
+            error_log(print_r($schema->errors(), true));
 
             throw $exception;
         }

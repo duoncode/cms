@@ -50,25 +50,62 @@ abstract class Page extends Node
         $this->persistUrlPaths($db, $data, $editor, $node);
     }
 
-    protected function persistUrlPaths(Database $db, array $data, int $editor, int $node): int
+    protected function persistUrlPaths(Database $db, array $data, int $editor, int $node): void
     {
         $defaultLocale = $this->config->locales->getDefault();
         $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
 
-        // if (!$defaultPath) {
-            //     throw new RuntimeException(_("Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein"));
-        // }
+        if (!$defaultPath) {
+            throw new RuntimeException(_('Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein'));
+        }
 
-        error_log(print_r($data['paths'], true));
-        // foreach ($data['paths'] as $locale => $path) {
-            //     if ($path) {
-            //         $db->nodes->deleteInactivePath(['path' => $path])->run();
-            //     }
-        // }
+        $currentPaths = array_column($db->nodes->getPaths(['node' => $node])->all(), 'path', 'locale');
 
-        $currentPaths = $db->nodes->getPaths(['node' => $node])->all();
-        error_log(print_r($currentPaths, true));
+        foreach ($data['paths'] as $locale => $path) {
+            if ($path) {
+                if (!str_starts_with($path, '/')) {
+                    $path = '/' . $path;
+                }
+                // If this is a new path it could already be in the
+                // list of inactive ones. So delete it if it exists.
+                $db->nodes->deleteInactivePath(['path' => $path])->run();
 
-        return 0;
+                $currentPath = $currentPaths[$locale] ?? null;
+
+                if ($currentPath && $currentPath === $path) {
+                    // The path is the same as the existing. Move on.
+                    continue;
+                }
+
+                if ($currentPath) {
+                    $db->nodes->deactivatePath([
+                        'path' => $currentPath,
+                        'locale' => $locale,
+                        'editor' => $editor,
+                    ])->run();
+                }
+
+                if ($db->nodes->pathExists(['path' => $path])->one()) {
+                    // The new path already exists, add a unique part
+                    $path = $path . '-' . nanoid();
+                }
+
+                $db->nodes->savePath([
+                    'node' => $node,
+                    'path' => $path,
+                    'locale' => $locale,
+                    'editor' => $editor,
+                ])->run();
+            } else {
+                // A localized path was emptied
+                if (array_key_exists($locale, $currentPaths)) {
+                    $db->nodes->deactivatePath([
+                        'path' => $currentPaths[$locale],
+                        'locale' => $locale,
+                        'editor' => $editor,
+                    ])->run();
+                }
+            }
+        }
     }
 }

@@ -2,7 +2,9 @@ SELECT
     up.node,
     up.path,
     up.locale,
-    up.inactive
+    up.creator,
+    up.inactive,
+    up.created
 FROM
     conia.urlpaths up
 WHERE

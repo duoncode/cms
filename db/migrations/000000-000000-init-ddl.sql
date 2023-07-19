@@ -201,10 +201,17 @@ CREATE TABLE conia.urlpaths (
     node integer NOT NULL,
     path text NOT NULL CHECK (char_length(path) <= 512),
     locale text NOT NULL CHECK (char_length(locale) <= 32),
+    creator integer NOT NULL,
+    editor integer NOT NULL,
+    created timestamp with time zone NOT NULL DEFAULT now(),
     inactive timestamp with time zone,
     CONSTRAINT pk_urlpaths PRIMARY KEY (node, locale, path),
     CONSTRAINT fk_urlpaths_nodes FOREIGN KEY (node)
-        REFERENCES conia.nodes (node)
+        REFERENCES conia.nodes (node),
+    CONSTRAINT fk_urlpaths_users_creator FOREIGN KEY (creator)
+        REFERENCES conia.users (usr),
+    CONSTRAINT fk_urlpaths_users_editor FOREIGN KEY (editor)
+        REFERENCES conia.users (usr)
 );
 CREATE UNIQUE INDEX uix_urlpaths_path ON conia.urlpaths
     USING btree (path);

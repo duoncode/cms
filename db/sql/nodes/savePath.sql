@@ -1,29 +1,13 @@
 INSERT INTO conia.urlpaths (
     node,
     path,
-    locale
-)
-SELECT
-    :uid,
-    type,
-    :published,
-    :locked,
-    :hidden,
+    locale,
+    editor,
+    creator
+) VALUES (
+    :node,
+    :path,
+    :locale,
     :editor,
-    :editor,
-    :content
-FROM
-    conia.types t
-WHERE
-    t.handle = :type
-
-ON CONFLICT (uid) DO
-
-UPDATE SET
-    published = :published,
-    locked = :locked,
-    hidden = :hidden,
-    editor = :editor,
-    content = :content
-WHERE
-    conia.nodes.uid = :uid;
+    :editor
+);
