@@ -10,6 +10,7 @@
     import type { GridField } from '$types/fields';
 
     import { _ } from '$lib/locale';
+    import resize from '$lib/resize';
     import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
     import { setDirty } from '$lib/state';
@@ -89,6 +90,10 @@
             );
         };
     }
+
+    function resizeCell(item: GridItem) {
+        return (element) => item.width = element.clientWidth;
+    }
 </script>
 
 <div
@@ -97,7 +102,8 @@
         {#each data as item, index (item)}
             <div
                 class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null ? '' : 'col-start-' + item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white"
-                animate:flip={{ duration: 300 }}>
+                animate:flip={{ duration: 300 }}
+                use:resize={resizeCell(item)}>
                 <svelte:component
                     this={controls[item.type]}
                     bind:item

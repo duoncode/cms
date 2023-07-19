@@ -38,6 +38,7 @@ export interface GridBase {
     colspan: number;
     rowspan: number;
     colstart?: number;
+    width?: number; // will be added while rendering the grid
 }
 
 export interface GridHtml extends GridBase {
