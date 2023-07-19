@@ -20,12 +20,11 @@ class Finder
     {
     }
 
-    public function __get($key): Nodes|Node|Blocks|Block|Menu
+    public function __get($key): Nodes|Node|Block|Menu
     {
         return match ($key) {
             'nodes' => new Nodes($this->context, $this),
             'node' => new Node($this->context, $this),
-            'blocks' => new Blocks($this->context, $this),
             default => throw new RuntimeException('Property not supported')
         };
     }

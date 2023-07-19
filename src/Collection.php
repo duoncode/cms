@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
+use Conia\Core\Finder\Finder;
 use Conia\Core\Finder\Nodes;
 
 abstract class Collection
