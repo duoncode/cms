@@ -45,9 +45,9 @@ class File extends Field
         return $this->getFileStructure('file', $value);
     }
 
-    public function asArray(): array
+    public function properties(): array
     {
-        return array_merge(parent::asArray(), [
+        return array_merge(parent::properties(), [
             'multiple' => $this->multiple,
             'translateFile' => $this->translateFile,
         ]);

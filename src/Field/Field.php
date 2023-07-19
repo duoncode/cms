@@ -145,7 +145,7 @@ abstract class Field
         return $this->rows;
     }
 
-    public function asArray(): array
+    public function properties(): array
     {
         return [
             'rows' => $this->rows,

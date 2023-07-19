@@ -42,7 +42,7 @@ class Picture extends Field
         return $this->translateFile;
     }
 
-    public function asArray(): array
+    public function properties(): array
     {
         $value = $this->value();
         $count = $value->count();
@@ -53,7 +53,7 @@ class Picture extends Field
             $value->width(400)->url(false, $i);
         }
 
-        return array_merge(parent::asArray(), [
+        return array_merge(parent::properties(), [
             'multiple' => $this->multiple,
             'translateFile' => $this->translateFile,
         ]);

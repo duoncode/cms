@@ -58,9 +58,9 @@ class Grid extends Field
         return new GridValue($this->node, $this, $this->valueContext);
     }
 
-    public function asArray(): array
+    public function properties(): array
     {
-        return parent::asArray();
+        return parent::properties();
     }
 
     public function structure(mixed $value = null): array

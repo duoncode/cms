@@ -31,9 +31,9 @@ class Option extends Field
         $this->options = $options;
     }
 
-    public function asArray(): array
+    public function properties(): array
     {
-        $result = parent::asArray();
+        $result = parent::properties();
         $result['options'] = $this->options;
         $result['hasLabel'] = $this->hasLabel;
 

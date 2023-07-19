@@ -220,7 +220,7 @@ abstract class Node
         $allFields = array_merge($orderedFields, $missingFields);
 
         foreach ($allFields as $fieldName) {
-            $fields[] = $this->{$fieldName}->asArray();
+            $fields[] = $this->{$fieldName}->properties();
         }
 
         return $fields;
