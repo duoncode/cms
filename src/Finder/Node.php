@@ -59,7 +59,7 @@ class Node
             ->context
             ->registry
             ->tag(CoreNode::class)
-            ->entry($data['typeslug'])
+            ->entry($data['typehandle'])
             ->definition();
 
         if (is_subclass_of($class, CoreNode::class)) {

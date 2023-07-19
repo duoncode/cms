@@ -96,7 +96,7 @@ class Panel
         $blueprints = [];
 
         foreach ($obj->blueprints() as $blueprint) {
-            $blueprints[] = ['slug' => $blueprint::slug(), 'name' => $blueprint::name()];
+            $blueprints[] = ['slug' => $blueprint::handle(), 'name' => $blueprint::name()];
         }
 
         return [

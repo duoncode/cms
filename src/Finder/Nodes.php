@@ -34,8 +34,8 @@ final class Nodes implements Iterator
             'id' => 'n.uid',
             'locked' => 'n.locked',
             'published' => 'n.published',
-            'type' => 't.slug',
-            'typeslug' => 't.slug',
+            'type' => 't.handle',
+            'typehandle' => 't.handle',
             'uid' => 'n.uid',
             'kind' => 't.kind',
         ];
@@ -116,7 +116,7 @@ final class Nodes implements Iterator
         $class = $context
             ->registry
             ->tag(Node::class)
-            ->entry($page['typeslug'])
+            ->entry($page['typehandle'])
             ->definition();
 
         return new $class($context, $this->find, $page);
@@ -169,7 +169,7 @@ final class Nodes implements Iterator
         $result = [];
 
         foreach ($types as $type) {
-            $result[] = 't.slug = ' . $this->context->db->quote($type);
+            $result[] = 't.handle = ' . $this->context->db->quote($type);
         }
 
         return match (count($result)) {

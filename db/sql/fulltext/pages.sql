@@ -1,6 +1,6 @@
 SELECT
     n.content,
-    t.slug
+    t.handle
 FROM
     conia.nodes n
 JOIN conia.types t

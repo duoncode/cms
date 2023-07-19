@@ -28,11 +28,12 @@ class Block
             'deleted' => $deleted,
             'kind' => 'block',
         ])->one();
+        error_log(print_r($data, true));
         $class = $this
             ->context
             ->registry
             ->tag(Node::class)
-            ->entry($data['typeslug'])
+            ->entry($data['typehandle'])
             ->definition();
 
         if (!is_subclass_of($class, Node::class)) {

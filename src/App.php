@@ -36,6 +36,10 @@ class App extends \Conia\Chuck\App
         $registry = new Registry($container);
         $router = new Router();
 
+        if ($config->debug) {
+            return new static($config, $router, $registry);
+        }
+
         return new static($config, $router, $registry, Handler::class);
     }
 
@@ -50,14 +54,14 @@ class App extends \Conia\Chuck\App
     {
         $this->registry
             ->tag(Collection::class)
-            ->add($class::slug(), $class);
+            ->add($class::handle(), $class);
     }
 
     public function node(string $class): void
     {
         $this->registry
             ->tag(Node::class)
-            ->add($class::slug(), $class);
+            ->add($class::handle(), $class);
     }
 
     public function database(

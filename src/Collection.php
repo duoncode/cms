@@ -10,7 +10,7 @@ use Conia\Core\Finder\Nodes;
 abstract class Collection
 {
     protected static string $name = '';
-    protected static string $slug = '';
+    protected static string $handle = '';
 
     public function __construct(
         public readonly Finder $find,
@@ -63,8 +63,16 @@ abstract class Collection
         }, iterator_to_array($this->entries()));
     }
 
-    public static function slug(): string
+    public static function handle(): string
     {
-        return static::$slug ?: strtolower(basename(str_replace('\\', '/', static::class)));
+        return static::$handle ?:
+            ltrim(
+                strtolower(preg_replace(
+                    '/[A-Z]([A-Z](?![a-z]))*/',
+                    '-$0',
+                    basename(str_replace('\\', '/', static::class))
+                )),
+                '-'
+            );
     }
 }

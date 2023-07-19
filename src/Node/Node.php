@@ -31,7 +31,7 @@ abstract class Node
     public readonly Request $request;
     public readonly Config $config;
     protected static string $name = ''; // The public name of the node type
-    protected static string $slug = ''; // The slug which is used to address the node type in the panel
+    protected static string $handle = ''; // Used also as slug to address the node type in the panel
     protected static array $permissions = [
         'read' => 'everyone',
         'create' => 'authenticated',
@@ -184,9 +184,17 @@ abstract class Node
         return static::$name ?: static::className();
     }
 
-    public static function slug(): string
+    public static function handle(): string
     {
-        return static::$slug ?: strtolower(static::className());
+        return static::$handle ?:
+            ltrim(
+                strtolower(preg_replace(
+                    '/[A-Z]([A-Z](?![a-z]))*/',
+                    '-$0',
+                    static::className()
+                )),
+                '-'
+            );
     }
 
     public function uid(): string
@@ -332,7 +340,7 @@ abstract class Node
             'hidden' => $data['hidden'],
             'published' => $data['published'],
             'locked' => $data['published'],
-            'type' => $this->slug(),
+            'type' => $this->handle(),
             'content' => json_encode($data['content']),
             'editor' => $editor,
         ])->one()['node'];

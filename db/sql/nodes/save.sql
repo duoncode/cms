@@ -20,7 +20,7 @@ SELECT
 FROM
     conia.types t
 WHERE
-    t.slug = :type
+    t.handle = :type
 
 ON CONFLICT (uid) DO
 

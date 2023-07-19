@@ -19,7 +19,7 @@ trait RendersTemplate
             return static::$template;
         }
 
-        return static::slug();
+        return static::handle();
     }
 
     /**
