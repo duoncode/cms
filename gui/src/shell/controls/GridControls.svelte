@@ -86,7 +86,7 @@
 </script>
 
 <div class="content-actions flex flex-row items-center justify-end">
-    <div class="flex flex-row flex-grow items-center justify-start">
+    <div class="flex flex-row items-center justify-start">
         <button class="width-plus" disabled={widest} on:click={width(1)}>
             <IcoExpand />
         </button>
@@ -106,7 +106,7 @@
             <IcoCollapse />
         </button>
     </div>
-    <div class="flex flex-row items-center justify-end">
+    <div class="flex flex-row flex-grow items-center justify-end">
         <button class="up-down" disabled={last} on:click={down}>
             <IcoArrowDown />
         </button>
@@ -129,15 +129,16 @@
     .content-actions {
         & > div {
             @apply ml-4 py-2 gap-x-3;
+        }
 
-            &:hover button {
-                opacity: 1;
-            }
+        &:hover button {
+            opacity: 1;
         }
     }
 
     button {
         @apply w-4 h-4;
+        opacity: 0;
 
         transition: opacity 0.35s ease;
 
@@ -146,18 +147,16 @@
         }
     }
 
-    .up-down {
-        opacity: 0.2;
+    .edit {
+        opacity: 1;
     }
 
     .remove {
         @apply text-orange-700;
-        opacity: 0.2;
     }
 
     .add {
         @apply text-sky-700;
-        opacity: 0.2;
     }
 
     .width-minus, .width-plus {
