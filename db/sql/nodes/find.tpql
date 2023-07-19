@@ -9,6 +9,7 @@ SELECT
     n.deleted,
     n.content,
     t.slug AS typeslug,
+    t.kind AS nodetype,
     uc.uid AS creator_uid,
     uc.email AS creator_email,
     uc.username AS creator_username,
@@ -76,7 +77,8 @@ GROUP BY
     ue.email,
     ue.username,
     ue.data,
-    t.slug
+    t.slug,
+    t.kind
 <?php if (isset($order)) : ?>
 ORDER BY <?= $order ?>
 <?php endif ?>
