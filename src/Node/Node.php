@@ -7,7 +7,6 @@ namespace Conia\Core\Node;
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Chuck\Renderer\Render;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Config;
@@ -344,7 +343,7 @@ abstract class Node
         $factory = new NodeSchemaFactory($this, $this->config->locales());
         $schema = $factory->create();
 
-        if (!$schema->validate($data['content'])) {
+        if (!$schema->validate($data)) {
             $exception = new HttpBadRequest(_('Unvollständige oder fehlerhafte Daten'));
             $exception->setPayload($schema->errors());
 
@@ -365,33 +364,11 @@ abstract class Node
 
     /**
      * Usually overwritten in the app. Used to handle form posts
-     * from the fronend.
+     * from the frontend.
      */
     protected function formPost(?array $body): Response
     {
         throw new HttpBadRequest();
-    }
-
-    protected function render(array $context = []): Response
-    {
-        $context = array_merge([
-            'page' => $this,
-            'find' => $this->find,
-            'locale' => $this->request->get('locale'),
-            'locales' => $this->config->locales,
-        ], $context);
-
-        try {
-            $render = new Render('template', self::template());
-
-            return $render->response($this->registry, $context);
-        } catch (Throwable $e) {
-            if ($this->config->debug()) {
-                throw $e;
-            }
-
-            throw new HttpBadRequest();
-        }
     }
 
     protected function locale(): Locale

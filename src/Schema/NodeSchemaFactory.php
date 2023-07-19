@@ -21,22 +21,30 @@ class NodeSchemaFactory
         protected readonly Locales $locales,
     ) {
         $this->schema = new Schema(keepUnknown: true);
+        $this->schema->add('uid', 'text', 'required', 'maxlen:13');
+        $this->schema->add('published', 'bool', 'required');
+        $this->schema->add('locked', 'bool', 'required');
+        $this->schema->add('hidden', 'bool', 'required');
     }
 
     public function create(): Schema
     {
+        $contentSchema = new Schema(title: 'Content', keepUnknown: true);
+
         foreach ($this->node->fieldNames() as $fieldName) {
-            $this->add($fieldName, $this->node->getField($fieldName));
+            $this->add($contentSchema, $fieldName, $this->node->getField($fieldName));
         }
+
+        $this->schema->add('content', $contentSchema);
 
         return $this->schema;
     }
 
-    protected function add(string $fieldName, Field $field): void
+    protected function add(Schema $schema, string $fieldName, Field $field): void
     {
         $validators = $field->validators();
 
-        $this->schema->add($fieldName, match ($field::class) {
+        $schema->add($fieldName, match ($field::class) {
             \Conia\Core\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
             \Conia\Core\Field\Date::class => $this->addText($field, 'date', $validators),
             \Conia\Core\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
