@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
+use Conia\Core\Node\Node;
 
 final class Column
 {
