@@ -33,7 +33,7 @@
             {#if types.length > 0}
                 {#each types as t}
                     <Button
-                        class="border-sky-800 {t.id === type
+                        class="ring-1 ring-sky-800 {t.id === type
                             ? 'bg-sky-800 text-white'
                             : 'text-sky-800 bg-white'}"
                         on:click={setType(t.id)}>

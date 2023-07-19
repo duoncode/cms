@@ -16,10 +16,6 @@
         showSettings = true;
     }
 
-    function edit() {
-        showSettings = !showSettings;
-    }
-
     $: {
         let x = item.aspectRatioX ? item.aspectRatioX : 16;
         let y = item.aspectRatioY ? item.aspectRatioY : 9;
@@ -28,7 +24,7 @@
     }
 </script>
 
-<slot {edit} />
+<slot edit={() => showSettings = !showSettings} />
 
 {#if showSettings}
     <Setting>

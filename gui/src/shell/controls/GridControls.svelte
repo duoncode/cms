@@ -3,6 +3,10 @@
     import type { GridItem } from '$types/data';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoArrowUp from '$shell/icons/IcoArrowUp.svelte';
+    import IcoExpand from '$shell/icons/IcoExpand.svelte';
+    import IcoCollapse from '$shell/icons/IcoCollapse.svelte';
+    import IcoIndent from '$shell/icons/IcoIndent.svelte';
+    import IcoUnindent from '$shell/icons/IcoUnindent.svelte';
     import IcoArrowDown from '$shell/icons/IcoArrowDown.svelte';
     import IcoCirclePlus from '$shell/icons/IcoCirclePlus.svelte';
     import IcoThreeDots from '$shell/icons/IcoThreeDots.svelte';
@@ -18,6 +22,12 @@
 
     let first = false;
     let last = false;
+    let widest = false;
+    let narrowest = false;
+    let highest = false;
+    let onerow = false;
+    let unindented = false;
+    let fullyindented = false;
 
     function remove() {
         data.splice(index, 1);
@@ -48,6 +58,25 @@
         setDirty();
     }
 
+    function width(val: number) {
+        return () => item.colspan = item.colspan + val;
+    }
+
+    function height(val: number) {
+        return () => item.rowspan = item.rowspan + val;
+    }
+
+    function indent(val: number) {
+        return () => {
+            console.log(item.colstart);
+            if (item.colstart === null) {
+                item.colstart = 2;
+            } else {
+                item.colstart = item.colstart + val;
+            }
+        }
+    }
+
     const dirty = () => {
         setDirty();
     };
@@ -57,29 +86,53 @@
 </script>
 
 <div class="content-actions flex flex-row items-center justify-end">
-    <button class="up-down" disabled={last} on:click={down}>
-        <IcoArrowDown />
-    </button>
-    <button class="up-down" disabled={first} on:click={up}>
-        <IcoArrowUp />
-    </button>
-    <button class="add" on:click={add}>
-        <IcoCirclePlus />
-    </button>
-    <button class="remove" on:click={remove}>
-        <IcoTrash />
-    </button>
-    <button class="edit" on:click={edit}>
-        <IcoThreeDots />
-    </button>
+    <div class="flex flex-row flex-grow items-center justify-start">
+        <button class="width-plus" disabled={widest} on:click={width(1)}>
+            <IcoExpand />
+        </button>
+        <button class="width-minus" disabled={narrowest} on:click={width(-1)}>
+            <IcoCollapse />
+        </button>
+        <button class="indent" disabled={unindented} on:click={indent(1)}>
+            <IcoIndent />
+        </button>
+        <button class="unindent" disabled={fullyindented} on:click={indent(-1)}>
+            <IcoUnindent />
+        </button>
+        <button class="height-plus" disabled={highest} on:click={height(1)}>
+            <IcoExpand />
+        </button>
+        <button class="height-minus" disabled={onerow} on:click={height(-1)}>
+            <IcoCollapse />
+        </button>
+    </div>
+    <div class="flex flex-row items-center justify-end">
+        <button class="up-down" disabled={last} on:click={down}>
+            <IcoArrowDown />
+        </button>
+        <button class="up-down" disabled={first} on:click={up}>
+            <IcoArrowUp />
+        </button>
+        <button class="add" on:click={add}>
+            <IcoCirclePlus />
+        </button>
+        <button class="remove" on:click={remove}>
+            <IcoTrash />
+        </button>
+        <button class="edit" on:click={edit}>
+            <IcoThreeDots />
+        </button>
+    </div>
 </div>
 
 <style lang="postcss">
     .content-actions {
-        @apply flex-shrink flex items-center justify-end ml-4 py-2 gap-x-3;
+        & > div {
+            @apply ml-4 py-2 gap-x-3;
 
-        &:hover button {
-            opacity: 1;
+            &:hover button {
+                opacity: 1;
+            }
         }
     }
 
@@ -105,5 +158,9 @@
     .add {
         @apply text-sky-700;
         opacity: 0.2;
+    }
+
+    .width-minus, .width-plus {
+        transform: rotate(90deg);
     }
 </style>

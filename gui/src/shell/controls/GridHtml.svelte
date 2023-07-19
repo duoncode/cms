@@ -7,14 +7,19 @@
     export let item: GridHtml;
     export let index: number;
 
-    function edit() {
-        console.log('edit the HANS');
-    }
+console.log(item);
+console.log(field);
+
+    let showSettings = false;
 </script>
 
-<slot {edit} />
+<slot edit={() => showSettings = !showSettings} />
 
-<Wysiwyg
-    required={false}
-    name={field.name + '_' + index}
-    bind:value={item.value} />
+{#if showSettings}
+    Settings
+{:else}
+    <Wysiwyg
+        required={false}
+        name={field.name + '_' + index}
+        bind:value={item.value} />
+{/if}

@@ -96,7 +96,7 @@
     {#if data.length > 0}
         {#each data as item, index (item)}
             <div
-                class="border rounded px-2 pb-2 border-gray-300 bg-white col-span-{item.colspan} row-span-{item.rowspan}"
+                class="border rounded px-2 pb-2 border-gray-300 bg-white col-span-{item.colspan} row-span-{item.rowspan} col-start-{item.colstart}"
                 animate:flip={{ duration: 300 }}>
                 <svelte:component
                     this={controls[item.type]}

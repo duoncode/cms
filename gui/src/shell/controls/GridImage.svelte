@@ -9,13 +9,9 @@
     export let index: number;
 
     let showSettings = false;
-
-    function edit() {
-        showSettings = !showSettings;
-    }
 </script>
 
-<slot {edit} />
+<slot edit={() => showSettings = !showSettings} />
 
 {#if showSettings}
     SETTINGS
