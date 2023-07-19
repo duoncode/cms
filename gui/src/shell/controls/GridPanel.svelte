@@ -101,7 +101,7 @@
     {#if data.length > 0}
         {#each data as item, index (item)}
             <div
-                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null ? '' : 'col-start-' + item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white"
+                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null ? '' : 'col-start-' + item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative"
                 animate:flip={{ duration: 300 }}
                 use:resize={resizeCell(item)}>
                 <svelte:component

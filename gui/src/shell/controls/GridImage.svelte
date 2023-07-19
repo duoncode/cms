@@ -11,16 +11,19 @@
     let showSettings = false;
 </script>
 
-<slot edit={() => showSettings = !showSettings} />
-
-{#if showSettings}
-    SETTINGS
-{:else}
-    <Upload
-        image
-        multiple={false}
-        path="/media/image/node/{node}"
-        name={field.name + '_' + index}
-        translate={false}
-        bind:assets={item.files} />
-{/if}
+<div class="grid-cell-header">
+    <slot edit={() => showSettings = !showSettings} />
+</div>
+<div class="grid-cell-body">
+    {#if showSettings}
+        SETTINGS
+    {:else}
+        <Upload
+            image
+            multiple={false}
+            path="/media/image/node/{node}"
+            name={field.name + '_' + index}
+            translate={false}
+            bind:assets={item.files} />
+    {/if}
+</div>

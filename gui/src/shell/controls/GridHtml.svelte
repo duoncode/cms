@@ -10,13 +10,16 @@
     let showSettings = false;
 </script>
 
-<slot edit={() => showSettings = !showSettings} />
-
-{#if showSettings}
-    Settings
-{:else}
-    <Wysiwyg
-        required={false}
-        name={field.name + '_' + index}
-        bind:value={item.value} />
-{/if}
+<div class="grid-cell-header">
+    <slot edit={() => showSettings = !showSettings} />
+</div>
+<div class="grid-cell-body">
+    {#if showSettings}
+        Settings
+    {:else}
+        <Wysiwyg
+            required={false}
+            name={field.name + '_' + index}
+            bind:value={item.value} />
+    {/if}
+</div>

@@ -477,6 +477,15 @@ abstract class Node
                     $field->translateFile(true);
 
                     break;
+                case Attr\Columns::class:
+                    if (!$field instanceof \Conia\Core\Field\Grid) {
+                        throw new RuntimeException('Cannot apply attribute Columns to ' . $field::class);
+                    }
+
+                    $instance = $attr->newInstance();
+                    $field->columns($instance->columns, $instance->minCellWidth);
+
+                    break;
             }
         }
 

@@ -24,54 +24,57 @@
     }
 </script>
 
-<slot edit={() => showSettings = !showSettings} />
-
-{#if showSettings}
-    <Setting>
-        <label for={field.name + '_' + index + '_ytid'}>
-            {_('Youtube-ID')}
-        </label>
-        <div class="mt-2">
-            <input
-                id={field.name + '_' + index + '_ytid'}
-                name={field.name + '_' + index + '_ytid'}
-                type="text"
-                maxlength="20"
-                placeholder={_('Fügen Sie hier die Youtube-ID ein')}
-                bind:value={item.value} />
+<div class="grid-cell-header">
+    <slot edit={() => showSettings = !showSettings} />
+</div>
+<div class="grid-cell-body">
+    {#if showSettings}
+        <Setting>
+            <label for={field.name + '_' + index + '_ytid'}>
+                {_('Youtube-ID')}
+            </label>
+            <div class="mt-2">
+                <input
+                    id={field.name + '_' + index + '_ytid'}
+                    name={field.name + '_' + index + '_ytid'}
+                    type="text"
+                    maxlength="20"
+                    placeholder={_('Fügen Sie hier die Youtube-ID ein')}
+                    bind:value={item.value} />
+            </div>
+        </Setting>
+        <Setting>
+            <label for={field.name + '_' + index + '_x'}>
+                {_('Seitenverhältnis')}
+            </label>
+            <div class="mt-2 flex flex-row gap-4">
+                <input
+                    id={field.name + '_' + index + '_x'}
+                    name={field.name + '_' + index + '_x'}
+                    type="number"
+                    max="100"
+                    min="1"
+                    placeholder={_('Breite')}
+                    bind:value={item.aspectRatioX} />
+                <input
+                    id={field.name + '_' + index + '_y'}
+                    name={field.name + '_' + index + '_y'}
+                    type="number"
+                    max="100"
+                    min="1"
+                    placeholder={_('Höhe')}
+                    bind:value={item.aspectRatioY} />
+            </div>
+        </Setting>
+    {:else}
+        <div class="youtube-container">
+            <div class="relative" style="padding-top: {percent}%">
+                <iframe
+                    class="youtube absolute top-0 left-0 w-full h-full"
+                    title="Youtube Video"
+                    src="https://www.youtube.com/embed/{item.value}"
+                    allowfullscreen />
+            </div>
         </div>
-    </Setting>
-    <Setting>
-        <label for={field.name + '_' + index + '_x'}>
-            {_('Seitenverhältnis')}
-        </label>
-        <div class="mt-2 flex flex-row gap-4">
-            <input
-                id={field.name + '_' + index + '_x'}
-                name={field.name + '_' + index + '_x'}
-                type="number"
-                max="100"
-                min="1"
-                placeholder={_('Breite')}
-                bind:value={item.aspectRatioX} />
-            <input
-                id={field.name + '_' + index + '_y'}
-                name={field.name + '_' + index + '_y'}
-                type="number"
-                max="100"
-                min="1"
-                placeholder={_('Höhe')}
-                bind:value={item.aspectRatioY} />
-        </div>
-    </Setting>
-{:else}
-    <div class="youtube-container">
-        <div class="relative" style="padding-top: {percent}%">
-            <iframe
-                class="youtube absolute top-0 left-0 w-full h-full"
-                title="Youtube Video"
-                src="https://www.youtube.com/embed/{item.value}"
-                allowfullscreen />
-        </div>
-    </div>
-{/if}
+    {/if}
+</div>

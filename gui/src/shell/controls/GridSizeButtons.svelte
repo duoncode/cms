@@ -46,7 +46,7 @@
     }
 
     $: widest = item.colspan === field.columns;
-    $: narrowest = item.colspan === 1;
+    $: narrowest = item.colspan === field.minCellWidth;
     $: highest = item.rowspan === field.columns * 2; // This is arbitrary. Allow twice as many rows as columns
     $: onerow = item.rowspan === 1;
     $: unindented = item.colstart === null;

@@ -19,6 +19,7 @@ export interface ImageField extends FileField {
 
 export interface GridField extends SimpleField {
     columns: number;
+    minCellWidth: number;
 }
 
 export type Field = ImageField | FileField | SimpleField;

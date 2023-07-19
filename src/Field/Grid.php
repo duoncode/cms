@@ -11,20 +11,25 @@ use ValueError;
 class Grid extends Field
 {
     protected int $columns = 12;
-    protected string $i18n = 'mixed';
+    protected int $minCellWidth = 1;
 
     public function __toString(): string
     {
         return 'Grid Field';
     }
 
-    public function columns(int $columns): static
+    public function columns(int $columns, int $minCellWidth = 1): static
     {
         if ($columns < 1 || $columns > 25) {
             throw new ValueError('The value of $columns must be >= 1 and <= 25');
         }
 
+        if ($minCellWidth < 1 || $minCellWidth > $columns) {
+            throw new ValueError('The value of $minCellWidth must be >= 1 and <= ' . (string)$columns);
+        }
+
         $this->columns = $columns;
+        $this->minCellWidth = $minCellWidth;
 
         return $this;
     }
@@ -34,9 +39,9 @@ class Grid extends Field
         return $this->columns;
     }
 
-    public function getI18N(): string
+    public function getMinCellWidth(): int
     {
-        return $this->i18n;
+        return $this->minCellWidth;
     }
 
     public function value(): GridValue
@@ -48,6 +53,7 @@ class Grid extends Field
     {
         return array_merge(parent::properties(), [
             'columns' => $this->columns,
+            'minCellWidth' => $this->minCellWidth,
         ]);
     }
 
@@ -56,10 +62,10 @@ class Grid extends Field
         $value = $value ?: $this->default;
 
         if (is_array($value)) {
-            return ['type' => 'grid', 'columns' => 12, 'value' => $value];
+            return ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => $value];
         }
 
-        $result = ['type' => 'grid', 'columns' => 12, 'value' => []];
+        $result = ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => []];
 
         if ($this->translate) {
             foreach ($this->node->config->locales() as $locale) {
