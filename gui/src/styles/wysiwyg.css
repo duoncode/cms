@@ -81,10 +81,15 @@
     .ProseMirror {
         @apply py-1 px-2;
         max-height: 60vh;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     .ProseMirror-focused {
         @apply border-0 focus:outline-none;
     }
+}
+
+.grid-field .wysiwyg {
+    border-radius: 0;
+    box-shadow: none;
 }

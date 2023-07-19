@@ -92,7 +92,7 @@
 </script>
 
 <div
-    class="grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
+    class="grid-field grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
     {#if data.length > 0}
         {#each data as item, index (item)}
             <div
