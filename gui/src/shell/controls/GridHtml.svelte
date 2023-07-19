@@ -7,9 +7,6 @@
     export let item: GridHtml;
     export let index: number;
 
-console.log(item);
-console.log(field);
-
     let showSettings = false;
 </script>
 

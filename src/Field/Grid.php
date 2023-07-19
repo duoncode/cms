@@ -10,9 +10,6 @@ use ValueError;
 
 class Grid extends Field
 {
-    public const I18N_MIXED = 'mixed';
-    public const I18N_SEPARATE = 'separate';
-
     protected int $columns = 12;
     protected string $i18n = 'mixed';
 
@@ -37,17 +34,6 @@ class Grid extends Field
         return $this->columns;
     }
 
-    public function i18n(string $i18n): static
-    {
-        if ($i18n === self::I18N_MIXED || $i18n === self::I18N_SEPARATE) {
-            $this->i18n = $i18n;
-
-            return $this;
-        }
-
-        throw new ValueError('Wrong i18n value. Use the Grid class constants');
-    }
-
     public function getI18N(): string
     {
         return $this->i18n;
@@ -60,7 +46,9 @@ class Grid extends Field
 
     public function properties(): array
     {
-        return parent::properties();
+        return array_merge(parent::properties(), [
+            'columns' => $this->columns,
+        ]);
     }
 
     public function structure(mixed $value = null): array

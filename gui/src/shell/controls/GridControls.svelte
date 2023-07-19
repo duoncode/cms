@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import type { GridItem } from '$types/data';
+    import type { GridField } from '$types/fields';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoArrowUp from '$shell/icons/IcoArrowUp.svelte';
     import IcoExpand from '$shell/icons/IcoExpand.svelte';
@@ -17,6 +18,7 @@
 
     export let data: GridItem[];
     export let item: GridItem;
+    export let field: GridField;
     export let index: number;
     export let edit: () => void;
 
@@ -68,12 +70,20 @@
 
     function indent(val: number) {
         return () => {
-            console.log(item.colstart);
-            if (item.colstart === null) {
+            let colstart = item.colstart;
+
+            if (val > 0 && colstart === null) {
                 item.colstart = 2;
-            } else {
-                item.colstart = item.colstart + val;
+                return;
             }
+
+            colstart += val
+
+            if (colstart === 0) {
+                colstart = null;
+            }
+
+            item.colstart = colstart;
         }
     }
 
@@ -83,6 +93,14 @@
 
     $: first = data.indexOf(item) === 0;
     $: last = data.indexOf(item) === data.length - 1;
+    $: widest = item.colspan === field.columns;
+    $: narrowest = item.colspan === 1;
+    $: highest = item.rowspan === field.columns * 2; // This is arbitrary. Allow twice as many rows as columns
+    $: onerow = item.rowspan === 1;
+    $: unindented = item.colstart === null;
+    $: fullyindented = (item.colstart !== null && (item.colstart + item.colspan - 1) === field.columns);
+
+    console.log(fullyindented);
 </script>
 
 <div class="content-actions flex flex-row items-center justify-end">
@@ -93,10 +111,10 @@
         <button class="width-minus" disabled={narrowest} on:click={width(-1)}>
             <IcoCollapse />
         </button>
-        <button class="indent" disabled={unindented} on:click={indent(1)}>
+        <button class="indent" disabled={fullyindented} on:click={indent(1)}>
             <IcoIndent />
         </button>
-        <button class="unindent" disabled={fullyindented} on:click={indent(-1)}>
+        <button class="unindent" disabled={unindented} on:click={indent(-1)}>
             <IcoUnindent />
         </button>
         <button class="height-plus" disabled={highest} on:click={height(1)}>
@@ -142,7 +160,7 @@
 
         transition: opacity 0.35s ease;
 
-        &[disabled].up-down {
+        &[disabled] {
             @apply text-gray-300;
         }
     }
