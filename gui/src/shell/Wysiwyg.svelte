@@ -3,8 +3,8 @@
     import { getContext } from 'svelte';
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
-    import { _ } from '$lib/locale';
     import { setDirty } from '$lib/state';
+    import { _ } from '$lib/locale';
     import ModalLink from '$shell/modals/ModalLink.svelte';
 
     import { Editor } from '@tiptap/core';
@@ -178,7 +178,7 @@
         showDropdown = false;
     }
 
-    function addLink(url, target) {
+    function addLink(url: string, blank: boolean) {
         if (url) {
             editor
                 .chain()
@@ -186,7 +186,7 @@
                 .extendMarkRange('link')
                 .setLink({
                     href: url,
-                    target: target === true ? '_blank' : '',
+                    target: blank ? '_blank' : '',
                     class: undefined,
                 })
                 .run();
@@ -194,15 +194,20 @@
     }
 
     function openAddLinkModal() {
+        const value = editor.isActive('link') ? editor.getAttributes('link').href : '';
+        const target = editor.isActive('link') ? editor.getAttributes('link').target : '';
+
         open(
             ModalLink,
             {
                 add: addLink,
                 close,
+                value,
+                blank: target === '_blank',
             },
             {
                 closeButton: false,
-                styleContent: { overflow: 'visible' },
+                styleContent: { overflow: 'hidden' },
             },
         );
     }
@@ -567,6 +572,12 @@
                             )}>
                             <IcoHorizontalRule />
                         </button>
+                        <button
+                            class="wysiwyg-toolbar-btn"
+                            tooltip={_('Add link to page')}
+                            on:click={openAddLinkModal}>
+                            <IcoLink />
+                        </button>
                         {#if editor.isActive('link')}
                             <button
                                 class="wysiwyg-toolbar-btn"
@@ -575,13 +586,6 @@
                                     editor.chain().focus().unsetLink().run,
                                 )}>
                                 <IcoUnlink />
-                            </button>
-                        {:else}
-                            <button
-                                class="wysiwyg-toolbar-btn"
-                                tooltip={_('Add link to page')}
-                                on:click={openAddLinkModal}>
-                                <IcoLink />
                             </button>
                         {/if}
                         <button

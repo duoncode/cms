@@ -7,6 +7,6 @@
 <div class="image-preview flex justify-center items-center">
     <img
         src="{image}?resize=width&w=1280"
-        alt={_('Preview')}
+        alt={_('Vorschau')}
         style="max-height: 90vh" />
 </div>

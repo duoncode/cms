@@ -82,6 +82,10 @@
         @apply py-1 px-2;
         max-height: 60vh;
         overflow-y: auto;
+
+        a {
+            @apply text-sky-600 underline;
+        }
     }
 
     .ProseMirror-focused {
