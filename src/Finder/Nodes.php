@@ -18,6 +18,7 @@ final class Nodes implements Iterator
     private ?int $limit = null;
     private ?bool $deleted = false; // defaults to false, if all nodes are needed set $deleted to null
     private ?bool $published = true; // ditto
+    private ?bool $hidden = false; // ditto
     private readonly array $builtins;
     private Generator $result;
 
@@ -34,6 +35,7 @@ final class Nodes implements Iterator
             'id' => 'n.uid',
             'locked' => 'n.locked',
             'published' => 'n.published',
+            'hidden' => 'n.hidden',
             'type' => 't.handle',
             'typehandle' => 't.handle',
             'uid' => 'n.uid',
@@ -81,6 +83,13 @@ final class Nodes implements Iterator
     public function published(?bool $published): self
     {
         $this->published = $published;
+
+        return $this;
+    }
+
+    public function hidden(?bool $hidden): self
+    {
+        $this->hidden = $hidden;
 
         return $this;
     }
@@ -155,6 +164,10 @@ final class Nodes implements Iterator
 
         if (is_bool($this->published)) {
             $params['published'] = $this->published;
+        }
+
+        if (is_bool($this->hidden)) {
+            $params['hidden'] = $this->hidden;
         }
 
         if ($this->order) {

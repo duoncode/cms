@@ -59,6 +59,9 @@ WHERE
 <?php if (isset($published)) : ?>
     AND n.published = :published
 <?php endif ?>
+<?php if (isset($hidden)) : ?>
+    AND n.hidden = :hidden
+<?php endif ?>
 <?php if (isset($condition) && !empty(trim($condition))) : ?>
     AND <?= $condition ?>
 <?php endif ?>
