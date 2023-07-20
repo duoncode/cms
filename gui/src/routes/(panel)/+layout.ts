@@ -21,7 +21,6 @@ export const load = async ({ fetch }) => {
 
         iv = setInterval(async function () {
             const resp = await req.get('me', {}, fetch);
-            console.log(resp);
 
             if (!resp.ok) {
                 clearInterval(iv);

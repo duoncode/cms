@@ -26,8 +26,8 @@ CREATE TABLE conia.userroles (
 CREATE TABLE conia.users (
     usr integer GENERATED ALWAYS AS IDENTITY,
     uid text NOT NULL CHECK (char_length(uid) <= 64),
-    username text CHECK (char_length(username) > 0),
-    email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5),
+    username text CHECK (char_length(username) > 0 AND char_length(username) < 65),
+    email text CHECK (email SIMILAR TO '%@%' AND char_length(email) > 5 AND char_length(email) < 256),
     pwhash text NOT NULL,
     userrole text NOT NULL,
     active boolean NOT NULL,

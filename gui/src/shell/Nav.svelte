@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { _ } from '$lib/locale';
     import { logoutUser } from '$lib/user';
     import { navVisible } from '$lib/ui';
     import { collections } from '$lib/collections';
@@ -9,7 +10,7 @@
 <div id="nav" class:open={$navVisible}>
     <NavLogo />
 
-    <h2>Inhalte</h2>
+    <h2>{_('Inhalte')}</h2>
     <ul class="ml-4">
         {#each $collections as collection}
             <li class="my-3">
@@ -19,9 +20,11 @@
             </li>
         {/each}
     </ul>
-    <div class="mt-4">
-        <button class="font-medium" on:click={logoutUser}>Logout</button>
-    </div>
+    <h2>{_('Benutzer')}</h2>
+    <ul class="ml-4">
+        <li class="my-3"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></li>
+        <li class="my-3"><button on:click={logoutUser}>{_('Abmelden')}</button></li>
+    </ul>
 </div>
 
 <style lang="postcss">

@@ -1,5 +1,14 @@
 import type { Field } from '$types/fields';
 
+export interface User {
+    uid: string;
+    email: string;
+    username: string;
+    name: string;
+    password: string;
+    passwordRepeat: string;
+}
+
 export interface FileItem {
     file?: string;
     alt?: string | Record<string, string>;

@@ -1,7 +1,10 @@
+import type { User } from '$types/data';
 import { base } from '$app/paths';
 import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
+import { _ } from '$lib/locale';
 import req from './req';
+import toast from '$lib/toast';
 
 const authenticated = writable(false);
 const user = writable(null);
@@ -45,6 +48,22 @@ async function loadUser(fetchFn: typeof window.fetch) {
     }
 }
 
+async function saveProfile(user: User) {
+    const resp = await req.put('profile', user);
+
+    if (resp.ok) {
+        toast.add({
+            kind: 'success',
+            message: _('Benutzerprofil erfolgreich gespeichert!'),
+        });
+    } else {
+        toast.add({
+            kind: 'error',
+            message: resp.data.payload.error,
+        });
+    }
+}
+
 export {
     loginUser,
     logoutUser,
@@ -52,4 +71,5 @@ export {
     authenticated,
     rememberedRoute,
     user,
+    saveProfile,
 };

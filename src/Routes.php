@@ -11,6 +11,7 @@ use Conia\Core\View\Auth;
 use Conia\Core\View\Media;
 use Conia\Core\View\Page;
 use Conia\Core\View\Panel;
+use Conia\Core\View\User;
 
 class Routes
 {
@@ -65,6 +66,8 @@ class Routes
         $api->get('/user/{uid:[a-z0-9-]{1,64}}', [User::class, 'get'], 'user.get');
         $api->post('/user', [User::class, 'create'], 'user.create');
         $api->put('/user/{uid:[a-z0-9-]{1,64}}', [User::class, 'save'], 'user.save');
+        $api->get('/profile', [User::class, 'profile'], 'profile.get');
+        $api->put('/profile', [User::class, 'saveProfile'], 'profile.save');
     }
 
     protected function addSystem(Group $api): void

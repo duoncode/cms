@@ -11,6 +11,7 @@ input[type='text'],
 input[type='number'],
 input[type='date'],
 input[type='time'],
+input[type='password'],
 textarea,
 select {
     @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm;
@@ -37,7 +38,7 @@ textarea[required] {
 }
 
 .field {
-    @apply p-4 sm:p-6 md:p-8;
+    @apply py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:p-8;
 }
 
 .setting {
