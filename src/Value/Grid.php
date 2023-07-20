@@ -74,6 +74,14 @@ class Grid extends Value
                             $this->node,
                             new ValueContext($this->context->fieldName, $item->data)
                         ))->value();
+                    } elseif ($item->type === 'images') {
+                        foreach ((new Field\Image(
+                            $this->context->fieldName,
+                            $this->node,
+                            new ValueContext($this->context->fieldName, $item->data)
+                        ))->multiple()->value() as $image) {
+                            yield $image;
+                        }
                     }
                 }
             }
@@ -85,6 +93,14 @@ class Grid extends Value
                         $this->node,
                         new ValueContext($this->context->fieldName, $item->data)
                     ))->value();
+                } elseif ($item->type === 'images') {
+                    foreach ((new Field\Image(
+                        $this->context->fieldName,
+                        $this->node,
+                        new ValueContext($this->context->fieldName, $item->data)
+                    ))->multiple()->value() as $image) {
+                        yield $image;
+                    }
                 }
             }
         }
@@ -193,6 +209,7 @@ class Grid extends Value
             'h5' => '<h5>' . $value->data['value'] . '</h5>',
             'h6' => '<h6>' . $value->data['value'] . '</h6>',
             'image' => $this->renderImage($value->data, $args),
+            'images' => $this->renderImages($value->data, $args),
             'youtube' => $this->getValueObject(Field\Youtube::class, $value)->__toString(),
         };
         $out .= '</div>';
@@ -213,7 +230,7 @@ class Grid extends Value
     {
         $file = $data['files'][0]['file'];
         $title = $data['files'][0]['title'] ?? '';
-        $maxWidth = $args['maxImageWidth'] ?? 1280;
+        $maxWidth = $args['maxImageWidth'] ?? 1440;
         $path = $this->assetsPath() . $file;
         $image = $this->getAssets()->image($path);
         $resized = $image->resize(
@@ -225,6 +242,35 @@ class Grid extends Value
         $url = $resized->url(true);
 
         return "<img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\">";
+    }
+
+    protected function renderImages(array $data, array $args): string
+    {
+        $result = '';
+
+        foreach ($data['files'] as $f) {
+            $file = $f['file'];
+            $title = $f['title'] ?? '';
+            $maxWidth = $args['maxImageWidth'] ?? 1440;
+            $path = $this->assetsPath() . $file;
+            $image = $this->getAssets()->image($path);
+            // TODO: currently we assume a gallery with 3 columns
+            $resized = $image->resize(
+                new Size((int)($maxWidth / $this->columns() / 3) * (int)($data['colspan'] ?? 12)),
+                ResizeMode::Width,
+                enlarge: false,
+                quality: null,
+            );
+            $url = $resized->url(true);
+
+            $result .= "<div class=\"conia-grid-images-image\"><img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\"></div>";
+        }
+
+        if ($result) {
+            return '<div class="conia-grid-images">' . $result . '</div>';
+        }
+
+        return '';
     }
 
     protected function prepareData(array $data): Generator
