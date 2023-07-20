@@ -10,6 +10,7 @@ use Conia\Core\Field;
 use Conia\Core\Node\Node;
 use Conia\Core\Util\Html as HtmlUtil;
 use Generator;
+use Gumlet\ImageResize;
 
 class Grid extends Value
 {
@@ -254,10 +255,9 @@ class Grid extends Value
             $maxWidth = $args['maxImageWidth'] ?? 1440;
             $path = $this->assetsPath() . $file;
             $image = $this->getAssets()->image($path);
-            // TODO: currently we assume a gallery with 3 columns
             $resized = $image->resize(
-                new Size((int)($maxWidth / $this->columns() / 3) * (int)($data['colspan'] ?? 12)),
-                ResizeMode::Width,
+                new Size(400, 267, cropMode: ImageResize::CROPCENTER),
+                ResizeMode::Crop,
                 enlarge: false,
                 quality: null,
             );
