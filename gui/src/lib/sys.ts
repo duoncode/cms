@@ -21,6 +21,8 @@ export interface System {
     defaultLocale: string;
     locales: Locale[];
     logo?: string;
+    assets: string;
+    cache: string;
     transliterate?: Record<string, string>;
 }
 
@@ -31,6 +33,8 @@ export const system: Writable<System> = writable({
     csrfToken: '',
     locale: 'en',
     defaultLocale: 'en',
+    assets: '',
+    cache: '',
     locales: [],
 });
 
@@ -62,8 +66,10 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             defaultLocale: data.defaultLocale as string,
             locales: data.locales as Locale[],
             logo: data.logo as string,
+            assets: data.assets as string,
+            cache: data.cache as string,
             transliterate: data.transliterate as Record<string, string> | null,
-        };
+        } as System;
 
         system.set(sys);
 

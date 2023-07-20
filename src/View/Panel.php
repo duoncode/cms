@@ -52,6 +52,8 @@ class Panel
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
             'logo' => $this->config->get('panel.logo', null),
+            'assets' => $this->config->get('path.assets'),
+            'cache' => $this->config->get('path.cache'),
             'transliterate' => $this->config->get('slug.transliterate'),
         ];
     }
