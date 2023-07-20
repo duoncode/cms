@@ -26,6 +26,7 @@
 
         let result = await loginUser(login, password, rememberme);
 
+console.log(result);
         if (result !== true) {
             message = result;
         }

@@ -7,8 +7,6 @@ export const load = async ({ fetch }) => {
     if (response.ok) {
         const data = response.data;
 
-        console.log(data);
-
         return {
             user: {
                 uid: data.uid,

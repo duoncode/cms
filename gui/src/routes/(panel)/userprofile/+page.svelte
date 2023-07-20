@@ -13,10 +13,7 @@
 
     export let data: {user: User};
 
-    console.log(data.user);
-
     async function save() {
-        console.log(data.user);
         saveProfile(data.user);
     }
 </script>

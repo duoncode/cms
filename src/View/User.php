@@ -35,8 +35,6 @@ class User
             $name = '';
         }
 
-        error_log(print_r($user, true));
-
         return [
             'uid' => $user['uid'],
             'username' => $user['username'],

@@ -43,16 +43,16 @@ class Auth
 
             if ($user === false) {
                 return $response->json(array_merge(
-                    ['error' => _('Incorrect username or password.')],
+                    ['error' => _('Falscher Benutzername oder Passwort')],
                     $schema->pristineValues()
-                ), 401);
+                ), 400);
             }
 
             return $response->json($user);
         }
         $response->json(
             array_merge(
-                ['error' => _('Please provide username and password.')],
+                ['error' => _('Bitte Benutzernamen und Passwort eingeben')],
                 $schema->pristineValues()
             ),
             400
