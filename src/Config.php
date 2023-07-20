@@ -29,7 +29,10 @@ class Config
             'path.public' => "{$root}/public",
             'path.assets' => '/assets',
             'path.cache' => '/cache',
-            'session.options' => [],
+            'session.options' => [
+                'gc_maxlifetime' => 3600,
+                'cookie_lifetime' => 0,
+            ],
             'slug.transliterate' => null,
             'media.fileserver' => null,
             'upload.mimetypes' => [

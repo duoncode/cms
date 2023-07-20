@@ -54,4 +54,14 @@ class Session extends BaseSession
     {
         return $_COOKIE[$this->authCookie] ?? null;
     }
+
+    public function signalActivity(): void
+    {
+        $_SESSION['last_activity'] = time();
+    }
+
+    public function lastActivity(): ?int
+    {
+        return $_SESSION['last_activity'] ?? null;
+    }
 }

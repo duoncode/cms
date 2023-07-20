@@ -54,6 +54,7 @@ class Panel
             'logo' => $this->config->get('panel.logo', null),
             'assets' => $this->config->get('path.assets'),
             'cache' => $this->config->get('path.cache'),
+            'sessionExpires' => $this->config->get('session.options')['gc_maxlifetime'],
             'transliterate' => $this->config->get('slug.transliterate'),
         ];
     }

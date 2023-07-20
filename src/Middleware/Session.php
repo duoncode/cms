@@ -19,10 +19,20 @@ class Session implements Middleware
     {
         $session = new \Conia\Core\Session(
             $this->config->app(),
-            $this->config->get('session.options', []),
+            $this->config->get('session.options'),
             $this->config->get('session.handler', null),
         );
         $session->start();
+
+        $expires = $this->config->get('session.options')['gc_maxlifetime'];
+        $lastActivity = $session->lastActivity();
+
+        if ($lastActivity && (time() - $lastActivity > $expires)) {
+            $session->forget();
+            $session->start();
+        }
+
+        $session->signalActivity();
 
         $request->set('session', $session);
 

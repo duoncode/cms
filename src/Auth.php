@@ -107,7 +107,7 @@ class Auth
     protected function remember(int $userId): RememberDetails
     {
         $token = new Token($this->config->get('app.secret'));
-        $expires = time() + ($this->config->get('session.options', [])['cache_expire'] ?? 180);
+        $expires = time() + $this->config->get('session.options', [])['cache_expire'];
 
         $remembered = $this->users->remember(
             $token->hash(),
@@ -133,6 +133,7 @@ class Auth
 
         if ($remember) {
             $details = $this->remember($userId);
+            error_log(print_r($details->expires, true));
 
             if ($details) {
                 $session->remember(
@@ -147,7 +148,7 @@ class Auth
             $token = $session->getAuthToken();
 
             if ($token !== null) {
-                $this->users->forget($token->hash());
+                $this->users->forget($token);
             }
         }
     }
