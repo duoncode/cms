@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <div
+                <!--<div
                     class="flex flex-col sm:flex-row items-center justify-between">
                     <div class="flex items-center">
                         <input
@@ -122,7 +122,7 @@
                             {_('Passwort vergessen?')}
                         </Link>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="flex justify-end">
                     <Button
