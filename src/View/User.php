@@ -104,7 +104,7 @@ class User
             $passwordUtil = Password::fromConfig($config);
 
             if (!$passwordUtil->strongEnough($pw)) {
-                throw HttpBadRequest::withPayload(['error' => 'Das Passwort ist zu schwach']);
+                throw HttpBadRequest::withPayload(['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
             }
 
             if (trim($data['password']) !== trim($data['passwordRepeat'])) {
