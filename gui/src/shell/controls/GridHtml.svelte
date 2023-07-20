@@ -15,7 +15,7 @@
 </div>
 <div class="grid-cell-body">
     {#if showSettings}
-        Settings
+        <div>Keine Einstellungsmöglichkeiten vorhanden</div>
     {:else}
         <Wysiwyg
             required={false}

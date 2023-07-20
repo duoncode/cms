@@ -19,6 +19,7 @@
     import ModalAdd from '$shell/modals/ModalAdd.svelte';
     import GridControls from './GridControls.svelte';
     import GridImage from './GridImage.svelte';
+    import GridImages from './GridImages.svelte';
     import GridHtml from './GridHtml.svelte';
     import GridYoutube from './GridYoutube.svelte';
 
@@ -31,18 +32,20 @@
         image: GridImage,
         html: GridHtml,
         youtube: GridYoutube,
+        images: GridImages,
     };
     const types = [
         { id: 'html', label: 'Text' },
-        { id: 'image', label: 'Bild' },
+        { id: 'image', label: 'Einzelbild' },
         { id: 'youtube', label: 'Youtube-Video' },
+        { id: 'images', label: 'Mehrere Bilder' },
     ];
     const modal: Modal = getContext('simple-modal');
 
     function add(
         index: number,
         before: boolean,
-        type: 'html' | 'image' | 'youtube',
+        type: 'html' | 'image' | 'youtube' | 'images',
     ) {
         let content: GridBase = {
             type,
@@ -52,7 +55,7 @@
         };
         if (type === 'html') {
             (content as GridHtmlData).value = '';
-        } else if (type === 'image') {
+        } else if (type === 'image' || type === 'images') {
             (content as GridImageData).files = [];
         } else {
             (content as GridYoutubeData).value = '';

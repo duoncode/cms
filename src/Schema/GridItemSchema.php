@@ -10,7 +10,7 @@ class GridItemSchema extends Schema
 {
     protected function rules(): void
     {
-        $this->add('type', 'text', 'required', 'in:html,image,youtube');
+        $this->add('type', 'text', 'required', 'in:html,image,youtube,images');
         $this->add('rowspan', 'int', 'required');
         $this->add('colspan', 'int', 'required');
         $this->add('colstart', 'int');
@@ -21,7 +21,7 @@ class GridItemSchema extends Schema
         foreach ($this->values() as $value) {
             $type = $value['type'] ?? null;
 
-            if ($type === 'image') {
+            if ($type === 'image' || $type === 'images') {
                 $files = $value['files'] ?? [];
 
                 if (count($files) > 0) {
