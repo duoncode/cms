@@ -35,6 +35,8 @@ class Routes
 
         $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')
             ->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash')
+            ->middleware(Middleware\InitRequest::class);
         $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')
             ->middleware(Middleware\InitRequest::class);
 
@@ -75,7 +77,7 @@ class Routes
         $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
         $api->get('/collections', [Panel::class, 'collections'], 'conia.collections');
         $api->get('/collection/{collection}', [Panel::class, 'collection'], 'conia.collection');
-        $api->route('/node/{uid:[a-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
+        $api->route('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
         $api->post('/node/{type}', [Panel::class, 'createNode'], 'conia.node.create');
         $api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'conia.blueprint');
     }
