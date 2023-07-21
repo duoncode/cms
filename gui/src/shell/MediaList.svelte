@@ -36,10 +36,9 @@
         }
     });
 
-    function edit(index: number) {
+    function edit(index: number, hasAlt: boolean) {
         const apply = (asset: FileItem) => {
             assets[index] = asset;
-            console.log(asset);
             modal.close();
         }
 
@@ -50,6 +49,7 @@
                 close: modal.close,
                 apply,
                 translate,
+                hasAlt,
             }
         );
     }
@@ -65,7 +65,7 @@
                     {path}
                     image={asset.file}
                     remove={() => remove(index)}
-                    edit={() => edit(index)}
+                    edit={() => edit(index, true)}
                     {loading} />
             {/each}
         </div>
@@ -76,7 +76,7 @@
             {multiple}
             image={assets[0] && assets[0].file}
             remove={() => remove(null)}
-            edit={() => edit(0)}
+            edit={() => edit(0, true)}
             {loading} />
     {:else if multiple && file}
         <div class="multiple-files flex flex-col gap-3 mb-3" bind:this={sorter}>
@@ -86,7 +86,7 @@
                     {loading}
                     asset={asset.file}
                     remove={() => remove(index)}
-                    edit={() => edit(index)} />
+                    edit={() => edit(index, false)} />
             {/each}
         </div>
     {:else}
@@ -95,7 +95,7 @@
             {loading}
             asset={assets[0].file}
             remove={() => remove(null)}
-            edit={() => edit(0)} />
+            edit={() => edit(0, false)} />
     {/if}
 {/if}
 

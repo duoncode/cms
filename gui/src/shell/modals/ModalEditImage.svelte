@@ -8,8 +8,7 @@
     export let apply: (asset: FileItem) => void;
     export let asset: FileItem;
     export let translate: boolean;
-
-    console.log(asset);
+    export let hasAlt: boolean;
 </script>
 
 <div class="modal">
@@ -17,8 +16,10 @@
     <div class="body">
         <div class="flex flex-col gap-4 mb-8">
             <Input bind:value={asset.title} label={_('Titel')} id="edit_image_title" {translate}/>
-            <Input bind:value={asset.alt} label={_('Alt-Text')} id="edit_image_alt" {translate}
-                description={_('Ein Alt-Text ist eine kurze Bildbeschreibung oder eine sprachliche Übersetzung eines visuellen Inhalts im Internet, die blinden Benutzern von Hilfsmitteln wie Screen- readern anstelle des Bildes vorgelesen wird. Suchmaschinen verwenden diesen Text ebenfalls.')}/>
+            {#if hasAlt}
+                <Input bind:value={asset.alt} label={_('Alt-Text')} id="edit_image_alt" {translate}
+                    description={_('Ein Alt-Text ist eine kurze Bildbeschreibung oder eine sprachliche Übersetzung eines visuellen Inhalts im Internet, die blinden Benutzern von Hilfsmitteln wie Screen- readern anstelle des Bildes vorgelesen wird. Suchmaschinen verwenden diesen Text ebenfalls.')}/>
+            {/if}
         </div>
     </div>
     <div class="controls">
