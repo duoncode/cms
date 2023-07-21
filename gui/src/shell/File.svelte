@@ -3,10 +3,12 @@
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoDownload from '$shell/icons/IcoDownload.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
+    import IcoPencil from '$shell/icons/IcoPencil.svelte';
 
     export let path: string;
     export let asset: string;
     export let remove: () => void;
+    export let edit: () => void;
     export let loading: boolean;
 </script>
 
@@ -23,6 +25,12 @@
         <a href="{path}/{asset}" target="_blank" class="inline-block pl-2">
             {_('Datei herunterladen')}
         </a>
+
+        <button on:click={edit} class="text-rose-800">
+            <span class="inline-block h-4 w-4 ml-4 flex items-center">
+                <IcoPencil />
+            </span>
+        </button>
 
         <button on:click={remove} class="text-rose-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">

@@ -31,7 +31,7 @@
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
 
-    function remove(index: number) {
+    function remove(index: number|null) {
         if (index === null) {
             assets = [];
         } else {
@@ -188,7 +188,7 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
-        <MediaList bind:assets {multiple} {image} {path} {remove} {loading} />
+        <MediaList bind:assets {multiple} {image} {path} {remove} {loading} {translate}/>
         {#if !assets || assets.length === 0 || multiple}
             <label
                 class="dragdrop"

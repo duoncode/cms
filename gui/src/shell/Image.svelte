@@ -4,6 +4,7 @@
     import { _ } from '$lib/locale';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
+    import IcoPencil from '$shell/icons/IcoPencil.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
     export let path: string;
@@ -12,6 +13,7 @@
     export let upload: boolean;
     export let multiple: boolean;
     export let remove: () => void;
+    export let edit: () => void;
 
     let orig: string;
     let thumb: string;
@@ -65,14 +67,20 @@
                     <span class="ico">
                         <IcoTrash />
                     </span>
-                    <span class="icobtn">{_('löschen')}</span>
+                    <span class="icobtn">{_('Löschen')}</span>
                 </button>
             {/if}
             <button class="text-sky-700" on:click={preview}>
                 <span class="ico">
-                    <IcoEye /><br />
+                    <IcoEye />
                 </span>
-                <span class="icobtn">{_('anzeigen')}</span>
+                <span class="icobtn">{_('Vorschau')}</span>
+            </button>
+            <button class="text-sky-700" on:click={edit}>
+                <span class="ico">
+                    <IcoPencil />
+                </span>
+                <span class="icobtn">{_('Titel')}</span>
             </button>
         </div>
     {/if}
@@ -110,14 +118,15 @@
     }
 
     .overlay {
-        @apply flex flex-row items-center justify-center gap-6;
+        @apply flex flex-row items-center justify-center gap-2;
         @apply invisible opacity-0;
         @apply absolute top-1 bottom-1 left-1 right-1;
         transition: visibility 0.1s, opacity 0.2s linear;
         background: rgba(0, 0, 0, 0.3);
     }
 
-    button[class^='icon-'] {
+    button {
+        @apply flex flex-col items-center justify-center;
         cursor: pointer;
     }
 
