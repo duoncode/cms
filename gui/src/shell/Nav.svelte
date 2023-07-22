@@ -10,21 +10,20 @@
 <div id="nav" class:open={$navVisible}>
     <NavLogo />
 
-    <h2>{_('Inhalte')}</h2>
-    <ul class="ml-4">
-        {#each $collections as collection}
-            <li class="my-3">
-                <Link href="collection/{collection.slug}">
-                    {collection.name}
-                </Link>
-            </li>
-        {/each}
-    </ul>
+    {#each $collections as item}
+        {#if item.type === 'section'}
+            <h2>{item.name}</h2>
+        {:else}
+        <div class="mt-1 ml-4">
+            <Link href="collection/{item.slug}">
+                {item.name}
+            </Link>
+        </div>
+        {/if}
+    {/each}
     <h2>{_('Benutzer')}</h2>
-    <ul class="ml-4">
-        <li class="my-3"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></li>
-        <li class="my-3"><button on:click={logoutUser}>{_('Abmelden')}</button></li>
-    </ul>
+    <div class="mt-1 ml-4"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></div>
+    <div class="mt-1 ml-4"><button on:click={logoutUser}>{_('Abmelden')}</button></div>
 </div>
 
 <style lang="postcss">
@@ -46,6 +45,6 @@
     }
 
     h2 {
-        @apply font-medium mt-8;
+        @apply font-medium mt-6;
     }
 </style>

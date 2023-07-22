@@ -2,8 +2,9 @@ import { writable, type Writable } from 'svelte/store';
 import req from '$lib/req';
 
 export interface Collection {
-    slug: string;
+    type: 'section' | 'collection';
     name: string;
+    slug?: string;
 }
 
 export const collections: Writable<Collection[]> = writable([]);

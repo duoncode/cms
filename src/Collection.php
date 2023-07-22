@@ -50,17 +50,21 @@ abstract class Collection
 
     public function listing(): array
     {
-        return array_map(function ($node) {
-            return [
+        $result = [];
+
+        foreach ($this->entries() as $node) {
+            $columns = [];
+            foreach ($this->columns() as $column) {
+                $columns[] = $column->get($node);
+            }
+
+            $result[] = [
                 'uid' => $node->meta('uid'),
-                'columns' => array_map(
-                    function (Column $column) use ($node) {
-                        return $column->get($node);
-                    },
-                    $this->columns()
-                ),
+                'columns' => $columns,
             ];
-        }, iterator_to_array($this->entries()));
+        }
+
+        return $result;
     }
 
     public static function handle(): string

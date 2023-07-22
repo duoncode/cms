@@ -46,6 +46,13 @@ class App extends \Conia\Chuck\App
         return static::fromConfig($config, $container);
     }
 
+    public function section(string $name): void
+    {
+        $this->registry
+            ->tag(Collection::class)
+            ->add($name, new Section($name));
+    }
+
     public function collection(string $class): void
     {
         $this->registry

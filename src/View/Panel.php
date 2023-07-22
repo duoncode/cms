@@ -15,6 +15,7 @@ use Conia\Core\Context;
 use Conia\Core\Finder\Finder;
 use Conia\Core\Middleware\Permission;
 use Conia\Core\Node\Node;
+use Conia\Core\Section;
 
 class Panel
 {
@@ -82,11 +83,20 @@ class Panel
         $collections = [];
 
         foreach ($tag->entries() as $id) {
-            $collection = $tag->get($id);
-            $collections[] = [
-                'slug' => $id,
-                'name' => $collection->name(),
-            ];
+            $item = $tag->get($id);
+            error_log(print_r($item::class, true));
+            if ($item::class === Section::class) {
+                $collections[] = [
+                    'type' => 'section',
+                    'name' => $item->name,
+                ];
+            } else {
+                $collections[] = [
+                    'type' => 'collection',
+                    'slug' => $id,
+                    'name' => $item->name(),
+                ];
+            }
         }
 
         return $collections;
@@ -96,6 +106,7 @@ class Panel
     public function collection(string $collection): array
     {
         $obj = $this->registry->tag(Collection::class)->get($collection);
+
         $blueprints = [];
 
         foreach ($obj->blueprints() as $blueprint) {
