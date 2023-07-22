@@ -133,7 +133,6 @@ class Auth
 
         if ($remember) {
             $details = $this->remember($userId);
-            error_log(print_r($details->expires, true));
 
             if ($details) {
                 $session->remember(

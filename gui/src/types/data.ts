@@ -17,8 +17,8 @@ export interface FileItem {
 
 export interface TranslatedFile {
     file: string;
-    alt: string;
-    title: string;
+    alt?: string;
+    title?: string;
 }
 
 export interface TextData {
@@ -33,7 +33,7 @@ export interface NumberData {
 
 export interface FileData {
     type: 'picture' | 'image';
-    files: FileItem[] | Record<string, TranslatedFile>;
+    files: FileItem[] | Record<string, TranslatedFile[]>;
 }
 
 export interface UploadResponse {

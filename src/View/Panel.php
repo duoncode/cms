@@ -84,7 +84,7 @@ class Panel
 
         foreach ($tag->entries() as $id) {
             $item = $tag->get($id);
-            error_log(print_r($item::class, true));
+
             if ($item::class === Section::class) {
                 $collections[] = [
                     'type' => 'section',
