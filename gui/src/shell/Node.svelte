@@ -25,7 +25,7 @@
     }
 
     $: {
-        if (node.doc.route) {
+        if (node?.doc?.route) {
             node.doc.generatedPaths = generatePaths(node.doc, node.doc.route, $system);
         }
     };
