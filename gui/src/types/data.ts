@@ -115,6 +115,7 @@ export interface Document {
     published: boolean;
     hidden: boolean;
     locked: boolean;
+    deletable: boolean;
     created: string;
     changed: string;
     deleted: null | string;

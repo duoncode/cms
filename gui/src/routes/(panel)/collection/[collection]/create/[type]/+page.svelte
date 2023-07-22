@@ -10,4 +10,4 @@
     }
 </script>
 
-<Node bind:data allowDelete={false} {save} />
+<Node bind:data deletable={false} {save} />

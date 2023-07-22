@@ -13,7 +13,7 @@
     import Settings from '$shell/Settings.svelte';
 
     export let node: Node;
-    export let allowDelete: boolean;
+    export let deletable: boolean;
     export let save: () => void;
 
     let activeTab = 'content';
@@ -35,7 +35,7 @@
     <NodeControlBar
         bind:uid={node.uid}
         collectionPath="collection/{node.collection.slug}"
-        {allowDelete}
+        {deletable}
         {save} />
     <Document>
         <Breadcrumbs slug={node.collection.slug} name={node.collection.name} />

@@ -10,7 +10,7 @@
 
     export let uid: string;
     export let collectionPath: string;
-    export let allowDelete: boolean;
+    export let deletable: boolean;
     export let save: () => void;
 
     const modal: Modal = getContext('simple-modal');
@@ -35,7 +35,7 @@
 <div class="headerbar">
     <NavToggle />
     <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
-        {#if allowDelete}
+        {#if deletable}
             <Button class="danger" icon={IcoTrash} on:click={remove}>
                 Löschen
             </Button>

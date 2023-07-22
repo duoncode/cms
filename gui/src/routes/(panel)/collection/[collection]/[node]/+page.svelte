@@ -10,4 +10,4 @@
     }
 </script>
 
-<Node bind:node={data} allowDelete={true} {save} />
+<Node bind:node={data} deletable={data.doc.deletable} {save} />

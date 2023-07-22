@@ -125,6 +125,7 @@ abstract class Node
             }
 
             $result['content'] = $content;
+            $result['deletable'] = $this->deletable();
         }
 
         return $result;
@@ -147,6 +148,7 @@ abstract class Node
                 'published' => false,
                 'hidden' => false,
                 'locked' => false,
+                'deletable' => $this->deletable(),
                 'content' => $result,
                 'paths' => [],
             ],
@@ -490,5 +492,10 @@ abstract class Node
         }
 
         return $field;
+    }
+
+    protected function deletable(): bool
+    {
+        return true;
     }
 }
