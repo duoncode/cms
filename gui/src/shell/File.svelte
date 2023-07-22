@@ -1,28 +1,51 @@
 <script lang="ts">
+    import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
+    import { system } from '$lib/sys';
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoDownload from '$shell/icons/IcoDownload.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
 
     export let path: string;
-    export let asset: string;
+    export let asset: FileItem;
     export let remove: () => void;
     export let edit: () => void;
     export let loading: boolean;
+
+    let title = '';
+
+    function getTitle(asset: FileItem) {
+        if (asset.title) {
+            if (typeof asset.title === 'string') {
+                return asset.title;
+            }
+
+            for (const locale of $system.locales) {
+                if (asset.title[locale.id]) {
+                    return asset.title[locale.id];
+                }
+            }
+        }
+
+        return '';
+    }
+
+    $: title = getTitle(asset);
 </script>
 
 {#if asset}
     <div class="file pl-4">
         <IcoDocument />
         <div class="flex-grow text-left pl-3 truncate">
-            <b class="font-medium">{asset}</b>
+            <b class="font-medium">{asset.file}</b>
+            <span class="inline-block pl-4">{title}</span>
         </div>
         {#if loading}
             <div>Loading ...</div>
         {/if}
         <IcoDownload />
-        <a href="{path}/{asset}" target="_blank" class="inline-block pl-2">
+        <a href="{path}/{asset.file}" target="_blank" class="inline-block pl-2">
             {_('Datei herunterladen')}
         </a>
 

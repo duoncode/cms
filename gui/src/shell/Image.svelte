@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
+    import type { FileItem } from '$types/data';
     import { getContext } from 'svelte';
+    import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
@@ -8,19 +10,21 @@
     import ImagePreview from '$shell/ImagePreview.svelte';
 
     export let path: string;
-    export let image: string;
+    export let image: FileItem;
     export let loading: boolean;
     export let upload: boolean;
     export let multiple: boolean;
     export let remove: () => void;
     export let edit: () => void;
 
+    const modal: Modal = getContext('simple-modal');
+
     let orig: string;
     let thumb: string;
     let hover = false;
     let ext = '';
+    let title = '';
 
-    const modal: Modal = getContext('simple-modal');
 
     function preview() {
         modal.open(
@@ -38,17 +42,35 @@
         return image + '?resize=width&w=400';
     }
 
-    $: {
-        ext = image.split('.').pop()?.toLowerCase();
+    function getTitle(image:FileItem, key: string) {
+        if (image[key]) {
+            if (typeof image[key] === 'string') {
+                return image[key];
+            }
 
-        orig = `${path}/${image}`;
+            for (const locale of $system.locales) {
+                if (image[key][locale.id]) {
+                    return image[key][locale.id];
+                }
+            }
+        }
+
+        return '';
+    }
+
+    $: {
+        ext = image.file.split('.').pop()?.toLowerCase();
+
+        orig = `${path}/${image.file}`;
 
         if (ext === 'svg') {
             thumb = orig;
         } else {
-            thumb = `${path}/${thumbIt(image)}`;
+            thumb = `${path}/${thumbIt(image.file)}`;
         }
     }
+
+    $: title = getTitle(image, 'title') || getTitle(image, 'alt');
 </script>
 
 <div
@@ -84,14 +106,26 @@
             </button>
         </div>
     {/if}
+    {#if title}
+        <button
+            class="title absolute left-1 bottom-1 rounded text-gray-600 bg-white text-xs px-1 mb-px ml-px"
+             on:click={edit}>
+            {title}
+        </button>
+    {/if}
     {#if ext}
         <span
-            class="absolute right-2 bottom-2 rounded text-white bg-rose-700 text-sm px-1"
-            >{ext.toUpperCase()}</span>
+            class="absolute right-1 bottom-1 rounded text-white bg-rose-700 text-xs px-1 mb-px mr-px">
+            {ext.toUpperCase()}
+        </span>
     {/if}
 </div>
 
 <style lang="postcss">
+    button.title {
+        @apply truncate;
+        max-width: 8rem;
+    }
     .image {
         @apply bg-gray-100 border border-gray-300 p-1 text-center relative;
     }
@@ -125,7 +159,7 @@
         background: rgba(0, 0, 0, 0.3);
     }
 
-    button {
+    .overlay button {
         @apply flex flex-col items-center justify-center;
         cursor: pointer;
     }

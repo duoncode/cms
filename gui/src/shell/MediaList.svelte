@@ -63,7 +63,7 @@
                     upload
                     {multiple}
                     {path}
-                    image={asset.file}
+                    image={asset}
                     remove={() => remove(index)}
                     edit={() => edit(index, true)}
                     {loading} />
@@ -74,7 +74,7 @@
             upload
             {path}
             {multiple}
-            image={assets[0] && assets[0].file}
+            image={assets[0]}
             remove={() => remove(null)}
             edit={() => edit(0, true)}
             {loading} />
@@ -84,7 +84,7 @@
                 <File
                     {path}
                     {loading}
-                    asset={asset.file}
+                    {asset}
                     remove={() => remove(index)}
                     edit={() => edit(index, false)} />
             {/each}
@@ -93,7 +93,7 @@
         <File
             {path}
             {loading}
-            asset={assets[0].file}
+            asset={assets[0]}
             remove={() => remove(null)}
             edit={() => edit(0, false)} />
     {/if}
