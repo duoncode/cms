@@ -5,6 +5,7 @@
     import Button from '$shell/Button.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoSave from '$shell/icons/IcoSave.svelte';
+    import IcoEye from '$shell/icons/IcoEye.svelte';
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import node from '$lib/node';
 
@@ -12,6 +13,7 @@
     export let collectionPath: string;
     export let deletable: boolean;
     export let save: () => void;
+    export let preview: () => void | null;
 
     const modal: Modal = getContext('simple-modal');
 
@@ -38,6 +40,11 @@
         {#if deletable}
             <Button class="danger" icon={IcoTrash} on:click={remove}>
                 Löschen
+            </Button>
+        {/if}
+        {#if preview}
+            <Button class="secondary" icon={IcoEye} on:click={preview}>
+                Vorschau
             </Button>
         {/if}
         <Button class="primary" icon={IcoSave} on:click={save}>

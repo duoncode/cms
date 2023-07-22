@@ -10,6 +10,7 @@ use Conia\Chuck\Registry;
 use Conia\Chuck\Response;
 use Conia\Core\Context;
 use Conia\Core\Finder\Finder;
+use Conia\Core\Middleware\Permission;
 
 class Page
 {
@@ -29,6 +30,14 @@ class Page
 
             throw new HttpNotFound();
         }
+
+        return $page->response();
+    }
+
+    #[Permission('panel')]
+    public function preview(Finder $find, string $slug): Response
+    {
+        $page = $find->node->byPath('/' . $slug);
 
         return $page->response();
     }

@@ -47,6 +47,12 @@ class Routes
         $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file')
             ->middleware(Middleware\InitRequest::class);
 
+        $app->route(
+            '/preview/...slug',
+            [Page::class, 'preview'],
+            'conia.preview.catchall',
+        )->middleware(Middleware\InitRequest::class, Middleware\Session::class);
+
         // Add catchall for page url paths. Must be the last one
         $app->route(
             '/...slug',
