@@ -26,7 +26,7 @@
             {_('Datei herunterladen')}
         </a>
 
-        <button on:click={edit} class="text-rose-800">
+        <button on:click={edit} class="text-sky-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">
                 <IcoPencil />
             </span>

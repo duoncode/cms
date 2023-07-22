@@ -179,40 +179,9 @@ class Image extends File
         return $this->textValue('link', $this->index);
     }
 
-    public function title(): string
-    {
-        return $this->textValue('title', $this->index);
-    }
-
     public function alt(): string
     {
         return $this->textValue('alt', $this->index);
-    }
-
-    protected function textValue(string $key, int $index): string
-    {
-        if ($this->translate) {
-            return $this->translated($key, $index);
-        }
-
-        return $this->data['files'][$this->index][$key][$this->defaultLocale->id] ?? '';
-    }
-
-    protected function translated(string $key, int $index): string
-    {
-        $locale = $this->locale;
-
-        while ($locale) {
-            $value = $this->data['files'][$index][$key][$locale->id] ?? null;
-
-            if ($value) {
-                return $value;
-            }
-
-            $locale = $locale->fallback();
-        }
-
-        return '';
     }
 
     protected function getMediaPath(int $index): string
