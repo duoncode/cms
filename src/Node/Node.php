@@ -164,6 +164,7 @@ abstract class Node
                 'type' => static::handle(),
                 'nodetype' => $nodetype,
                 'paths' => [],
+                'generatedPaths' => [],
             ],
         ];
     }
