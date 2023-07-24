@@ -25,6 +25,11 @@ class Locales implements Iterator
         ?array $domains = null,
         ?string $urlPrefix = null,
     ) {
+        // The first locale is always the default one
+        if ($this->default === null) {
+            $this->default = $id;
+        }
+
         $this->locales[$id] = new Locale($this, $id, $title, $fallback, $pgDict, $domains, $urlPrefix);
     }
 
@@ -58,32 +63,11 @@ class Locales implements Iterator
         return key($this->locales) !== null;
     }
 
-    public function setDefault(string $locale): void
-    {
-        if ($this->exists($locale)) {
-            $this->default = $locale;
-
-            return;
-        }
-
-        throw new RuntimeException('Locale does not exist. Add all your locales first before setting the default.');
-    }
-
     public function getDefault(): Locale
     {
-        $count = count($this->locales);
-
-        if ($count === 0) {
-            throw new RuntimeException('No locales available. You must add at least your default language.');
-        }
-
         // default locale from config file
         if (is_null($this->default)) {
-            if ($count > 1) {
-                throw new RuntimeException('Default locale not available');
-            }
-
-            $this->default = array_key_first($this->locales);
+            throw new RuntimeException('Default locale not available');
         }
 
         return $this->locales[$this->default];

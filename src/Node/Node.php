@@ -287,6 +287,7 @@ abstract class Node
 
         $this->db->nodes->delete([
             'uid' => $this->uid(),
+            'editor' => $this->request->get('session')->authenticatedUserId(),
         ])->run();
 
         return [
@@ -315,7 +316,6 @@ abstract class Node
     public function save(array $data): array
     {
         $data = $this->validate($data);
-        error_log(print_r($data, true));
 
         // TODO: check permissions
         try {
