@@ -8,6 +8,23 @@ use Conia\Core\Assets;
 
 class TranslatedFile extends File
 {
+    public function isset(): bool
+    {
+        $locale = $this->locale;
+
+        while ($locale) {
+            $value = $this->data['files'][$locale->id][$this->index]['file'] ?? null;
+
+            if ($value) {
+                return true;
+            }
+
+            $locale = $locale->fallback();
+        }
+
+        return false;
+    }
+
     protected function textValue(string $key, int $index): string
     {
         return $this->translated($key, $index);
@@ -18,7 +35,7 @@ class TranslatedFile extends File
         $locale = $this->locale;
 
         while ($locale) {
-            $value = $this->data['files'][$index][$locale->id][$key] ?? null;
+            $value = $this->data['files'][$locale->id][$index][$key] ?? null;
 
             if ($value) {
                 return $value;

@@ -200,13 +200,13 @@ class NodeSchemaFactory
 
     protected function getTranslatableFileSchema(Field $field, array $fields): Schema
     {
-        $subSchema = new Schema(title: $field->getLabel(), keepUnknown: true);
+        $subSchema = new Schema(list: true, title: $field->getLabel(), keepUnknown: true);
 
         foreach ($fields as $fieldName) {
             $subSchema->add($fieldName, 'text');
         }
 
-        $schema = new Schema(list: true, title: $field->getLabel(), keepUnknown: true);
+        $schema = new Schema(title: $field->getLabel(), keepUnknown: true);
 
         foreach ($this->locales as $locale) {
             $schema->add($locale->id, $subSchema);

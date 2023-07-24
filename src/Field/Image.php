@@ -59,6 +59,10 @@ class Image extends Field
 
     public function structure(mixed $value = null): array
     {
+        if ($this->translateFile) {
+            return $this->getTranslatableFileStructure('image', $value);
+        }
+
         return $this->getFileStructure('image', $value);
     }
 }

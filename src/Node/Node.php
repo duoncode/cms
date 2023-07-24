@@ -303,6 +303,7 @@ abstract class Node
     public function save(array $data): array
     {
         $data = $this->validate($data);
+        error_log(print_r($data, true));
 
         // TODO: check permissions
         try {

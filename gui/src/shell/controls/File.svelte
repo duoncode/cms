@@ -22,7 +22,7 @@
             path="/media/file/node/{node}"
             multiple={field.multiple}
             name={field.name}
-            translate={field.translate}
+            translate={field.translateFile ? false : field.translate}
             bind:assets={data.files} />
     </div>
 </Field>

@@ -19,10 +19,14 @@ export function remove(toast: Toast) {
 export function add(toast: Toast, timeout?: number) {
     update(toasts => [toast, ...toasts]);
 
-    if (!(toast.kind === 'error') || timeout) {
+    if (toast.kind === 'error') {
         setTimeout(() => {
             remove(toast);
-        }, timeout || 3000);
+        }, timeout || 30000);
+    } else {
+        setTimeout(() => {
+            remove(toast);
+        }, timeout || 30000);
     }
 }
 

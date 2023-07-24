@@ -203,4 +203,25 @@ abstract class Field
 
         return $result;
     }
+
+    protected function getTranslatableFileStructure(string $type, mixed $value = null): array
+    {
+        $value = $value ?: $this->default;
+
+        $result = ['type' => $type];
+
+        if ($value) {
+            $result['files'] = $value;
+
+            return $result;
+        }
+
+        $result['files'] = [];
+
+        foreach ($this->node->config->locales() as $locale) {
+            $result['files'][$locale->id] = [];
+        }
+
+        return $result;
+    }
 }

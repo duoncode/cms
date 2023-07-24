@@ -36,7 +36,7 @@
                 multiple={field.multiple}
                 path="/media/image/node/{node}"
                 name={field.name}
-                translate={field.translateFile ? false : field.translate}
+                translate={field.translate}
                 bind:assets={data.files} />
         {/if}
     </div>
