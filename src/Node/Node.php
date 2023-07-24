@@ -140,6 +140,17 @@ abstract class Node
             $result[$fieldName] = $field->structure($values[$fieldName] ?? null);
         }
 
+        // TODO: We should improve the nodetype detection?
+        $nodetype = 'document';
+
+        if (is_subclass_of($this, Page::class)) {
+            $nodetype = 'page';
+        } else {
+            if (is_subclass_of($this, Block::class)) {
+                $nodetype = 'block';
+            }
+        }
+
         return [
             'title' => _('Neues Dokument:') . ' ' . $this->name(),
             'fields' => $this->fields(),
@@ -150,6 +161,7 @@ abstract class Node
                 'locked' => false,
                 'deletable' => $this->deletable(),
                 'content' => $result,
+                'nodetype' => $nodetype,
                 'paths' => [],
             ],
         ];

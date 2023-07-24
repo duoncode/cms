@@ -106,11 +106,13 @@ class Panel
     public function collection(string $collection): array
     {
         $obj = $this->registry->tag(Collection::class)->get($collection);
-
         $blueprints = [];
 
         foreach ($obj->blueprints() as $blueprint) {
-            $blueprints[] = ['slug' => $blueprint::handle(), 'name' => $blueprint::name()];
+            $blueprints[] = [
+                'slug' => $blueprint::handle(),
+                'name' => $blueprint::name(),
+            ];
         }
 
         return [
