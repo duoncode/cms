@@ -6,7 +6,6 @@ import req from '$lib/req';
 import toast from '$lib/toast';
 
 async function save(uid: string, doc: Document) {
-    console.log(doc);
     const response = await req.put(`node/${uid}`, doc);
 
     if (response.ok) {

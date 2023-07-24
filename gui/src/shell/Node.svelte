@@ -14,13 +14,10 @@
     import Settings from '$shell/Settings.svelte';
 
     export let node: Node;
+    export let save: () => Promise<void>;
 
     let activeTab = 'content';
     let showPreview: string|null = null
-
-    async function save() {
-        nodelib.save(node.uid, node.doc);
-    }
 
     function changeTab(tab: string) {
         return () => {
@@ -29,7 +26,7 @@
     }
 
     async function preview() {
-        await nodelib.save(node.uid, node.doc);
+        await save();
         showPreview = node.doc.paths.de;
     }
 

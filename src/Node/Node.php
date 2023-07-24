@@ -161,6 +161,7 @@ abstract class Node
                 'locked' => false,
                 'deletable' => $this->deletable(),
                 'content' => $result,
+                'type' => static::handle(),
                 'nodetype' => $nodetype,
                 'paths' => [],
             ],

@@ -50,44 +50,33 @@ abstract class Page extends Node
         $this->persistUrlPaths($db, $data, $editor, $node);
     }
 
-    protected function persistUrlPaths(Database $db, array $data, int $editor, int $node): void
+    protected function prepareUrlPath(Database $db, string $path): string
     {
-        $defaultLocale = $this->config->locales->getDefault();
-        $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
-
-        if (!$defaultPath) {
-            throw new RuntimeException(_('Die URL für die Hauptsprache {$defaultLocale->title} muss gesetzt sein'));
+        if (!str_starts_with($path, '/')) {
+            $path = '/' . $path;
         }
+        // If this is a new path it could already be in the
+        // list of inactive ones. So delete it if it exists.
+        $db->nodes->deleteInactivePath(['path' => $path])->run();
 
-        $currentPaths = array_column($db->nodes->getPaths(['node' => $node])->all(), 'path', 'locale');
+        return $path;
+    }
 
-        foreach ($data['paths'] as $locale => $path) {
+    protected function createUrlPaths(Database $db, array $paths, int $editor, int $node): void
+    {
+        $alreadyPersisted = [];
+
+        foreach ($paths as $locale => $path) {
             if ($path) {
-                if (!str_starts_with($path, '/')) {
-                    $path = '/' . $path;
-                }
-                // If this is a new path it could already be in the
-                // list of inactive ones. So delete it if it exists.
-                $db->nodes->deleteInactivePath(['path' => $path])->run();
+                $this->prepareUrlPath($db, $path);
 
-                $currentPath = $currentPaths[$locale] ?? null;
-
-                if ($currentPath && $currentPath === $path) {
-                    // The path is the same as the existing. Move on.
+                if (in_array($path, $alreadyPersisted)) {
                     continue;
-                }
-
-                if ($currentPath) {
-                    $db->nodes->deactivatePath([
-                        'path' => $currentPath,
-                        'locale' => $locale,
-                        'editor' => $editor,
-                    ])->run();
                 }
 
                 if ($db->nodes->pathExists(['path' => $path])->one()) {
                     // The new path already exists, add a unique part
-                    $path = $path . '-' . nanoid();
+                    $path = $path . '-' . substr(nanoid(), 0, 5);
                 }
 
                 $db->nodes->savePath([
@@ -96,16 +85,103 @@ abstract class Page extends Node
                     'locale' => $locale,
                     'editor' => $editor,
                 ])->run();
-            } else {
-                // A localized path was emptied
-                if (array_key_exists($locale, $currentPaths)) {
+
+                $alreadyPersisted[] = $path;
+            }
+        }
+    }
+
+    protected function saveUrlPaths(
+        Database $db,
+        array $currentPaths,
+        array $paths,
+        int $editor,
+        int $node
+    ): void {
+        $alreadyPersisted = [];
+
+        foreach ($currentPaths as $locale => $currentPath) {
+            $newPath = trim($paths[$locale] ?? '');
+
+            if ($newPath) {
+                $newPath = $this->prepareUrlPath($db, $newPath);
+
+                if ($currentPath) {
+                    if ($currentPath === $newPath) {
+                        $alreadyPersisted[] = $newPath;
+
+                        continue;
+                    }
+
+                    // The paths differ, so deactivate the old one
                     $db->nodes->deactivatePath([
-                        'path' => $currentPaths[$locale],
+                        'path' => $currentPath,
+                        'locale' => $locale,
+                        'editor' => $editor,
+                    ])->run();
+                }
+
+                if (in_array($newPath, $alreadyPersisted)) {
+                    continue;
+                }
+
+                if ($db->nodes->pathExists(['path' => $newPath])->one()) {
+                    // The new path already exists, add a unique part
+                    $newPath = $newPath . '-' . substr(nanoid(), 0, 5);
+                }
+
+                $db->nodes->savePath([
+                    'node' => $node,
+                    'path' => $newPath,
+                    'locale' => $locale,
+                    'editor' => $editor,
+                ])->run();
+
+                $alreadyPersisted[] = $newPath;
+            } else {
+                // The value existed but has been emptied.
+                if ($currentPath) {
+                    $db->nodes->deactivatePath([
+                        'path' => $currentPath,
                         'locale' => $locale,
                         'editor' => $editor,
                     ])->run();
                 }
             }
+        }
+    }
+
+    protected function persistUrlPaths(Database $db, array $data, int $editor, int $node): void
+    {
+        if (empty($data['paths'] ?? [])) {
+            $data['paths'] = $data['generatedPaths'];
+        }
+
+        $defaultLocale = $this->config->locales->getDefault();
+        $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
+
+        if (!$defaultPath) {
+            throw new RuntimeException(_('Der URL-Pfad für die Hauptsprache {$defaultLocale->title} muss gesetzt sein'));
+        }
+
+        $currentPaths = array_column($db->nodes->getPaths(['node' => $node])->all(), 'path', 'locale');
+
+        if ($currentPaths) {
+            $baseStructure = [];
+
+            foreach ($this->config->locales as $locale) {
+                $baseStructure[$locale->id] = '';
+            }
+
+            $this->saveUrlPaths(
+                $db,
+                array_merge($baseStructure, $currentPaths),
+                $data['paths'],
+                $editor,
+                $node
+            );
+        } else {
+            $this->createUrlPaths($db, $data['paths'], $editor, $node);
         }
     }
 }

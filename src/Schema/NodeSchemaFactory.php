@@ -21,7 +21,7 @@ class NodeSchemaFactory
         protected readonly Locales $locales,
     ) {
         $this->schema = new Schema(keepUnknown: true);
-        $this->schema->add('uid', 'text', 'required', 'maxlen:13');
+        $this->schema->add('uid', 'text', 'required', 'maxlen:64');
         $this->schema->add('published', 'bool', 'required');
         $this->schema->add('locked', 'bool', 'required');
         $this->schema->add('hidden', 'bool', 'required');

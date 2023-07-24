@@ -147,11 +147,6 @@ class Config
         $this->locales->add($id, $title, $fallback, $pgDict, $domains, $urlPrefix);
     }
 
-    public function defaultLocale(string $locale): void
-    {
-        $this->locales->setDefault($locale);
-    }
-
     public function locales(): Locales
     {
         return $this->locales;
