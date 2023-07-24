@@ -1,7 +1,7 @@
 import { writable, derived, type Writable } from 'svelte/store';
 import toast from '$lib/toast';
 import type { Document } from '$types/data';
-import type { Field } from '$types/field';
+import type { Field } from '$types/fields';
 
 const pristine = writable(true);
 const dirty = derived(pristine, $pristine => !$pristine);

@@ -3,7 +3,6 @@
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import { generatePaths } from '$lib/urlpaths';
-    import nodelib from '$lib/node';
     import NodeControlBar from '$shell/NodeControlBar.svelte';
     import Breadcrumbs from '$shell/Breadcrumbs.svelte';
     import Headline from '$shell/Headline.svelte';

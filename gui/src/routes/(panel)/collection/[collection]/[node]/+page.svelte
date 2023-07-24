@@ -1,12 +1,21 @@
 <script lang="ts">
-    import type { Node as NodeType } from '$types/data';
+    import type { Document, Node as NodeType } from '$types/data';
+    import req from '$lib/req';
     import node from '$lib/node';
     import Node from '$shell/Node.svelte';
 
     export let data: NodeType;
 
     async function save() {
-        node.save(data.doc.uid, data.doc);
+        const result = await node.save(data.doc.uid, data.doc);
+
+        if (result.success) {
+            const response = await req.get(`node/${result.uid}`);
+
+            if (response.ok) {
+                data.doc = response.data.data as Document;
+            }
+        }
     }
 </script>
 

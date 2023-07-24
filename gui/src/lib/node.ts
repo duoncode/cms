@@ -5,6 +5,11 @@ import { _ } from '$lib/locale';
 import req from '$lib/req';
 import toast from '$lib/toast';
 
+export interface Result {
+    success: boolean;
+    uid: string;
+}
+
 async function save(uid: string, doc: Document) {
     const response = await req.put(`node/${uid}`, doc);
 
@@ -13,6 +18,8 @@ async function save(uid: string, doc: Document) {
             kind: 'success',
             message: _('Dokument erfolgreich gespeichert!'),
         });
+
+        return response.data as Result;
     } else {
         const data = response.data;
 
@@ -22,6 +29,8 @@ async function save(uid: string, doc: Document) {
                 ? data.description
                 : _('Fehler beim Speichern des Dokuments aufgetreten!'),
         });
+
+        return response.data as Result;
     }
 }
 
@@ -37,11 +46,15 @@ async function create(doc: Document, type: string, collectionPath: string) {
             kind: 'success',
             message: _('Dokument erfolgreich erstellt!'),
         });
+
+        return response.data as Result;
     } else {
         toast.add({
             kind: 'error',
             message: _('Fehler beim Erstellen des Dokuments aufgetreten!'),
         });
+
+        return response.data as Result;
     }
 }
 

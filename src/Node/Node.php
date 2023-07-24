@@ -340,7 +340,7 @@ abstract class Node
 
         return [
             'success' => true,
-            'error' => false,
+            'uid' => $data['uid'],
         ];
     }
 
