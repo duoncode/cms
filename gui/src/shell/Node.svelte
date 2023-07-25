@@ -36,7 +36,7 @@
     };
 </script>
 
-<div class="flex flex-col h-screen relative z-10">
+<div class="flex flex-col h-screen">
     <NodeControlBar
         bind:uid={node.uid}
         collectionPath="collection/{node.collection.slug}"
@@ -72,7 +72,7 @@
     </Document>
 </div>
 {#if showPreview}
-    <div class="preview relative z-20">
+    <div class="preview">
         <button on:click={() => showPreview = null}>schließen</button>
         <iframe src="/preview{showPreview}" title="Preview"></iframe>
     </div>

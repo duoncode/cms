@@ -9,7 +9,7 @@
 <Modal classWindow="modal" classCloseButton="modal-close">
     <div class="flex flex-row relative">
         <Nav collections={data.system.collections} />
-        <main class="flex-grow relative z-20">
+        <main class="flex-grow">
             <slot />
         </main>
     </div>
