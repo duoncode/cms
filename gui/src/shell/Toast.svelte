@@ -16,7 +16,7 @@
 <style lang="postcss">
     h3,
     h4 {
-        @apply font-medium mt-3 mb-1;
+        @apply font-semibold mt-3 mb-1;
     }
 
     h3:first-child {

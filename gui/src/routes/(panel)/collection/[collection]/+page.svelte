@@ -40,7 +40,7 @@
         bind:searchTerm
         collectionSlug={data.slug}
         blueprints={data.blueprints} />
-    <h1 class="py-4 px-8 text-xl font-medium">
+    <h1 class="py-4 px-8 text-xl font-semibold">
         {data.name}
     </h1>
     <div class="flex-1 px-4 sm:px-6 lg:px-8 overflow-y-auto border-gray-200">
@@ -63,7 +63,7 @@
                                     <tr>
                                         {#each node.columns as column}
                                             <td
-                                                class:font-medium={column.bold}
+                                                class:font-semibold={column.bold}
                                                 class:font-italic={column.italic}>
                                                 <Link
                                                     href="collection/{data.slug}/{node.uid}">

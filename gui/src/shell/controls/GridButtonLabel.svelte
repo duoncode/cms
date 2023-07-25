@@ -10,7 +10,7 @@
 
 <style lang="postcss">
     span {
-        @apply font-medium flex items-center justify-center;
+        @apply font-semibold flex items-center justify-center;
         font-size: 9px;
         height: 12px;
         width: 12px;

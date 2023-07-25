@@ -6,7 +6,7 @@
 </script>
 
 <div class="label flex flex-row">
-    <div class="flex-grow font-medium"><slot /></div>
+    <div class="flex-grow"><slot /></div>
     {#if translate}
         <LocaleTabs bind:lang />
     {/if}

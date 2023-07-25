@@ -1,5 +1,5 @@
-label, .form-label {
-    @apply block font-medium leading-6 text-gray-900;
+label, .label {
+    @apply block font-semibold leading-6 text-gray-900;
     @apply flex flex-row items-center;
 
     div {

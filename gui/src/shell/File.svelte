@@ -38,7 +38,7 @@
     <div class="file pl-4">
         <IcoDocument />
         <div class="flex-grow text-left pl-3 truncate">
-            <b class="font-medium">{asset.file}</b>
+            <b class="font-semibold">{asset.file}</b>
             <span class="inline-block pl-4">{title}</span>
         </div>
         {#if loading}

@@ -60,6 +60,6 @@
 
 <style lang="postcss">
     h2 {
-        @apply font-medium mb-4;
+        @apply font-semibold mb-4;
     }
 </style>

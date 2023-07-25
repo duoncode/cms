@@ -9,7 +9,7 @@
 <div class="flex items-center justify-between">
     <span class="flex flex-grow flex-col">
         <span
-            class="text-sm font-medium leading-6 text-gray-900"
+            class="text-sm font-semibold leading-6 text-gray-900"
             id="availability-label">{title}</span>
         <span class="text-sm text-gray-500" id="availability-description"
             >{subtitle}</span>

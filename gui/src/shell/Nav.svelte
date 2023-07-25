@@ -45,6 +45,6 @@
     }
 
     h2 {
-        @apply font-medium mt-6;
+        @apply font-semibold mt-6;
     }
 </style>

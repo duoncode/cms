@@ -70,7 +70,7 @@ console.log(result);
                 <div>
                     <label
                         for="login"
-                        class="block text-sm font-medium leading-6 text-gray-900">
+                        class="block text-sm font-semibold leading-6 text-gray-900">
                         {_('Benutzername oder E-Mail-Adresse')}
                     </label>
                     <div class="mt-2">
@@ -87,7 +87,7 @@ console.log(result);
                 <div>
                     <label
                         for="password"
-                        class="block text-sm font-medium leading-6 text-gray-900">
+                        class="block text-sm font-semibold leading-6 text-gray-900">
                         {_('Passwort')}
                     </label>
                     <div class="mt-2">

@@ -74,6 +74,6 @@
 
 <style type="postcss">
     :global(.message em) {
-        @apply font-medium italic whitespace-nowrap;
+        @apply font-semibold italic whitespace-nowrap;
     }
 </style>
