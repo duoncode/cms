@@ -22,9 +22,9 @@
 
         const value = doc.generatedPaths[localeId];
 
-            if (value) {
-                return value;
-            }
+        if (value) {
+            return value;
+        }
 
         return '';
     }
