@@ -1,13 +1,25 @@
+.danger {
+    @apply text-white bg-rose-800 hover:bg-rose-700;
+}
+
+.primary {
+    @apply text-white bg-emerald-800;
+}
+
+.secondary {
+    @apply text-white bg-sky-800;
+}
+
 button {
     &.danger {
-        @apply text-white bg-rose-800 hover:bg-rose-700 focus-visible:outline-rose-600;
+        @apply focus-visible:outline-rose-600;
     }
 
     &.primary {
-        @apply text-white bg-emerald-800 focus-visible:outline-emerald-800;
+        @apply focus-visible:outline-emerald-800;
     }
 
     &.secondary {
-        @apply text-white bg-sky-800 focus-visible:outline-sky-800;
+        @apply focus-visible:outline-sky-800;
     }
 }
