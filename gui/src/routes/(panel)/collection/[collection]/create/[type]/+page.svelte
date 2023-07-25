@@ -5,7 +5,11 @@
 
     export let data: NodeType;
 
-    async function save() {
+    async function save(publish: boolean) {
+        if (publish) {
+            data.doc.published = true;
+        }
+
         node.create(data.doc, data.type, `collection/${data.collection.slug}`);
     }
 </script>

@@ -1,8 +1,11 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
     import type { Modal } from 'svelte-simple-modal';
+    import { getContext } from 'svelte';
+    import { _ } from '$lib/locale';
     import NavToggle from '$shell/NavToggle.svelte';
     import Button from '$shell/Button.svelte';
+    import ButtonMenu from '$shell/ButtonMenu.svelte';
+    import ButtonMenuEntry from '$shell/ButtonMenuEntry.svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoSave from '$shell/icons/IcoSave.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
@@ -12,7 +15,7 @@
     export let uid: string;
     export let collectionPath: string;
     export let deletable: boolean;
-    export let save: () => void;
+    export let save: (publish: boolean) => void;
     export let preview: () => void | null;
 
     const modal: Modal = getContext('simple-modal');
@@ -39,16 +42,26 @@
     <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
         {#if deletable}
             <Button class="danger" icon={IcoTrash} on:click={remove}>
-                Löschen
+                {_('Löschen')}
             </Button>
         {/if}
         {#if preview}
             <Button class="secondary" icon={IcoEye} on:click={preview}>
-                Vorschau
+                {_('Vorschaut')}
             </Button>
         {/if}
-        <Button class="primary" icon={IcoSave} on:click={save}>
-            Speichern
-        </Button>
+        <ButtonMenu
+            class="primary"
+            icon={IcoSave}
+            on:click={() => save(false)}
+            label={_('Speichern')}
+            let:closeMenu>
+            <ButtonMenuEntry
+                on:click={() => {
+                    save(true), closeMenu();
+                }}>
+                {_('Speichern und veröffentlichen')}
+            </ButtonMenuEntry>
+        </ButtonMenu>
     </div>
 </div>

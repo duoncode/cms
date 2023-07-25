@@ -6,7 +6,11 @@
 
     export let data: NodeType;
 
-    async function save() {
+    async function save(publish: boolean) {
+        if (publish) {
+            data.doc.published = true;
+        }
+
         const result = await node.save(data.doc.uid, data.doc);
 
         if (result.success) {
@@ -19,4 +23,4 @@
     }
 </script>
 
-<Node bind:node={data} {save}/>
+<Node bind:node={data} {save} />

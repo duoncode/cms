@@ -31,7 +31,7 @@
     <div class="relative -ml-px block">
         <button
             type="button"
-            class="{cls} relative inline-flex items-center rounded-r-md px-3.5 py-2.5 text-gray-400 border-l border-gray-300 focus:z-10"
+            class="{cls} relative inline-flex items-center rounded-r-md p-2.5 text-gray-400 border-l border-gray-300 focus:z-10"
             id="option-menu-button"
             aria-expanded="true"
             aria-haspopup="true"

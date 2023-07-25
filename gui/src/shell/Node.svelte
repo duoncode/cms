@@ -13,10 +13,10 @@
     import Settings from '$shell/Settings.svelte';
 
     export let node: Node;
-    export let save: () => Promise<void>;
+    export let save: (published: boolean) => Promise<void>;
 
     let activeTab = 'content';
-    let showPreview: string|null = null
+    let showPreview: string | null = null;
 
     function changeTab(tab: string) {
         return () => {
@@ -25,15 +25,19 @@
     }
 
     async function preview() {
-        await save();
+        await save(false);
         showPreview = node.doc.paths.de;
     }
 
     $: {
         if (node?.doc?.route) {
-            node.doc.generatedPaths = generatePaths(node.doc, node.doc.route, $system);
+            node.doc.generatedPaths = generatePaths(
+                node.doc,
+                node.doc.route,
+                $system,
+            );
         }
-    };
+    }
 </script>
 
 <div class="flex flex-col h-screen">
@@ -54,12 +58,12 @@
                 {_('Inhalt')}
             </button>
             {#if node.doc.nodetype === 'page'}
-            <button
-                on:click={changeTab('settings')}
-                class:active={activeTab === 'settings'}
-                class="tab">
-                {_('Einstellungen')}
-            </button>
+                <button
+                    on:click={changeTab('settings')}
+                    class:active={activeTab === 'settings'}
+                    class="tab">
+                    {_('Einstellungen')}
+                </button>
             {/if}
         </Tabs>
         <Pane>
@@ -73,34 +77,34 @@
 </div>
 {#if showPreview}
     <div class="preview">
-        <button on:click={() => showPreview = null}>schließen</button>
-        <iframe src="/preview{showPreview}" title="Preview"></iframe>
+        <button on:click={() => (showPreview = null)}>schließen</button>
+        <iframe src="/preview{showPreview}" title="Preview" />
     </div>
 {/if}
 
 <style lang="postcss">
-.preview {
-    @apply bg-gray-800 bg-opacity-50;
-    z-index: 999;
-    backdrop-filter: blur(0.5rem);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    .preview {
+        @apply bg-gray-800 bg-opacity-50;
+        z-index: 999;
+        backdrop-filter: blur(0.5rem);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
 
-    button {
-        @apply text-white bg-rose-600 px-4 py-1 rounded;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-    }
+        button {
+            @apply text-white bg-rose-600 px-4 py-1 rounded;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
 
-    iframe {
-        width: 90vw;
-        height: 90vh;
-        margin-top: 5vh;
-        margin-left: 5vw;
+        iframe {
+            width: 90vw;
+            height: 90vh;
+            margin-top: 5vh;
+            margin-left: 5vw;
+        }
     }
-}
 </style>
