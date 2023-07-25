@@ -356,7 +356,7 @@ abstract class Node
             'uid' => $data['uid'],
             'hidden' => $data['hidden'],
             'published' => $data['published'],
-            'locked' => $data['published'],
+            'locked' => $data['locked'],
             'type' => $this->handle(),
             'content' => json_encode($data['content']),
             'editor' => $editor,
