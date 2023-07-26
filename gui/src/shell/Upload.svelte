@@ -271,7 +271,7 @@
         @apply md:w-2/5;
     }
     .dragdrop > div.file-extensions {
-        @apply text-gray-500;
+        @apply text-gray-400 mt-1;
         font-weight: normal;
     }
 </style>

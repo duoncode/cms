@@ -12,7 +12,7 @@
 
 <style lang="postcss">
     span {
-        @apply inline-block rounded-full bg-gray-400;
+        @apply inline-block rounded-full bg-gray-300;
 
         width: 0.4rem;
         height: 0.4rem;
