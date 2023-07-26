@@ -11,6 +11,11 @@
 }
 
 button {
+    &[disabled] {
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
+
     &.danger {
         @apply focus-visible:outline-rose-600;
     }
