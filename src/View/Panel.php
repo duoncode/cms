@@ -124,6 +124,9 @@ class Panel
             'name' => $obj->name(),
             'slug' => $collection,
             'header' => $obj->header(),
+            'showPublished' => $obj->showPublished(),
+            'showHidden' => $obj->showHidden(),
+            'showLocked' => $obj->showLocked(),
             'nodes' => $obj->listing(),
             'blueprints' => $blueprints,
         ];

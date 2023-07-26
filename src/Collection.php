@@ -11,6 +11,9 @@ abstract class Collection
 {
     protected static string $name = '';
     protected static string $handle = '';
+    protected static bool $showPublished = true;
+    protected static bool $showLocked = false;
+    protected static bool $showHidden = false;
 
     public function __construct(
         public readonly Finder $find,
@@ -60,6 +63,9 @@ abstract class Collection
 
             $result[] = [
                 'uid' => $node->meta('uid'),
+                'published' => $node->meta('published'),
+                'locked' => $node->meta('locked'),
+                'hidden' => $node->meta('hidden'),
                 'columns' => $columns,
             ];
         }
@@ -78,5 +84,20 @@ abstract class Collection
                 )),
                 '-'
             );
+    }
+
+    public static function showPublished(): bool
+    {
+        return self::$showPublished;
+    }
+
+    public static function showHidden(): bool
+    {
+        return self::$showHidden;
+    }
+
+    public static function showLocked(): bool
+    {
+        return self::$showLocked;
     }
 }
