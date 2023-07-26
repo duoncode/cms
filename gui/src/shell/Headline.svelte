@@ -1,15 +1,18 @@
 <script lang="ts">
     import Published from '$shell/Published.svelte';
 
-    export let published: boolean;
+    export let showPublished = false;
+    export let published = false;
 </script>
 
 <h1
     class="text-3xl font-semibold mb-6 flex flex-row items-center justify-start">
-    <span class="ml-1 inline-flex items-center">
-        <Published {published} large />
-    </span>
-    <span class="pl-3 flex items-center">
+    {#if showPublished}
+        <span class="ml-1 inline-flex items-center">
+            <Published {published} large />
+        </span>
+    {/if}
+    <span class="flex items-center" class:pl-3={showPublished}>
         <slot />
     </span>
 </h1>

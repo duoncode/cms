@@ -49,7 +49,11 @@
         {save} />
     <Document>
         <Breadcrumbs slug={node.collection.slug} name={node.collection.name} />
-        <Headline published={node.doc.published}>{@html node.title}</Headline>
+        <Headline
+            published={node.doc.published}
+            showPublished={node.doc.nodetype !== 'document'}>
+            {@html node.title}
+        </Headline>
         <Tabs>
             <button
                 on:click={changeTab('content')}
