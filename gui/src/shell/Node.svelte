@@ -61,7 +61,7 @@
                 class="tab">
                 {_('Inhalt')}
             </button>
-            {#if node.doc.nodetype === 'page'}
+            {#if node.doc.nodetype !== 'document'}
                 <button
                     on:click={changeTab('settings')}
                     class:active={activeTab === 'settings'}

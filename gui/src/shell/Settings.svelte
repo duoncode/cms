@@ -46,6 +46,8 @@
                 </div>
             {/each}
         </div>
+    {/if}
+    {#if doc.nodetype !== 'document'}
         <div class="max-w-xl">
             <div class="mb-4">
                 <ToggleLine
