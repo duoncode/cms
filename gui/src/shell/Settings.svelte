@@ -57,14 +57,14 @@
                     )}
                     bind:value={doc.published} />
             </div>
-            <div class="my-4">
+            <!--<div class="my-4">
                 <ToggleLine
                     title={_('Gesperrt')}
                     subtitle={_(
                         'Seiten die gesperrt sind, können nicht verändert werden.',
                     )}
                     bind:value={doc.locked} />
-            </div>
+            </div>-->
             <div class="mt-4">
                 <ToggleLine
                     title={_('Versteckt')}

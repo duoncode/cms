@@ -319,6 +319,10 @@ abstract class Node
     {
         $data = $this->validate($data);
 
+        if ($data['locked']) {
+            throw new HttpBadRequest(_('Das Dokument ist gesperrt'));
+        }
+
         // TODO: check permissions
         try {
             $editor = $this->request->get('session')->authenticatedUserId();

@@ -15,6 +15,7 @@
     export let uid: string;
     export let collectionPath: string;
     export let deletable: boolean;
+    export let locked = false;
     export let save: (publish: boolean) => void;
     export let preview: () => void | null;
 
@@ -40,28 +41,30 @@
 <div class="headerbar">
     <NavToggle />
     <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
-        {#if deletable}
+        {#if deletable && !locked}
             <Button class="danger" icon={IcoTrash} on:click={remove}>
                 {_('Löschen')}
             </Button>
         {/if}
         {#if preview}
             <Button class="secondary" icon={IcoEye} on:click={preview}>
-                {_('Vorschaut')}
+                {_('Vorschau')}
             </Button>
         {/if}
-        <ButtonMenu
-            class="primary"
-            icon={IcoSave}
-            on:click={() => save(false)}
-            label={_('Speichern')}
-            let:closeMenu>
-            <ButtonMenuEntry
-                on:click={() => {
-                    save(true), closeMenu();
-                }}>
-                {_('Speichern und veröffentlichen')}
-            </ButtonMenuEntry>
-        </ButtonMenu>
+        {#if !locked}
+            <ButtonMenu
+                class="primary"
+                icon={IcoSave}
+                on:click={() => save(false)}
+                label={_('Speichern')}
+                let:closeMenu>
+                <ButtonMenuEntry
+                    on:click={() => {
+                        save(true), closeMenu();
+                    }}>
+                    {_('Speichern und veröffentlichen')}
+                </ButtonMenuEntry>
+            </ButtonMenu>
+        {/if}
     </div>
 </div>
