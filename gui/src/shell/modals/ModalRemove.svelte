@@ -11,7 +11,7 @@
     <h2>{_('Dokument löschen')}</h2>
     <div class="body">
         <p>
-            {_('Wollen Sie das Dokument wirklich löschen?')}
+            {_('Soll der Eintrag wirklich gelöscht werden?')}
         </p>
         {#if message}
             <p class="font-semibold mt-6">{message}</p>
@@ -19,10 +19,10 @@
     </div>
     <div class="controls">
         <Button class="danger" on:click={proceed}>
-            {_('Ja, Dokument löschen')}
+            {_('Ja, Eintrag löschen')}
         </Button>
-        <Button class="primary" on:click={close}>
-            {_('Nein, Dokument nicht löschen')}
+        <Button class="secondary" on:click={close}>
+            {_('Nein, Eintrag nicht löschen')}
         </Button>
     </div>
 </div>

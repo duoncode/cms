@@ -1,10 +1,12 @@
-
 <script lang="ts">
+    import type { Modal } from 'svelte-simple-modal';
     import type { GridItem } from '$types/data';
+    import { getContext } from 'svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoArrowUp from '$shell/icons/IcoArrowUp.svelte';
     import IcoArrowDown from '$shell/icons/IcoArrowDown.svelte';
     import IcoCirclePlus from '$shell/icons/IcoCirclePlus.svelte';
+    import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import { setDirty } from '$lib/state';
 
     export let data: GridItem[];
@@ -13,12 +15,26 @@
     export let add: () => void;
     export let dropdown = false;
 
+    const modal: Modal = getContext('simple-modal');
+
     let first = false;
     let last = false;
 
-    function remove() {
-        data.splice(index, 1);
-        data = data;
+    async function remove() {
+        modal.open(
+            ModalRemove,
+            {
+                close: modal.close,
+                proceed: () => {
+                    data.splice(index, 1);
+                    data = data;
+                    modal.close();
+                },
+            },
+            {
+                closeButton: false,
+            },
+        );
     }
 
     function up() {
@@ -44,10 +60,14 @@
     $: last = data.indexOf(item) === data.length - 1;
 </script>
 
-<div class="flex flex-row flex-grow items-center py-2 gap-x-3"
-     class:justify-end={!dropdown}
-     class:mr-3={!dropdown}
-     class:justify-center={dropdown}>
+<div
+    class="flex flex-row flex-grow items-center py-2 gap-x-3"
+    class:justify-end={!dropdown}
+    class:mr-3={!dropdown}
+    class:justify-center={dropdown}>
+    <button class="remove" on:click={remove}>
+        <IcoTrash />
+    </button>
     <button class="up-down" disabled={last} on:click={down}>
         <IcoArrowDown />
     </button>
@@ -56,9 +76,6 @@
     </button>
     <button class="add" on:click={add}>
         <IcoCirclePlus />
-    </button>
-    <button class="remove" on:click={remove}>
-        <IcoTrash />
     </button>
 </div>
 
