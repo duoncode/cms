@@ -25,6 +25,10 @@ export interface System {
     cache: string;
     sessionExpires: number;
     transliterate?: Record<string, string>;
+    allowedFiles: {
+        file: string[];
+        image: string[];
+    };
 }
 
 export const system: Writable<System> = writable({
@@ -38,6 +42,10 @@ export const system: Writable<System> = writable({
     cache: '',
     sessionExpires: 3600,
     locales: [],
+    allowedFiles: {
+        file: [],
+        image: [],
+    },
 });
 
 export function localesMap(locales: Locale[]) {
@@ -72,6 +80,10 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             cache: data.cache as string,
             sessionExpires: data.sessionExpires as number,
             transliterate: data.transliterate as Record<string, string> | null,
+            allowedFiles: data.allowedFiles as {
+                file: string[];
+                image: string[];
+            },
         } as System;
 
         system.set(sys);

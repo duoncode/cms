@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Upload from '$shell/Upload.svelte';
     import type { GridImage } from '$types/data';
     import type { GridField } from '$types/fields';
+    import Upload from '$shell/Upload.svelte';
 
     export let field: GridField;
     export let item: GridImage;
@@ -12,7 +12,7 @@
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => showSettings = !showSettings} />
+    <slot edit={() => (showSettings = !showSettings)} />
 </div>
 <div class="grid-cell-body">
     {#if showSettings}
@@ -27,4 +27,3 @@
             bind:assets={item.files} />
     {/if}
 </div>
-

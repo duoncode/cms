@@ -31,7 +31,8 @@ class Panel
 
     public function boot(): array
     {
-        $locales = $this->config->locales();
+        $config = $this->config;
+        $locales = $config->locales();
         $localesList = array_map(
             function ($locale) {
                 return [
@@ -49,14 +50,18 @@ class Panel
             'locales' => $localesList,
             'locale' => $locales->getDefault()->id, // TODO: set the correct user locale
             'defaultLocale' => $locales->getDefault()->id,
-            'debug' => $this->config->debug(),
-            'env' => $this->config->env(),
+            'debug' => $config->debug(),
+            'env' => $config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
-            'logo' => $this->config->get('panel.logo', null),
-            'assets' => $this->config->get('path.assets'),
-            'cache' => $this->config->get('path.cache'),
-            'sessionExpires' => $this->config->get('session.options')['gc_maxlifetime'],
-            'transliterate' => $this->config->get('slug.transliterate'),
+            'logo' => $config->get('panel.logo', null),
+            'assets' => $config->get('path.assets'),
+            'cache' => $config->get('path.cache'),
+            'sessionExpires' => $config->get('session.options')['gc_maxlifetime'],
+            'transliterate' => $config->get('slug.transliterate'),
+            'allowedFiles' => [
+                'file' => array_merge(...array_values($config->get('upload.mimetypes.file'))),
+                'image' => array_merge(...array_values($config->get('upload.mimetypes.image'))),
+            ],
         ];
     }
 

@@ -27,11 +27,12 @@
 
     let loading = false;
     let dragging = false;
+    let allowedExtensions = '';
 
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
 
-    function remove(index: number|null) {
+    function remove(index: number | null) {
         if (index === null) {
             assets = [];
         } else {
@@ -174,6 +175,10 @@
             dispatch('dirty');
         };
     }
+
+    $: allowedExtensions = image
+        ? $system.allowedFiles.image.join(', ')
+        : $system.allowedFiles.file.join(', ');
 </script>
 
 {#if disabled}
@@ -188,7 +193,14 @@
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
-        <MediaList bind:assets {multiple} {image} {path} {remove} {loading} {translate}/>
+        <MediaList
+            bind:assets
+            {multiple}
+            {image}
+            {path}
+            {remove}
+            {loading}
+            {translate} />
         {#if !assets || assets.length === 0 || multiple}
             <label
                 class="dragdrop"
@@ -198,10 +210,13 @@
                 on:drop|preventDefault={onFile(getFilesFromDrop)}
                 on:dragover|preventDefault={startDragging}
                 on:dragleave|preventDefault={stopDragging}>
-                <div>
-                    <span class="inline-block w-6 h-6 mt-4"><IcoUpload /></span>
+                <div class="label">
+                    <span class="inline-block w-6 h-6"><IcoUpload /></span>
                     {_('Neue Dateien per Drag and Drop hier einfügen oder')}
                     <u>{_('auswählen')}</u>
+                </div>
+                <div class="file-extensions text-xs mt-0">
+                    Erlaubte Dateiendungen: {allowedExtensions}
                 </div>
                 <input
                     type="file"
@@ -234,7 +249,7 @@
     }
 
     .dragdrop {
-        @apply flex flex-1 justify-center items-center;
+        @apply flex flex-1 flex-col justify-center items-center;
         @apply bg-gray-100 py-4 px-2;
         @apply border-2 border-dashed border-gray-300 rounded-md;
         @apply text-center align-middle;
@@ -243,16 +258,20 @@
     .dragdrop:hover {
         cursor: pointer;
     }
-    .dragdrop > div {
-        @apply text-gray-600 text-center md:-mt-2.5;
+    .dragdrop > div.label {
+        @apply flex flex-row justify-center gap-2 items-center text-gray-600;
     }
-    :global(.dragdrop > div svg) {
+    :global(.dragdrop > div.label svg) {
         @apply mb-2 inline;
     }
-    :global(.dragdrop > div u) {
+    :global(.dragdrop > div.label u) {
         @apply text-sky-700;
     }
     :global(.upload-image .preview) {
         @apply md:w-2/5;
+    }
+    .dragdrop > div.file-extensions {
+        @apply text-gray-500;
+        font-weight: normal;
     }
 </style>

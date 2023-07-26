@@ -35,8 +35,10 @@ class Config
             ],
             'slug.transliterate' => null,
             'media.fileserver' => null,
-            'upload.mimetypes' => [
+            'upload.mimetypes.file' => [
                 'application/pdf' => ['pdf'],
+            ],
+            'upload.mimetypes.image' => [
                 'image/gif' => ['gif'],
                 'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
                 'image/png' => ['png'],

@@ -28,12 +28,12 @@ class Media
      * TODO: sanitize filename.
      */
     #[Permission('panel')]
-    public function upload(string $doctype, string $uid): Response
+    public function upload(string $mediatype, string $doctype, string $uid): Response
     {
         $response = Response::fromFactory($this->factory);
         $file = $_FILES['file'] ?? null;
 
-        $result = $this->validateUploadedFile($file);
+        $result = $this->validateUploadedFile($mediatype, $file);
 
         if (!$result['ok']) {
             return $response->json($result, 400);
@@ -106,7 +106,7 @@ class Media
         return Response::fromFactory($this->factory)->file($file->path());
     }
 
-    protected function validateUploadedFile(?array $file): array
+    protected function validateUploadedFile(string $mediatype, ?array $file): array
     {
         if (!$file) {
             return [
@@ -115,7 +115,7 @@ class Media
                 'file' => _(' Dateiname unbekannt'),
             ];
         }
-        $mimeTypes = $this->config->get('upload.mimetypes');
+        $mimeTypes = $this->config->get('upload.mimetypes.' . $mediatype);
         $maxSize = $this->config->get('upload.maxsize');
 
         $tmpFile = $file['tmp_name'];

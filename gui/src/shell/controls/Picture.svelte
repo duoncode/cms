@@ -1,10 +1,10 @@
 <script lang="ts">
+    import type { FileData } from '$types/data';
+    import type { ImageField } from '$types/fields';
     import { system } from '$lib/sys';
     import Field from '$shell/Field.svelte';
     import Upload from '$shell/Upload.svelte';
     import LabelDiv from '$shell/LabelDiv.svelte';
-    import type { FileData } from '$types/data';
-    import type { ImageField } from '$types/fields';
 
     export let field: ImageField;
     export let data: FileData;
