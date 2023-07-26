@@ -94,6 +94,9 @@ export interface Column {
 
 export interface ListedNode {
     uid: string;
+    published: boolean;
+    hidden: boolean;
+    locked: boolean;
     columns: Column[];
 }
 
@@ -105,6 +108,9 @@ export interface Blueprint {
 export interface Collection {
     name: string;
     slug: string;
+    showPublished: boolean;
+    showHidden: boolean;
+    showLocked: boolean;
     header: string[];
     nodes: ListedNode[];
     blueprints: Blueprint[];

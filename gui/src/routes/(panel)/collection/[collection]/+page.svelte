@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { ListedNode } from '$types/data';
     import Searchbar from '$shell/Searchbar.svelte';
+    import Published from '$shell/Published.svelte';
     import Link from '$shell/Link.svelte';
 
     export let data;
@@ -53,6 +54,9 @@
                             class="min-w-full border-separate border-spacing-0 bg-white">
                             <thead>
                                 <tr>
+                                    {#if data.showPublished}
+                                        <th class="published" />
+                                    {/if}
                                     {#each data.header as column}
                                         <th scope="col">{column}</th>
                                     {/each}
@@ -61,6 +65,15 @@
                             <tbody>
                                 {#each nodes as node}
                                     <tr>
+                                        {#if data.showPublished}
+                                            <td
+                                                class="published text-center align-middle">
+                                                <span class="inline-block pb-1">
+                                                    <Published
+                                                        published={node.published} />
+                                                </span>
+                                            </td>
+                                        {/if}
                                         {#each node.columns as column}
                                             <td
                                                 class:font-semibold={column.bold}
@@ -89,15 +102,23 @@
 </div>
 
 <style lang="postcss">
+    th,
+    td {
+        @apply px-3 sm:px-4 lg:px-6 py-4;
+    }
     th {
         @apply sticky top-0 z-10 border-b border-gray-300 bg-gray-100;
-        @apply bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold;
-        @apply text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 border-t border-black border-opacity-10;
+        @apply bg-opacity-75 text-left text-sm font-semibold;
+        @apply text-gray-900 backdrop-blur backdrop-filter border-t border-black border-opacity-10;
     }
 
     td {
-        @apply whitespace-nowrap border-b border-gray-200 py-4 pl-4 pr-3;
-        @apply text-sm text-gray-900 sm:pl-6 lg:pl-8;
+        @apply whitespace-nowrap border-b border-gray-200;
+        @apply text-sm text-gray-900;
+    }
+
+    .published {
+        padding-right: 0;
     }
 
     tr:hover {

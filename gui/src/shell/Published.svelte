@@ -14,8 +14,8 @@
     span {
         @apply inline-block rounded-full bg-gray-400;
 
-        width: 5px;
-        height: 5px;
+        width: 0.4rem;
+        height: 0.4rem;
 
         &.large {
             width: 0.5rem;

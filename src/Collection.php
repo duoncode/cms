@@ -88,16 +88,16 @@ abstract class Collection
 
     public static function showPublished(): bool
     {
-        return self::$showPublished;
+        return static::$showPublished;
     }
 
     public static function showHidden(): bool
     {
-        return self::$showHidden;
+        return static::$showHidden;
     }
 
     public static function showLocked(): bool
     {
-        return self::$showLocked;
+        return static::$showLocked;
     }
 }
