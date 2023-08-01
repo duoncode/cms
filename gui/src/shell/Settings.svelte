@@ -8,6 +8,10 @@
     export let doc: Document;
 
     function getPathPlaceholder(locale: Locale) {
+        if (!doc.generatedPaths) {
+            return '';
+        }
+
         const localeId = locale.id;
 
         while (locale) {
