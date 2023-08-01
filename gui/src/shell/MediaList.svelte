@@ -20,11 +20,11 @@
     const file = !image;
     const modal: Modal = getContext('simple-modal');
 
-    let sorter: HTMLElement;
+    let sorterElement: HTMLElement;
 
-    onMount(() => {
-        if (sorter) {
-            Sortable.create(sorter, {
+    function createSorter() {
+        if (sorterElement) {
+            Sortable.create(sorterElement, {
                 animation: 200,
                 onUpdate: function (event: SortableEvent) {
                     const tmp = assets[event.oldIndex];
@@ -34,69 +34,68 @@
                 },
             });
         }
-    });
+    }
 
     function edit(index: number, hasAlt: boolean) {
         const apply = (asset: FileItem) => {
             assets[index] = asset;
             modal.close();
-        }
+        };
 
-        modal.open(
-            ModalEditImage,
-            {
-                asset: assets[index],
-                close: modal.close,
-                apply,
-                translate,
-                hasAlt,
-            }
-        );
+        modal.open(ModalEditImage, {
+            asset: assets[index],
+            close: modal.close,
+            apply,
+            translate,
+            hasAlt,
+        });
     }
+
+    onMount(createSorter);
 </script>
 
-{#if assets && assets.length > 0}
-    {#if multiple && image}
-        <div class="multiple-images" bind:this={sorter}>
-            {#each assets as asset, index}
-                <Image
-                    upload
-                    {multiple}
-                    {path}
-                    image={asset}
-                    remove={() => remove(index)}
-                    edit={() => edit(index, true)}
-                    {loading} />
-            {/each}
-        </div>
-    {:else if !multiple && image}
-        <Image
-            upload
-            {path}
-            {multiple}
-            image={assets[0]}
-            remove={() => remove(null)}
-            edit={() => edit(0, true)}
-            {loading} />
-    {:else if multiple && file}
-        <div class="multiple-files flex flex-col gap-3 mb-3" bind:this={sorter}>
-            {#each assets as asset, index}
-                <File
-                    {path}
-                    {loading}
-                    {asset}
-                    remove={() => remove(index)}
-                    edit={() => edit(index, false)} />
-            {/each}
-        </div>
-    {:else}
-        <File
-            {path}
-            {loading}
-            asset={assets[0]}
-            remove={() => remove(null)}
-            edit={() => edit(0, false)} />
-    {/if}
+{#if multiple && image}
+    <div class="multiple-images" bind:this={sorterElement}>
+        {#each assets as asset, index (asset)}
+            <Image
+                upload
+                {multiple}
+                {path}
+                image={asset}
+                remove={() => remove(index)}
+                edit={() => edit(index, true)}
+                {loading} />
+        {/each}
+    </div>
+{:else if !multiple && image && assets && assets.length > 0}
+    <Image
+        upload
+        {path}
+        {multiple}
+        image={assets[0]}
+        remove={() => remove(null)}
+        edit={() => edit(0, true)}
+        {loading} />
+{:else if multiple && file}
+    <div
+        class="multiple-files flex flex-col gap-3 mb-3"
+        bind:this={sorterElement}>
+        {#each assets as asset, index (asset)}
+            <File
+                {path}
+                {loading}
+                {asset}
+                remove={() => remove(index)}
+                edit={() => edit(index, false)} />
+        {/each}
+    </div>
+{:else if assets && assets.length > 0}
+    <File
+        {path}
+        {loading}
+        asset={assets[0]}
+        remove={() => remove(null)}
+        edit={() => edit(0, false)} />
 {/if}
 
 <style lang="postcss">

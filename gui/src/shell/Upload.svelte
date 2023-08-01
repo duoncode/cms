@@ -28,6 +28,7 @@
     let loading = false;
     let dragging = false;
     let allowedExtensions = '';
+    let mediaList;
 
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
@@ -145,6 +146,7 @@
                                 title: value,
                                 file: item.file,
                             });
+                            assets = [...assets];
                         } else {
                             toast.add(getError(item));
                         }
@@ -195,6 +197,7 @@
         class:mt-6={inline}>
         <MediaList
             bind:assets
+            bind:this={mediaList}
             {multiple}
             {image}
             {path}
