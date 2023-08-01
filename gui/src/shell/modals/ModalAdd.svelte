@@ -4,7 +4,7 @@
 
     export let add: (index: number, before: boolean, type: string) => void;
     export let close: () => void;
-    export let index: number;
+    export let index: number | null;
     export let types: { id: string; label: string }[];
 
     let type: string | null = null;

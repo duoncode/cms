@@ -95,7 +95,7 @@
     }
 
     function resizeCell(item: GridItem) {
-        return (element) => item.width = element.clientWidth;
+        return element => (item.width = element.clientWidth);
     }
 </script>
 
@@ -104,7 +104,11 @@
     {#if data.length > 0}
         {#each data as item, index (item)}
             <div
-                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null ? '' : 'col-start-' + item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative"
+                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart ===
+                null
+                    ? ''
+                    : 'col-start-' +
+                      item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative"
                 animate:flip={{ duration: 300 }}
                 use:resize={resizeCell(item)}>
                 <svelte:component
@@ -126,7 +130,7 @@
         {/each}
     {:else}
         <div class="p-4 col-span-{cols} flex flex-row justify-center">
-            <Button class="secondary" on:click={openAddModal(0)}>
+            <Button class="secondary" on:click={openAddModal(null)}>
                 <span class="h-5 w-5 mr-2">
                     <IcoCirclePlus />
                 </span>
