@@ -6,7 +6,7 @@ namespace Conia\Core;
 
 use Conia\Chuck\Group;
 use Conia\Core\App;
-use Conia\Core\Middleware;
+use Conia\Core\Session;
 use Conia\Core\View\Auth;
 use Conia\Core\View\Media;
 use Conia\Core\View\Page;
@@ -18,7 +18,7 @@ class Routes
     protected string $panelPath;
     protected string $apiPath;
 
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected bool $sessionEnabled)
     {
         $this->panelPath = $config->getPanelPath();
         $this->apiPath = $this->panelPath . '/api';
@@ -33,32 +33,32 @@ class Routes
             'conia.panel.',
         );
 
-        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall')
-            ->middleware(Middleware\InitRequest::class);
-        $app->route($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash')
-            ->middleware(Middleware\InitRequest::class);
-        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel')
-            ->middleware(Middleware\InitRequest::class);
+        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall');
+        $app->route($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash');
+        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel');
 
-        $app->post('/media/{mediatype:(image|file)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload')
-            ->middleware(Middleware\InitRequest::class, Middleware\Session::class);
-        $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image')
-            ->middleware(Middleware\InitRequest::class);
-        $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file')
-            ->middleware(Middleware\InitRequest::class);
+        $postMediaRoute = $app->post('/media/{mediatype:(image|file)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload');
 
-        $app->route(
+        $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image');
+        $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file');
+
+        $catchallRoute = $app->route(
             '/preview/...slug',
             [Page::class, 'preview'],
             'conia.preview.catchall',
-        )->middleware(Middleware\InitRequest::class, Middleware\Session::class);
+        );
+
+        if (!$this->sessionEnabled) {
+            $postMediaRoute->middleware(Session::class);
+            $catchallRoute->middleware(Session::class);
+        }
 
         // Add catchall for page url paths. Must be the last one
         $app->route(
             '/...slug',
             [Page::class, 'catchall'],
             'conia.catchall',
-        )->middleware(Middleware\InitRequest::class);
+        );
     }
 
     protected function addAuth(Group $api): void
@@ -90,7 +90,11 @@ class Routes
 
     protected function addPanelApi(Group $api): void
     {
-        $api->middleware(Middleware\InitRequest::class, Middleware\Session::class)->render('json');
+        $api->render('json');
+
+        if (!$this->sessionEnabled) {
+            $api->middleware(Session::class);
+        }
 
         $this->addAuth($api);
         $this->addUser($api);

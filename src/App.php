@@ -10,6 +10,8 @@ use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Router;
 use Conia\Core\Config;
+use Conia\Core\Middleware\InitRequest;
+use Conia\Core\Middleware\Session;
 use Conia\Core\Node\Node;
 use Conia\Core\Routes;
 use Conia\Quma\Connection;
@@ -20,6 +22,8 @@ use Psr\Http\Server\MiddlewareInterface as PsrMiddleware;
 
 class App extends \Conia\Chuck\App
 {
+    protected bool $sessionEnabled = false;
+
     /** @psalm-param non-falsy-string|list{non-falsy-string, ...}|Closure|Middleware|PsrMiddleware|null $errorHandler */
     public function __construct(
         protected Config $config,
@@ -94,10 +98,24 @@ class App extends \Conia\Chuck\App
         ));
     }
 
+    /**
+     * Enables the sessions middleware everywhere.
+     *
+     * If this is not enabled, sessions are only started
+     * for panel actions.
+     */
+    public function enableSession(): void
+    {
+        $this->router->middleware(Session::class);
+        $this->sessionEnabled = true;
+    }
+
     public function run(): PsrResponse
     {
+        $this->router->middleware(InitRequest::class);
+
         // Add the system routes as last step
-        (new Routes($this->config))->add($this);
+        (new Routes($this->config, $this->sessionEnabled))->add($this);
 
         return parent::run();
     }
