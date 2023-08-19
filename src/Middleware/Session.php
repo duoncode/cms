@@ -8,10 +8,12 @@ use Conia\Chuck\Middleware;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Config;
+use Conia\Core\Users;
+use Conia\Quma\Database;
 
 class Session implements Middleware
 {
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected Database $db)
     {
     }
 
@@ -22,8 +24,8 @@ class Session implements Middleware
             $this->config->get('session.options'),
             $this->config->get('session.handler', null),
         );
-        $session->start();
 
+        $session->start();
         $expires = $this->config->get('session.options')['gc_maxlifetime'];
         $lastActivity = $session->lastActivity();
 
@@ -33,6 +35,12 @@ class Session implements Middleware
         }
 
         $session->signalActivity();
+        $userId = $session->authenticatedUserId();
+
+        if ($userId) {
+            $user = (new Users($this->db))->byId($userId);
+            $request->set('user', $user);
+        }
 
         $request->set('session', $session);
 
