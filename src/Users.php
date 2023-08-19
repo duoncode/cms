@@ -12,32 +12,32 @@ class Users
     {
     }
 
-    public function byLogin(string $login): ?array
+    public function byLogin(string $login): ?User
     {
-        return $this->db->users->get([
+        return $this->getUserOrNull($this->db->users->get([
             'login' => $login,
-        ])->one();
+        ])->one());
     }
 
-    public function bySession(string $hash): ?array
+    public function bySession(string $hash): ?User
     {
-        return $this->db->users->get([
+        return $this->getUserOrNull($this->db->users->get([
             'sessionhash' => $hash,
-        ])->one();
+        ])->one());
     }
 
-    public function byUid(string $uid): ?array
+    public function byUid(string $uid): ?User
     {
-        return $this->db->users->get([
+        return $this->getUserOrNull($this->db->users->get([
             'uid' => $uid,
-        ])->one();
+        ])->one());
     }
 
-    public function byId(int $id): ?array
+    public function byId(int $id): ?User
     {
-        return $this->db->users->get([
+        return $this->getUserOrNull($this->db->users->get([
             'usr' => $id,
-        ])->one();
+        ])->one());
     }
 
     public function remember(string $hash, int $userId, string $expires): bool
@@ -54,5 +54,14 @@ class Users
         return $this->db->users->forget([
             'hash' => $hash,
         ])->run();
+    }
+
+    protected function getUserOrNull(?array $data): ?User
+    {
+        if ($data) {
+            return new User($data);
+        }
+
+        return null;
     }
 }

@@ -48,8 +48,9 @@ class Auth
                 ), 400);
             }
 
-            return $response->json($user);
+            return $response->json($user->array());
         }
+
         $response->json(
             array_merge(
                 ['error' => _('Bitte Benutzernamen und Passwort eingeben')],

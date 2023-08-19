@@ -38,19 +38,17 @@ class Auth
         string $password,
         bool $remember,
         bool $initSession,
-    ): array|false {
+    ): User|false {
         $user = $this->users->byLogin($login);
 
         if (!$user) {
             return false;
         }
 
-        if (password_verify($password, $user['pwhash'])) {
+        if (password_verify($password, $user->pwhash)) {
             if ($initSession) {
-                $this->login($user['usr'], $remember);
+                $this->login($user->id, $remember);
             }
-
-            unset($user['pwhash']);
 
             return $user;
         }
@@ -58,7 +56,7 @@ class Auth
         return false;
     }
 
-    public function user(): ?array
+    public function user(): ?User
     {
         static $user = false;
 
@@ -66,7 +64,7 @@ class Auth
             return $user;
         }
 
-        // verify if user is logged in via cookie session
+        // Verify if user is logged in via cookie session
         $userId = $this->session->authenticatedUserId();
 
         if ($userId) {
@@ -80,8 +78,8 @@ class Auth
         if ($hash) {
             $user = $this->users->bySession($hash);
 
-            if ($user && !(strtotime($user['expires']) < time())) {
-                $this->login($user['usr'], false);
+            if ($user && !(strtotime($user->expires) < time())) {
+                $this->login($user->id, false);
 
                 return $user;
             }
@@ -94,14 +92,13 @@ class Auth
 
     public function permissions(): array
     {
-        $permissions = new Permissions();
         $user = $this->user();
 
         if ($user === null) {
             return [];
         }
 
-        return $permissions->get($user['role']);
+        return $user->permissions();
     }
 
     protected function remember(int $userId): RememberDetails

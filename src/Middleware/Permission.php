@@ -13,7 +13,6 @@ use Conia\Chuck\Request;
 use Conia\Chuck\Response;
 use Conia\Core\Auth;
 use Conia\Core\Config;
-use Conia\Core\Permissions;
 use Conia\Core\Users;
 
 #[Attribute, Call('init')]
@@ -43,9 +42,7 @@ class Permission implements Middleware
         $user = $auth->user();
 
         if ($user) {
-            $permission = new Permissions();
-
-            if (!$permission->has($user['role'], $this->permission)) {
+            if (!$user->hasPermission($this->permission)) {
                 throw new HttpForbidden();
             }
 
