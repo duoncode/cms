@@ -28,12 +28,12 @@ class InitRequest implements Middleware
             isset($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
-            $request->set('isJson', true);
+            $request->set('isXhr', true);
         } else {
             if ($request->hasHeader('Accept') && $request->header('Accept') === 'application/json') {
-                $request->set('isJson', true);
+                $request->set('isXhr', true);
             } else {
-                $request->set('isJson', false);
+                $request->set('isXhr', false);
             }
         }
 
