@@ -9,6 +9,7 @@ class User
     public readonly int $id;
     public readonly string $uid;
     public readonly string $username;
+    public readonly string $email;
     public readonly string $pwhash;
     public readonly string $role;
     public readonly bool $active;
@@ -22,6 +23,7 @@ class User
         $this->id = $data['usr'];
         $this->uid = $data['uid'];
         $this->username = $data['username'];
+        $this->email = $data['email'];
         $this->pwhash = $data['pwhash'];
         $this->role = $data['role'];
         $this->active = $data['active'];
