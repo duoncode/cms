@@ -14,6 +14,7 @@ use Conia\Core\Finder\Output\Comparison;
 use Conia\Core\Finder\Output\Exists;
 use Conia\Core\Finder\Output\Expression;
 use Conia\Core\Finder\Output\LeftParen;
+use Conia\Core\Finder\Output\NullComparison;
 use Conia\Core\Finder\Output\Operator;
 use Conia\Core\Finder\Output\RightParen;
 use Conia\Core\Finder\Output\UrlPath;
@@ -130,6 +131,14 @@ final class QueryParser
         $this->pos += 3;
         // Wrong position to start a new condition after this one
         $this->readyForCondition = false;
+
+        if ($left->type === TokenType::Null) {
+            $this->error($left, 'Invalid position for a null value.');
+        }
+
+        if ($right->type === TokenType::Null) {
+            return new NullComparison($left, $operator, $right, $this->context, $this->builtins);
+        }
 
         if ($left->type === TokenType::Path || $right->type === TokenType::Path) {
             return new UrlPath($left, $operator, $right);

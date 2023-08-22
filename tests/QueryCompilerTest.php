@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use Conia\Core\Finder\Context;
+use Conia\Core\Context;
+use Conia\Core\Exception\ParserException;
+use Conia\Core\Exception\ParserOutputException;
 use Conia\Core\Finder\QueryCompiler;
 use Conia\Core\Tests\Setup\TestCase;
 
@@ -12,7 +14,8 @@ beforeEach(function () {
     $this->context = new Context(
         $this->db(),
         $this->request(),
-        $this->config()
+        $this->config(),
+        $this->registry(),
     );
 });
 
@@ -53,3 +56,31 @@ test('Nested query III', function () {
         "(t.another = 'test' OR (builtin > 2 AND builtin < 5))"
     );
 });
+
+test('Null query', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    expect($compiler->compile('builtin = null'))->toBe(
+        'builtin IS NULL'
+    );
+});
+
+test('Not Null query', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    expect($compiler->compile('builtin != null'))->toBe(
+        'builtin IS NOT NULL'
+    );
+});
+
+test('Null query wrong position', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    $compiler->compile('null = builtin');
+})->throws(ParserException::class, 'Parse error at position 1. Invalid position for a null value.');
+
+test('Null query wrong operant', function () {
+    $compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+    $compiler->compile('builtin ~ null');
+})->throws(ParserOutputException::class, 'Only equal (=) or unequal (!=) operators are allowed');

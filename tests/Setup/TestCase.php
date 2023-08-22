@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Tests\Setup;
 
 use Conia\Chuck\Exception\ValueError;
+use Conia\Chuck\Registry;
 use Conia\Chuck\Request;
 use Conia\Core\Config;
 use Conia\Quma\Connection;
@@ -115,7 +116,6 @@ class TestCase extends BaseTestCase
             title: 'Italiano',
             fallback: 'en',
         );
-        $config->defaultLocale('en');
 
         return $config;
     }
@@ -149,6 +149,11 @@ class TestCase extends BaseTestCase
         }
 
         return new Request($this->psrRequest());
+    }
+
+    public function registry(): Registry
+    {
+        return new Registry();
     }
 
     public function set(string $method, array $values): void
