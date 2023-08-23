@@ -1,3 +1,4 @@
+import Checkbox from '$shell/controls/Checkbox.svelte';
 import Date from '$shell/controls/Date.svelte';
 import File from '$shell/controls/File.svelte';
 import Grid from '$shell/controls/Grid.svelte';
@@ -12,6 +13,7 @@ import Textarea from '$shell/controls/Textarea.svelte';
 import Time from '$shell/controls/Time.svelte';
 
 export default {
+    'Conia\\Core\\Field\\Checkbox': Checkbox,
     'Conia\\Core\\Field\\Date': Date,
     'Conia\\Core\\Field\\File': File,
     'Conia\\Core\\Field\\Grid': Grid,

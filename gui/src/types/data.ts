@@ -31,6 +31,11 @@ export interface NumberData {
     value?: number;
 }
 
+export interface BooleanData {
+    type: 'checkbox';
+    value?: boolean;
+}
+
 export interface FileData {
     type: 'picture' | 'image';
     files: FileItem[] | Record<string, TranslatedFile[]>;
