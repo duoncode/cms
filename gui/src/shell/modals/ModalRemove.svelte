@@ -18,10 +18,14 @@
         {/if}
     </div>
     <div class="controls">
-        <Button class="danger" on:click={proceed}>
+        <Button
+            class="danger"
+            on:click={proceed}>
             {_('Ja, Eintrag löschen')}
         </Button>
-        <Button class="secondary" on:click={close}>
+        <Button
+            class="secondary"
+            on:click={close}>
             {_('Nein, Eintrag nicht löschen')}
         </Button>
     </div>

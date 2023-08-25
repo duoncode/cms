@@ -4,7 +4,7 @@
 
     export let node: string;
     export let file: string;
-    export let current: string
+    export let current: string;
 
     const path = `${$system.assets}/node/${node}/${file}`;
     const dispatch = createEventDispatcher();
@@ -26,4 +26,3 @@
         @apply bg-emerald-600 text-white;
     }
 </style>
-

@@ -14,7 +14,10 @@
 </script>
 
 <Field {required}>
-    <Label of={id} {translate} bind:lang>
+    <Label
+        of={id}
+        {translate}
+        bind:lang>
         {label}
     </Label>
     <div class="mt-2">
@@ -22,7 +25,7 @@
             {#each $system.locales as locale}
                 {#if locale.id === lang}
                     <input
-                        id={id}
+                        {id}
                         name={id}
                         type="text"
                         {required}
@@ -32,7 +35,7 @@
             {/each}
         {:else}
             <input
-                id={id}
+                {id}
                 name={id}
                 type="text"
                 {required}

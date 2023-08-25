@@ -42,11 +42,7 @@
     ];
     const modal: Modal = getContext('simple-modal');
 
-    function add(
-        index: number,
-        before: boolean,
-        type: 'html' | 'image' | 'youtube' | 'images',
-    ) {
+    function add(index: number, before: boolean, type: 'html' | 'image' | 'youtube' | 'images') {
         let content: GridBase = {
             type,
             colspan: 12,
@@ -99,13 +95,11 @@
     }
 </script>
 
-<div
-    class="grid-field grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
+<div class="grid-field grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
     {#if data.length > 0}
         {#each data as item, index (item)}
             <div
-                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart ===
-                null
+                class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null
                     ? ''
                     : 'col-start-' +
                       item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative"
@@ -130,7 +124,9 @@
         {/each}
     {:else}
         <div class="p-4 col-span-{cols} flex flex-row justify-center">
-            <Button class="secondary" on:click={openAddModal(null)}>
+            <Button
+                class="secondary"
+                on:click={openAddModal(null)}>
                 <span class="h-5 w-5 mr-2">
                     <IcoCirclePlus />
                 </span>

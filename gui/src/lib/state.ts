@@ -35,13 +35,4 @@ function error(message: string) {
     });
 }
 
-export {
-    pristine,
-    dirty,
-    setDirty,
-    setPristine,
-    success,
-    error,
-    currentDocument,
-    currentFields,
-};
+export { pristine, dirty, setDirty, setPristine, success, error, currentDocument, currentFields };

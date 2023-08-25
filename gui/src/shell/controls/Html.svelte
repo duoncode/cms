@@ -13,7 +13,9 @@
 </script>
 
 <Field required={field.required}>
-    <LabelDiv translate={field.translate} bind:lang>
+    <LabelDiv
+        translate={field.translate}
+        bind:lang>
         {field.label}
     </LabelDiv>
     <div class="mt-2">

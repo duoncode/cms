@@ -2,7 +2,9 @@
     import NavToggle from './NavToggle.svelte';
 </script>
 
-<div id="toolbar" class="headerbar">
+<div
+    id="toolbar"
+    class="headerbar">
     <NavToggle />
 </div>
 

@@ -17,12 +17,7 @@ export function generatePaths(doc: Document, route: Route, system: System) {
     return paths;
 }
 
-function transformPath(
-    path: string,
-    doc: Document,
-    localeId: string,
-    system: System,
-) {
+function transformPath(path: string, doc: Document, localeId: string, system: System) {
     const routePattern = /[^{}]+(?=})/g;
     const extractParams = path.match(routePattern);
 
@@ -36,10 +31,7 @@ function transformPath(
                 case 'option':
                 case 'datetime':
                     if (value.value) {
-                        path = path.replace(
-                            `{${param}}`,
-                            slugify(value.value.toString(), null),
-                        );
+                        path = path.replace(`{${param}}`, slugify(value.value.toString(), null));
                     }
                     break;
                 case 'text':
@@ -83,10 +75,7 @@ function getTextValue(
     return '{' + param + '}';
 }
 
-export function slugify(
-    orig: string,
-    transliterate: Record<string, string> | null,
-) {
+export function slugify(orig: string, transliterate: Record<string, string> | null) {
     let value = orig.trim().replace(/\s+/g, '-');
 
     value = value.slice(0, 255);

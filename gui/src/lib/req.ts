@@ -5,9 +5,7 @@ import { get as getStore } from 'svelte/store';
 import { system } from '$lib/sys';
 
 const panelApi = `${base}/api/`;
-const domain = browser
-    ? `${window.location.protocol}/${window.location.host}`
-    : '';
+const domain = browser ? `${window.location.protocol}/${window.location.host}` : '';
 
 class Response {
     constructor(public ok: boolean, public data: any) {}
@@ -92,10 +90,7 @@ async function fetchit(
 
             // The user logged out in another tab and logged in again.
             // Now the csrf token is invalid.
-            if (
-                response.status === 400 &&
-                message.error_message === 'CSRF Error'
-            ) {
+            if (response.status === 400 && message.error_message === 'CSRF Error') {
                 window.location.reload();
             }
         } catch {
@@ -118,21 +113,13 @@ async function get(
     return fetchit(url, params, options, fetchFn);
 }
 
-async function post(
-    url: string,
-    data = {},
-    fetchFn: typeof window.fetch = null,
-) {
+async function post(url: string, data = {}, fetchFn: typeof window.fetch = null) {
     const options = getBodyOptions('POST', data);
 
     return fetchit(url, {}, options, fetchFn);
 }
 
-async function put(
-    url: string,
-    data = {},
-    fetchFn: typeof window.fetch = null,
-) {
+async function put(url: string, data = {}, fetchFn: typeof window.fetch = null) {
     const options = getBodyOptions('PUT', data);
 
     return fetchit(url, {}, options, fetchFn);

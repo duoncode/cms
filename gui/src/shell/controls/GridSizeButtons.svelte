@@ -19,11 +19,11 @@
     let fullyindented = false;
 
     function width(val: number) {
-        return () => item.colspan = item.colspan + val;
+        return () => (item.colspan = item.colspan + val);
     }
 
     function height(val: number) {
-        return () => item.rowspan = item.rowspan + val;
+        return () => (item.rowspan = item.rowspan + val);
     }
 
     function indent(val: number) {
@@ -35,14 +35,14 @@
                 return;
             }
 
-            colstart += val
+            colstart += val;
 
             if (colstart === 0) {
                 colstart = null;
             }
 
             item.colstart = colstart;
-        }
+        };
     }
 
     $: widest = item.colspan === field.columns;
@@ -50,39 +50,58 @@
     $: highest = item.rowspan === field.columns * 2; // This is arbitrary. Allow twice as many rows as columns
     $: onerow = item.rowspan === 1;
     $: unindented = item.colstart === null;
-    $: fullyindented = (item.colstart !== null && (item.colstart + item.colspan - 1) === field.columns);
+    $: fullyindented = item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
 </script>
 
-<div class="flex flex-row flex-grow items-center py-2 gap-x-3"
-     class:justify-start={!dropdown}
-     class:justify-center={dropdown}>
-    <button class="width-plus" disabled={widest} on:click={width(1)}>
+<div
+    class="flex flex-row flex-grow items-center py-2 gap-x-3"
+    class:justify-start={!dropdown}
+    class:justify-center={dropdown}>
+    <button
+        class="width-plus"
+        disabled={widest}
+        on:click={width(1)}>
         <span class="icon">
             <IcoExpand />
         </span>
-        <GridButtonLabel value={item.colspan}/>
+        <GridButtonLabel value={item.colspan} />
     </button>
-    <button class="width-minus" disabled={narrowest} on:click={width(-1)}>
+    <button
+        class="width-minus"
+        disabled={narrowest}
+        on:click={width(-1)}>
         <span class="icon">
             <IcoCollapse />
         </span>
-        <GridButtonLabel value={item.colspan}/>
+        <GridButtonLabel value={item.colspan} />
     </button>
-    <button class="indent" disabled={fullyindented} on:click={indent(1)}>
+    <button
+        class="indent"
+        disabled={fullyindented}
+        on:click={indent(1)}>
         <IcoIndent />
-        <GridButtonLabel value={item.colstart}/>
+        <GridButtonLabel value={item.colstart} />
     </button>
-    <button class="unindent" disabled={unindented} on:click={indent(-1)}>
+    <button
+        class="unindent"
+        disabled={unindented}
+        on:click={indent(-1)}>
         <IcoUnindent />
-        <GridButtonLabel value={item.colstart}/>
+        <GridButtonLabel value={item.colstart} />
     </button>
-    <button class="height-plus" disabled={highest} on:click={height(1)}>
+    <button
+        class="height-plus"
+        disabled={highest}
+        on:click={height(1)}>
         <IcoExpand />
-        <GridButtonLabel value={item.rowspan}/>
+        <GridButtonLabel value={item.rowspan} />
     </button>
-    <button class="height-minus" disabled={onerow} on:click={height(-1)}>
+    <button
+        class="height-minus"
+        disabled={onerow}
+        on:click={height(-1)}>
         <IcoCollapse />
-        <GridButtonLabel value={item.rowspan}/>
+        <GridButtonLabel value={item.rowspan} />
     </button>
 </div>
 
@@ -95,7 +114,8 @@
         }
     }
 
-    .width-minus, .width-plus {
+    .width-minus,
+    .width-plus {
         span.icon {
             display: block;
             transform: rotate(90deg);

@@ -5,14 +5,17 @@
     export let published = false;
 </script>
 
-<h1
-    class="text-3xl font-semibold mb-6 flex flex-row items-center justify-start">
+<h1 class="text-3xl font-semibold mb-6 flex flex-row items-center justify-start">
     {#if showPublished}
         <span class="ml-1 inline-flex items-center">
-            <Published {published} large />
+            <Published
+                {published}
+                large />
         </span>
     {/if}
-    <span class="flex items-center" class:pl-3={showPublished}>
+    <span
+        class="flex items-center"
+        class:pl-3={showPublished}>
         <slot />
     </span>
 </h1>

@@ -47,11 +47,9 @@
     <div class="flex-1 px-4 sm:px-6 lg:px-8 overflow-y-auto border-gray-200">
         <div class="flow-root">
             <div class="mx-8 mb-8">
-                <div
-                    class="-mx-4 sm:-mx-6 lg:-mx-8 ring-1 ring-opacity-5 ring-black">
+                <div class="-mx-4 sm:-mx-6 lg:-mx-8 ring-1 ring-opacity-5 ring-black">
                     <div class="inline-block min-w-full align-middle shadow">
-                        <table
-                            class="min-w-full border-separate border-spacing-0 bg-white">
+                        <table class="min-w-full border-separate border-spacing-0 bg-white">
                             <thead>
                                 <tr>
                                     {#if data.showPublished}
@@ -66,11 +64,9 @@
                                 {#each nodes as node}
                                     <tr>
                                         {#if data.showPublished}
-                                            <td
-                                                class="published text-center align-middle">
+                                            <td class="published text-center align-middle">
                                                 <span class="inline-block pb-1">
-                                                    <Published
-                                                        published={node.published} />
+                                                    <Published published={node.published} />
                                                 </span>
                                             </td>
                                         {/if}
@@ -78,12 +74,9 @@
                                             <td
                                                 class:font-semibold={column.bold}
                                                 class:font-italic={column.italic}>
-                                                <Link
-                                                    href="collection/{data.slug}/{node.uid}">
+                                                <Link href="collection/{data.slug}/{node.uid}">
                                                     {#if column.date}
-                                                        {fmtDate(
-                                                            column.value.toString(),
-                                                        )}
+                                                        {fmtDate(column.value.toString())}
                                                     {:else}
                                                         {@html column.value}
                                                     {/if}

@@ -65,16 +65,26 @@
     class:justify-end={!dropdown}
     class:mr-3={!dropdown}
     class:justify-center={dropdown}>
-    <button class="remove" on:click={remove}>
+    <button
+        class="remove"
+        on:click={remove}>
         <IcoTrash />
     </button>
-    <button class="up-down" disabled={last} on:click={down}>
+    <button
+        class="up-down"
+        disabled={last}
+        on:click={down}>
         <IcoArrowDown />
     </button>
-    <button class="up-down" disabled={first} on:click={up}>
+    <button
+        class="up-down"
+        disabled={first}
+        on:click={up}>
         <IcoArrowUp />
     </button>
-    <button class="add" on:click={add}>
+    <button
+        class="add"
+        on:click={add}>
         <IcoCirclePlus />
     </button>
 </div>

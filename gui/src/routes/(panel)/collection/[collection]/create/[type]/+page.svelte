@@ -14,4 +14,6 @@
     }
 </script>
 
-<Node bind:node={data} {save} />
+<Node
+    bind:node={data}
+    {save} />

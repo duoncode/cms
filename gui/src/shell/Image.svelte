@@ -25,7 +25,6 @@
     let ext = '';
     let title = '';
 
-
     function preview() {
         modal.open(
             ImagePreview,
@@ -42,7 +41,7 @@
         return image + '?resize=width&w=400';
     }
 
-    function getTitle(image:FileItem, key: string) {
+    function getTitle(image: FileItem, key: string) {
         if (image[key]) {
             if (typeof image[key] === 'string') {
                 return image[key];
@@ -82,23 +81,31 @@
     {#if loading}
         {_('Loading ...')}
     {:else}
-        <img src={thumb} alt={_('Vorschau')} />
+        <img
+            src={thumb}
+            alt={_('Vorschau')} />
         <div class="overlay">
             {#if remove}
-                <button class="text-rose-700" on:click={remove}>
+                <button
+                    class="text-rose-700"
+                    on:click={remove}>
                     <span class="ico">
                         <IcoTrash />
                     </span>
                     <span class="icobtn">{_('Löschen')}</span>
                 </button>
             {/if}
-            <button class="text-sky-700" on:click={preview}>
+            <button
+                class="text-sky-700"
+                on:click={preview}>
                 <span class="ico">
                     <IcoEye />
                 </span>
                 <span class="icobtn">{_('Vorschau')}</span>
             </button>
-            <button class="text-sky-700" on:click={edit}>
+            <button
+                class="text-sky-700"
+                on:click={edit}>
                 <span class="ico">
                     <IcoPencil />
                 </span>
@@ -109,7 +116,7 @@
     {#if title}
         <button
             class="title absolute left-1 bottom-1 rounded text-gray-600 bg-white text-xs px-1 mb-px ml-px"
-             on:click={edit}>
+            on:click={edit}>
             {title}
         </button>
     {/if}

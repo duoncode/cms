@@ -46,12 +46,22 @@
         </div>
     </div>
     <div class="controls">
-        <Button class="danger" on:click={close}>{_('Abbrechen')}</Button>
-        <Button class="primary" on:click={addContent(true)} {disabled}>
+        <Button
+            class="danger"
+            on:click={close}>
+            {_('Abbrechen')}
+        </Button>
+        <Button
+            class="primary"
+            on:click={addContent(true)}
+            {disabled}>
             {index === null ? _('Einfügen') : _('Davor einfügen')}
         </Button>
         {#if index !== null}
-            <Button class="primary" on:click={addContent(false)} {disabled}>
+            <Button
+                class="primary"
+                on:click={addContent(false)}
+                {disabled}>
                 {_('Danach einfügen')}
             </Button>
         {/if}

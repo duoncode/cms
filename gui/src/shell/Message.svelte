@@ -59,7 +59,9 @@
                     <IcoCircleInfo />
                 {/if}
             </div>
-            <div class:ml-2={narrow} class:ml-3={!narrow}>
+            <div
+                class:ml-2={narrow}
+                class:ml-3={!narrow}>
                 <div class="text-sm {getTextColor()}">
                     {#if text}
                         {@html text}

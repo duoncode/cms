@@ -2,6 +2,8 @@
     export let required = false;
 </script>
 
-<div class="setting" class:required>
+<div
+    class="setting"
+    class:required>
     <slot />
 </div>

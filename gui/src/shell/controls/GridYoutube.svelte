@@ -25,7 +25,7 @@
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => showSettings = !showSettings} />
+    <slot edit={() => (showSettings = !showSettings)} />
 </div>
 <div class="grid-cell-body">
     {#if showSettings}
@@ -68,7 +68,9 @@
         </Setting>
     {:else}
         <div class="youtube-container">
-            <div class="relative" style="padding-top: {percent}%">
+            <div
+                class="relative"
+                style="padding-top: {percent}%">
                 <iframe
                     class="youtube absolute top-0 left-0 w-full h-full"
                     title="Youtube Video"

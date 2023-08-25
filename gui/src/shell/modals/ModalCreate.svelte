@@ -35,6 +35,10 @@
         </div>
     </div>
     <div class="controls">
-        <Button class="danger" on:click={close}>{_('Abbrechen')}</Button>
+        <Button
+            class="danger"
+            on:click={close}>
+            {_('Abbrechen')}
+        </Button>
     </div>
 </div>

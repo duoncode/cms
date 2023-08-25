@@ -11,7 +11,7 @@
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => showSettings = !showSettings} />
+    <slot edit={() => (showSettings = !showSettings)} />
 </div>
 <div class="grid-cell-body">
     {#if showSettings}

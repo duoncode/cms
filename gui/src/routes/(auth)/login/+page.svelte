@@ -26,15 +26,14 @@
 
         let result = await loginUser(login, password, rememberme);
 
-console.log(result);
+        console.log(result);
         if (result !== true) {
             message = result;
         }
     }
 </script>
 
-<div
-    class="flex min-h-full flex-col justify-center py-12 bg-gray-50 sm:px-6 lg:px-8">
+<div class="flex min-h-full flex-col justify-center py-12 bg-gray-50 sm:px-6 lg:px-8">
     {#if $system.initialized}
         {#if $system.logo}
             <div class="sm:mx-auto sm:w-full sm:max-w-md -mt-32">

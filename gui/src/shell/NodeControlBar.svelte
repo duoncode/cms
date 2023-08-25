@@ -42,12 +42,18 @@
     <NavToggle />
     <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
         {#if deletable && !locked}
-            <Button class="danger" icon={IcoTrash} on:click={remove}>
+            <Button
+                class="danger"
+                icon={IcoTrash}
+                on:click={remove}>
                 {_('Löschen')}
             </Button>
         {/if}
         {#if preview}
-            <Button class="secondary" icon={IcoEye} on:click={preview}>
+            <Button
+                class="secondary"
+                icon={IcoEye}
+                on:click={preview}>
                 {_('Vorschau')}
             </Button>
         {/if}

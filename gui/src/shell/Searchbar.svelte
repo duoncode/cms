@@ -29,9 +29,7 @@
                 },
             );
         } else {
-            goto(
-                `${base}/collection/${collectionSlug}/create/${blueprints[0].slug}`,
-            );
+            goto(`${base}/collection/${collectionSlug}/create/${blueprints[0].slug}`);
         }
     }
 </script>

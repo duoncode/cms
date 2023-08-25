@@ -45,17 +45,24 @@
             <div>Loading ...</div>
         {/if}
         <IcoDownload />
-        <a href="{path}/{asset.file}" target="_blank" class="inline-block pl-2">
+        <a
+            href="{path}/{asset.file}"
+            target="_blank"
+            class="inline-block pl-2">
             {_('Datei herunterladen')}
         </a>
 
-        <button on:click={edit} class="text-sky-800">
+        <button
+            on:click={edit}
+            class="text-sky-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">
                 <IcoPencil />
             </span>
         </button>
 
-        <button on:click={remove} class="text-rose-800">
+        <button
+            on:click={remove}
+            class="text-rose-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">
                 <IcoTrash />
             </span>

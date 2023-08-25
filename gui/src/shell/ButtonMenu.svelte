@@ -55,7 +55,9 @@
                 aria-orientation="vertical"
                 aria-labelledby="option-menu-button"
                 tabindex="-1">
-                <div class="py-1" role="none">
+                <div
+                    class="py-1"
+                    role="none">
                     <slot {closeMenu} />
                 </div>
             </div>

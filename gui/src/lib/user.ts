@@ -66,12 +66,4 @@ async function saveProfile(user: User) {
     }
 }
 
-export {
-    loginUser,
-    logoutUser,
-    loadUser,
-    authenticated,
-    rememberedRoute,
-    user,
-    saveProfile,
-};
+export { loginUser, logoutUser, loadUser, authenticated, rememberedRoute, user, saveProfile };

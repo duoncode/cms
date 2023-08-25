@@ -6,10 +6,6 @@ export const load = async ({ params, fetch }) => {
     currentDocument.set(null);
     currentFields.set(null);
 
-    const response = await req.get(
-        `collection/${params.collection}`,
-        {},
-        fetch,
-    );
+    const response = await req.get(`collection/${params.collection}`, {}, fetch);
     return (response.ok ? response.data : {}) as Collection;
 };

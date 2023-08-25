@@ -19,8 +19,11 @@
                 bind:checked={data.value} />
         </div>
         <div class="ml-3 text-sm leading-6">
-            <label for={field.name} class="font-medium text-gray-900"
-                >{field.label}</label>
+            <label
+                for={field.name}
+                class="font-medium text-gray-900">
+                {field.label}
+            </label>
             {#if field.description}
                 <p class="text-gray-500">{field.description}</p>
             {/if}

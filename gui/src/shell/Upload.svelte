@@ -64,9 +64,7 @@
                 Dialog,
                 {
                     title: _('Fehler'),
-                    body: _(
-                        'In diesem Feld ist nur eine einzelne Datei erlaubt.',
-                    ),
+                    body: _('In diesem Feld ist nur eine einzelne Datei erlaubt.'),
                     type: 'error',
                     close,
                 },
@@ -185,9 +183,13 @@
 
 {#if disabled}
     {#if disabledMsg}
-        <Message type="warning" text={disabledMsg} />
+        <Message
+            type="warning"
+            text={disabledMsg} />
     {:else}
-        <Message type="warning" text={_('-warning-save-to-upload-')} />
+        <Message
+            type="warning"
+            text={_('-warning-save-to-upload-')} />
     {/if}
 {:else}
     <div

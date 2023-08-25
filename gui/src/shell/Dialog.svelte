@@ -16,6 +16,10 @@
         {body}
     </div>
     <div class="controls">
-        <Button class="secondary" on:click={close}>{_('OK')}</Button>
+        <Button
+            class="secondary"
+            on:click={close}>
+            {_('OK')}
+        </Button>
     </div>
 </div>

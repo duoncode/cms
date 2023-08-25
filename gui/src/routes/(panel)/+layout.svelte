@@ -6,7 +6,9 @@
     export let data;
 </script>
 
-<Modal classWindow="modal" classCloseButton="modal-close">
+<Modal
+    classWindow="modal"
+    classCloseButton="modal-close">
     <div class="flex flex-row relative">
         <Nav collections={data.system.collections} />
         <main class="flex-grow">

@@ -11,7 +11,9 @@
     <IcoDocumentTree />
     <IcoChevronRight />
     <span>
-        <Link href="collection/{slug}" class="hover:underline">
+        <Link
+            href="collection/{slug}"
+            class="hover:underline">
             {name}
         </Link>
     </span>

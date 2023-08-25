@@ -2,10 +2,7 @@ import elementResizeDetectorMaker from 'element-resize-detector';
 
 const erd = elementResizeDetectorMaker({ strategy: 'scroll' });
 
-export default function watchResize(
-    element: HTMLElement,
-    handler: (element: HTMLElement) => void,
-) {
+export default function watchResize(element: HTMLElement, handler: (element: HTMLElement) => void) {
     erd.listenTo(element, handler);
 
     let currentHandler = handler;

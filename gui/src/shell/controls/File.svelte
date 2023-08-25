@@ -14,7 +14,10 @@
 </script>
 
 <Field required={field.required}>
-    <Label of={field.name} translate={field.translate} bind:lang>
+    <Label
+        of={field.name}
+        translate={field.translate}
+        bind:lang>
         {field.label}
     </Label>
     <div class="mt-2">

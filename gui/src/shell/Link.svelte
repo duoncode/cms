@@ -8,6 +8,9 @@
     export let href: string;
 </script>
 
-<a href="{base}/{href}" class={cls} {target}>
+<a
+    href="{base}/{href}"
+    class={cls}
+    {target}>
     <slot />
 </a>

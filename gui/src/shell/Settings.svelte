@@ -56,9 +56,7 @@
             <div class="mb-4">
                 <ToggleLine
                     title={_('Veröffentlicht')}
-                    subtitle={_(
-                        'Legt fest, ob die Seite für alle Besucher erreichbar ist.',
-                    )}
+                    subtitle={_('Legt fest, ob die Seite für alle Besucher erreichbar ist.')}
                     bind:value={doc.published} />
             </div>
             <!--<div class="my-4">
@@ -72,9 +70,7 @@
             <div class="mt-4">
                 <ToggleLine
                     title={_('Versteckt')}
-                    subtitle={_(
-                        'Versteckte Seiten werden in Auflistungen ignoriert.',
-                    )}
+                    subtitle={_('Versteckte Seiten werden in Auflistungen ignoriert.')}
                     bind:value={doc.hidden} />
             </div>
         </div>

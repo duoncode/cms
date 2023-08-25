@@ -55,7 +55,9 @@
 </script>
 
 {#if multiple && image}
-    <div class="multiple-images" bind:this={sorterElement}>
+    <div
+        class="multiple-images"
+        bind:this={sorterElement}>
         {#each assets as asset, index (asset)}
             <Image
                 upload

@@ -50,8 +50,7 @@
             out:send={{ key: toast }}>
             <Toast {toast} />
             {#if toast.kind === 'error'}
-                <span
-                    class="absolute top-1 right-1 w-4 h-4 rounded-full text-white cursor-pointer">
+                <span class="absolute top-1 right-1 w-4 h-4 rounded-full text-white cursor-pointer">
                     <IcoTimes />
                 </span>
             {/if}

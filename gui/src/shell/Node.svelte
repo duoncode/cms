@@ -31,11 +31,7 @@
 
     $: {
         if (node?.doc?.route) {
-            node.doc.generatedPaths = generatePaths(
-                node.doc,
-                node.doc.route,
-                $system,
-            );
+            node.doc.generatedPaths = generatePaths(node.doc, node.doc.route, $system);
         }
     }
 </script>
@@ -48,7 +44,9 @@
         preview={node.doc.nodetype === 'page' ? preview : null}
         {save} />
     <Document>
-        <Breadcrumbs slug={node.collection.slug} name={node.collection.name} />
+        <Breadcrumbs
+            slug={node.collection.slug}
+            name={node.collection.name} />
         <Headline
             published={node.doc.published}
             showPublished={node.doc.nodetype !== 'document'}>
@@ -72,7 +70,9 @@
         </Tabs>
         <Pane>
             {#if activeTab === 'content'}
-                <Content bind:fields={node.fields} bind:doc={node.doc} />
+                <Content
+                    bind:fields={node.fields}
+                    bind:doc={node.doc} />
             {:else}
                 <Settings bind:doc={node.doc} />
             {/if}
@@ -82,7 +82,9 @@
 {#if showPreview}
     <div class="preview">
         <button on:click={() => (showPreview = null)}>schließen</button>
-        <iframe src="/preview{showPreview}" title="Preview" />
+        <iframe
+            src="/preview{showPreview}"
+            title="Preview" />
     </div>
 {/if}
 

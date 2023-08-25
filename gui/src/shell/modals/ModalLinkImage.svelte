@@ -4,7 +4,7 @@
 
     export let node: string;
     export let file: string;
-    export let current: string
+    export let current: string;
 
     const path = `/media/image/node/${node}/${file}`;
     const dispatch = createEventDispatcher();
@@ -12,7 +12,10 @@
     const sendFile = () => dispatch('click', { file: path });
 </script>
 
-<button class="link-image" on:click={sendFile} class:active={current && current.endsWith(`/${file}`)}>
+<button
+    class="link-image"
+    on:click={sendFile}
+    class:active={current && current.endsWith(`/${file}`)}>
     <img
         src="{path}?resize=fit&w=200&h=200"
         alt={_('Vorschau')}
@@ -32,4 +35,3 @@
         }
     }
 </style>
-

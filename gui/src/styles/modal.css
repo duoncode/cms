@@ -37,7 +37,8 @@
             @apply border-rose-500 bg-rose-500;
         }
 
-        &::before, &::after {
+        &::before,
+        &::after {
             @apply bg-white;
         }
     }

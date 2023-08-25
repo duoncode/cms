@@ -11,7 +11,7 @@
     import IcoSave from '$shell/icons/IcoSave.svelte';
     import Pane from '$shell/Pane.svelte';
 
-    export let data: {user: User};
+    export let data: { user: User };
 
     async function save() {
         saveProfile(data.user);
@@ -22,7 +22,10 @@
     <div class="headerbar">
         <NavToggle />
         <div class="controls flex flex-row gap-4 justify-end px-4 py-6">
-            <Button class="primary" icon={IcoSave} on:click={save}>
+            <Button
+                class="primary"
+                icon={IcoSave}
+                on:click={save}>
                 Speichern
             </Button>
         </div>
@@ -33,11 +36,27 @@
         </div>
 
         <Pane>
-            <Input id="email" bind:value={data.user.email} label={_('E-Mail-Adresse')} required/>
-            <Input id="username" bind:value={data.user.username} label={_('Benutzername')}/>
-            <Input id="name" bind:value={data.user.name} label={_('Vollständiger Name')}/>
-            <Password id="password" bind:value={data.user.password} label={_('Neues Passwort')}/>
-            <Password id="passwordRepeat" bind:value={data.user.passwordRepeat} label={_('Neues Passwort wiederholen')}/>
+            <Input
+                id="email"
+                bind:value={data.user.email}
+                label={_('E-Mail-Adresse')}
+                required />
+            <Input
+                id="username"
+                bind:value={data.user.username}
+                label={_('Benutzername')} />
+            <Input
+                id="name"
+                bind:value={data.user.name}
+                label={_('Vollständiger Name')} />
+            <Password
+                id="password"
+                bind:value={data.user.password}
+                label={_('Neues Passwort')} />
+            <Password
+                id="passwordRepeat"
+                bind:value={data.user.passwordRepeat}
+                label={_('Neues Passwort wiederholen')} />
         </Pane>
     </Document>
 </div>

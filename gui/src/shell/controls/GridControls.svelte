@@ -23,33 +23,59 @@
 </script>
 
 <div class="content-actions flex flex-row items-center justify-end">
-{#if item.width < 350}
-    <div class="flex flex-row flex-grow items-center justify-end py-2 gap-x-3 mr-3">
-        <div class="grid-buttons dropdown relative inline-block text-left">
-            <div>
-                <button type="button" class="flex items-center" on:click={() => showDropdown = !showDropdown}>
-                    <span class="sr-only">Open options</span>
-                    <IcoThreeDots/>
-                </button>
-            </div>
-            {#if showDropdown}
-                <div class="absolute right-0 z-10 mt-2 w-44 px-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                    <div class="py-1 flex flex-col justify-center" role="none">
-                        <GridCellButtons bind:data bind:item bind:index {add} dropdown/>
-                        <GridSizeButtons bind:field bind:item dropdown/>
-                    </div>
+    {#if item.width < 350}
+        <div class="flex flex-row flex-grow items-center justify-end py-2 gap-x-3 mr-3">
+            <div class="grid-buttons dropdown relative inline-block text-left">
+                <div>
+                    <button
+                        type="button"
+                        class="flex items-center"
+                        on:click={() => (showDropdown = !showDropdown)}>
+                        <span class="sr-only">Open options</span>
+                        <IcoThreeDots />
+                    </button>
                 </div>
-            {/if}
+                {#if showDropdown}
+                    <div
+                        class="absolute right-0 z-10 mt-2 w-44 px-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="menu-button"
+                        tabindex="-1">
+                        <div
+                            class="py-1 flex flex-col justify-center"
+                            role="none">
+                            <GridCellButtons
+                                bind:data
+                                bind:item
+                                bind:index
+                                {add}
+                                dropdown />
+                            <GridSizeButtons
+                                bind:field
+                                bind:item
+                                dropdown />
+                        </div>
+                    </div>
+                {/if}
+            </div>
         </div>
-    </div>
-{:else}
-    <div class="grid-buttons flex flex-row flex-grow items-center justify-end">
-        <GridSizeButtons bind:field bind:item />
-        <GridCellButtons bind:data bind:item bind:index {add}/>
-    </div>
-{/if}
+    {:else}
+        <div class="grid-buttons flex flex-row flex-grow items-center justify-end">
+            <GridSizeButtons
+                bind:field
+                bind:item />
+            <GridCellButtons
+                bind:data
+                bind:item
+                bind:index
+                {add} />
+        </div>
+    {/if}
     <div class="flex flex-row flex-shrink items-center justify-end">
-        <button class="edit" on:click={edit}>
+        <button
+            class="edit"
+            on:click={edit}>
             <IcoGear />
         </button>
     </div>

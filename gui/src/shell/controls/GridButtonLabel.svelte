@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let value: number|null;
+    export let value: number | null;
 </script>
 
 {#if value !== null}

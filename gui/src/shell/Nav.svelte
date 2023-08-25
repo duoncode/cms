@@ -7,18 +7,20 @@
     import Link from '$shell/Link.svelte';
 </script>
 
-<div id="nav" class:open={$navVisible}>
+<div
+    id="nav"
+    class:open={$navVisible}>
     <NavLogo />
 
     {#each $collections as item}
         {#if item.type === 'section'}
             <h2>{item.name}</h2>
         {:else}
-        <div class="mt-1 ml-4">
-            <Link href="collection/{item.slug}">
-                {item.name}
-            </Link>
-        </div>
+            <div class="mt-1 ml-4">
+                <Link href="collection/{item.slug}">
+                    {item.name}
+                </Link>
+            </div>
         {/if}
     {/each}
     <h2>{_('Benutzer')}</h2>

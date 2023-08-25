@@ -14,7 +14,7 @@
     </Label>
     <div class="mt-2">
         <input
-            id={id}
+            {id}
             name={id}
             type="password"
             {required}

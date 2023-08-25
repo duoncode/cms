@@ -3,7 +3,9 @@
     import IcoBarsCenterLeft from '$shell/icons/IcoBarsCenterLeft.svelte';
 </script>
 
-<button class="nav" on:click={toggleNav}>
+<button
+    class="nav"
+    on:click={toggleNav}>
     <IcoBarsCenterLeft />
 </button>
 
