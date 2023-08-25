@@ -326,6 +326,10 @@ abstract class Node
         // TODO: check permissions
         try {
             $editor = $this->request->get('session')->authenticatedUserId();
+
+            if (!$editor) {
+                $editor = 1;
+            }
         } catch (\Throwable) {
             $editor = 1; // The System user
         }
