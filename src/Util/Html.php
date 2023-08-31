@@ -9,14 +9,18 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Html
 {
-    public static function excerpt(string $html, $limit = 30, $allowedtags = '<a><i><b><em><strong>')
-    {
+    public static function excerpt(
+        string $html,
+        $limit = 30,
+        $allowedtags = '<a><i><b><em><strong>',
+        $ellipsis = '…'
+    ) {
         $result = strip_tags($html, $allowedtags);
 
         if (str_word_count($result, 0) > $limit) {
             $words = str_word_count($result, 2);
             $pos = array_keys($words);
-            $result = substr($result, 0, $pos[$limit]) . '...';
+            $result = substr($result, 0, $pos[$limit]) . $ellipsis;
         }
 
         return self::balanceTags($result);
