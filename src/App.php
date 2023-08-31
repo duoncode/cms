@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Closure;
 use Conia\Chuck\Error\Handler;
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
@@ -24,12 +23,12 @@ class App extends \Conia\Chuck\App
 {
     protected bool $sessionEnabled = false;
 
-    /** @psalm-param non-falsy-string|list{non-falsy-string, ...}|Closure|Middleware|PsrMiddleware|null $errorHandler */
+    /** @psalm-param Middleware|PsrMiddleware|null $errorHandler */
     public function __construct(
         protected Config $config,
         protected Router $router,
         protected Registry $registry,
-        protected string|array|Closure|Middleware|PsrMiddleware|null $errorHandler = null,
+        protected Middleware|PsrMiddleware|null $errorHandler = null,
     ) {
         $registry->add(Config::class, $config);
         parent::__construct($router, $registry, $errorHandler);
@@ -40,7 +39,7 @@ class App extends \Conia\Chuck\App
         $registry = new Registry($container);
         $router = new Router();
 
-        return new static($config, $router, $registry, Handler::class);
+        return new static($config, $router, $registry, new Handler($registry));
     }
 
     public static function create(?PsrContainer $container = null): static
