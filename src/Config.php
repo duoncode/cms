@@ -30,8 +30,9 @@ class Config
             'path.assets' => '/assets',
             'path.cache' => '/cache',
             'session.options' => [
-                'gc_maxlifetime' => 3600,
+                'cookie_httponly' => true,
                 'cookie_lifetime' => 0,
+                'gc_maxlifetime' => 3600,
             ],
             'slug.transliterate' => null,
             'media.fileserver' => null,
