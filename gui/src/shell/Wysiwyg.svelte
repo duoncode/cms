@@ -298,36 +298,32 @@
                                 <div
                                     class="py-1"
                                     role="none">
-                                    {#if toolbar === 'page'}
-                                        <button
-                                            on:click={clickDropdown(
-                                                editor.chain().focus().toggleHeading({ level: 1 })
-                                                    .run,
-                                            )}
-                                            role="menuitem"
-                                            tabindex="-1"
-                                            class="wysiwyg-dropdown-item"
-                                            class:active={editor.isActive('heading', { level: 1 })}>
-                                            <IcoH1 />
-                                            <span class="ml-2">
-                                                {_('Headline level 1')}
-                                            </span>
-                                        </button>
-                                        <button
-                                            on:click={clickDropdown(
-                                                editor.chain().focus().toggleHeading({ level: 2 })
-                                                    .run,
-                                            )}
-                                            role="menuitem"
-                                            tabindex="-1"
-                                            class="wysiwyg-dropdown-item"
-                                            class:active={editor.isActive('heading', { level: 2 })}>
-                                            <IcoH2 />
-                                            <span class="ml-2">
-                                                {_('Headline level 2')}
-                                            </span>
-                                        </button>
-                                    {/if}
+                                    <button
+                                        on:click={clickDropdown(
+                                            editor.chain().focus().toggleHeading({ level: 1 }).run,
+                                        )}
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        class="wysiwyg-dropdown-item"
+                                        class:active={editor.isActive('heading', { level: 1 })}>
+                                        <IcoH1 />
+                                        <span class="ml-2">
+                                            {_('Überschrift Level 1')}
+                                        </span>
+                                    </button>
+                                    <button
+                                        on:click={clickDropdown(
+                                            editor.chain().focus().toggleHeading({ level: 2 }).run,
+                                        )}
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        class="wysiwyg-dropdown-item"
+                                        class:active={editor.isActive('heading', { level: 2 })}>
+                                        <IcoH2 />
+                                        <span class="ml-2">
+                                            {_('Überschrift Level 2')}
+                                        </span>
+                                    </button>
                                     <button
                                         on:click={clickDropdown(
                                             editor.chain().focus().toggleHeading({ level: 3 }).run,
@@ -338,7 +334,7 @@
                                         class:active={editor.isActive('heading', { level: 3 })}>
                                         <IcoH3 />
                                         <span class="ml-2">
-                                            {_('Headline level 3')}
+                                            {_('Überschrift Level 3')}
                                         </span>
                                     </button>
                                     <button
@@ -352,7 +348,7 @@
                                             editor.getAttributes('paragraph')['class'] !== 'large'}>
                                         <IcoParagraph />
                                         <span class="ml-2">
-                                            {_('Regular paragraph')}
+                                            {_('Absatz')}
                                         </span>
                                     </button>
                                     <button
@@ -372,7 +368,7 @@
                                             editor.getAttributes('paragraph')['class'] === 'large'}>
                                         <IcoTextHeight />
                                         <span class="ml-2">
-                                            {_('Paragraph with large font')}
+                                            {_('Absatz große Schrift')}
                                         </span>
                                     </button>
                                     <button
@@ -392,7 +388,7 @@
                                             editor.getAttributes('paragraph')['class'] === 'small'}>
                                         <IcoTextHeight />
                                         <span class="ml-2">
-                                            {_('Paragraph with small font')}
+                                            {_('Absatz kleine Schrift')}
                                         </span>
                                     </button>
                                     <button
@@ -404,7 +400,7 @@
                                         class="wysiwyg-dropdown-item">
                                         <IcoRemoveFormat />
                                         <span class="ml-2">
-                                            {_('Remove headlines and lists')}
+                                            {_('Format entfernen')}
                                         </span>
                                     </button>
                                 </div>
@@ -568,7 +564,7 @@
     {/if}
 
     <div
-        class="wysiwyg-editor relative z-0"
+        class="wysiwyg-editor prose relative z-0"
         bind:this={ref}
         class:hide={showSource}
         on:click={() => (showDropdown = false)} />

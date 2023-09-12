@@ -48,6 +48,12 @@
         margin-bottom: 0;
     }
 
+    .wysiwyg-editor {
+        &.prose {
+            max-width: 100%;
+        }
+    }
+
     .wysiwyg-dropdown-button {
         margin-left: 1px;
     }
