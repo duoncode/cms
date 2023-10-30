@@ -57,6 +57,10 @@
             (content as GridYoutubeData).value = '';
         }
 
+        if (!data) {
+            data = [];
+        }
+
         if (before) {
             data.splice(index, 0, content as GridItem);
         } else {
