@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Conia\Chuck\Error\Handler;
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Router;
-use Conia\Core\Config;
-use Conia\Core\Middleware\InitRequest;
-use Conia\Core\Middleware\Session;
-use Conia\Core\Node\Node;
-use Conia\Core\Routes;
+use Conia\Cms\Config;
+use Conia\Cms\Middleware\InitRequest;
+use Conia\Cms\Middleware\Session;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Routes;
 use Conia\Quma\Connection;
 use PDO;
 use Psr\Container\ContainerInterface as PsrContainer;

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Context;
-use Conia\Core\Exception\ParserException;
-use Conia\Core\Exception\ParserOutputException;
-use Conia\Core\Finder\Input\Token;
-use Conia\Core\Finder\Input\TokenGroup;
-use Conia\Core\Finder\Input\TokenType;
-use Conia\Core\Finder\Output\Comparison;
-use Conia\Core\Finder\Output\Exists;
-use Conia\Core\Finder\Output\Expression;
-use Conia\Core\Finder\Output\LeftParen;
-use Conia\Core\Finder\Output\NullComparison;
-use Conia\Core\Finder\Output\Operator;
-use Conia\Core\Finder\Output\RightParen;
-use Conia\Core\Finder\Output\UrlPath;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\ParserException;
+use Conia\Cms\Exception\ParserOutputException;
+use Conia\Cms\Finder\Input\Token;
+use Conia\Cms\Finder\Input\TokenGroup;
+use Conia\Cms\Finder\Input\TokenType;
+use Conia\Cms\Finder\Output\Comparison;
+use Conia\Cms\Finder\Output\Exists;
+use Conia\Cms\Finder\Output\Expression;
+use Conia\Cms\Finder\Output\LeftParen;
+use Conia\Cms\Finder\Output\NullComparison;
+use Conia\Cms\Finder\Output\Operator;
+use Conia\Cms\Finder\Output\RightParen;
+use Conia\Cms\Finder\Output\UrlPath;
 
 final class QueryParser
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder\Output;
+namespace Conia\Cms\Finder\Output;
 
-use Conia\Core\Finder\Input\Token;
+use Conia\Cms\Finder\Input\Token;
 
-readonly final class UrlPath extends Expression implements Output
+final readonly class UrlPath extends Expression implements Output
 {
     public function __construct(
         public Token $left,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Conia\Sire\Schema;
 use Conia\Sire\SchemaInterface;
@@ -90,7 +90,6 @@ abstract class SchemaI18N implements SchemaInterface
                     $error['error'] = $error['error'] . " ({$lang})";
                     $this->errorList[] = $error;
                 }
-
 
                 foreach ($errors['map'] as $field => $mapErrors) {
                     $innerResult = [];

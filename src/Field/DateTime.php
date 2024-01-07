@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Value\DateTime as DateTimeValue;
+use Conia\Cms\Value\DateTime as DateTimeValue;
 
 class DateTime extends Field
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Middleware;
+namespace Conia\Cms\Middleware;
 
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Config;
+use Conia\Cms\Config;
 
 class InitRequest implements Middleware
 {

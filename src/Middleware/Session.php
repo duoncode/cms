@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Middleware;
+namespace Conia\Cms\Middleware;
 
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Config;
-use Conia\Core\Users;
+use Conia\Cms\Config;
+use Conia\Cms\Users;
 use Conia\Quma\Database;
 
 class Session implements Middleware
@@ -19,7 +19,7 @@ class Session implements Middleware
 
     public function __invoke(Request $request, callable $next): Response
     {
-        $session = new \Conia\Core\Session(
+        $session = new \Conia\Cms\Session(
             $this->config->app(),
             $this->config->get('session.options'),
             $this->config->get('session.handler', null),

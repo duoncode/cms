@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Collection;
-use Conia\Core\Config;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Collection;
+use Conia\Cms\Config;
+use Conia\Cms\Middleware\Permission;
 
 class Node
 {

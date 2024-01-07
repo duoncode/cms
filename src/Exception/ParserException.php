@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Exception;
+namespace Conia\Cms\Exception;
 
-class ParserException extends RuntimeException implements CoreException
+class ParserException extends RuntimeException implements CmsException
 {
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Assets;
+namespace Conia\Cms\Assets;
 
 use Conia\Chuck\Request;
-use Conia\Core\Util\Path;
+use Conia\Cms\Util\Path;
 
 class File
 {

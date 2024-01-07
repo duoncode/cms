@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Field\Attr\FulltextWeight;
-use Conia\Core\Node\Node;
-use Conia\Core\Value\Value;
-use Conia\Core\Value\ValueContext;
+use Conia\Cms\Field\Attr\FulltextWeight;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Value\Value;
+use Conia\Cms\Value\ValueContext;
 
 abstract class Field
 {
@@ -35,6 +35,7 @@ abstract class Field
     }
 
     abstract public function value(): Value;
+
     abstract public function structure(mixed $value = null): array;
 
     public function isset(): bool
@@ -194,6 +195,7 @@ abstract class Field
 
         if ($this->translate) {
             $result['value'] = [];
+
             foreach ($this->node->config->locales() as $locale) {
                 $result['value'][$locale->id] = null;
             }

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Exception;
+namespace Conia\Cms\Exception;
 
-class RuntimeException extends \RuntimeException implements CoreException
+class RuntimeException extends \RuntimeException implements CmsException
 {
 }

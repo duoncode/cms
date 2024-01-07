@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Closure;
 use Conia\Chuck\Exception\OutOfBoundsException;
 use Conia\Chuck\Exception\ValueError;
-use Conia\Core\Locales;
+use Conia\Cms\Locales;
 
 class Config
 {

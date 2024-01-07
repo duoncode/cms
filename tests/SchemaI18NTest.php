@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Core\SchemaI18N;
+use Conia\Cms\SchemaI18N;
 
 test('Translated valid values', function () {
     $testData = [
@@ -37,7 +37,6 @@ test('Translated valid values', function () {
     expect($pristine['en']['int'])->toBe('23');
 })->skip();
 
-
 test('Translated failing values', function () {
     $testData = [
         'de' => [
@@ -68,7 +67,6 @@ test('Translated failing values', function () {
     expect($errors['map']['required'][1])->toEqual('-schema-required-Required- (en)');
 })->skip();
 
-
 test('Empty field name', function () {
     $schema = new class (langs: ['de', 'en']) extends SchemaI18N {
         protected function rules(): void
@@ -79,7 +77,6 @@ test('Empty field name', function () {
     $schema->validate([]);
 })->throws(ValueError::class, 'must not be empty');
 
-
 test('Empty languages array', function () {
     $schema = new class (langs: []) extends SchemaI18N {
         protected function rules(): void
@@ -89,7 +86,6 @@ test('Empty languages array', function () {
     };
     $schema->validate([]);
 })->throws(ValueError::class, 'at least one language');
-
 
 test('Overwritten ::rules missing', function () {
     $schema = new class (langs: []) extends SchemaI18N {

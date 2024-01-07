@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Commands;
+namespace Conia\Cms\Commands;
 
 use Conia\Cli\Command;
 use Conia\Quma\Connection;
@@ -34,6 +34,7 @@ class Superuser extends Command
         );
 
         $result = $this->db->users->addSuperuser($params);
+
         if ($result['success']) {
             echo "\nSuccessfully created superuser: " . $params['email'] . "\n";
         } else {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Closure;
 use Conia\Chuck\Request;
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Exception\RuntimeException;
 use Iterator;
 
 class Locales implements Iterator
@@ -93,6 +93,7 @@ class Locales implements Iterator
 
         // By domain
         $host = strtolower(explode(':', $uri->getHost())[0]);
+
         foreach ($locales as $locale) {
             foreach ($locale->domains as $domain) {
                 if ($host === $domain) {
@@ -103,6 +104,7 @@ class Locales implements Iterator
 
         // From URL path prefix. e. g. http://example.com/en_EN/path/to/page
         $prefix = explode('/', trim($uri->getPath(), '/'))[0];
+
         foreach ($locales as $locale) {
             if ($prefix === $locale->urlPrefix) {
                 return $locale;
@@ -111,6 +113,7 @@ class Locales implements Iterator
 
         // From session
         $session = $request->get('session', null);
+
         if ($session) {
             $locale = $session->get('locale', false);
 
@@ -159,11 +162,13 @@ class Locales implements Iterator
                     }
 
                     $lang = str_replace('-', '_', $lang);
+
                     if ($this->exists($lang)) {
                         return $lang;
                     }
 
                     $lang = strtok($lang, '_');
+
                     if ($this->exists($lang)) {
                         return $lang;
                     }

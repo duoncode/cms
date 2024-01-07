@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Context;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Node\Node;
+use Conia\Cms\Context;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Node\Node;
 use Generator;
 use Iterator;
 

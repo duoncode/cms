@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
 use Conia\Chuck\Factory;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Assets\Assets;
-use Conia\Core\Assets\ResizeMode;
-use Conia\Core\Assets\Size;
-use Conia\Core\Config;
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Assets\Assets;
+use Conia\Cms\Assets\ResizeMode;
+use Conia\Cms\Assets\Size;
+use Conia\Cms\Config;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Middleware\Permission;
 use Gumlet\ImageResize;
 
 class Media

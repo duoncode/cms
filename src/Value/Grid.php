@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Assets\ResizeMode;
-use Conia\Core\Assets\Size;
-use Conia\Core\Field;
-use Conia\Core\Node\Node;
-use Conia\Core\Util\Html as HtmlUtil;
+use Conia\Cms\Assets\ResizeMode;
+use Conia\Cms\Assets\Size;
+use Conia\Cms\Field;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Util\Html as HtmlUtil;
 use Generator;
 use Gumlet\ImageResize;
 
@@ -110,6 +110,7 @@ class Grid extends Value
     public function hasImage(int $index = 1): bool
     {
         $i = 0;
+
         foreach ($this->preparedData as $value) {
             if ($value->type === 'image') {
                 $i++;

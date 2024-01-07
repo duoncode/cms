@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Node;
+namespace Conia\Cms\Node;
 
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Renderer\Render;

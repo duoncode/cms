@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
 use Conia\Chuck\Renderer\Render;
-use Conia\Core\Context;
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Node\Block as BlockNode;
-use Conia\Core\Node\Node;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Node\Block as BlockNode;
+use Conia\Cms\Node\Node;
 
 class Block
 {

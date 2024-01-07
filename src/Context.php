@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Conia\Chuck\Registry;
 use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Core\Locale;
+use Conia\Cms\Config;
+use Conia\Cms\Locale;
 use Conia\Quma\Database;
 
 final class Context

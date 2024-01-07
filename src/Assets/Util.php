@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Assets;
+namespace Conia\Cms\Assets;
 
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Exception\RuntimeException;
 
 class Util
 {
@@ -17,6 +17,7 @@ class Util
 
         // Open the file
         $fileHandle = fopen($fileName, 'rb');
+
         if (!$fileHandle) {
             throw new RuntimeException('File could not be opened: ' . $fileName);
         }
@@ -35,6 +36,7 @@ class Util
             while (!feof($fileHandle) && $frameCount < 2) {
                 $chunk = fread($fileHandle, 1024 * 100); // read 100kb at a time
                 $frameCount += substr_count($chunk, "\x00\x21\xF9\x04");
+
                 if ($frameCount > 1) {
                     fclose($fileHandle);
 

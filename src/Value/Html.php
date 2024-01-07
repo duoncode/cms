@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Util\Html as HtmlUtil;
+use Conia\Cms\Util\Html as HtmlUtil;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Html extends Text

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Context;
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\RuntimeException;
 
 /**
  * @psalm-property-read Nodes  $nodes

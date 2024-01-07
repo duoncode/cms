@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Middleware;
+namespace Conia\Cms\Middleware;
 
 use Attribute;
 use Conia\Chuck\Di\Call;
@@ -11,9 +11,9 @@ use Conia\Chuck\Exception\HttpUnauthorized;
 use Conia\Chuck\Middleware;
 use Conia\Chuck\Request;
 use Conia\Chuck\Response;
-use Conia\Core\Auth;
-use Conia\Core\Config;
-use Conia\Core\Users;
+use Conia\Cms\Auth;
+use Conia\Cms\Config;
+use Conia\Cms\Users;
 
 #[Attribute, Call('init')]
 class Permission implements Middleware
