@@ -13,24 +13,34 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
-        "conia/chuck": "dev-main",
         "conia/cli": "dev-main",
+        "conia/development": "^1.0",
         "conia/i18n": "dev-main",
         "conia/quma": "dev-main",
-        "conia/sire": "dev-main",
+        "conia/registry": "dev-main",
+        "conia/route": "@dev",
         "conia/session": "dev-main",
+        "conia/sire": "dev-main",
         "gumlet/php-image-resize": "2.0.*",
         "hidehalo/nanoid-php": "^1.1",
-        "symfony/html-sanitizer": "^6.2",
-        "conia/development": "^1.0"
+        "psr/http-message-implementation": "^1.0",
+        "symfony/html-sanitizer": "^6.2"
     },
     "require-dev": {
         "conia/chuck-boiler": "dev-main",
+        "guzzlehttp/psr7": "^2",
+        "laminas/laminas-diactoros": "^2",
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1",
         "pestphp/pest": "^1",
         "phpunit/phpunit": "^9"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../conia/route"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Conia\\Cms\\": "src"
