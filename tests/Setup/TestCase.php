@@ -6,8 +6,8 @@ namespace Conia\Cms\Tests\Setup;
 
 use Conia\Chuck\Exception\ValueError;
 use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
 use Conia\Cms\Config;
+use Conia\HttpRequest;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;
 use Nyholm\Psr7\Factory\Psr17Factory;

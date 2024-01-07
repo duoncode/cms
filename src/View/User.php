@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Chuck\Exception\HttpBadRequest;
-use Conia\Chuck\Request;
 use Conia\Cms\Config;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Util\Password;
+use Conia\Http\Request;
 use Conia\Quma\Database;
 
 class User

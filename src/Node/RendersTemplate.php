@@ -6,7 +6,7 @@ namespace Conia\Cms\Node;
 
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Renderer\Render;
-use Conia\Chuck\Response;
+use Conia\Http\Response;
 use Throwable;
 
 trait RendersTemplate

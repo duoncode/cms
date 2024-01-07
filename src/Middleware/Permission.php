@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Conia\Cms\Middleware;
 
 use Attribute;
-use Conia\Chuck\Di\Call;
 use Conia\Chuck\Exception\HttpForbidden;
 use Conia\Chuck\Exception\HttpUnauthorized;
-use Conia\Chuck\Middleware;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
 use Conia\Cms\Auth;
 use Conia\Cms\Config;
 use Conia\Cms\Users;
+use Conia\Http\Middleware;
+use Conia\Http\Request;
+use Conia\Http\Response;
+use Conia\Wire\Call;
 
 #[Attribute, Call('init')]
-class Permission implements Middleware
+class Permission extends Middleware
 {
     protected Users $users;
     protected Config $config;
@@ -25,7 +25,7 @@ class Permission implements Middleware
     {
     }
 
-    public function __invoke(Request $request, callable $next): Response
+    public function handle(Request $request, callable $next): Response
     {
         $session = $request->get('session', null);
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conia\Cms;
 
 use Closure;
-use Conia\Chuck\Request;
 use Conia\Cms\Exception\RuntimeException;
+use Conia\Http\Request;
 use Iterator;
 
 class Locales implements Iterator

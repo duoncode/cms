@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
-use Conia\Chuck\Request;
 use Conia\Cms\Config;
 use Conia\Cms\Permissions;
 use Conia\Cms\Util\Time;
+use Conia\Http\Request;
 use RuntimeException;
 
 class Auth

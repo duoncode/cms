@@ -7,8 +7,6 @@ namespace Conia\Cms\View;
 use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
 use Conia\Cms\Collection;
 use Conia\Cms\Config;
 use Conia\Cms\Context;
@@ -16,6 +14,8 @@ use Conia\Cms\Finder\Finder;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Node\Node;
 use Conia\Cms\Section;
+use Conia\Http\Response;
+use Conia\HttpRequest;
 
 class Panel
 {

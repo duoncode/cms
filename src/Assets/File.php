@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Assets;
 
-use Conia\Chuck\Request;
 use Conia\Cms\Util\Path;
+use Conia\HttpRequest;
 
 class File
 {

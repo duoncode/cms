@@ -6,11 +6,11 @@ namespace Conia\Cms\View;
 
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
 use Conia\Cms\Collection;
 use Conia\Cms\Config;
 use Conia\Cms\Middleware\Permission;
+use Conia\Http\Response;
+use Conia\HttpRequest;
 
 class Node
 {

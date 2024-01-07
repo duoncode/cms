@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Middleware;
 
-use Conia\Chuck\Middleware;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
 use Conia\Cms\Config;
+use Conia\Http\Middleware;
+use Conia\Http\Request;
+use Conia\Http\Response;
 
-class InitRequest implements Middleware
+class InitRequest extends Middleware
 {
     public function __construct(protected Config $config)
     {
     }
 
-    public function __invoke(Request $request, callable $next): Response
+    public function handle(Request $request, callable $next): Response
     {
         // Set current locale
         $locales = $this->config->locales();

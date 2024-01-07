@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Chuck\Factory;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Schema;
+use Conia\Http\Response;
+use Conia\HttpRequest;
 
 class Auth
 {
