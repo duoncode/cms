@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Chuck\Exception\OutOfBoundsException;
-use Conia\Chuck\Exception\ValueError;
+use Conia\Core\Exception\OutOfBoundsException;
+use Conia\Core\Exception\ValueError;
 use Conia\Core\Locales;
 
 class Config

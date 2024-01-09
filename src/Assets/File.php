@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Conia\Core\Assets;
 
 use Conia\Core\Util\Path;
-use Conia\HttpRequest;
+use Conia\Http\Request;
 
 class File
 {

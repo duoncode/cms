@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Core;
 
-use Conia\Chuck\Registry;
 use Conia\Core\Config;
 use Conia\Core\Locale;
 use Conia\Http\Request;
 use Conia\Quma\Database;
+use Conia\Registry\Registry;
 
 final class Context
 {

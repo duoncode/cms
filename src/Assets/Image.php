@@ -6,7 +6,7 @@ namespace Conia\Core\Assets;
 
 use Conia\Core\Exception\RuntimeException;
 use Conia\Core\Util\Path;
-use Conia\HttpRequest;
+use Conia\Http\Request;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
 

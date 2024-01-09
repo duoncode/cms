@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Exception\HttpNotFound;
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
 use Conia\Core\Context;
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Factory;
 use Conia\Core\Finder\Finder;
 use Conia\Core\Middleware\Permission;
 use Conia\Http\Response;
+use Conia\Registry\Registry;
 
 class Page
 {

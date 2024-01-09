@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Node;
 
-use Conia\Chuck\Exception\HttpBadRequest;
-use Conia\Chuck\Renderer\Render;
+use Conia\Core\Exception\HttpBadRequest;
+use Conia\Core\Renderer\Render;
 use Conia\Http\Response;
 use Throwable;
 

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Factory;
 use Conia\Core\Assets\Assets;
 use Conia\Core\Assets\ResizeMode;
 use Conia\Core\Assets\Size;
 use Conia\Core\Config;
 use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Factory;
 use Conia\Core\Middleware\Permission;
+use Conia\Http\Request;
 use Conia\Http\Response;
-use Conia\HttpRequest;
 use Gumlet\ImageResize;
 
 class Media

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Exception\HttpNotFound;
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
 use Conia\Core\Collection;
 use Conia\Core\Config;
 use Conia\Core\Context;
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Factory;
 use Conia\Core\Finder\Finder;
 use Conia\Core\Middleware\Permission;
 use Conia\Core\Node\Node;
 use Conia\Core\Section;
+use Conia\Http\Request;
 use Conia\Http\Response;
-use Conia\HttpRequest;
+use Conia\Registry\Registry;
 
 class Panel
 {

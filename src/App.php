@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Conia\Core;
 
 use Closure;
-use Conia\Chuck\Error\ErrorRenderer;
 use Conia\Core\Factory;
 use Conia\Core\Middleware\InitRequest;
+use Conia\Error\ErrorRenderer;
 use Conia\Error\Handler;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;

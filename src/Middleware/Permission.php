@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Conia\Core\Middleware;
 
 use Attribute;
-use Conia\Chuck\Exception\HttpForbidden;
-use Conia\Chuck\Exception\HttpUnauthorized;
 use Conia\Core\Auth;
 use Conia\Core\Config;
+use Conia\Core\Exception\HttpForbidden;
+use Conia\Core\Exception\HttpUnauthorized;
 use Conia\Core\Users;
 use Conia\Http\Middleware;
 use Conia\Http\Request;

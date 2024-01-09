@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Core\Config;
+use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Middleware\Permission;
 use Conia\Core\Util\Password;
 use Conia\Http\Request;

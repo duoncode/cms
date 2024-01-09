@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Core\Finder;
 
-use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Core\Context;
+use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Finder\Finder;
 use Conia\Core\Node\Node as CoreNode;
 

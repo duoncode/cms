@@ -6,7 +6,7 @@ namespace Conia\Core\Assets;
 
 use Conia\Core\Config;
 use Conia\Core\Util\Path;
-use Conia\HttpRequest;
+use Conia\Http\Request;
 
 class Assets
 {

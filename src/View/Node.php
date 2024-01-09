@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Conia\Core\View;
 
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
 use Conia\Core\Collection;
 use Conia\Core\Config;
+use Conia\Core\Factory;
 use Conia\Core\Middleware\Permission;
+use Conia\Http\Request;
 use Conia\Http\Response;
-use Conia\HttpRequest;
+use Conia\Registry\Registry;
 
 class Node
 {

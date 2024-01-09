@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Conia\Core\Tests\Setup;
 
-use Conia\Chuck\Exception\ValueError;
-use Conia\Chuck\Registry;
 use Conia\Core\Config;
-use Conia\HttpRequest;
+use Conia\Core\Exception\ValueError;
+use Conia\Http\Request;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;
+use Conia\Registry\Registry;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
