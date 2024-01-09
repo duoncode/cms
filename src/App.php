@@ -13,6 +13,7 @@ use Conia\Quma\Connection;
 use Conia\Quma\Database;
 use Conia\Registry\Entry;
 use Conia\Registry\Registry;
+use Conia\Route\AddsBeforeAfter;
 use Conia\Route\AddsRoutes;
 use Conia\Route\Dispatcher;
 use Conia\Route\Group;
@@ -28,6 +29,7 @@ use Psr\Log\LoggerInterface as Logger;
 readonly class App implements RouteAdder
 {
     use AddsRoutes;
+    use AddsBeforeAfter;
 
     protected readonly Dispatcher $dispatcher;
     protected readonly Database $db;
@@ -99,25 +101,6 @@ readonly class App implements RouteAdder
     public function middleware(Middleware ...$middleware): void
     {
         $this->dispatcher->middleware(...$middleware);
-    }
-
-    /**
-     * @psalm-param non-empty-string $name
-     * @psalm-param non-empty-string $class
-     */
-    public function renderer(string $name, string $class): Entry
-    {
-        return $this->registry->tag(Renderer::class)->add($name, $class);
-    }
-
-    /**
-     * @psalm-param non-empty-string $contentType
-     * @psalm-param non-empty-string $renderer
-     */
-    public function errorRenderer(string $contentType, string $renderer, mixed ...$args): Entry
-    {
-        return $this->registry->tag(Handler::class)
-            ->add($contentType, ErrorRenderer::class)->args(renderer: $renderer, args: $args);
     }
 
     public function logger(callable $callback): void
@@ -196,6 +179,8 @@ readonly class App implements RouteAdder
     {
         $request = $this->factory->serverRequest();
         $route = $this->router->match($request);
+        $this->dispatcher->setBeforeHandlers($this->beforeHandlers);
+        $this->dispatcher->setAfterHandlers($this->afterHandlers);
         $response = $this->dispatcher->dispatch($request, $route);
 
         // Add the system routes as last step
