@@ -4,34 +4,37 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
-use Conia\Chuck\Group;
 use Conia\Cms\App;
-use Conia\Cms\Session;
+use Conia\Cms\Middleware\Session;
 use Conia\Cms\View\Auth;
 use Conia\Cms\View\Media;
 use Conia\Cms\View\Page;
 use Conia\Cms\View\Panel;
 use Conia\Cms\View\User;
+use Conia\Quma\Database;
+use Conia\Route\Group;
 
 class Routes
 {
     protected string $panelPath;
     protected string $apiPath;
 
-    public function __construct(protected Config $config, protected bool $sessionEnabled)
-    {
+    public function __construct(
+        protected Config $config,
+        protected Database $db,
+        protected Factory $factory,
+        protected bool $sessionEnabled
+    ) {
         $this->panelPath = $config->getPanelPath();
         $this->apiPath = $this->panelPath . '/api';
     }
 
     public function add(App $app): void
     {
+        $session = new Session($this->config, $this->db);
+
         // All API routes
-        $app->group(
-            $this->apiPath,
-            $this->addPanelApi(...),
-            'conia.panel.',
-        );
+        $this->addPanelApi($app, $session);
 
         $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall');
         $app->route($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash');
@@ -49,8 +52,8 @@ class Routes
         );
 
         if (!$this->sessionEnabled) {
-            $postMediaRoute->middleware(Session::class);
-            $catchallRoute->middleware(Session::class);
+            $postMediaRoute->middleware($session);
+            $catchallRoute->middleware($session);
         }
 
         // Add catchall for page url paths. Must be the last one
@@ -88,16 +91,22 @@ class Routes
         $api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'conia.blueprint');
     }
 
-    protected function addPanelApi(Group $api): void
+    protected function addPanelApi(App $app, Session $session): void
     {
-        $api->render('json');
+        $app->group(
+            $this->apiPath,
+            function (Group $api) use ($session) {
+                $api->after(new JsonRenderer($this->factory));
 
-        if (!$this->sessionEnabled) {
-            $api->middleware(Session::class);
-        }
+                if (!$this->sessionEnabled) {
+                    $api->middleware($session);
+                }
 
-        $this->addAuth($api);
-        $this->addUser($api);
-        $this->addSystem($api);
+                $this->addAuth($api);
+                $this->addUser($api);
+                $this->addSystem($api);
+            },
+            'conia.panel.',
+        );
     }
 }

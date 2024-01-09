@@ -4,49 +4,143 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
-use Conia\Chuck\Error\Handler;
-use Conia\Chuck\Middleware;
-use Conia\Chuck\Registry;
-use Conia\Chuck\Router;
-use Conia\Cms\Config;
+use Closure;
+use Conia\Chuck\Error\ErrorRenderer;
+use Conia\Cms\Factory;
 use Conia\Cms\Middleware\InitRequest;
-use Conia\Cms\Middleware\Session;
-use Conia\Cms\Node\Node;
-use Conia\Cms\Routes;
+use Conia\Error\Handler;
 use Conia\Quma\Connection;
+use Conia\Quma\Database;
+use Conia\Registry\Entry;
+use Conia\Registry\Registry;
+use Conia\Route\AddsRoutes;
+use Conia\Route\Dispatcher;
+use Conia\Route\Group;
+use Conia\Route\Route;
+use Conia\Route\RouteAdder;
+use Conia\Route\Router;
 use PDO;
-use Psr\Container\ContainerInterface as PsrContainer;
-use Psr\Http\Message\ResponseInterface as PsrResponse;
-use Psr\Http\Server\MiddlewareInterface as PsrMiddleware;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Log\LoggerInterface as Logger;
 
-class App extends \Conia\Chuck\App
+/** @psalm-api */
+readonly class App implements RouteAdder
 {
-    protected bool $sessionEnabled = false;
+    use AddsRoutes;
 
-    /** @psalm-param Middleware|PsrMiddleware|null $errorHandler */
+    protected readonly Dispatcher $dispatcher;
+    protected readonly Database $db;
+
     public function __construct(
-        protected Config $config,
-        protected Router $router,
-        protected Registry $registry,
-        protected Middleware|PsrMiddleware|null $errorHandler = null,
+        protected readonly Config $config,
+        protected readonly Factory $factory,
+        protected readonly Router $router,
+        protected readonly Registry $registry,
     ) {
-        $registry->add(Config::class, $config);
-        parent::__construct($router, $registry, $errorHandler);
+        $this->dispatcher = new Dispatcher();
+        $this->initializeRegistry();
     }
 
-    public static function fromConfig(Config $config, ?PsrContainer $container = null): static
+    public static function create(Config $config, Factory $factory): static
     {
-        $registry = new Registry($container);
-        $router = new Router();
+        $app = new static($config, $factory, new Router(), new Registry());
+        $app->middleware(new Handler($factory->responseFactory));
+        $app->middleware(new InitRequest($config));
 
-        return new static($config, $router, $registry, new Handler($registry));
+        return $app;
     }
 
-    public static function create(?PsrContainer $container = null): static
+    public function router(): Router
     {
-        $config = new Config('conia', debug: false);
+        return $this->router;
+    }
 
-        return static::fromConfig($config, $container);
+    public function registry(): Registry
+    {
+        return $this->registry;
+    }
+
+    /** @psalm-param Closure(Router $router):void $creator */
+    public function routes(Closure $creator, string $cacheFile = '', bool $shouldCache = true): void
+    {
+        $this->router->routes($creator, $cacheFile, $shouldCache);
+    }
+
+    public function addRoute(Route $route): Route
+    {
+        return $this->router->addRoute($route);
+    }
+
+    public function addGroup(Group $group): void
+    {
+        $this->router->addGroup($group);
+    }
+
+    public function group(
+        string $patternPrefix,
+        Closure $createClosure,
+        string $namePrefix = '',
+    ): Group {
+        $group = new Group($patternPrefix, $createClosure, $namePrefix);
+        $this->router->addGroup($group);
+
+        return $group;
+    }
+
+    public function staticRoute(
+        string $prefix,
+        string $path,
+        string $name = '',
+    ): void {
+        $this->router->addStatic($prefix, $path, $name);
+    }
+
+    public function middleware(Middleware ...$middleware): void
+    {
+        $this->dispatcher->middleware(...$middleware);
+    }
+
+    /**
+     * @psalm-param non-empty-string $name
+     * @psalm-param non-empty-string $class
+     */
+    public function renderer(string $name, string $class): Entry
+    {
+        return $this->registry->tag(Renderer::class)->add($name, $class);
+    }
+
+    /**
+     * @psalm-param non-empty-string $contentType
+     * @psalm-param non-empty-string $renderer
+     */
+    public function errorRenderer(string $contentType, string $renderer, mixed ...$args): Entry
+    {
+        return $this->registry->tag(Handler::class)
+            ->add($contentType, ErrorRenderer::class)->args(renderer: $renderer, args: $args);
+    }
+
+    public function logger(callable $callback): void
+    {
+        $this->registry->add(Logger::class, Closure::fromCallable($callback));
+    }
+
+    /**
+     * @psalm-param non-empty-string $key
+     * @psalm-param class-string|object $value
+     */
+    public function register(string $key, object|string $value): Entry
+    {
+        return $this->registry->add($key, $value);
+    }
+
+    public function initializeRegistry(): void
+    {
+        $this->registry->add(Router::class, $this->router);
+        $this->registry->add($this->router::class, $this->router);
+
+        $this->registry->add(Factory::class, $this->factory);
+        $this->registry->add($this->factory::class, $this->factory);
     }
 
     public function section(string $name): void
@@ -87,7 +181,7 @@ class App extends \Conia\Chuck\App
             $migrations ? (is_array($migrations) ? $migrations : [$migrations]) : []
         );
 
-        $this->registry->add(Connection::class, new Connection(
+        $this->db = new Database(new Connection(
             $dsn,
             $sql,
             $migrations,
@@ -95,27 +189,18 @@ class App extends \Conia\Chuck\App
             options: $options,
             print: $print,
         ));
+        $this->registry->add(Database::class, $this->db);
     }
 
-    /**
-     * Enables the sessions middleware everywhere.
-     *
-     * If this is not enabled, sessions are only started
-     * for panel actions.
-     */
-    public function enableSession(): void
+    public function run(bool $sessionEnabled): Response|false
     {
-        $this->router->middleware(Session::class);
-        $this->sessionEnabled = true;
-    }
-
-    public function run(): PsrResponse
-    {
-        $this->router->middleware(InitRequest::class);
+        $request = $this->factory->serverRequest();
+        $route = $this->router->match($request);
+        $response = $this->dispatcher->dispatch($request, $route);
 
         // Add the system routes as last step
-        (new Routes($this->config, $this->sessionEnabled))->add($this);
+        (new Routes($this->config, $this->db, $this->factory, $sessionEnabled))->add($this);
 
-        return parent::run();
+        return (new Emitter())->emit($response) ? $response : false;
     }
 }
