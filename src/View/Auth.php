@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\View;
+namespace Conia\Core\View;
 
 use Conia\Chuck\Factory;
-use Conia\Cms\Middleware\Permission;
-use Conia\Cms\Schema;
+use Conia\Core\Middleware\Permission;
+use Conia\Core\Schema;
 use Conia\Http\Response;
 use Conia\HttpRequest;
 
@@ -14,7 +14,7 @@ class Auth
 {
     public function __construct(
         protected readonly Factory $factory,
-        protected readonly \Conia\Cms\Auth $auth,
+        protected readonly \Conia\Core\Auth $auth,
     ) {
     }
 

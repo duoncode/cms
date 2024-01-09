@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Schema;
+namespace Conia\Core\Schema;
 
 use Conia\Sire\Schema;
 

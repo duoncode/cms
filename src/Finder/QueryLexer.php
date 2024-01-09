@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder;
+namespace Conia\Core\Finder;
 
-use Conia\Cms\Exception\ParserException;
-use Conia\Cms\Finder\Input\Token;
-use Conia\Cms\Finder\Input\TokenGroup;
-use Conia\Cms\Finder\Input\TokenType;
+use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Input\Token;
+use Conia\Core\Finder\Input\TokenGroup;
+use Conia\Core\Finder\Input\TokenType;
 
 final class QueryLexer
 {

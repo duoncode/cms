@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Util;
+namespace Conia\Core\Util;
 
-use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\Exception\RuntimeException;
 
 class Path
 {

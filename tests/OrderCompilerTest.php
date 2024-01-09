@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Conia\Cms\Exception\ParserException;
-use Conia\Cms\Finder\OrderCompiler;
-use Conia\Cms\Tests\Setup\TestCase;
+use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\OrderCompiler;
+use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 

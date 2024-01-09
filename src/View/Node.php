@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\View;
+namespace Conia\Core\View;
 
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Cms\Collection;
-use Conia\Cms\Config;
-use Conia\Cms\Middleware\Permission;
+use Conia\Core\Collection;
+use Conia\Core\Config;
+use Conia\Core\Middleware\Permission;
 use Conia\Http\Response;
 use Conia\HttpRequest;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Field\Attr;
+namespace Conia\Core\Field\Attr;
 
 enum FulltextWeight
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
-use Conia\Cms\Config;
-use Conia\Cms\Permissions;
-use Conia\Cms\Util\Time;
+use Conia\Core\Config;
+use Conia\Core\Permissions;
+use Conia\Core\Util\Time;
 use Conia\Http\Request;
 use RuntimeException;
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Middleware;
+namespace Conia\Core\Middleware;
 
 use Attribute;
 use Conia\Chuck\Exception\HttpForbidden;
 use Conia\Chuck\Exception\HttpUnauthorized;
-use Conia\Cms\Auth;
-use Conia\Cms\Config;
-use Conia\Cms\Users;
+use Conia\Core\Auth;
+use Conia\Core\Config;
+use Conia\Core\Users;
 use Conia\Http\Middleware;
 use Conia\Http\Request;
 use Conia\Http\Response;

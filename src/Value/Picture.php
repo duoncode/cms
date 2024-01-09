@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Value;
+namespace Conia\Core\Value;
 
-use Conia\Cms\Exception\RuntimeException;
-use Conia\Cms\Field\Field;
-use Conia\Cms\Node\Node;
+use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Field\Field;
+use Conia\Core\Node\Node;
 
 class Picture extends Image
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder\Input;
+namespace Conia\Core\Finder\Input;
 
 readonly class Token
 {

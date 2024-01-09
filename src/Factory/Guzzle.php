@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Factory;
+namespace Conia\Core\Factory;
 
-use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\Exception\RuntimeException;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;

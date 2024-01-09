@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Node;
+namespace Conia\Core\Node;
 
 abstract class Document extends Node
 {

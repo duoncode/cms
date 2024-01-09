@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Field;
+namespace Conia\Core\Field;
 
-use Conia\Cms\Field\Field;
-use Conia\Cms\Value;
+use Conia\Core\Field\Field;
+use Conia\Core\Value;
 
 class Option extends Field
 {

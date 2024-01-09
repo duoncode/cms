@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Conia\Cms\Exception\ParserException;
-use Conia\Cms\Finder\Output\Comparison;
-use Conia\Cms\Finder\Output\Exists;
-use Conia\Cms\Finder\Output\LeftParen;
-use Conia\Cms\Finder\Output\Operator;
-use Conia\Cms\Finder\Output\RightParen;
-use Conia\Cms\Finder\Output\UrlPath;
-use Conia\Cms\Finder\QueryParser;
-use Conia\Cms\Tests\Setup\TestCase;
+use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Output\Comparison;
+use Conia\Core\Finder\Output\Exists;
+use Conia\Core\Finder\Output\LeftParen;
+use Conia\Core\Finder\Output\Operator;
+use Conia\Core\Finder\Output\RightParen;
+use Conia\Core\Finder\Output\UrlPath;
+use Conia\Core\Finder\QueryParser;
+use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 

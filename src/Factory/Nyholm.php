@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Factory;
+namespace Conia\Core\Factory;
 
-use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\Exception\RuntimeException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\ServerRequestInterface;

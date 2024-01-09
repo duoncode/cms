@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder\Output;
+namespace Conia\Core\Finder\Output;
 
-use Conia\Cms\Exception\ParserException;
-use Conia\Cms\Finder\Input\Token;
-use Conia\Cms\Finder\Input\TokenType;
+use Conia\Core\Exception\ParserException;
+use Conia\Core\Finder\Input\Token;
+use Conia\Core\Finder\Input\TokenType;
 
 class Operator implements Output
 {

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Node;
+namespace Conia\Core\Node;
 
 use Conia\Chuck\Exception\HttpBadRequest;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Cms\Config;
-use Conia\Cms\Context;
-use Conia\Cms\Exception\NoSuchField;
-use Conia\Cms\Exception\RuntimeException;
-use Conia\Cms\Field\Attr;
-use Conia\Cms\Field\Field;
-use Conia\Cms\Finder\Finder;
-use Conia\Cms\Locale;
-use Conia\Cms\Schema\NodeSchemaFactory;
-use Conia\Cms\Value\Value;
-use Conia\Cms\Value\ValueContext;
+use Conia\Core\Config;
+use Conia\Core\Context;
+use Conia\Core\Exception\NoSuchField;
+use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Field\Attr;
+use Conia\Core\Field\Field;
+use Conia\Core\Finder\Finder;
+use Conia\Core\Locale;
+use Conia\Core\Schema\NodeSchemaFactory;
+use Conia\Core\Value\Value;
+use Conia\Core\Value\ValueContext;
 use Conia\Http\Response;
 use Conia\HttpRequest;
 use Conia\Quma\Database;
@@ -494,7 +494,7 @@ abstract class Node
                     $field->default($attr->newInstance()->get());
                     break;
                 case Attr\TranslateFile::class:
-                    if (!($field instanceof \Conia\Cms\Field\Image || !$field instanceof \Conia\Cms\Field\File)) {
+                    if (!($field instanceof \Conia\Core\Field\Image || !$field instanceof \Conia\Core\Field\File)) {
                         throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
                     }
 
@@ -502,7 +502,7 @@ abstract class Node
 
                     break;
                 case Attr\Columns::class:
-                    if (!$field instanceof \Conia\Cms\Field\Grid) {
+                    if (!$field instanceof \Conia\Core\Field\Grid) {
                         throw new RuntimeException('Cannot apply attribute Columns to ' . $field::class);
                     }
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
 use Closure;
 use Conia\Chuck\Error\ErrorRenderer;
-use Conia\Cms\Factory;
-use Conia\Cms\Middleware\InitRequest;
+use Conia\Core\Factory;
+use Conia\Core\Middleware\InitRequest;
 use Conia\Error\Handler;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;

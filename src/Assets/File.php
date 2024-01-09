@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Assets;
+namespace Conia\Core\Assets;
 
-use Conia\Cms\Util\Path;
+use Conia\Core\Util\Path;
 use Conia\HttpRequest;
 
 class File

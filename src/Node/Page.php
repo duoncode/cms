@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Node;
+namespace Conia\Core\Node;
 
-use Conia\Cms\Exception\RuntimeException;
-use Conia\Cms\Locale;
+use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Locale;
 use Conia\Quma\Database;
 
 abstract class Page extends Node

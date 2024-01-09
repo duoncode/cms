@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Conia\Cms\Config;
-use Conia\Cms\Tests\Setup\TestCase;
+use Conia\Core\Config;
+use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder;
+namespace Conia\Core\Finder;
 
 trait CompilesField
 {

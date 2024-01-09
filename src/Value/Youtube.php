@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Value;
+namespace Conia\Core\Value;
 
 class Youtube extends Value
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Util;
+namespace Conia\Core\Util;
 
 class Time
 {

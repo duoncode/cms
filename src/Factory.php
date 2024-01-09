@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;

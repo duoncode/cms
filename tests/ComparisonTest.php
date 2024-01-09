@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Conia\Cms\Context;
-use Conia\Cms\Exception\ParserOutputException;
-use Conia\Cms\Finder\QueryCompiler;
-use Conia\Cms\Tests\Setup\TestCase;
+use Conia\Core\Context;
+use Conia\Core\Exception\ParserOutputException;
+use Conia\Core\Finder\QueryCompiler;
+use Conia\Core\Tests\Setup\TestCase;
 
 uses(TestCase::class);
 

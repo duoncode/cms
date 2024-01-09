@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Middleware;
+namespace Conia\Core\Middleware;
 
-use Conia\Cms\Config;
+use Conia\Core\Config;
 use Conia\Http\Middleware;
 use Conia\Http\Request;
 use Conia\Http\Response;

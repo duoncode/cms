@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
 use Conia\Chuck\Registry;
-use Conia\Cms\Config;
-use Conia\Cms\Locale;
+use Conia\Core\Config;
+use Conia\Core\Locale;
 use Conia\Http\Request;
 use Conia\Quma\Database;
 

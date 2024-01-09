@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Schema;
+namespace Conia\Core\Schema;
 
-use Conia\Cms\Field\Field;
-use Conia\Cms\Field\File;
-use Conia\Cms\Field\Image;
-use Conia\Cms\Field\Picture;
-use Conia\Cms\Locales;
-use Conia\Cms\Node\Node;
+use Conia\Core\Field\Field;
+use Conia\Core\Field\File;
+use Conia\Core\Field\Image;
+use Conia\Core\Field\Picture;
+use Conia\Core\Locales;
+use Conia\Core\Node\Node;
 use Conia\Sire\Schema;
 
 class NodeSchemaFactory
@@ -45,23 +45,23 @@ class NodeSchemaFactory
         $validators = $field->validators();
 
         $schema->add($fieldName, match ($field::class) {
-            \Conia\Cms\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
-            \Conia\Cms\Field\Date::class => $this->addText($field, 'date', $validators),
-            \Conia\Cms\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
-            \Conia\Cms\Field\Decmial::class => $this->addText($field, 'decimal', $validators),
-            \Conia\Cms\Field\File::class => $this->addFile($field, 'file', $validators),
-            \Conia\Cms\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
-            \Conia\Cms\Field\Html::class => $this->addText($field, 'html', $validators),
-            \Conia\Cms\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
-            \Conia\Cms\Field\Image::class => $this->addImage($field, 'image', $validators),
-            \Conia\Cms\Field\Number::class => $this->addNumber($field, 'number', $validators),
-            \Conia\Cms\Field\Option::class => $this->addOption($field, 'option', $validators),
-            \Conia\Cms\Field\Picture::class => $this->addImage($field, 'picture', $validators),
-            \Conia\Cms\Field\Radio::class => $this->addText($field, 'radio', $validators),
-            \Conia\Cms\Field\Text::class => $this->addText($field, 'text', $validators),
-            \Conia\Cms\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
-            \Conia\Cms\Field\Time::class => $this->addText($field, 'time', $validators),
-            \Conia\Cms\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
+            \Conia\Core\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
+            \Conia\Core\Field\Date::class => $this->addText($field, 'date', $validators),
+            \Conia\Core\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
+            \Conia\Core\Field\Decmial::class => $this->addText($field, 'decimal', $validators),
+            \Conia\Core\Field\File::class => $this->addFile($field, 'file', $validators),
+            \Conia\Core\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
+            \Conia\Core\Field\Html::class => $this->addText($field, 'html', $validators),
+            \Conia\Core\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
+            \Conia\Core\Field\Image::class => $this->addImage($field, 'image', $validators),
+            \Conia\Core\Field\Number::class => $this->addNumber($field, 'number', $validators),
+            \Conia\Core\Field\Option::class => $this->addOption($field, 'option', $validators),
+            \Conia\Core\Field\Picture::class => $this->addImage($field, 'picture', $validators),
+            \Conia\Core\Field\Radio::class => $this->addText($field, 'radio', $validators),
+            \Conia\Core\Field\Text::class => $this->addText($field, 'text', $validators),
+            \Conia\Core\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
+            \Conia\Core\Field\Time::class => $this->addText($field, 'time', $validators),
+            \Conia\Core\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
         }, ...$validators)->label($field->getLabel());
     }
 

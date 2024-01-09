@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Assets;
+namespace Conia\Core\Assets;
 
-use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\Exception\RuntimeException;
 
 class Size
 {

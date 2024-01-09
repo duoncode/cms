@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Value;
+namespace Conia\Core\Value;
 
-use Conia\Cms\Assets;
+use Conia\Core\Assets;
 
 class TranslatedImage extends Image
 {

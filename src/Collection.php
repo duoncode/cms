@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
-use Conia\Cms\Finder\Finder;
-use Conia\Cms\Finder\Nodes;
+use Conia\Core\Finder\Finder;
+use Conia\Core\Finder\Nodes;
 
 abstract class Collection
 {

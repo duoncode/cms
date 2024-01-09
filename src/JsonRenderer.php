@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace Conia\Core;
 
-use Conia\Cms\Factory;
+use Conia\Core\Factory;
 use Conia\Route\After;
 use Psr\Http\Message\ResponseInterface as Response;
 use Traversable;

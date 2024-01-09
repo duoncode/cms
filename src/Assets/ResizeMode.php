@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Assets;
+namespace Conia\Core\Assets;
 
 enum ResizeMode: string
 {

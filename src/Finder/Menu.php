@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder;
+namespace Conia\Core\Finder;
 
-use Conia\Cms\Context;
-use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\Context;
+use Conia\Core\Exception\RuntimeException;
 use Iterator;
 
 class Menu implements Iterator

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\View;
+namespace Conia\Core\View;
 
 use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Cms\Collection;
-use Conia\Cms\Config;
-use Conia\Cms\Context;
-use Conia\Cms\Finder\Finder;
-use Conia\Cms\Middleware\Permission;
-use Conia\Cms\Node\Node;
-use Conia\Cms\Section;
+use Conia\Core\Collection;
+use Conia\Core\Config;
+use Conia\Core\Context;
+use Conia\Core\Finder\Finder;
+use Conia\Core\Middleware\Permission;
+use Conia\Core\Node\Node;
+use Conia\Core\Section;
 use Conia\Http\Response;
 use Conia\HttpRequest;
 

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Exception;
+namespace Conia\Core\Exception;
 
-class NoSuchField extends RuntimeException implements CmsException
+class NoSuchField extends RuntimeException implements CoreException
 {
 }

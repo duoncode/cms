@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Factory;
+namespace Conia\Core\Factory;
 
-use Conia\Cms\Exception\RuntimeException;
-use Conia\Cms\Factory;
+use Conia\Core\Exception\RuntimeException;
+use Conia\Core\Factory;
 use Psr\Http\Message\RequestFactoryInterface as Requestfactory;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;

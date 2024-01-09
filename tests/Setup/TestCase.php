@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Tests\Setup;
+namespace Conia\Core\Tests\Setup;
 
 use Conia\Chuck\Exception\ValueError;
 use Conia\Chuck\Registry;
-use Conia\Cms\Config;
+use Conia\Core\Config;
 use Conia\HttpRequest;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;

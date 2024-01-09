@@ -1,6 +1,6 @@
 {
-    "name": "conia/cms",
-    "description": "Conia CMS/CMF Library",
+    "name": "conia/core",
+    "description": "Conia Content Management Framework",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -46,7 +46,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Conia\\Cms\\": "src"
+            "Conia\\Core\\": "src"
         },
         "files": [
             "src/Util/functions.php"
@@ -54,7 +54,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Conia\\Cms\\Tests\\": "tests"
+            "Conia\\Core\\Tests\\": "tests"
         }
     },
     "config": {

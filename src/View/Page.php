@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\View;
+namespace Conia\Core\View;
 
 use Conia\Chuck\Exception\HttpNotFound;
 use Conia\Chuck\Factory;
 use Conia\Chuck\Registry;
-use Conia\Cms\Context;
-use Conia\Cms\Finder\Finder;
-use Conia\Cms\Middleware\Permission;
+use Conia\Core\Context;
+use Conia\Core\Finder\Finder;
+use Conia\Core\Middleware\Permission;
 use Conia\Http\Response;
 
 class Page
