@@ -26,7 +26,7 @@ use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Log\LoggerInterface as Logger;
 
 /** @psalm-api */
-readonly class App implements RouteAdder
+class App implements RouteAdder
 {
     use AddsRoutes;
     use AddsBeforeAfter;
