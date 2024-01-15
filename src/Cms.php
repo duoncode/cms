@@ -10,7 +10,7 @@ use Conia\Registry\Registry;
 use Conia\Route\Route;
 use PDO;
 
-class Panel implements Plugin
+class Cms implements Plugin
 {
     protected readonly Config $config;
     protected readonly Factory $factory;
