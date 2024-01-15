@@ -55,13 +55,6 @@ class Routes
             $postMediaRoute->middleware($session);
             $catchallRoute->middleware($session);
         }
-
-        // Add catchall for page url paths. Must be the last one
-        $app->route(
-            '/...slug',
-            [Page::class, 'catchall'],
-            'conia.catchall',
-        );
     }
 
     protected function addAuth(Group $api): void

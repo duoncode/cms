@@ -2,29 +2,63 @@
 
 declare(strict_types=1);
 
-namespace Conia\Panel;
+namespace Conia\Core;
 
-class Panel
+use Conia\Quma\Connection;
+use Conia\Quma\Database;
+use Conia\Registry\Registry;
+use Conia\Route\Route;
+use PDO;
+
+class Panel implements Plugin
 {
+    protected readonly Config $config;
+    protected readonly Factory $factory;
+    protected readonly Registry $registry;
+    protected readonly Database $db;
+    protected array $collections = [];
+    protected array $nodes = [];
+
+    public function __construct(protected readonly bool $sessionEnabled = false)
+    {
+    }
+
+    public function load(App $app): void
+    {
+        $this->factory = $app->factory();
+        $this->registry = $app->registry();
+
+        (new Routes($this->config, $this->db, $this->factory, $this->sessionEnabled))->add($app);
+    }
+
+    protected function collect(): void
+    {
+        foreach ($this->collections as $name => $collection) {
+            $this->registry
+                ->tag(Collection::class)
+                ->add($name, $collection);
+        }
+
+        foreach ($this->nodes as $name => $node) {
+            $this->registry
+                ->tag(Node::class)
+                ->add($name, $node);
+        }
+    }
+
     public function section(string $name): void
     {
-        $this->registry
-            ->tag(Collection::class)
-            ->add($name, new Section($name));
+        $this->collections[$name] = new Section($name);
     }
 
     public function collection(string $class): void
     {
-        $this->registry
-            ->tag(Collection::class)
-            ->add($class::handle(), $class);
+        $this->collections[$class::handle()] = $class;
     }
 
     public function node(string $class): void
     {
-        $this->registry
-            ->tag(Node::class)
-            ->add($class::handle(), $class);
+        $this->collections[$class::handle()] = $class;
     }
 
     public function database(
@@ -53,5 +87,19 @@ class Panel
             print: $print,
         ));
         $this->registry->add(Database::class, $this->db);
+    }
+
+    /**
+     * Catchall for page url paths.
+     *
+     * Should be the last one
+     */
+    public function catchallRoute(): Route
+    {
+        return Route::any(
+            '/...slug',
+            [Page::class, 'catchall'],
+            'conia.catchall',
+        );
     }
 }
