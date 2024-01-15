@@ -44,6 +44,11 @@ class App implements RouteAdder
         $this->initializeRegistry();
     }
 
+    public function plugin(Plugin $plugin): void
+    {
+        $plugin->load($this);
+    }
+
     public static function create(Config $config, Factory $factory): static
     {
         $app = new static($config, $factory, new Router(), new Registry());
@@ -61,6 +66,11 @@ class App implements RouteAdder
     public function registry(): Registry
     {
         return $this->registry;
+    }
+
+    public function factory(): Factory
+    {
+        return $this->factory;
     }
 
     /** @psalm-param Closure(Router $router):void $creator */
@@ -126,65 +136,13 @@ class App implements RouteAdder
         $this->registry->add($this->factory::class, $this->factory);
     }
 
-    public function section(string $name): void
-    {
-        $this->registry
-            ->tag(Collection::class)
-            ->add($name, new Section($name));
-    }
-
-    public function collection(string $class): void
-    {
-        $this->registry
-            ->tag(Collection::class)
-            ->add($class::handle(), $class);
-    }
-
-    public function node(string $class): void
-    {
-        $this->registry
-            ->tag(Node::class)
-            ->add($class::handle(), $class);
-    }
-
-    public function database(
-        string $dsn,
-        string|array $sql = null,
-        string|array $migrations = null,
-        array $options = [],
-        bool $print = false
-    ): void {
-        $root = dirname(__DIR__);
-        $sql = array_merge(
-            [$root . '/db/sql'],
-            $sql ? (is_array($sql) ? $sql : [$sql]) : []
-        );
-        $migrations = array_merge(
-            [$root . '/db/migrations'],
-            $migrations ? (is_array($migrations) ? $migrations : [$migrations]) : []
-        );
-
-        $this->db = new Database(new Connection(
-            $dsn,
-            $sql,
-            $migrations,
-            fetchMode: PDO::FETCH_ASSOC,
-            options: $options,
-            print: $print,
-        ));
-        $this->registry->add(Database::class, $this->db);
-    }
-
-    public function run(bool $sessionEnabled): Response|false
+    public function run(): Response|false
     {
         $request = $this->factory->serverRequest();
         $route = $this->router->match($request);
         $this->dispatcher->setBeforeHandlers($this->beforeHandlers);
         $this->dispatcher->setAfterHandlers($this->afterHandlers);
         $response = $this->dispatcher->dispatch($request, $route);
-
-        // Add the system routes as last step
-        (new Routes($this->config, $this->db, $this->factory, $sessionEnabled))->add($this);
 
         return (new Emitter())->emit($response) ? $response : false;
     }
