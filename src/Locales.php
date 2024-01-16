@@ -6,16 +6,24 @@ namespace Conia\Cms;
 
 use Closure;
 use Conia\Cms\Exception\RuntimeException;
-use Conia\Http\Request;
+use Conia\Cms\Middleware\AddLocale;
+use Conia\Core\App;
+use Conia\Core\Plugin;
 use Iterator;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
-class Locales implements Iterator
+class Locales implements Iterator, Plugin
 {
     /** @var array<string, Locale> */
     protected array $locales = [];
 
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
+
+    public function load(App $app): void
+    {
+        $app->middleware(new AddLocale($this));
+    }
 
     public function add(
         string $id,
