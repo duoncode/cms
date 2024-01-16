@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Middleware;
 
-use Conia\Cms\Config;
 use Conia\Cms\Users;
-use Conia\Http\Middleware;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Config;
 use Conia\Quma\Database;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 
-class Session extends Middleware
+class Session implements Middleware
 {
     public function __construct(protected Config $config, protected Database $db)
     {
     }
 
-    public function handle(Request $request, callable $next): Response
+    public function process(Request $request, Handler $handler): Response
     {
         $session = new \Conia\Cms\Session(
             $this->config->app(),
@@ -39,11 +40,11 @@ class Session extends Middleware
 
         if ($userId) {
             $user = (new Users($this->db))->byId($userId);
-            $request->set('user', $user);
+            $request = $request->withAttribute('user', $user);
         }
 
-        $request->set('session', $session);
+        $request = $request->withAttribute('session', $session);
 
-        return $next($request);
+        return $handler->handle($request);
     }
 }

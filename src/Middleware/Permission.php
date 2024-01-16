@@ -6,17 +6,18 @@ namespace Conia\Cms\Middleware;
 
 use Attribute;
 use Conia\Cms\Auth;
-use Conia\Cms\Config;
-use Conia\Cms\Exception\HttpForbidden;
-use Conia\Cms\Exception\HttpUnauthorized;
 use Conia\Cms\Users;
-use Conia\Http\Middleware;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Config;
+use Conia\Core\Exception\HttpForbidden;
+use Conia\Core\Exception\HttpUnauthorized;
 use Conia\Wire\Call;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 #[Attribute, Call('init')]
-class Permission extends Middleware
+class Permission implements Middleware
 {
     protected Users $users;
     protected Config $config;
@@ -25,9 +26,9 @@ class Permission extends Middleware
     {
     }
 
-    public function handle(Request $request, callable $next): Response
+    public function process(Request $request, Handler $handler): Response
     {
-        $session = $request->get('session', null);
+        $session = $request->getAttribute('session', null);
 
         if (!$session) {
             throw new HttpUnauthorized();
