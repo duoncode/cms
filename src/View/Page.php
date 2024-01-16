@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Core\Context;
-use Conia\Core\Exception\HttpNotFound;
-use Conia\Core\Factory;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\HttpNotFound;
+use Conia\Cms\Factory;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Middleware\Permission;
 use Conia\Http\Response;
 use Conia\Registry\Registry;
 

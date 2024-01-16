@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder\Output;
+namespace Conia\Cms\Finder\Output;
 
 interface Output
 {

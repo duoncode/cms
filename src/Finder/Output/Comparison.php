@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder\Output;
+namespace Conia\Cms\Finder\Output;
 
-use Conia\Core\Context;
-use Conia\Core\Exception\ParserOutputException;
-use Conia\Core\Finder\Input\Token;
-use Conia\Core\Finder\Input\TokenType;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\ParserOutputException;
+use Conia\Cms\Finder\Input\Token;
+use Conia\Cms\Finder\Input\TokenType;
 
 final readonly class Comparison extends Expression implements Output
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Field\Field;
-use Conia\Core\Value\Youtube as YoutubeValue;
+use Conia\Cms\Field\Field;
+use Conia\Cms\Value\Youtube as YoutubeValue;
 
 class Youtube extends Field
 {

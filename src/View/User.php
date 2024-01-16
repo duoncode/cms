@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Core\Config;
-use Conia\Core\Exception\HttpBadRequest;
-use Conia\Core\Middleware\Permission;
-use Conia\Core\Util\Password;
+use Conia\Cms\Config;
+use Conia\Cms\Exception\HttpBadRequest;
+use Conia\Cms\Middleware\Permission;
+use Conia\Cms\Util\Password;
 use Conia\Http\Request;
 use Conia\Quma\Database;
 

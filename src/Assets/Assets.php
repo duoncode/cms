@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Assets;
+namespace Conia\Cms\Assets;
 
-use Conia\Core\Config;
-use Conia\Core\Util\Path;
+use Conia\Cms\Config;
+use Conia\Cms\Util\Path;
 use Conia\Http\Request;
 
 class Assets

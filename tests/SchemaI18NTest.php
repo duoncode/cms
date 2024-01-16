@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Conia\Core\SchemaI18N;
+use Conia\Cms\SchemaI18N;
 
 test('Translated valid values', function () {
     $testData = [

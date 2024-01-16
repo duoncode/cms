@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Assets;
+namespace Conia\Cms\Assets;
 
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Util\Path;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Util\Path;
 use Conia\Http\Request;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;

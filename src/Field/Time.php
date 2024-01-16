@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Value\Time as TimeValue;
+use Conia\Cms\Value\Time as TimeValue;
 
 class Time extends Field
 {

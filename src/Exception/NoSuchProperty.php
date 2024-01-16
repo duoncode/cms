@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Exception;
+namespace Conia\Cms\Exception;
 
-class NoSuchProperty extends RuntimeException implements CoreException
+class NoSuchProperty extends RuntimeException implements CmsException
 {
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Closure;
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Exception\RuntimeException;
 use Conia\Http\Request;
 use Iterator;
 

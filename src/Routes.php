@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
-use Conia\Core\App;
-use Conia\Core\Middleware\Session;
-use Conia\Core\View\Auth;
-use Conia\Core\View\Media;
-use Conia\Core\View\Page;
-use Conia\Core\View\Panel;
-use Conia\Core\View\User;
+use Conia\Cms\App;
+use Conia\Cms\Middleware\Session;
+use Conia\Cms\View\Auth;
+use Conia\Cms\View\Media;
+use Conia\Cms\View\Page;
+use Conia\Cms\View\Panel;
+use Conia\Cms\View\User;
 use Conia\Quma\Database;
 use Conia\Route\Group;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Field\Attr\FulltextWeight;
-use Conia\Core\Node\Node;
-use Conia\Core\Value\Value;
-use Conia\Core\Value\ValueContext;
+use Conia\Cms\Field\Attr\FulltextWeight;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Value\Value;
+use Conia\Cms\Value\ValueContext;
 
 abstract class Field
 {

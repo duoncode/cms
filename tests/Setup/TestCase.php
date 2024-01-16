@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Tests\Setup;
+namespace Conia\Cms\Tests\Setup;
 
-use Conia\Core\Config;
-use Conia\Core\Exception\ValueError;
+use Conia\Cms\Config;
+use Conia\Cms\Exception\ValueError;
 use Conia\Http\Request;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;

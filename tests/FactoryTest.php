@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Route\Tests;
 
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Factory\Guzzle;
-use Conia\Core\Factory\Laminas;
-use Conia\Core\Factory\Nyholm;
-use Conia\Core\Tests\Setup\TestCase;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Factory\Guzzle;
+use Conia\Cms\Factory\Laminas;
+use Conia\Cms\Factory\Nyholm;
+use Conia\Cms\Tests\Setup\TestCase;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;

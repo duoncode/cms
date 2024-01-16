@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Middleware;
+namespace Conia\Cms\Middleware;
 
-use Conia\Core\Config;
-use Conia\Core\Users;
+use Conia\Cms\Config;
+use Conia\Cms\Users;
 use Conia\Http\Middleware;
 use Conia\Http\Request;
 use Conia\Http\Response;
@@ -19,7 +19,7 @@ class Session extends Middleware
 
     public function handle(Request $request, callable $next): Response
     {
-        $session = new \Conia\Core\Session(
+        $session = new \Conia\Cms\Session(
             $this->config->app(),
             $this->config->get('session.options'),
             $this->config->get('session.handler', null),

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Context;
-use Conia\Core\Exception\HttpBadRequest;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Node\Node as CoreNode;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\HttpBadRequest;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Node\Node as CmsNode;
 
 class Node
 {
@@ -21,7 +21,7 @@ class Node
         string $path,
         ?bool $deleted = false,
         ?bool $published = true
-    ): ?CoreNode {
+    ): ?CmsNode {
         return $this->get([
             'path' => $path,
             'published' => $published,
@@ -34,7 +34,7 @@ class Node
         string $uid,
         ?bool $deleted = false,
         ?bool $published = true
-    ): ?CoreNode {
+    ): ?CmsNode {
         return $this->get([
             'uid' => $uid,
             'published' => $published,
@@ -44,7 +44,7 @@ class Node
 
     public function get(
         array $params,
-    ): ?CoreNode {
+    ): ?CmsNode {
         $data = $this->context->db->nodes->find($params)->one();
 
         if (!$data) {
@@ -58,11 +58,11 @@ class Node
         $class = $this
             ->context
             ->registry
-            ->tag(CoreNode::class)
+            ->tag(CmsNode::class)
             ->entry($data['typehandle'])
             ->definition();
 
-        if (is_subclass_of($class, CoreNode::class)) {
+        if (is_subclass_of($class, CmsNode::class)) {
             return new $class($this->context, $this->find, $data);
         }
 

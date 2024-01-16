@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Util;
+namespace Conia\Cms\Util;
 
 use Hidehalo\Nanoid\Client;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Exception\ParserException;
+use Conia\Cms\Exception\ParserException;
 
 final class OrderCompiler
 {

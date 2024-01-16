@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/vendor/autoload.php';
 
 use Conia\Cli\Runner;
-use Conia\Core\Commands\RecreateDb;
+use Conia\Cms\Commands\RecreateDb;
 use Conia\I18n\I18n;
 use Conia\I18n\Source;
 use Conia\Quma\Connection;

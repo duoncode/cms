@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Core\Collection;
-use Conia\Core\Config;
-use Conia\Core\Factory;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Collection;
+use Conia\Cms\Config;
+use Conia\Cms\Factory;
+use Conia\Cms\Middleware\Permission;
 use Conia\Http\Request;
 use Conia\Http\Response;
 use Conia\Registry\Registry;

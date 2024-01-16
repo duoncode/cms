@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Node;
+namespace Conia\Cms\Node;
 
-use Conia\Core\Exception\HttpBadRequest;
-use Conia\Core\Renderer\Render;
+use Conia\Cms\Exception\HttpBadRequest;
+use Conia\Cms\Renderer\Render;
 use Conia\Http\Response;
 use Throwable;
 
