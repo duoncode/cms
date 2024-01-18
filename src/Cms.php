@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Cms;
 
 use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Node\Node;
 use Conia\Cms\View\Page;
 use Conia\Core\App;
 use Conia\Core\Config;
@@ -82,7 +83,7 @@ class Cms implements Plugin
 
     public function node(string $class): void
     {
-        $this->collections[$class::handle()] = $class;
+        $this->nodes[$class::handle()] = $class;
     }
 
     public function database(
