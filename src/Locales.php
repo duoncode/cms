@@ -97,7 +97,7 @@ class Locales implements Iterator, Plugin
 
     protected function fromRequest(Request $request, array $locales, Locale $default): Locale
     {
-        $uri = $request->uri();
+        $uri = $request->getUri();
 
         // By domain
         $host = strtolower(explode(':', $uri->getHost())[0]);
@@ -120,7 +120,7 @@ class Locales implements Iterator, Plugin
         }
 
         // From session
-        $session = $request->get('session', null);
+        $session = $request->getAttribute('session', null);
 
         if ($session) {
             $locale = $session->get('locale', false);
