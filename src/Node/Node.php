@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Conia\Cms\Node;
 
 use Conia\Cms\Context;
-use Conia\Cms\Exception\HttpBadRequest;
 use Conia\Cms\Exception\NoSuchField;
 use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Field\Attr;
@@ -16,6 +15,7 @@ use Conia\Cms\Schema\NodeSchemaFactory;
 use Conia\Cms\Value\Value;
 use Conia\Cms\Value\ValueContext;
 use Conia\Core\Config;
+use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Core\Response;
@@ -25,6 +25,8 @@ use ReflectionClass;
 use ReflectionProperty;
 use ReflectionUnionType;
 use Throwable;
+
+use function Conia\Cms\Util\nanoid;
 
 abstract class Node
 {
@@ -40,10 +42,11 @@ abstract class Node
     ];
     protected readonly Database $db;
     protected readonly Registry $registry;
+    protected readonly Factory $factory;
     protected array $fieldNames = [];
 
     final public function __construct(
-        protected readonly Context $context,
+        public readonly Context $context,
         protected readonly Finder $find,
         protected ?array $data = null,
     ) {
@@ -53,6 +56,7 @@ abstract class Node
         $this->request = $context->request;
         $this->config = $context->config;
         $this->registry = $context->registry;
+        $this->factory = $context->factory;
     }
 
     final public function __get(string $fieldName): ?Value
@@ -373,7 +377,7 @@ abstract class Node
 
     protected function validate(array $data): array
     {
-        $factory = new NodeSchemaFactory($this, $this->config->locales());
+        $factory = new NodeSchemaFactory($this, $this->context->locales());
         $schema = $factory->create();
 
         if (!$schema->validate($data)) {

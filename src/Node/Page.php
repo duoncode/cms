@@ -8,6 +8,8 @@ use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Locale;
 use Conia\Quma\Database;
 
+use function Conia\Cms\Util\nanoid;
+
 abstract class Page extends Node
 {
     use RendersTemplate;
@@ -157,7 +159,8 @@ abstract class Page extends Node
             $data['paths'] = $data['generatedPaths'];
         }
 
-        $defaultLocale = $this->config->locales->getDefault();
+        $locales = $this->context->locales();
+        $defaultLocale = $locales->getDefault();
         $defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
 
         if (!$defaultPath) {
@@ -169,7 +172,7 @@ abstract class Page extends Node
         if ($currentPaths) {
             $baseStructure = [];
 
-            foreach ($this->config->locales as $locale) {
+            foreach ($locales as $locale) {
                 $baseStructure[$locale->id] = '';
             }
 
