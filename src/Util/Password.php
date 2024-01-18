@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Util;
 
-use Conia\Cms\Config;
+use Conia\Core\Config;
 
 class Password
 {
