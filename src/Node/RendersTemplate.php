@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Node;
 
+use Conia\Cms\Renderer;
 use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Response;
 use Throwable;
@@ -12,13 +13,13 @@ trait RendersTemplate
 {
     protected const string renderer = '';
 
-    public static function renderer(): ?string
+    public function renderer(): array
     {
         if (!empty(static::renderer)) {
-            return static::renderer;
+            return ['template', static::renderer];
         }
 
-        return static::handle();
+        return ['template', static::handle()];
     }
 
     /**
@@ -30,10 +31,10 @@ trait RendersTemplate
             return parent::read();
         }
 
-        return $this->render();
+        return (new Response($this->factory->response()))->body($this->render());
     }
 
-    protected function render(array $context = []): Response
+    protected function render(array $context = []): string
     {
         $context = array_merge([
             'page' => $this,
@@ -47,7 +48,7 @@ trait RendersTemplate
         ], $context);
 
         try {
-            [$type, $id] = self::renderer();
+            [$type, $id] = $this->renderer();
             $renderer = $this->registry->tag(Renderer::class)->get($type);
 
             return $renderer->render($id, $context);
