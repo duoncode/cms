@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
-use Conia\Cms\Config;
 use Conia\Cms\Context;
 use Conia\Cms\Exception\HttpNotFound;
-use Conia\Cms\Factory;
 use Conia\Cms\Finder\Finder;
+use Conia\Cms\Locales;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Node\Node;
 use Conia\Cms\Section;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Config;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 use Conia\Registry\Registry;
 
 class Panel
@@ -25,6 +26,7 @@ class Panel
         protected readonly Request $request,
         protected readonly Config $config,
         protected readonly Registry $registry,
+        protected readonly Locales $locales,
     ) {
         $this->publicPath = $config->get('path.public');
     }
@@ -32,7 +34,6 @@ class Panel
     public function boot(): array
     {
         $config = $this->config;
-        $locales = $config->locales();
         $localesList = array_map(
             function ($locale) {
                 return [
@@ -41,15 +42,15 @@ class Panel
                     'fallback' => $locale->fallback,
                 ];
             },
-            iterator_to_array($locales),
+            iterator_to_array($this->locales),
             [] // Add an empty array to remove the assoc array keys
             //    See: https://www.php.net/manual/en/function.array-map.php#refsect1-function.array-map-returnvalues
         );
 
         return [
             'locales' => $localesList,
-            'locale' => $locales->getDefault()->id, // TODO: set the correct user locale
-            'defaultLocale' => $locales->getDefault()->id,
+            'locale' => $this->locales->getDefault()->id, // TODO: set the correct user locale
+            'defaultLocale' => $this->locales->getDefault()->id,
             'debug' => $config->debug(),
             'env' => $config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
@@ -75,10 +76,10 @@ class Panel
         $file = $this->publicPath . '/panel/' . $slug;
 
         if (file_exists($file)) {
-            return Response::fromFactory($factory)->file($file);
+            return Response::fromFactory($factory->responseFactory, $factory->streamFactory)->file($file);
         }
 
-        return Response::fromFactory($factory)->file($this->getPanelIndex());
+        return Response::fromFactory($factory->responseFactory, $factory->streamFactory)->file($this->getPanelIndex());
     }
 
     #[Permission('panel')]

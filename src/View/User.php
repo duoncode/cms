@@ -8,7 +8,7 @@ use Conia\Cms\Config;
 use Conia\Cms\Exception\HttpBadRequest;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Util\Password;
-use Conia\Http\Request;
+use Conia\Core\Request;
 use Conia\Quma\Database;
 
 class User

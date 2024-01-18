@@ -47,7 +47,7 @@ class Permission implements Middleware
                 throw new HttpForbidden();
             }
 
-            return $next($request);
+            return $handler->handle($request);
         }
 
         throw new HttpUnauthorized();

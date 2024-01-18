@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Core\App;
+use Conia\Core\Config;
+use Conia\Core\Factory;
+use Conia\Core\Plugin;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;
+use Conia\Registry\Entry;
 use Conia\Registry\Registry;
 use Conia\Route\Route;
 use PDO;
@@ -16,6 +22,10 @@ class Cms implements Plugin
     protected readonly Factory $factory;
     protected readonly Registry $registry;
     protected readonly Database $db;
+
+    /** @property array<Entry> */
+    protected array $renderers = [];
+
     protected array $collections = [];
     protected array $nodes = [];
 
@@ -27,8 +37,11 @@ class Cms implements Plugin
     {
         $this->factory = $app->factory();
         $this->registry = $app->registry();
+        $this->collect();
 
         (new Routes($this->config, $this->db, $this->factory, $this->sessionEnabled))->add($app);
+
+        $this->registry->add(Database::class, $this->db);
     }
 
     protected function collect(): void
@@ -43,6 +56,12 @@ class Cms implements Plugin
             $this->registry
                 ->tag(Node::class)
                 ->add($name, $node);
+        }
+
+        foreach ($this->renderers as $entry) {
+            $this->registry
+                ->tag(Renderer::class)
+                ->addEntry($entry);
         }
     }
 
@@ -86,7 +105,6 @@ class Cms implements Plugin
             options: $options,
             print: $print,
         ));
-        $this->registry->add(Database::class, $this->db);
     }
 
     /**
@@ -101,5 +119,17 @@ class Cms implements Plugin
             [Page::class, 'catchall'],
             'conia.catchall',
         );
+    }
+
+    public function renderer(string $id, string $class): Entry
+    {
+        if (is_a($class, Renderer::class, true)) {
+            $entry = new Entry($id, $class);
+            $this->renderers[] = $entry;
+
+            return $entry;
+        }
+
+        throw new RuntimeException('Renderers must imlement the `Conia\Cms\Renderer` interface');
     }
 }

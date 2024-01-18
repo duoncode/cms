@@ -9,10 +9,10 @@ use Conia\Cms\Assets\ResizeMode;
 use Conia\Cms\Assets\Size;
 use Conia\Cms\Config;
 use Conia\Cms\Exception\RuntimeException;
-use Conia\Cms\Factory;
 use Conia\Cms\Middleware\Permission;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 use Gumlet\ImageResize;
 
 class Media

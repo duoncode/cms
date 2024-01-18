@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Node;
 
-use Conia\Cms\Exception\HttpBadRequest;
-use Conia\Cms\Renderer\Render;
-use Conia\Http\Response;
+use Conia\Core\Exception\HttpBadRequest;
+use Conia\Core\Response;
 use Throwable;
 
 trait RendersTemplate
 {
-    protected static string $template = '';
+    protected const string renderer = '';
 
-    public static function template(): ?string
+    public static function renderer(): ?string
     {
-        if (!empty(static::$template)) {
-            return static::$template;
+        if (!empty(static::renderer)) {
+            return static::renderer;
         }
 
         return static::handle();
@@ -40,13 +39,18 @@ trait RendersTemplate
             'page' => $this,
             'find' => $this->find,
             'locale' => $this->request->get('locale'),
-            'locales' => $this->config->locales,
+            'locales' => $this->request->get('locales'),
+            'request' => $this->request,
+            'registry' => $this->registry,
+            'debug' => $this->config->debug,
+            'env' => $this->config->env,
         ], $context);
 
         try {
-            $render = new Render('template', self::template());
+            [$type, $id] = self::renderer();
+            $renderer = $this->registry->tag(Renderer::class)->get($type);
 
-            return $render->response($this->registry, $context);
+            return $renderer->render($id, $context);
         } catch (Throwable $e) {
             if ($this->config->debug()) {
                 throw $e;

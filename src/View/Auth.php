@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Cms\View;
 
-use Conia\Cms\Factory;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Schema;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 
 class Auth
 {

@@ -6,10 +6,10 @@ namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
 use Conia\Cms\Config;
-use Conia\Cms\Factory;
 use Conia\Cms\Middleware\Permission;
-use Conia\Http\Request;
-use Conia\Http\Response;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 use Conia\Registry\Registry;
 
 class Node
