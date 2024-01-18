@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Value;
 
+use function Conia\Cms\Util\escape;
+
 class Str extends Value
 {
     public function __toString(): string

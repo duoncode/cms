@@ -8,6 +8,8 @@ use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Field\Field;
 use Conia\Cms\Node\Node;
 
+use function Conia\Cms\Util\escape;
+
 class Picture extends Image
 {
     public function __construct(Node $node, Field $field, ValueContext $context)

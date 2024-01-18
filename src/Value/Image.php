@@ -8,6 +8,8 @@ use Conia\Cms\Assets;
 use Conia\Cms\Exception\RuntimeException;
 use Gumlet\ImageResize;
 
+use function Conia\Cms\Util\escape;
+
 class Image extends File
 {
     protected ?Assets\Size $size = null;

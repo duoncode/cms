@@ -9,6 +9,8 @@ use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Field\Field;
 use Conia\Cms\Node\Node;
 
+use function Conia\Cms\Util\escape;
+
 class File extends Value
 {
     public function __construct(

@@ -7,6 +7,8 @@ namespace Conia\Cms;
 use Closure;
 use Conia\Cms\Node\Node;
 
+use function Conia\Cms\Util\escape;
+
 final class Column
 {
     private bool|Closure $bold = false;
