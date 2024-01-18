@@ -17,6 +17,7 @@ use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Core\Response;
 use Conia\Registry\Registry;
+use Conia\Wire\Creator;
 
 class Panel
 {
@@ -85,11 +86,18 @@ class Panel
     #[Permission('panel')]
     public function collections(): array
     {
+        $creator = new Creator($this->registry);
         $tag = $this->registry->tag(Collection::class);
         $collections = [];
 
         foreach ($tag->entries() as $id) {
-            $item = $tag->get($id);
+            $class = $tag->entry($id)->definition();
+
+            if (is_object($class)) {
+                $item = $class;
+            } else {
+                $item = $creator->create($class, predefinedTypes: [Request::class => $this->request]);
+            }
 
             if ($item::class === Section::class) {
                 $collections[] = [
@@ -111,7 +119,11 @@ class Panel
     #[Permission('panel')]
     public function collection(string $collection): array
     {
-        $obj = $this->registry->tag(Collection::class)->get($collection);
+        $creator = new Creator($this->registry);
+        $obj = $creator->create(
+            $this->registry->tag(Collection::class)->entry($collection)->definition(),
+            predefinedTypes: [Request::class => $this->request]
+        );
         $blueprints = [];
 
         foreach ($obj->blueprints() as $blueprint) {
