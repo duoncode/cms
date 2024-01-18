@@ -22,6 +22,7 @@ class AddLocale implements Middleware
 
         return $handler->handle(
             $request
+                ->withAttribute('locales', $this->locales)
                 ->withAttribute('locale', $locale)
                 ->withAttribute('defaultLocale', $this->locales->getDefault())
         );
