@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Conia\Cms\Finder;
 
 use Conia\Cms\Context;
-use Conia\Cms\Exception\HttpBadRequest;
 use Conia\Cms\Finder\Finder;
 use Conia\Cms\Node\Node as CmsNode;
+use Conia\Core\Exception\HttpBadRequest;
 
 class Node
 {
