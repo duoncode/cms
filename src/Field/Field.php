@@ -196,7 +196,7 @@ abstract class Field
         if ($this->translate) {
             $result['value'] = [];
 
-            foreach ($this->node->config->locales() as $locale) {
+            foreach ($this->node->context->locales() as $locale) {
                 $result['value'][$locale->id] = null;
             }
         } else {
@@ -220,7 +220,7 @@ abstract class Field
 
         $result['files'] = [];
 
-        foreach ($this->node->config->locales() as $locale) {
+        foreach ($this->node->context->locales() as $locale) {
             $result['files'][$locale->id] = [];
         }
 

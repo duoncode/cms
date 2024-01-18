@@ -68,7 +68,7 @@ class Grid extends Field
         $result = ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => []];
 
         if ($this->translate) {
-            foreach ($this->node->config->locales() as $locale) {
+            foreach ($this->node->context->locales() as $locale) {
                 $result['value'][$locale->id] = [];
             }
         }
