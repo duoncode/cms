@@ -12,8 +12,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
-        "conia/core": "@dev",
+        "php": ">=8.3",
+        "conia/core": "dev-main",
         "conia/error": "dev-main",
         "conia/quma": "dev-main",
         "conia/registry": "dev-main",
@@ -31,16 +31,6 @@
         "laminas/laminas-diactoros": "^2",
         "phpunit/phpunit": "^10"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../../conia/core"
-        },
-        {
-            "type": "path",
-            "url": "../../conia/route"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Conia\\Cms\\": "src"
