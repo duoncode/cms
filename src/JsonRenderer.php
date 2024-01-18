@@ -24,7 +24,7 @@ class JsonRenderer implements AfterRenderer
             return $this->response(json_encode(iterator_to_array($data), $flags));
         }
 
-        return json_encode($data, $flags);
+        return $this->response(json_encode($data, $flags));
     }
 
     public function response(string $json): Response
