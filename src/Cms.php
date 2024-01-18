@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conia\Cms;
 
 use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\View\Page;
 use Conia\Core\App;
 use Conia\Core\Config;
 use Conia\Core\Factory;
@@ -22,6 +23,7 @@ class Cms implements Plugin
     protected readonly Factory $factory;
     protected readonly Registry $registry;
     protected readonly Database $db;
+    protected readonly Connection $connection;
 
     /** @property array<Entry> */
     protected array $renderers = [];
@@ -39,9 +41,12 @@ class Cms implements Plugin
         $this->registry = $app->registry();
         $this->collect();
 
-        (new Routes($this->config, $this->db, $this->factory, $this->sessionEnabled))->add($app);
-
+        $this->registry->add($this->registry::class, $this->registry);
+        $this->registry->add(Connection::class, $this->connection);
         $this->registry->add(Database::class, $this->db);
+        $this->registry->add(Factory::class, $this->factory);
+
+        (new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled))->add($app);
     }
 
     protected function collect(): void
@@ -97,14 +102,15 @@ class Cms implements Plugin
             $migrations ? (is_array($migrations) ? $migrations : [$migrations]) : []
         );
 
-        $this->db = new Database(new Connection(
+        $this->connection = new Connection(
             $dsn,
             $sql,
             $migrations,
             fetchMode: PDO::FETCH_ASSOC,
             options: $options,
             print: $print,
-        ));
+        );
+        $this->db = new Database($this->connection);
     }
 
     /**
