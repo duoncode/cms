@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Traversable;
 
 /** @psalm-api */
-class JsonRenderer implements Renderer
+class JsonRenderer implements AfterRenderer
 {
     public function __construct(protected Factory $factory)
     {
