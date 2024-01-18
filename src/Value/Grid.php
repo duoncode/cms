@@ -177,7 +177,7 @@ class Grid extends Value
 
     public function isset(): bool
     {
-        if (is_null($this->preparedData)) {
+        if ($this->preparedData === null) {
             return false;
         }
 

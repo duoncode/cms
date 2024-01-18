@@ -47,7 +47,7 @@ class Page
         $db = $context->db;
         $path = $db->paths->byPath(['path' => $path])->one();
 
-        if ($path && !is_null($path['inactive'])) {
+        if ($path && !($path['inactive'] === null)) {
             $paths = $db->paths->activeByNode(['node' => $path['node']])->all();
 
             $pathsByLocale = array_combine(

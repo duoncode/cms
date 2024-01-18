@@ -87,7 +87,7 @@ abstract class Node
     {
         $field = $this->{$fieldName};
 
-        if (is_null($field)) {
+        if ($field === null) {
             $type = $this::class;
 
             throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");

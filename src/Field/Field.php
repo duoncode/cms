@@ -163,8 +163,8 @@ abstract class Field
 
     public function getFileStructure(string $type, mixed $value = null): array
     {
-        if (is_null($value)) {
-            if (is_null($this->default)) {
+        if ($value === null) {
+            if ($this->default === null) {
                 $value = [];
             } else {
                 $value = $this->default;
