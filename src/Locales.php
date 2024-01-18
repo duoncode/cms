@@ -23,6 +23,7 @@ class Locales implements Iterator, Plugin
     public function load(App $app): void
     {
         $app->middleware(new AddLocale($this));
+        $app->register(self::class, $this);
     }
 
     public function add(
@@ -74,7 +75,7 @@ class Locales implements Iterator, Plugin
     public function getDefault(): Locale
     {
         // default locale from config file
-        if (is_null($this->default)) {
+        if ($this->default === null) {
             throw new RuntimeException('Default locale not available');
         }
 
