@@ -6,13 +6,13 @@ namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
 use Conia\Cms\Context;
-use Conia\Cms\Exception\HttpNotFound;
 use Conia\Cms\Finder\Finder;
 use Conia\Cms\Locales;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Node\Node;
 use Conia\Cms\Section;
 use Conia\Core\Config;
+use Conia\Core\Exception\HttpNotFound;
 use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Core\Response;
@@ -166,6 +166,6 @@ class Panel
 
     protected function getPanelIndex(): string
     {
-        return $this->publicPath . $this->config->getPanelPath() . '/index.html';
+        return $this->publicPath . $this->config->get('panel.prefix') . '/index.html';
     }
 }

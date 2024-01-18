@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
-use Conia\Cms\Config;
 use Conia\Cms\Middleware\Permission;
+use Conia\Core\Config;
 use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Core\Response;
@@ -43,7 +43,7 @@ class Node
         return [
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
-            'panelPath' => $this->config->getPanelPath(),
+            'panelPath' => $this->config->get('panel.prefix'),
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
