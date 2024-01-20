@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Cms\View;
 
+use Conia\Cms\Config;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Util\Password;
-use Conia\Core\Config;
 use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Request;
 use Conia\Quma\Database;

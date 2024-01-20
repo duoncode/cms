@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
+use Conia\Cms\Config;
 use Conia\Cms\Middleware\Permission;
-use Conia\Core\Config;
 use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Core\Response;

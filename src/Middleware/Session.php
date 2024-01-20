@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Middleware;
 
+use Conia\Cms\Config;
 use Conia\Cms\Users;
-use Conia\Core\Config;
 use Conia\Quma\Database;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

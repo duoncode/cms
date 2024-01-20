@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Cms\Collection;
+use Conia\Cms\Config;
 use Conia\Cms\Context;
 use Conia\Cms\Finder\Finder;
 use Conia\Cms\Locales;
 use Conia\Cms\Middleware\Permission;
 use Conia\Cms\Node\Node;
 use Conia\Cms\Section;
-use Conia\Core\Config;
 use Conia\Core\Exception\HttpNotFound;
 use Conia\Core\Factory;
 use Conia\Core\Request;

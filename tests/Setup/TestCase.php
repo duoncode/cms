@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Tests\Setup;
 
+use Conia\Cms\Config;
 use Conia\Cms\Exception\ValueError;
-use Conia\Core\Config;
 use Conia\Core\Request;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;

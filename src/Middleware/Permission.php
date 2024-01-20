@@ -6,8 +6,8 @@ namespace Conia\Cms\Middleware;
 
 use Attribute;
 use Conia\Cms\Auth;
+use Conia\Cms\Config;
 use Conia\Cms\Users;
-use Conia\Core\Config;
 use Conia\Core\Exception\HttpForbidden;
 use Conia\Core\Exception\HttpUnauthorized;
 use Conia\Wire\Call;

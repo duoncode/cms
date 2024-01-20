@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Cms\Config;
 use Conia\Cms\Locale;
 use Conia\Cms\Locales;
-use Conia\Core\Config;
 use Conia\Core\Factory;
 use Conia\Core\Request;
 use Conia\Quma\Database;

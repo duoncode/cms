@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Cms\Node;
 
+use Conia\Cms\Config;
 use Conia\Cms\Context;
 use Conia\Cms\Exception\NoSuchField;
 use Conia\Cms\Exception\RuntimeException;
@@ -14,7 +15,6 @@ use Conia\Cms\Locale;
 use Conia\Cms\Schema\NodeSchemaFactory;
 use Conia\Cms\Value\Value;
 use Conia\Cms\Value\ValueContext;
-use Conia\Core\Config;
 use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Factory;
 use Conia\Core\Request;

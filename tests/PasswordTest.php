@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Conia\Cms\Config;
 use Conia\Cms\Tests\Setup\TestCase;
 use Conia\Cms\Util\Password;
-use Conia\Core\Config;
 
 uses(TestCase::class);
 

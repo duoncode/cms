@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Cms\Config;
 use Conia\Cms\Middleware\InitRequest;
 use Conia\Cms\Middleware\Session;
 use Conia\Cms\View\Auth;
@@ -12,7 +13,6 @@ use Conia\Cms\View\Page;
 use Conia\Cms\View\Panel;
 use Conia\Cms\View\User;
 use Conia\Core\App;
-use Conia\Core\Config;
 use Conia\Core\Factory;
 use Conia\Quma\Database;
 use Conia\Route\Group;

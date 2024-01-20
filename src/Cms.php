@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Cms\Config;
 use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Node\Node;
 use Conia\Cms\View\Page;
 use Conia\Core\App;
-use Conia\Core\Config;
 use Conia\Core\Factory;
 use Conia\Core\Plugin;
 use Conia\Quma\Connection;

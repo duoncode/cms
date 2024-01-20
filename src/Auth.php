@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Cms\Config;
 use Conia\Cms\Util\Time;
-use Conia\Core\Config;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
 
