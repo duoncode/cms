@@ -30,7 +30,7 @@ class Media
     #[Permission('panel')]
     public function upload(string $mediatype, string $doctype, string $uid): Response
     {
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
         $file = $_FILES['file'] ?? null;
 
         $result = $this->validateUploadedFile($mediatype, $file);
@@ -91,7 +91,7 @@ class Media
             return $this->sendFile($fileServer, $image->path());
         }
 
-        return Response::fromFactory($this->factory)->file($image->path());
+        return Response::create($this->factory)->file($image->path());
     }
 
     public function file(string $slug): Response
@@ -103,7 +103,7 @@ class Media
             return $this->sendFile($fileServer, $file->path());
         }
 
-        return Response::fromFactory($this->factory)->file($file->path());
+        return Response::create($this->factory)->file($file->path());
     }
 
     protected function validateUploadedFile(string $mediatype, ?array $file): array
@@ -162,7 +162,7 @@ class Media
 
     protected function sendFile(string $fileServer, string $file): Response
     {
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
         $response->header('Content-Type', mime_content_type($file));
 
         switch ($fileServer) {

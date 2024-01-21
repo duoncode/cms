@@ -69,7 +69,7 @@ class Panel
 
     public function index(Factory $factory): Response
     {
-        return Response::fromFactory($factory)->file($this->getPanelIndex());
+        return Response::create($factory)->file($this->getPanelIndex());
     }
 
     public function catchall(Factory $factory, string $slug): Response
@@ -77,10 +77,10 @@ class Panel
         $file = $this->publicPath . '/panel/' . $slug;
 
         if (file_exists($file)) {
-            return Response::fromFactory($factory->responseFactory, $factory->streamFactory)->file($file);
+            return Response::create($factory)->file($file);
         }
 
-        return Response::fromFactory($factory->responseFactory, $factory->streamFactory)->file($this->getPanelIndex());
+        return Response::create($factory)->file($this->getPanelIndex());
     }
 
     #[Permission('panel')]

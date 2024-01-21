@@ -53,7 +53,7 @@ class Node
 
     public function index(Factory $factory): Response
     {
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::create($factory)->file($this->panelIndex);
     }
 
     public function catchall(Factory $factory, string $slug): Response
@@ -61,10 +61,10 @@ class Node
         $file = $this->publicPath . '/panel/' . $slug;
 
         if (file_exists($file)) {
-            return Response::fromFactory($factory)->file($file);
+            return Response::create($factory)->file($file);
         }
 
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::create($factory)->file($this->panelIndex);
     }
 
     #[Permission('panel')]

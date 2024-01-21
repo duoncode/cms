@@ -417,7 +417,7 @@ abstract class Node
     {
         $factory = $this->registry->get(Factory::class);
 
-        return Response::fromFactory($factory);
+        return Response::create($factory);
     }
 
     protected function initFields(): void

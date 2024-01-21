@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Conia\Cms;
 
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Response;
+
 class Fulltext
 {
     public function __construct(string $type, array $content)
@@ -21,7 +24,7 @@ class Fulltext
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {
-                return Response::fromFactory($this->factory)->json($page->json());
+                return Response::create($this->factory)->json($page->json());
             }
 
             // try {

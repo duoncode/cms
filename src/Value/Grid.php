@@ -136,7 +136,7 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return HtmlUtil::excerpt($value->data['value'], $words, $allowedTags);
+                    return HtmlUtil::excerpt($value->data['value'] ?? '', $words, $allowedTags);
                 }
             }
         }
@@ -253,7 +253,6 @@ class Grid extends Value
         foreach ($data['files'] as $f) {
             $file = $f['file'];
             $title = $f['title'] ?? '';
-            $maxWidth = $args['maxImageWidth'] ?? 1440;
             $path = $this->assetsPath() . $file;
             $image = $this->getAssets()->image($path);
             $resized = $image->resize(

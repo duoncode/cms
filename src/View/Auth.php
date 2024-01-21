@@ -30,7 +30,7 @@ class Auth
     public function login(Request $request): Response
     {
         $schema = new Schema\Login();
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
 
         if ($schema->validate($request->json())) {
             $values = $schema->values();
