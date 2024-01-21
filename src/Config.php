@@ -18,7 +18,29 @@ class Config implements ConfigInterface
         public readonly string $env = '',
         array $settings = [],
     ) {
-        $this->settings = $settings;
+        $this->settings = array_merge([
+            'path.assets' => '/assets',
+            'path.cache' => '/cache',
+            'session.options' => [
+                'cookie_httponly' => true,
+                'cookie_lifetime' => 0,
+                'gc_maxlifetime' => 3600,
+            ],
+            'slug.transliterate' => null,
+            'media.fileserver' => null,
+            'upload.mimetypes.file' => [
+                'application/pdf' => ['pdf'],
+            ],
+            'upload.mimetypes.image' => [
+                'image/gif' => ['gif'],
+                'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
+                'image/png' => ['png'],
+                'image/webp' => ['webp'],
+            ],
+            'upload.maxsize' => 10 * 1024 * 1024,
+            // 'password.algorithm' => PASSWORD_* PHP constant
+            // 'password.entropy' => float
+        ], $settings);
         $this->validateApp($app);
     }
 
