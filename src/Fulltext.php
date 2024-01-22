@@ -14,7 +14,7 @@ class Fulltext
         $data = $find->node->byPath($request->uri()->getPath());
 
         if (!$data) {
-            throw new HttpNotFound();
+            throw new HttpNotFound($request);
         }
 
         $class = $data['slug'];
@@ -36,7 +36,7 @@ class Fulltext
                 'find' => $find,
             ]);
             // } catch (Throwable) {
-            //     throw new HttpBadRequest();
+            //     throw new HttpBadRequest($request);
             // }
         }
     }

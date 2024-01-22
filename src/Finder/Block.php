@@ -68,7 +68,7 @@ class Block
                 throw $e;
             }
 
-            throw new HttpBadRequest();
+            throw new HttpBadRequest($this->context->request);
         }
     }
 }

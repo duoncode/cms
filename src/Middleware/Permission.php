@@ -31,7 +31,7 @@ class Permission implements Middleware
         $session = $request->getAttribute('session', null);
 
         if (!$session) {
-            throw new HttpUnauthorized();
+            throw new HttpUnauthorized($request);
         }
 
         $auth = new Auth(
@@ -44,13 +44,13 @@ class Permission implements Middleware
 
         if ($user) {
             if (!$user->hasPermission($this->permission)) {
-                throw new HttpForbidden();
+                throw new HttpForbidden($request);
             }
 
             return $handler->handle($request);
         }
 
-        throw new HttpUnauthorized();
+        throw new HttpUnauthorized($request);
     }
 
     public function init(Users $users, Config $config): void

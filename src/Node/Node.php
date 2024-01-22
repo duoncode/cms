@@ -255,7 +255,7 @@ abstract class Node
             'POST' => $this->create(),
             'PUT' => $this->change(),
             'DELETE' => $this->delete(),
-            default => throw new HttpBadRequest(),
+            default => throw new HttpBadRequest($request),
         };
     }
 
@@ -288,7 +288,7 @@ abstract class Node
     public function delete(): array
     {
         if ($this->request->header('Accept') !== 'application/json') {
-            throw new HttpBadRequest();
+            throw new HttpBadRequest($this->request);
         }
 
         $this->db->nodes->delete([
@@ -324,7 +324,7 @@ abstract class Node
         $data = $this->validate($data);
 
         if ($data['locked']) {
-            throw new HttpBadRequest(_('Das Dokument ist gesperrt'));
+            throw new HttpBadRequest($this->request, payload: ['message' => _('This document is locked')]);
         }
 
         // TODO: check permissions
@@ -381,10 +381,10 @@ abstract class Node
         $schema = $factory->create();
 
         if (!$schema->validate($data)) {
-            $exception = new HttpBadRequest(_('Unvollständige oder fehlerhafte Daten'));
-            $exception->setPayload($schema->errors());
-
-            throw $exception;
+            throw new HttpBadRequest($this->request, payload: [
+                'message' => _('Incomplete or invalid data'),
+                'errors' => $schema->errors(),
+            ]);
         }
 
         return $schema->values();
@@ -393,7 +393,7 @@ abstract class Node
     protected function getRequestData(): array
     {
         if ($this->request->header('Content-Type') !== 'application/json') {
-            throw new HttpBadRequest();
+            throw new HttpBadRequest($this->request);
         }
 
         return $this->request->json();
@@ -405,7 +405,7 @@ abstract class Node
      */
     protected function formPost(?array $body): Response
     {
-        throw new HttpBadRequest();
+        throw new HttpBadRequest($this->request);
     }
 
     protected function locale(): Locale

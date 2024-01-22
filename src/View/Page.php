@@ -28,7 +28,7 @@ class Page
         if (!$page) {
             $this->redirectIfExists($context, $path);
 
-            throw new HttpNotFound();
+            throw new HttpNotFound($context->request);
         }
 
         return $page->response();

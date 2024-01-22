@@ -173,7 +173,7 @@ class Panel
             return $node->response();
         }
 
-        throw new HttpNotFound();
+        throw new HttpNotFound($this->request);
     }
 
     protected function getPanelIndex(): string

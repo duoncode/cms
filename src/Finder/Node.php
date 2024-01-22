@@ -66,7 +66,7 @@ class Node
             return new $class($this->context, $this->find, $data);
         }
 
-        throw new HttpBadRequest();
+        throw new HttpBadRequest($this->context->request);
     }
 
     public function find(
