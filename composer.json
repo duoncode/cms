@@ -26,7 +26,6 @@
         "symfony/html-sanitizer": "^6.2"
     },
     "require-dev": {
-        "conia/chuck-boiler": "dev-main",
         "conia/development": "^1.0",
         "laminas/laminas-diactoros": "^2",
         "phpunit/phpunit": "^10"
