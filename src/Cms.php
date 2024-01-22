@@ -6,7 +6,10 @@ namespace Conia\Cms;
 
 use Conia\Cms\Config;
 use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Node\Block;
+use Conia\Cms\Node\Document;
 use Conia\Cms\Node\Node;
+use Conia\Cms\Node\Page as PageNode;
 use Conia\Cms\View\Page;
 use Conia\Core\App;
 use Conia\Core\Factory;
@@ -38,6 +41,7 @@ class Cms implements Plugin
 
     public function load(App $app): void
     {
+        $this->synchronizeNodes();
         $this->factory = $app->factory();
         $this->registry = $app->registry();
         $this->collect();
@@ -78,12 +82,24 @@ class Cms implements Plugin
 
     public function collection(string $class): void
     {
+        $handle = $class::handle();
+
+        if (isset($this->collections[$handle])) {
+            throw new RuntimeException('Duplicate collection handle: ' . $handle);
+        }
+
         $this->collections[$class::handle()] = $class;
     }
 
     public function node(string $class): void
     {
-        $this->nodes[$class::handle()] = $class;
+        $handle = $class::handle();
+
+        if (isset($this->nodes[$handle])) {
+            throw new RuntimeException('Duplicate node handle: ' . $handle);
+        }
+
+        $this->nodes[$handle] = $class;
     }
 
     public function database(
@@ -138,5 +154,23 @@ class Cms implements Plugin
         }
 
         throw new RuntimeException('Renderers must imlement the `Conia\Cms\Renderer` interface');
+    }
+
+    protected function synchronizeNodes(): void
+    {
+        $types = array_map(fn ($record) => $record['handle'], $this->db->nodes->types()->all());
+
+        foreach ($this->nodes as $handle => $class) {
+            if (!in_array($handle, $types)) {
+                $this->db->nodes->addType([
+                    'handle' => $handle,
+                    'kind' => match(true) {
+                        is_a($class, Block::class, true) => 'block',
+                        is_a($class, PageNode::class, true) => 'page',
+                        is_a($class, Document::class, true) => 'document',
+                    },
+                ])->run();
+            }
+        }
     }
 }
