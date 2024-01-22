@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Exception\HttpNotFound;
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
-use Conia\Core\Collection;
-use Conia\Core\Config;
-use Conia\Core\Context;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Middleware\Permission;
-use Conia\Core\Node\Node;
-use Conia\Core\Section;
+use Conia\Cms\Collection;
+use Conia\Cms\Config;
+use Conia\Cms\Context;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Locales;
+use Conia\Cms\Middleware\Permission;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Section;
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
+use Conia\Registry\Registry;
+use Conia\Wire\Creator;
 
 class Panel
 {
@@ -25,6 +27,7 @@ class Panel
         protected readonly Request $request,
         protected readonly Config $config,
         protected readonly Registry $registry,
+        protected readonly Locales $locales,
     ) {
         $this->publicPath = $config->get('path.public');
     }
@@ -32,7 +35,6 @@ class Panel
     public function boot(): array
     {
         $config = $this->config;
-        $locales = $config->locales();
         $localesList = array_map(
             function ($locale) {
                 return [
@@ -41,15 +43,15 @@ class Panel
                     'fallback' => $locale->fallback,
                 ];
             },
-            iterator_to_array($locales),
+            iterator_to_array($this->locales),
             [] // Add an empty array to remove the assoc array keys
             //    See: https://www.php.net/manual/en/function.array-map.php#refsect1-function.array-map-returnvalues
         );
 
         return [
             'locales' => $localesList,
-            'locale' => $locales->getDefault()->id, // TODO: set the correct user locale
-            'defaultLocale' => $locales->getDefault()->id,
+            'locale' => $this->locales->getDefault()->id, // TODO: set the correct user locale
+            'defaultLocale' => $this->locales->getDefault()->id,
             'debug' => $config->debug(),
             'env' => $config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
@@ -67,7 +69,7 @@ class Panel
 
     public function index(Factory $factory): Response
     {
-        return Response::fromFactory($factory)->file($this->getPanelIndex());
+        return Response::create($factory)->file($this->getPanelIndex());
     }
 
     public function catchall(Factory $factory, string $slug): Response
@@ -75,20 +77,27 @@ class Panel
         $file = $this->publicPath . '/panel/' . $slug;
 
         if (file_exists($file)) {
-            return Response::fromFactory($factory)->file($file);
+            return Response::create($factory)->file($file);
         }
 
-        return Response::fromFactory($factory)->file($this->getPanelIndex());
+        return Response::create($factory)->file($this->getPanelIndex());
     }
 
     #[Permission('panel')]
     public function collections(): array
     {
+        $creator = new Creator($this->registry);
         $tag = $this->registry->tag(Collection::class);
         $collections = [];
 
         foreach ($tag->entries() as $id) {
-            $item = $tag->get($id);
+            $class = $tag->entry($id)->definition();
+
+            if (is_object($class)) {
+                $item = $class;
+            } else {
+                $item = $creator->create($class, predefinedTypes: [Request::class => $this->request]);
+            }
 
             if ($item::class === Section::class) {
                 $collections[] = [
@@ -110,7 +119,11 @@ class Panel
     #[Permission('panel')]
     public function collection(string $collection): array
     {
-        $obj = $this->registry->tag(Collection::class)->get($collection);
+        $creator = new Creator($this->registry);
+        $obj = $creator->create(
+            $this->registry->tag(Collection::class)->entry($collection)->definition(),
+            predefinedTypes: [Request::class => $this->request]
+        );
         $blueprints = [];
 
         foreach ($obj->blueprints() as $blueprint) {
@@ -160,11 +173,11 @@ class Panel
             return $node->response();
         }
 
-        throw new HttpNotFound();
+        throw new HttpNotFound($this->request);
     }
 
     protected function getPanelIndex(): string
     {
-        return $this->publicPath . $this->config->getPanelPath() . '/index.html';
+        return $this->publicPath . $this->config->get('panel.prefix') . '/index.html';
     }
 }

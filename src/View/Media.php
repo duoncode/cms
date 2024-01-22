@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Factory;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
-use Conia\Core\Assets\Assets;
-use Conia\Core\Assets\ResizeMode;
-use Conia\Core\Assets\Size;
-use Conia\Core\Config;
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Assets\Assets;
+use Conia\Cms\Assets\ResizeMode;
+use Conia\Cms\Assets\Size;
+use Conia\Cms\Config;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Middleware\Permission;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 use Gumlet\ImageResize;
 
 class Media
@@ -30,7 +30,7 @@ class Media
     #[Permission('panel')]
     public function upload(string $mediatype, string $doctype, string $uid): Response
     {
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
         $file = $_FILES['file'] ?? null;
 
         $result = $this->validateUploadedFile($mediatype, $file);
@@ -91,7 +91,7 @@ class Media
             return $this->sendFile($fileServer, $image->path());
         }
 
-        return Response::fromFactory($this->factory)->file($image->path());
+        return Response::create($this->factory)->file($image->path());
     }
 
     public function file(string $slug): Response
@@ -103,7 +103,7 @@ class Media
             return $this->sendFile($fileServer, $file->path());
         }
 
-        return Response::fromFactory($this->factory)->file($file->path());
+        return Response::create($this->factory)->file($file->path());
     }
 
     protected function validateUploadedFile(string $mediatype, ?array $file): array
@@ -162,7 +162,7 @@ class Media
 
     protected function sendFile(string $fileServer, string $file): Response
     {
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
         $response->header('Content-Type', mime_content_type($file));
 
         switch ($fileServer) {

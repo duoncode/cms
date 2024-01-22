@@ -2,31 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
-use Closure;
-use Conia\Chuck\Exception\OutOfBoundsException;
-use Conia\Chuck\Exception\ValueError;
-use Conia\Core\Locales;
+use Conia\Core\AddsConfigInterface;
+use Conia\Core\ConfigInterface;
+use Conia\Core\Exception\ValueError;
 
-class Config
+class Config implements ConfigInterface
 {
-    public readonly Locales $locales;
-    protected string $panelPath = '/panel';
-    protected ?string $panelTheme = null;
-    protected Closure $languageNegotiator;
-    private bool $debugPanel = false;
-    private array $settings;
+    use AddsConfigInterface;
 
     public function __construct(
-        public readonly string $root,
         public readonly string $app = 'conia',
         public readonly bool $debug = false,
         public readonly string $env = '',
         array $settings = [],
     ) {
         $this->settings = array_merge([
-            'path.public' => "{$root}/public",
             'path.assets' => '/assets',
             'path.cache' => '/cache',
             'session.options' => [
@@ -49,34 +41,7 @@ class Config
             // 'password.algorithm' => PASSWORD_* PHP constant
             // 'password.entropy' => float
         ], $settings);
-
         $this->validateApp($app);
-        $this->locales = new Locales();
-    }
-
-    public function set(string $key, mixed $value): void
-    {
-        $this->settings[$key] = $value;
-    }
-
-    public function has(string $key): bool
-    {
-        return array_key_exists($key, $this->settings);
-    }
-
-    public function get(string $key, mixed $default = null): mixed
-    {
-        if (isset($this->settings[$key])) {
-            return $this->settings[$key];
-        }
-
-        if (func_num_args() > 1) {
-            return $default;
-        }
-
-        throw new OutOfBoundsException(
-            "The configuration key '{$key}' does not exist"
-        );
     }
 
     public function app(): string
@@ -92,67 +57,6 @@ class Config
     public function env(): string
     {
         return $this->env;
-    }
-
-    public function debugPanel(bool $debug = true): bool
-    {
-        if (func_num_args() > 0) {
-            $this->debugPanel = $debug;
-        }
-
-        return $this->debugPanel;
-    }
-
-    public function secret(string $secret): void
-    {
-        $this->set('app.secret', $secret);
-    }
-
-    public function publicPath(string $path): void
-    {
-        $this->set('path.public', $path);
-    }
-
-    public function assets(string $assets, string $cache): void
-    {
-        $this->set('path.assets', '/' . ltrim($assets, '/'));
-        $this->set('path.cache', '/' . ltrim($cache, '/'));
-    }
-
-    public function panelPath(string $path): void
-    {
-        $this->panelPath = $path;
-    }
-
-    public function getPanelPath(): string
-    {
-        return $this->debugPanel ? '/panel' : '/' . $this->panelPath;
-    }
-
-    public function panelTheme(string $url): void
-    {
-        $this->panelTheme = $url;
-    }
-
-    public function localeNegotiator(Closure $func): void
-    {
-        $this->locales->setNegotiator($func);
-    }
-
-    public function locale(
-        string $id,
-        string $title,
-        ?string $fallback = null,
-        ?string $pgDict = null,
-        array|null $domains = null,
-        ?string $urlPrefix = null,
-    ) {
-        $this->locales->add($id, $title, $fallback, $pgDict, $domains, $urlPrefix);
-    }
-
-    public function locales(): Locales
-    {
-        return $this->locales;
     }
 
     protected function validateApp(string $app): void

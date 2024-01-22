@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Factory;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
-use Conia\Core\Middleware\Permission;
-use Conia\Core\Schema;
+use Conia\Cms\Middleware\Permission;
+use Conia\Cms\Schema;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
 
 class Auth
 {
     public function __construct(
         protected readonly Factory $factory,
-        protected readonly \Conia\Core\Auth $auth,
+        protected readonly \Conia\Cms\Auth $auth,
     ) {
     }
 
@@ -30,7 +30,7 @@ class Auth
     public function login(Request $request): Response
     {
         $schema = new Schema\Login();
-        $response = Response::fromFactory($this->factory);
+        $response = Response::create($this->factory);
 
         if ($schema->validate($request->json())) {
             $values = $schema->values();

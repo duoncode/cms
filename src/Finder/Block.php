@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Chuck\Renderer\Render;
-use Conia\Core\Context;
-use Conia\Core\Exception\RuntimeException;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Node\Block as BlockNode;
-use Conia\Core\Node\Node;
+use Conia\Cms\Context;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Node\Block as BlockNode;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Renderer;
+use Conia\Core\Exception\HttpBadRequest;
+
+use Throwable;
 
 class Block
 {
@@ -46,12 +49,26 @@ class Block
 
     public function __toString(): string
     {
-        $render = new Render('template', $this->block::template());
+        try {
+            [$type, $id] = $this->block->renderer();
+            $renderer = $this->context->registry->tag(Renderer::class)->get($type);
 
-        return $render->render($this->context->registry, array_merge([
-            'block' => $this->block,
-            'find' => $this->find,
-            'locale' => $this->context->request->get('locale'),
-        ], $this->templateContext));
+            return $renderer->render($id, array_merge([
+                'block' => $this->block,
+                'find' => $this->find,
+                'locale' => $this->context->request->get('locale'),
+                'locales' => $this->context->request->get('locales'),
+                'request' => $this->context->request,
+                'registry' => $this->context->registry,
+                'debug' => $this->context->config->debug,
+                'env' => $this->context->config->env,
+            ], $this->templateContext));
+        } catch (Throwable $e) {
+            if ($this->context->config->debug()) {
+                throw $e;
+            }
+
+            throw new HttpBadRequest($this->context->request);
+        }
     }
 }

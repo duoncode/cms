@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
-use Conia\Core\Finder\Finder;
-use Conia\Core\Finder\Nodes;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Finder\Nodes;
 
 abstract class Collection
 {
@@ -21,6 +21,7 @@ abstract class Collection
     }
 
     abstract public function entries(): Nodes;
+
     abstract public function blueprints(): array;
 
     public function name(): string
@@ -57,6 +58,7 @@ abstract class Collection
 
         foreach ($this->entries() as $node) {
             $columns = [];
+
             foreach ($this->columns() as $column) {
                 $columns[] = $column->get($node);
             }

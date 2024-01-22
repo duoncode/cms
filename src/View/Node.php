@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
-use Conia\Core\Collection;
-use Conia\Core\Config;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Collection;
+use Conia\Cms\Config;
+use Conia\Cms\Middleware\Permission;
+use Conia\Core\Factory;
+use Conia\Core\Request;
+use Conia\Core\Response;
+use Conia\Registry\Registry;
 
 class Node
 {
@@ -43,7 +43,7 @@ class Node
         return [
             // 'locales' => $this->config->get('locales.list'),
             // 'locale' => 'de',
-            'panelPath' => $this->config->getPanelPath(),
+            'panelPath' => $this->config->get('panel.prefix'),
             'debug' => $this->config->debug(),
             'env' => $this->config->env(),
             'csrfToken' => 'TOKEN', // TODO: real token
@@ -53,7 +53,7 @@ class Node
 
     public function index(Factory $factory): Response
     {
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::create($factory)->file($this->panelIndex);
     }
 
     public function catchall(Factory $factory, string $slug): Response
@@ -61,10 +61,10 @@ class Node
         $file = $this->publicPath . '/panel/' . $slug;
 
         if (file_exists($file)) {
-            return Response::fromFactory($factory)->file($file);
+            return Response::create($factory)->file($file);
         }
 
-        return Response::fromFactory($factory)->file($this->panelIndex);
+        return Response::create($factory)->file($this->panelIndex);
     }
 
     #[Permission('panel')]

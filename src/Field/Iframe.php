@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Value\Html;
+use Conia\Cms\Value\Html;
 
 class Iframe extends Field
 {

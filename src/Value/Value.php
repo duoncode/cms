@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Assets\Assets;
-use Conia\Core\Exception\NoSuchProperty;
-use Conia\Core\Field\Field;
-use Conia\Core\Locale;
-use Conia\Core\Node\Node;
+use Conia\Cms\Assets\Assets;
+use Conia\Cms\Exception\NoSuchProperty;
+use Conia\Cms\Field\Field;
+use Conia\Cms\Locale;
+use Conia\Cms\Node\Node;
 
 abstract class Value
 {

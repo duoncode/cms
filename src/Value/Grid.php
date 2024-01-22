@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Assets\ResizeMode;
-use Conia\Core\Assets\Size;
-use Conia\Core\Field;
-use Conia\Core\Node\Node;
-use Conia\Core\Util\Html as HtmlUtil;
+use Conia\Cms\Assets\ResizeMode;
+use Conia\Cms\Assets\Size;
+use Conia\Cms\Field;
+use Conia\Cms\Node\Node;
+use Conia\Cms\Util\Html as HtmlUtil;
 use Generator;
 use Gumlet\ImageResize;
 
@@ -110,6 +110,7 @@ class Grid extends Value
     public function hasImage(int $index = 1): bool
     {
         $i = 0;
+
         foreach ($this->preparedData as $value) {
             if ($value->type === 'image') {
                 $i++;
@@ -135,7 +136,7 @@ class Grid extends Value
                 $i++;
 
                 if ($i === $index) {
-                    return HtmlUtil::excerpt($value->data['value'], $words, $allowedTags);
+                    return HtmlUtil::excerpt($value->data['value'] ?? '', $words, $allowedTags);
                 }
             }
         }
@@ -176,7 +177,7 @@ class Grid extends Value
 
     public function isset(): bool
     {
-        if (is_null($this->preparedData)) {
+        if ($this->preparedData === null) {
             return false;
         }
 
@@ -252,7 +253,6 @@ class Grid extends Value
         foreach ($data['files'] as $f) {
             $file = $f['file'];
             $title = $f['title'] ?? '';
-            $maxWidth = $args['maxImageWidth'] ?? 1440;
             $path = $this->assetsPath() . $file;
             $image = $this->getAssets()->image($path);
             $resized = $image->resize(

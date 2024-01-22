@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Value\Text as TextValue;
+use Conia\Cms\Value\Text as TextValue;
 
 class Text extends Field
 {

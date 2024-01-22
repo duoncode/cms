@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Field\Field;
-use Conia\Core\Value\Grid as GridValue;
+use Conia\Cms\Field\Field;
+use Conia\Cms\Value\Grid as GridValue;
 use ValueError;
 
 class Grid extends Field
@@ -68,7 +68,7 @@ class Grid extends Field
         $result = ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => []];
 
         if ($this->translate) {
-            foreach ($this->node->config->locales() as $locale) {
+            foreach ($this->node->context->locales() as $locale) {
                 $result['value'][$locale->id] = [];
             }
         }

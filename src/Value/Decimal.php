@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Field\Field;
-use Conia\Core\Node\Node;
+use Conia\Cms\Field\Field;
+use Conia\Cms\Node\Node;
 use NumberFormatter;
 
 class Decimal extends Value

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 class Permissions
 {

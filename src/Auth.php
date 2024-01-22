@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
-use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Core\Permissions;
-use Conia\Core\Util\Time;
+use Conia\Cms\Config;
+use Conia\Cms\Util\Time;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
 
 class Auth

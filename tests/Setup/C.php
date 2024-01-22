@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Tests\Setup;
+namespace Conia\Cms\Tests\Setup;
 
 class C
 {

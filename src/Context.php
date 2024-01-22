@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
-use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Core\Locale;
+use Conia\Cms\Config;
+use Conia\Cms\Locale;
+use Conia\Cms\Locales;
+use Conia\Core\Factory;
+use Conia\Core\Request;
 use Conia\Quma\Database;
+use Conia\Registry\Registry;
 
 final class Context
 {
@@ -17,7 +19,13 @@ final class Context
         public readonly Request $request,
         public readonly Config $config,
         public readonly Registry $registry,
+        public readonly Factory $factory,
     ) {
+    }
+
+    public function locales(): Locales
+    {
+        return $this->request->get('locales');
     }
 
     public function locale(): Locale

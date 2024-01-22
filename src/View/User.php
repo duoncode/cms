@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Exception\HttpBadRequest;
-use Conia\Chuck\Request;
-use Conia\Core\Config;
-use Conia\Core\Middleware\Permission;
-use Conia\Core\Util\Password;
+use Conia\Cms\Config;
+use Conia\Cms\Middleware\Permission;
+use Conia\Cms\Util\Password;
+use Conia\Core\Exception\HttpBadRequest;
+use Conia\Core\Request;
 use Conia\Quma\Database;
 
 class User
@@ -53,7 +53,7 @@ class User
         $user['data'] = json_decode($user['data'], true);
 
         if ($data['uid'] !== $user['uid']) {
-            throw HttpBadRequest::withPayload(['error' => 'Falsche uid']);
+            throw new HttpBadRequest($request, payload: ['error' => 'Falsche uid']);
         }
 
         // E-Mail
@@ -61,17 +61,17 @@ class User
 
         if ($email) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                throw HttpBadRequest::withPayload(['error' => 'Die E-Mail-Adresse ist ungültig!']);
+                throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist ungültig!']);
             }
         } else {
-            throw HttpBadRequest::withPayload(['error' => 'Die E-Mail-Adresse muss angegeben werden!']);
+            throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse muss angegeben werden!']);
         }
 
         if (strtolower($email) !== strtolower($user['email'])) {
             $existing = $this->db->users->get(['login' => $email])->one();
 
             if ($existing) {
-                throw HttpBadRequest::withPayload(['error' => 'Die E-Mail-Adresse ist bereits vergeben']);
+                throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist bereits vergeben']);
             }
         }
 
@@ -80,7 +80,7 @@ class User
 
         if ($username) {
             if ($username !== ($user['username'] ?? null) && strlen($username) > 64) {
-                throw HttpBadRequest::withPayload(['error' => 'Der Benutzername ist zu lang']);
+                throw new HttpBadRequest($request, ['error' => 'Der Benutzername ist zu lang']);
             }
         } else {
             $username = $user['username'] ?? null;
@@ -91,7 +91,7 @@ class User
 
         if ($name) {
             if ($name !== ($user['data']['name'] ?? '') && strlen($name) > 64) {
-                throw HttpBadRequest::withPayload(['error' => 'Der vollständige Name ist zu lang']);
+                throw new HttpBadRequest($request, ['error' => 'Der vollständige Name ist zu lang']);
             }
         } else {
             $name = $user['data']['name'] ?? null;
@@ -104,11 +104,11 @@ class User
             $passwordUtil = Password::fromConfig($config);
 
             if (!$passwordUtil->strongEnough($pw)) {
-                throw HttpBadRequest::withPayload(['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
+                throw new HttpBadRequest($request, ['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
             }
 
             if (trim($data['password']) !== trim($data['passwordRepeat'])) {
-                throw HttpBadRequest::withPayload(['error' => 'Die neuen Passwörder stimmen nicht überein']);
+                throw new HttpBadRequest($request, ['error' => 'Die neuen Passwörder stimmen nicht überein']);
             }
 
             $pwHash = $passwordUtil->hash($pw);

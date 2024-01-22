@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Exception;
+namespace Conia\Cms\Exception;
 
-use Conia\Core\Finder\Input\Token;
+use Conia\Cms\Finder\Input\Token;
 use Throwable;
 
-class ParserOutputException extends ParserException implements CoreException
+class ParserOutputException extends ParserException implements CmsException
 {
     public function __construct(
         public readonly Token $token,

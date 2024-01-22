@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
+
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Response;
 
 class Fulltext
 {
@@ -11,7 +14,7 @@ class Fulltext
         $data = $find->node->byPath($request->uri()->getPath());
 
         if (!$data) {
-            throw new HttpNotFound();
+            throw new HttpNotFound($request);
         }
 
         $class = $data['slug'];
@@ -21,7 +24,7 @@ class Fulltext
 
             // Create a JSON response if the URL ends with .json
             if (strtolower($extension ?? '') === 'json') {
-                return Response::fromFactory($this->factory)->json($page->json());
+                return Response::create($this->factory)->json($page->json());
             }
 
             // try {
@@ -33,7 +36,7 @@ class Fulltext
                 'find' => $find,
             ]);
             // } catch (Throwable) {
-            //     throw new HttpBadRequest();
+            //     throw new HttpBadRequest($request);
             // }
         }
     }

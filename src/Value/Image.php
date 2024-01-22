@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
 
-use Conia\Core\Assets;
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Assets;
+use Conia\Cms\Exception\RuntimeException;
 use Gumlet\ImageResize;
+
+use function Conia\Cms\Util\escape;
 
 class Image extends File
 {

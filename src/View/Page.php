@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\View;
+namespace Conia\Cms\View;
 
-use Conia\Chuck\Exception\HttpNotFound;
-use Conia\Chuck\Factory;
-use Conia\Chuck\Registry;
-use Conia\Chuck\Response;
-use Conia\Core\Context;
-use Conia\Core\Finder\Finder;
-use Conia\Core\Middleware\Permission;
+use Conia\Cms\Context;
+use Conia\Cms\Finder\Finder;
+use Conia\Cms\Middleware\Permission;
+use Conia\Core\Exception\HttpNotFound;
+use Conia\Core\Factory;
+use Conia\Core\Response;
+use Conia\Registry\Registry;
 
 class Page
 {
@@ -28,7 +28,7 @@ class Page
         if (!$page) {
             $this->redirectIfExists($context, $path);
 
-            throw new HttpNotFound();
+            throw new HttpNotFound($context->request);
         }
 
         return $page->response();
@@ -47,7 +47,7 @@ class Page
         $db = $context->db;
         $path = $db->paths->byPath(['path' => $path])->one();
 
-        if ($path && !is_null($path['inactive'])) {
+        if ($path && !($path['inactive'] === null)) {
             $paths = $db->paths->activeByNode(['node' => $path['node']])->all();
 
             $pathsByLocale = array_combine(

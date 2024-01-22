@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Tests\Setup;
+namespace Conia\Cms\Tests\Setup;
 
-use Conia\Chuck\Exception\ValueError;
-use Conia\Chuck\Registry;
-use Conia\Chuck\Request;
-use Conia\Core\Config;
+use Conia\Cms\Config;
+use Conia\Cms\Exception\ValueError;
+use Conia\Core\Request;
 use Conia\Quma\Connection;
 use Conia\Quma\Database;
+use Conia\Registry\Registry;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
@@ -168,11 +168,13 @@ class TestCase extends BaseTestCase
 
                 continue;
             }
+
             if (strtoupper($method) === 'POST') {
                 $_POST[$key] = $value;
 
                 continue;
             }
+
             if (strtoupper($method) === 'COOKIE') {
                 $_COOKIE[$key] = $value;
             } else {

@@ -1,6 +1,6 @@
 {
-    "name": "conia/core",
-    "description": "Conia CMS/CMF Core Library",
+    "name": "conia/cms",
+    "description": "Conia Content Management Framework",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -12,28 +12,33 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
-        "conia/chuck": "dev-main",
-        "conia/cli": "dev-main",
-        "conia/i18n": "dev-main",
+        "php": ">=8.3",
+        "conia/core": "@dev",
+        "conia/error": "dev-main",
         "conia/quma": "dev-main",
-        "conia/sire": "dev-main",
+        "conia/registry": "dev-main",
         "conia/session": "dev-main",
+        "conia/sire": "dev-main",
         "gumlet/php-image-resize": "2.0.*",
         "hidehalo/nanoid-php": "^1.1",
-        "symfony/html-sanitizer": "^6.2",
-        "conia/development": "^1.0"
+        "laminas/laminas-httphandlerrunner": "^2.4",
+        "psr/http-message-implementation": "^1.0",
+        "symfony/html-sanitizer": "^6.2"
     },
     "require-dev": {
-        "conia/chuck-boiler": "dev-main",
-        "nyholm/psr7": "^1.5",
-        "nyholm/psr7-server": "^1",
-        "pestphp/pest": "^1",
-        "phpunit/phpunit": "^9"
+        "conia/development": "^1.0",
+        "laminas/laminas-diactoros": "^2",
+        "phpunit/phpunit": "^10"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../conia/core"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "Conia\\Core\\": "src"
+            "Conia\\Cms\\": "src"
         },
         "files": [
             "src/Util/functions.php"
@@ -41,13 +46,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Conia\\Core\\Tests\\": "tests"
+            "Conia\\Cms\\Tests\\": "tests"
         }
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "pestphp/pest-plugin": true
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

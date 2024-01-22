@@ -2,41 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Middleware;
+namespace Conia\Cms\Middleware;
 
-use Conia\Chuck\Middleware;
-use Conia\Chuck\Request;
-use Conia\Chuck\Response;
-use Conia\Core\Config;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 class InitRequest implements Middleware
 {
-    public function __construct(protected Config $config)
+    public function process(Request $request, Handler $handler): Response
     {
-    }
-
-    public function __invoke(Request $request, callable $next): Response
-    {
-        // Set current locale
-        $locales = $this->config->locales();
-        $locale = $locales->negotiate($request);
-        $request->set('locale', $locale);
-        $request->set('defaultLocale', $locales->getDefault());
-
         // See if it's a JSON request
         if (
             isset($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
-            $request->set('isXhr', true);
+            $request = $request->withAttribute('isXhr', true);
         } else {
-            if ($request->hasHeader('Accept') && $request->header('Accept') === 'application/json') {
-                $request->set('isXhr', true);
+            if ($request->hasHeader('Accept') && $request->getHeaderLine('Accept') === 'application/json') {
+                $request = $request->withAttribute('isXhr', true);
             } else {
-                $request->set('isXhr', false);
+                $request = $request->withAttribute('isXhr', false);
             }
         }
 
-        return $next($request);
+        return $handler->handle($request);
     }
 }

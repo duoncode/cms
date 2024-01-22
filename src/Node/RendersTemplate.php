@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Node;
+namespace Conia\Cms\Node;
 
-use Conia\Chuck\Exception\HttpBadRequest;
-use Conia\Chuck\Renderer\Render;
-use Conia\Chuck\Response;
+use Conia\Cms\Renderer;
+use Conia\Core\Exception\HttpBadRequest;
+use Conia\Core\Response;
 use Throwable;
 
 trait RendersTemplate
 {
-    protected static string $template = '';
+    protected const string renderer = '';
 
-    public static function template(): ?string
+    public function renderer(): array
     {
-        if (!empty(static::$template)) {
-            return static::$template;
+        if (!empty(static::renderer)) {
+            return ['template', static::renderer];
         }
 
-        return static::handle();
+        return ['template', static::handle()];
     }
 
     /**
@@ -31,28 +31,33 @@ trait RendersTemplate
             return parent::read();
         }
 
-        return $this->render();
+        return (new Response($this->factory->response()))->body($this->render());
     }
 
-    protected function render(array $context = []): Response
+    protected function render(array $context = []): string
     {
         $context = array_merge([
             'page' => $this,
             'find' => $this->find,
             'locale' => $this->request->get('locale'),
-            'locales' => $this->config->locales,
+            'locales' => $this->request->get('locales'),
+            'request' => $this->request,
+            'registry' => $this->registry,
+            'debug' => $this->config->debug,
+            'env' => $this->config->env,
         ], $context);
 
         try {
-            $render = new Render('template', self::template());
+            [$type, $id] = $this->renderer();
+            $renderer = $this->registry->tag(Renderer::class)->get($type);
 
-            return $render->response($this->registry, $context);
+            return $renderer->render($id, $context);
         } catch (Throwable $e) {
             if ($this->config->debug()) {
                 throw $e;
             }
 
-            throw new HttpBadRequest();
+            throw new HttpBadRequest($this->request);
         }
     }
 }

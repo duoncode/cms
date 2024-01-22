@@ -2,20 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Closure;
-use Conia\Chuck\Request;
-use Conia\Core\Exception\RuntimeException;
+use Conia\Cms\Exception\RuntimeException;
+use Conia\Cms\Middleware\AddLocale;
+use Conia\Core\App;
+use Conia\Core\Plugin;
 use Iterator;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
-class Locales implements Iterator
+class Locales implements Iterator, Plugin
 {
     /** @var array<string, Locale> */
     protected array $locales = [];
 
     protected ?string $default = null;
     protected ?Closure $negotiator = null;
+
+    public function load(App $app): void
+    {
+        $app->middleware(new AddLocale($this));
+        $app->register(self::class, $this);
+    }
 
     public function add(
         string $id,
@@ -66,7 +75,7 @@ class Locales implements Iterator
     public function getDefault(): Locale
     {
         // default locale from config file
-        if (is_null($this->default)) {
+        if ($this->default === null) {
             throw new RuntimeException('Default locale not available');
         }
 
@@ -89,10 +98,11 @@ class Locales implements Iterator
 
     protected function fromRequest(Request $request, array $locales, Locale $default): Locale
     {
-        $uri = $request->uri();
+        $uri = $request->getUri();
 
         // By domain
         $host = strtolower(explode(':', $uri->getHost())[0]);
+
         foreach ($locales as $locale) {
             foreach ($locale->domains as $domain) {
                 if ($host === $domain) {
@@ -103,6 +113,7 @@ class Locales implements Iterator
 
         // From URL path prefix. e. g. http://example.com/en_EN/path/to/page
         $prefix = explode('/', trim($uri->getPath(), '/'))[0];
+
         foreach ($locales as $locale) {
             if ($prefix === $locale->urlPrefix) {
                 return $locale;
@@ -110,7 +121,8 @@ class Locales implements Iterator
         }
 
         // From session
-        $session = $request->get('session', null);
+        $session = $request->getAttribute('session', null);
+
         if ($session) {
             $locale = $session->get('locale', false);
 
@@ -159,11 +171,13 @@ class Locales implements Iterator
                     }
 
                     $lang = str_replace('-', '_', $lang);
+
                     if ($this->exists($lang)) {
                         return $lang;
                     }
 
                     $lang = strtok($lang, '_');
+
                     if ($this->exists($lang)) {
                         return $lang;
                     }

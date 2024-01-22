@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Field;
+namespace Conia\Cms\Field;
 
-use Conia\Core\Value\Html as HtmlValue;
+use Conia\Cms\Value\Html as HtmlValue;
 
 class Html extends Field
 {

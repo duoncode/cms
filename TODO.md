@@ -1,7 +1,7 @@
 TODO
 ====
 
-- Fallback URLs respectively parameterized URLs in the CMS
+- Fallback URLs respectively parameterized URLs in the framework
   Like /url/path/...remainder
        /url/path/{id}/{name}
 - Add field type reference: reference a single node or a list of nodes

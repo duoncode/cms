@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core;
+namespace Conia\Cms;
 
 use Closure;
-use Conia\Core\Node\Node;
+use Conia\Cms\Node\Node;
+
+use function Conia\Cms\Util\escape;
 
 final class Column
 {

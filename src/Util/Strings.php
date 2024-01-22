@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Util;
+namespace Conia\Cms\Util;
 
 class Strings
 {
@@ -27,6 +27,7 @@ class Strings
 
         foreach ($classes as $pattern) {
             $matches = [];
+
             if (preg_match_all($pattern, $str, $matches)) {
                 $size += count(array_unique($matches[0]));
                 $classCount++;
@@ -35,12 +36,14 @@ class Strings
 
         // special characters
         $matches = [];
+
         foreach (str_split("/[ ,.?!\"┬ú$%^&*()-_=+[]{};:'@#~<>/\\|`┬¼┬ª]/", 1) as $char) {
             if (strpos($str, $char) !== false) {
                 $matches[] = $char;
             }
         }
         $foundSpecialChars = count(array_unique($matches));
+
         if ($foundSpecialChars > 0) {
             $classCount++;
             $size += $foundSpecialChars;
@@ -52,6 +55,7 @@ class Strings
         // If this is below certain thresholds
         $sumDiff = 1;
         $chars = str_split($str, 1);
+
         for ($i = 1; $i < count($chars); $i++) {
             $sumDiff += abs(mb_ord($chars[$i - 1]) - mb_ord($chars[$i]));
         }
@@ -60,6 +64,7 @@ class Strings
         if ($sumDiff <= 12) {
             $len--;
         }
+
         // probably something like 12345 or aaabbb
         if ($sumDiff <= 5) {
             $len--;

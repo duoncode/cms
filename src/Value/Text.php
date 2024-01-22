@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Value;
+namespace Conia\Cms\Value;
+
+use function Conia\Cms\Util\escape;
 
 class Text extends Value
 {

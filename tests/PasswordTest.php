@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-use Conia\Core\Config;
-use Conia\Core\Tests\Setup\TestCase;
-use Conia\Core\Util\Password;
+use Conia\Cms\Config;
+use Conia\Cms\Tests\Setup\TestCase;
+use Conia\Cms\Util\Password;
 
 uses(TestCase::class);
-
 
 test('Password strength', function () {
     $pw = new Password();
@@ -17,13 +16,11 @@ test('Password strength', function () {
     expect($pw->strongEnough('evil-chuck-666'))->toBe(true);
 });
 
-
 test('Password hash (default argon2)', function () {
     $pw = new Password();
 
     expect(str_starts_with($pw->hash('evil-chuck-666'), '$argon2id$v'))->toBe(true);
 });
-
 
 test('Password verify', function () {
     $pw = new Password();
@@ -32,7 +29,6 @@ test('Password verify', function () {
     expect($pw->valid('evil-chuck-666', $hash))->toBe(true);
     expect($pw->valid('evil-chuck-660', $hash))->toBe(false);
 });
-
 
 test('Password init from config', function () {
     $config = new Config('conia');

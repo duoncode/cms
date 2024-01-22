@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conia\Core\Finder;
+namespace Conia\Cms\Finder;
 
-use Conia\Core\Context;
+use Conia\Cms\Context;
 
 final class QueryCompiler
 {
