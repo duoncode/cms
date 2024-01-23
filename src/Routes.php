@@ -39,25 +39,29 @@ class Routes
     {
         $session = new Session($this->config, $this->db);
 
+        $indexRoute = $app->get('/', [Page::class, 'catchall'], 'conia.index.get');
+        $indexRoute = $app->post('/', [Page::class, 'catchall'], 'conia.index.post');
+
         // All API routes
         $this->addPanelApi($app, $session);
 
-        $app->route($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall');
-        $app->route($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash');
-        $app->route($this->panelPath, [Panel::class, 'index'], 'conia.panel');
+        $app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'conia.panel.catchall');
+        $app->get($this->panelPath, [Panel::class, 'index'], 'conia.panel');
+        $app->get($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash');
 
-        $postMediaRoute = $app->post('/media/{mediatype:(image|file)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}', [Media::class, 'upload'], 'conia.media.upload');
+        $postMediaRoute = $app->post(
+            '/media/{mediatype:(image|file)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
+            [Media::class, 'upload'],
+            'conia.media.upload'
+        );
 
         $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image');
         $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file');
 
-        $catchallRoute = $app->route(
-            '/preview/...slug',
-            [Page::class, 'preview'],
-            'conia.preview.catchall',
-        );
+        $catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'conia.preview.catchall');
 
         if (!$this->sessionEnabled) {
+            $indexRoute->middleware($session);
             $postMediaRoute->middleware($session);
             $catchallRoute->middleware($session);
         }
@@ -94,7 +98,9 @@ class Routes
         $api->get('/boot', [Panel::class, 'boot'], 'conia.boot');
         $api->get('/collections', [Panel::class, 'collections'], 'conia.collections');
         $api->get('/collection/{collection}', [Panel::class, 'collection'], 'conia.collection');
-        $api->route('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node')->method('GET', 'PUT', 'DELETE');
+        $api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node.get');
+        $api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node.put');
+        $api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'conia.node.delet');
         $api->post('/node/{type}', [Panel::class, 'createNode'], 'conia.node.create');
         $api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'conia.blueprint');
     }

@@ -24,7 +24,13 @@ class Page
     public function catchall(Context $context, Finder $find): Response
     {
         $path = $context->request->uri()->getPath();
-        $page = $find->node->byPath($path);
+        $prefix = $context->config->get('path.prefix', '');
+
+        if ($prefix) {
+            $path = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $path);
+        }
+
+        $page = $find->node->byPath($path === '' ? '/' : $path);
 
         if (!$page) {
             $this->redirectIfExists($context, $path);

@@ -10,7 +10,6 @@ use Conia\Cms\Node\Block;
 use Conia\Cms\Node\Document;
 use Conia\Cms\Node\Node;
 use Conia\Cms\Node\Page as PageNode;
-use Conia\Cms\View\Page;
 use Conia\Core\App;
 use Conia\Core\Factory;
 use Conia\Core\Plugin;

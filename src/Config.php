@@ -19,6 +19,7 @@ class Config implements ConfigInterface
         array $settings = [],
     ) {
         $this->settings = array_merge([
+            'path.prefix' => '',
             'path.assets' => '/assets',
             'path.cache' => '/cache',
 

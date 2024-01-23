@@ -261,17 +261,22 @@ abstract class Node
     {
         $request = $this->request;
 
-        return (new Response($this->factory
-            ->response()
-            ->withHeader('Content-Type', 'application/json')))->body(
-                json_encode(match ($request->method()) {
-                    'GET' => $this->read(),
-                    'POST' => $this->create(),
-                    'PUT' => $this->change(),
-                    'DELETE' => $this->delete(),
-                    default => throw new HttpBadRequest($request),
-                }, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)
-            );
+        $content = json_encode(match ($request->method()) {
+            'GET' => $this->read(),
+            'POST' => $this->create(),
+            'PUT' => $this->change(),
+            'DELETE' => $this->delete(),
+            default => throw new HttpBadRequest($request),
+        }, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        $response = (
+            new Response(
+                $this->factory
+                    ->response()
+                    ->withHeader('Content-Type', 'application/json')
+            )
+        )->body($content);
+
+        return $response;
     }
 
     public function render(array $context = []): Response
