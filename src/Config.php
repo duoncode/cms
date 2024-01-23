@@ -21,6 +21,15 @@ class Config implements ConfigInterface
         $this->settings = array_merge([
             'path.assets' => '/assets',
             'path.cache' => '/cache',
+
+            'panel.theme' => null,
+            'panel.prefix' => '/panel',
+            'panel.logo' => '/images/logo.png',
+            'panel.debug' => $debug,
+            'panel.color-success' => '',
+            'panel.color-danger' => '',
+            'panel.color-info' => '',
+
             'session.options' => [
                 'cookie_httponly' => true,
                 'cookie_lifetime' => 0,
@@ -36,6 +45,7 @@ class Config implements ConfigInterface
                 'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
                 'image/png' => ['png'],
                 'image/webp' => ['webp'],
+                'image/svg+xml' => ['svg'],
             ],
             'upload.maxsize' => 10 * 1024 * 1024,
             // 'password.algorithm' => PASSWORD_* PHP constant
