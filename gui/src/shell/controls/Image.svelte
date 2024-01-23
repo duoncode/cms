@@ -28,7 +28,7 @@
                     <Upload
                         image
                         multiple={field.multiple}
-                        path="/media/image/node/{node}"
+                        path="{$system.prefix}/media/image/node/{node}"
                         required={field.required}
                         name={field.name}
                         translate={false}
@@ -39,7 +39,7 @@
             <Upload
                 image
                 multiple={field.multiple}
-                path="/media/image/node/{node}"
+                path="{$system.prefix}/media/image/node/{node}"
                 required={field.required}
                 name={field.name}
                 translate={field.translate}

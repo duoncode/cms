@@ -23,6 +23,7 @@ export interface System {
     logo?: string;
     assets: string;
     cache: string;
+    prefix: string;
     sessionExpires: number;
     transliterate?: Record<string, string>;
     allowedFiles: {
@@ -40,6 +41,7 @@ export const system: Writable<System> = writable({
     defaultLocale: 'en',
     assets: '',
     cache: '',
+    prefix: '',
     sessionExpires: 3600,
     locales: [],
     allowedFiles: {
@@ -78,6 +80,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
             logo: data.logo as string,
             assets: data.assets as string,
             cache: data.cache as string,
+            prefix: data.prefix as string,
             sessionExpires: data.sessionExpires as number,
             transliterate: data.transliterate as Record<string, string> | null,
             allowedFiles: data.allowedFiles as {

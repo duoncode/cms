@@ -23,7 +23,7 @@
         <Upload
             image
             multiple={true}
-            path="/media/image/node/{node}"
+            path="{$system.prefix}/media/image/node/{node}"
             name={field.name}
             translate={field.translateFile ? false : field.translate}
             bind:assets={data.files} />

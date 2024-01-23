@@ -2,6 +2,7 @@
     import type { GridImage } from '$types/data';
     import type { GridField } from '$types/fields';
     import Upload from '$shell/Upload.svelte';
+    import { system } from '$lib/sys';
 
     export let field: GridField;
     export let item: GridImage;
@@ -21,7 +22,7 @@
         <Upload
             image
             multiple={true}
-            path="/media/image/node/{node}"
+            path="{$system.prefix}/media/image/node/{node}"
             name={field.name + '_' + index}
             translate={false}
             bind:assets={item.files} />

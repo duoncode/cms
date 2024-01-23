@@ -1,12 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
+    import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
 
     export let node: string;
     export let file: string;
     export let current: string;
 
-    const path = `/media/image/node/${node}/${file}`;
+    const path = `${$system.prefix}/media/image/node/${node}/${file}`;
     const dispatch = createEventDispatcher();
 
     const sendFile = () => dispatch('click', { file: path });
