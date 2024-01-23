@@ -20,6 +20,7 @@
     export let translate: boolean;
     export let assets: FileItem[];
     export let multiple = false;
+    export let required = false;
     export let disabled = false;
     export let disabledMsg = null;
     export let callback = null;
@@ -194,6 +195,7 @@
 {:else}
     <div
         class="upload"
+        class:required
         class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
@@ -240,6 +242,11 @@
 
         &.upload-multiple {
             @apply flex-col;
+        }
+
+        &.required .dragdrop {
+            @apply border-l-rose-700 border-l-4;
+            border-left-style: solid;
         }
     }
 

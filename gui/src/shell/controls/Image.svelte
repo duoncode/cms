@@ -29,6 +29,7 @@
                         image
                         multiple={field.multiple}
                         path="/media/image/node/{node}"
+                        required={field.required}
                         name={field.name}
                         translate={false}
                         bind:assets={data.files[locale.id]} />
@@ -39,6 +40,7 @@
                 image
                 multiple={field.multiple}
                 path="/media/image/node/{node}"
+                required={field.required}
                 name={field.name}
                 translate={field.translate}
                 bind:assets={data.files} />
