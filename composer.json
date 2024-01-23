@@ -13,7 +13,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.3",
-        "conia/core": "@dev",
+        "conia/core": "dev-main",
         "conia/error": "dev-main",
         "conia/quma": "dev-main",
         "conia/registry": "dev-main",
@@ -30,12 +30,6 @@
         "laminas/laminas-diactoros": "^2",
         "phpunit/phpunit": "^10"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../../conia/core"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Conia\\Cms\\": "src"
