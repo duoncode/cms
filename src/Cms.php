@@ -20,6 +20,7 @@ use Conia\Registry\Entry;
 use Conia\Registry\Registry;
 use Conia\Route\Route;
 use PDO;
+use Throwable;
 
 class Cms implements Plugin
 {
@@ -158,19 +159,24 @@ class Cms implements Plugin
 
     protected function synchronizeNodes(): void
     {
-        $types = array_map(fn ($record) => $record['handle'], $this->db->nodes->types()->all());
+        // TODO: check if db is already initialized
+        try {
+            $types = array_map(fn ($record) => $record['handle'], $this->db->nodes->types()->all());
 
-        foreach ($this->nodes as $handle => $class) {
-            if (!in_array($handle, $types)) {
-                $this->db->nodes->addType([
-                    'handle' => $handle,
-                    'kind' => match(true) {
-                        is_a($class, Block::class, true) => 'block',
-                        is_a($class, PageNode::class, true) => 'page',
-                        is_a($class, Document::class, true) => 'document',
-                    },
-                ])->run();
+            foreach ($this->nodes as $handle => $class) {
+                if (!in_array($handle, $types)) {
+                    $this->db->nodes->addType([
+                        'handle' => $handle,
+                        'kind' => match(true) {
+                            is_a($class, Block::class, true) => 'block',
+                            is_a($class, PageNode::class, true) => 'page',
+                            is_a($class, Document::class, true) => 'document',
+                        },
+                    ])->run();
+                }
             }
+        } catch (Throwable) {
+            return;
         }
     }
 }
