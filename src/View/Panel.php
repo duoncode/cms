@@ -76,7 +76,7 @@ class Panel
     {
         $file = $this->publicPath . '/panel/' . $slug;
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             return Response::create($factory)->file($file);
         }
 
@@ -165,7 +165,7 @@ class Panel
     }
 
     #[Permission('panel')]
-    public function node(Finder $find, string $uid): array
+    public function node(Finder $find, string $uid): Response
     {
         $node = $find->node->byUid($uid, published: null);
 
