@@ -188,7 +188,7 @@ class Image extends File
 
     protected function getMediaPath(int $index): string
     {
-        return '/media/image/' .
+        return $this->node->config->get('path.prefix') . '/media/image/' .
             $this->assetsPath() .
             $this->data['files'][$index]['file'] .
             $this->queryString .

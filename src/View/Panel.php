@@ -58,6 +58,7 @@ class Panel
             'logo' => $config->get('panel.logo', null),
             'assets' => $config->get('path.assets'),
             'cache' => $config->get('path.cache'),
+            'prefix' => $config->get('path.prefix'),
             'sessionExpires' => $config->get('session.options')['gc_maxlifetime'],
             'transliterate' => $config->get('slug.transliterate'),
             'allowedFiles' => [

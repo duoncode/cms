@@ -22,7 +22,7 @@
     </Label>
     <div class="mt-2">
         <Upload
-            path="/media/file/node/{node}"
+            path="{$system.prefix}/media/file/node/{node}"
             multiple={field.multiple}
             name={field.name}
             translate={field.translateFile ? false : field.translate}

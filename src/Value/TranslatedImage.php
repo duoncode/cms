@@ -32,7 +32,7 @@ class TranslatedImage extends Image
 
     protected function getMediaPath(int $index): string
     {
-        return '/media/image/' .
+        return $this->node->config->get('path.prefix') . '/media/image/' .
             $this->assetsPath() .
             $this->translated('file', $index) .
             $this->queryString .
