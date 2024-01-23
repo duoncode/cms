@@ -235,7 +235,7 @@
 
 <style lang="postcss">
     .upload {
-        @apply flex flex-col w-full;
+        @apply flex flex-col w-full h-full;
         @apply md:flex-row;
 
         &.upload-multiple {

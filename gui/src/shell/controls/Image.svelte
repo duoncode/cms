@@ -13,13 +13,15 @@
     let lang = $system.locale;
 </script>
 
-<Field required={field.required}>
+<Field
+    required={field.required}
+    class="flex flex-col h-full">
     <LabelDiv
         translate={field.translate}
         bind:lang>
         {field.label}
     </LabelDiv>
-    <div class="mt-2">
+    <div class="mt-2 flex-grow">
         {#if field.translateFile}
             {#each $system.locales as locale}
                 {#if locale.id === lang}
