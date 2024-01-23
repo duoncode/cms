@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Conia\Cms\View;
 
 use Conia\Cms\Context;
+use Conia\Cms\Exception\RuntimeException;
 use Conia\Cms\Finder\Finder;
 use Conia\Cms\Middleware\Permission;
+use Conia\Cms\Util\Path;
 use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Exception\HttpNotFound;
 use Conia\Core\Factory;
@@ -23,8 +25,10 @@ class Page
 
     public function catchall(Context $context, Finder $find): Response
     {
-        $path = $context->request->uri()->getPath();
-        $prefix = $context->config->get('path.prefix', '');
+        $request = $context->request;
+        $config = $context->config;
+        $path = $request->uri()->getPath();
+        $prefix = $config->get('path.prefix', '');
 
         if ($prefix) {
             $path = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $path);
@@ -33,13 +37,19 @@ class Page
         $page = $find->node->byPath($path === '' ? '/' : $path);
 
         if (!$page) {
-            $this->redirectIfExists($context, $path);
+            try {
+                $path = Path::inside($config->get('path.public'), $path);
 
-            throw new HttpNotFound($context->request);
+                return Response::create($this->factory)->file($path);
+            } catch (RuntimeException) {
+                $this->redirectIfExists($context, $path);
+
+                throw new HttpNotFound($request);
+            }
         }
 
-        if ($context->request->get('isXhr', false)) {
-            if ($context->request->method() === 'GET') {
+        if ($request->get('isXhr', false)) {
+            if ($request->method() === 'GET') {
                 return $page->jsonResponse();
             }
 
