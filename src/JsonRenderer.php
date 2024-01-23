@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Conia\Cms;
 
 use Conia\Core\Factory;
+use Conia\Core\Response;
 use Conia\Route\After;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface as PsrResponse;
 use Traversable;
 
 /** @psalm-api */
@@ -16,8 +17,16 @@ class JsonRenderer implements AfterRenderer
     {
     }
 
-    public function handle(mixed $data): Response
+    public function handle(mixed $data): PsrResponse
     {
+        if ($data instanceof PsrResponse) {
+            return $data;
+        }
+
+        if ($data instanceof Response) {
+            return $data->unwrap();
+        }
+
         $flags = JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR;
 
         if ($data instanceof Traversable) {
@@ -27,7 +36,7 @@ class JsonRenderer implements AfterRenderer
         return $this->response(json_encode($data, $flags));
     }
 
-    public function response(string $json): Response
+    public function response(string $json): PsrResponse
     {
         $response = $this->factory
             ->response()
