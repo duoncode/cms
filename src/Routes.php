@@ -69,7 +69,7 @@ class Routes
             '/...slug',
             [Page::class, 'catchall'],
             'conia.catchall',
-        )->middleware($this->initRequestMiddlware);
+        )->method('GET', 'POST')->middleware($this->initRequestMiddlware);
     }
 
     protected function addAuth(Group $api): void

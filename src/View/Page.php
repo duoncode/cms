@@ -7,6 +7,7 @@ namespace Conia\Cms\View;
 use Conia\Cms\Context;
 use Conia\Cms\Finder\Finder;
 use Conia\Cms\Middleware\Permission;
+use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Exception\HttpNotFound;
 use Conia\Core\Factory;
 use Conia\Core\Response;
@@ -29,6 +30,14 @@ class Page
             $this->redirectIfExists($context, $path);
 
             throw new HttpNotFound($context->request);
+        }
+
+        if ($context->request->get('isXhr', false)) {
+            if ($context->request->method() === 'GET') {
+                return $page->jsonResponse();
+            }
+
+            throw new HttpBadRequest();
         }
 
         return $page->response();

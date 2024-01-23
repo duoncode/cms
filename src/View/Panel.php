@@ -170,7 +170,7 @@ class Panel
         $node = $find->node->byUid($uid, published: null);
 
         if ($node) {
-            return $node->response();
+            return $node->jsonResponse();
         }
 
         throw new HttpNotFound($this->request);

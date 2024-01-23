@@ -246,23 +246,50 @@ abstract class Node
         return $fields;
     }
 
-    public function response(): array|Response
+    public function response(): Response
     {
         $request = $this->request;
 
         return match ($request->method()) {
-            'GET' => $this->read(),
-            'POST' => $this->create(),
-            'PUT' => $this->change(),
-            'DELETE' => $this->delete(),
+            'GET' => $this->render(),
+            'POST' => $this->formPost($request->form()),
             default => throw new HttpBadRequest($request),
         };
+    }
+
+    public function jsonResponse(): Response
+    {
+        $request = $this->request;
+
+        return (new Response($this->factory
+            ->response()
+            ->withHeader('Content-Type', 'application/json')))->body(
+                json_encode(match ($request->method()) {
+                    'GET' => $this->read(),
+                    'POST' => $this->create(),
+                    'PUT' => $this->change(),
+                    'DELETE' => $this->delete(),
+                    default => throw new HttpBadRequest($request),
+                }, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)
+            );
+    }
+
+    public function render(array $context = []): Response
+    {
+        return (new Response($this->factory
+            ->response()
+            ->withHeader('Content-Type', 'application/json')))->body(
+                json_encode(
+                    $this->read(),
+                    JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+                )
+            );
     }
 
     /**
      * Called on GET request.
      */
-    public function read(): array|Response
+    public function read(): array
     {
         $data = $this->data();
 
@@ -307,13 +334,7 @@ abstract class Node
      */
     public function create(): array|Response
     {
-        $request = $this->request;
-
-        return match ($request->header('Content-Type')) {
-            // TODO: prepare form data and send it to save
-            'application/x-www-form-urlencoded' => $this->formPost($request->form()),
-            'application/json' => $this->save($this->getRequestData()),
-        };
+        return $this->save($this->getRequestData());
     }
 
     /**

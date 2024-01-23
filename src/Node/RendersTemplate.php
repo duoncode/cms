@@ -7,6 +7,7 @@ namespace Conia\Cms\Node;
 use Conia\Cms\Renderer;
 use Conia\Core\Exception\HttpBadRequest;
 use Conia\Core\Response;
+use Conia\Registry\Exception\NotFoundException;
 use Throwable;
 
 trait RendersTemplate
@@ -22,19 +23,7 @@ trait RendersTemplate
         return ['template', static::handle()];
     }
 
-    /**
-     * Called on GET request.
-     */
-    public function read(): array|Response
-    {
-        if ($this->request->header('Accept') === 'application/json') {
-            return parent::read();
-        }
-
-        return (new Response($this->factory->response()))->body($this->render());
-    }
-
-    protected function render(array $context = []): string
+    public function render(array $context = []): Response
     {
         $context = array_merge([
             'page' => $this,
@@ -51,7 +40,11 @@ trait RendersTemplate
             [$type, $id] = $this->renderer();
             $renderer = $this->registry->tag(Renderer::class)->get($type);
 
-            return $renderer->render($id, $context);
+            return (new Response($this->factory->response()))->body(
+                $renderer->render($id, $context)
+            );
+        } catch (NotFoundException) {
+            return parent::render();
         } catch (Throwable $e) {
             if ($this->config->debug()) {
                 throw $e;
