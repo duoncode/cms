@@ -6,23 +6,27 @@
     export let doc: Document;
     export let fields: Field[];
 
-    function fieldSpan(value: number | null) {
+    function fieldSpan(value: number | null, type: 'row' | 'col') {
         if (value) {
             if (value > 100 || value <= 0) value = 100;
 
             return `span ${value} / span ${value}`;
         }
 
-        return 'span 100 / span 100';
+        if (type === 'col') {
+            return 'span 100 / span 100';
+        }
+
+        return 'span 1 / span 1';
     }
 </script>
 
-<div class="field-grid">
+<div class="field-grid hans">
     {#each fields as field}
         <div
             style="
-                grid-column: {fieldSpan(field.width)};
-                grid-row: {fieldSpan(field.rows)}">
+                grid-column: {fieldSpan(field.width, 'col')};
+                grid-row: {fieldSpan(field.rows, 'row')}">
             {#if controls[field.type]}
                 <svelte:component
                     this={controls[field.type]}
