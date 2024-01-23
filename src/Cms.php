@@ -20,7 +20,6 @@ use Conia\Registry\Entry;
 use Conia\Registry\Registry;
 use Conia\Route\Route;
 use PDO;
-use Throwable;
 
 class Cms implements Plugin
 {
@@ -29,6 +28,7 @@ class Cms implements Plugin
     protected readonly Registry $registry;
     protected readonly Database $db;
     protected readonly Connection $connection;
+    protected readonly Routes $routes;
 
     /** @property array<Entry> */
     protected array $renderers = [];
@@ -52,7 +52,8 @@ class Cms implements Plugin
         $this->registry->add(Database::class, $this->db);
         $this->registry->add(Factory::class, $this->factory);
 
-        (new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled))->add($app);
+        $this->routes = new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled);
+        $this->routes->add($app);
     }
 
     protected function collect(): void
@@ -138,11 +139,7 @@ class Cms implements Plugin
      */
     public function catchallRoute(): Route
     {
-        return Route::any(
-            '/...slug',
-            [Page::class, 'catchall'],
-            'conia.catchall',
-        );
+        return $this->routes->catchallRoute();
     }
 
     public function renderer(string $id, string $class): Entry
@@ -159,24 +156,19 @@ class Cms implements Plugin
 
     protected function synchronizeNodes(): void
     {
-        // TODO: check if db is already initialized
-        try {
-            $types = array_map(fn ($record) => $record['handle'], $this->db->nodes->types()->all());
+        $types = array_map(fn ($record) => $record['handle'], $this->db->nodes->types()->all());
 
-            foreach ($this->nodes as $handle => $class) {
-                if (!in_array($handle, $types)) {
-                    $this->db->nodes->addType([
-                        'handle' => $handle,
-                        'kind' => match(true) {
-                            is_a($class, Block::class, true) => 'block',
-                            is_a($class, PageNode::class, true) => 'page',
-                            is_a($class, Document::class, true) => 'document',
-                        },
-                    ])->run();
-                }
+        foreach ($this->nodes as $handle => $class) {
+            if (!in_array($handle, $types)) {
+                $this->db->nodes->addType([
+                    'handle' => $handle,
+                    'kind' => match(true) {
+                        is_a($class, Block::class, true) => 'block',
+                        is_a($class, PageNode::class, true) => 'page',
+                        is_a($class, Document::class, true) => 'document',
+                    },
+                ])->run();
             }
-        } catch (Throwable) {
-            return;
         }
     }
 }

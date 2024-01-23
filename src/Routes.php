@@ -16,6 +16,7 @@ use Conia\Core\App;
 use Conia\Core\Factory;
 use Conia\Quma\Database;
 use Conia\Route\Group;
+use Conia\Route\Route;
 
 class Routes
 {
@@ -60,6 +61,15 @@ class Routes
             $postMediaRoute->middleware($session);
             $catchallRoute->middleware($session);
         }
+    }
+
+    public function catchallRoute(): Route
+    {
+        return Route::any(
+            '/...slug',
+            [Page::class, 'catchall'],
+            'conia.catchall',
+        )->middleware($this->initRequestMiddlware);
     }
 
     protected function addAuth(Group $api): void
