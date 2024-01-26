@@ -114,23 +114,19 @@ abstract class Node
 
     public function data(): array
     {
-        static $result = null;
+        $result = $this->data;
+        $content = [];
 
-        if ($result === null) {
-            $result = $this->data;
-            $content = [];
-
-            // Fill the field's value with missing keys from the structure and fix type
-            foreach ($this->fieldNames as $fieldName) {
-                $field = $this->{$fieldName};
-                $structure = $field->structure();
-                $content[$fieldName] = array_merge($structure, $result['content'][$fieldName] ?? []);
-                $content[$fieldName]['type'] = $structure['type'];
-            }
-
-            $result['content'] = $content;
-            $result['deletable'] = $this->deletable();
+        // Fill the field's value with missing keys from the structure and fix type
+        foreach ($this->fieldNames as $fieldName) {
+            $field = $this->{$fieldName};
+            $structure = $field->structure();
+            $content[$fieldName] = array_merge($structure, $result['content'][$fieldName] ?? []);
+            $content[$fieldName]['type'] = $structure['type'];
         }
+
+        $result['content'] = $content;
+        $result['deletable'] = $this->deletable();
 
         return $result;
     }
