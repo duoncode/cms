@@ -114,17 +114,45 @@ abstract class Node
 
     public function data(): array
     {
-        $result = $this->data;
+        $data = $this->data;
+        $result = [
+            'uid' => $data['uid'],
+            'published' => $data['published'],
+            'hidden' => $data['hidden'],
+            'locked' => $data['locked'],
+            'created' => $data['created'],
+            'changed' => $data['changed'],
+            'deleted' => $data['deleted'],
+            'paths' => $data['paths'],
+            'type' => [
+                'handle' => $data['handle'],
+                'kind' => $data['kind'],
+                'class' => $this::class,
+            ],
+            'editor' => [
+                'uid' => $data['editor_uid'],
+                'email' => $data['editor_email'],
+                'username' => $data['editor_username'],
+                'data' => $data['editor_data'],
+            ],
+            'creator' => [
+                'uid' => $data['creator_uid'],
+                'email' => $data['creator_email'],
+                'username' => $data['creator_username'],
+                'data' => $data['creator_data'],
+            ],
+        ];
         $content = [];
 
         // Fill the field's value with missing keys from the structure and fix type
         foreach ($this->fieldNames as $fieldName) {
             $field = $this->{$fieldName};
             $structure = $field->structure();
-            $content[$fieldName] = array_merge($structure, $result['content'][$fieldName] ?? []);
+            $content[$fieldName] = array_merge($structure, $data['content'][$fieldName] ?? []);
             $content[$fieldName]['type'] = $structure['type'];
         }
 
+        error_log(print_r($content, true));
         $result['content'] = $content;
         $result['deletable'] = $this->deletable();
 
@@ -140,14 +168,14 @@ abstract class Node
             $result[$fieldName] = $field->structure($values[$fieldName] ?? null);
         }
 
-        // TODO: We should improve the nodetype detection?
-        $nodetype = 'document';
+        // TODO: Improve the node kind determination or get rid of it
+        $kind = 'document';
 
         if (is_subclass_of($this, Page::class)) {
-            $nodetype = 'page';
+            $kind = 'page';
         } else {
             if (is_subclass_of($this, Block::class)) {
-                $nodetype = 'block';
+                $kind = 'block';
             }
         }
 
@@ -160,8 +188,11 @@ abstract class Node
             'locked' => false,
             'deletable' => $this->deletable(),
             'content' => $result,
-            'type' => static::handle(),
-            'nodetype' => $nodetype,
+            'type' => [
+                'handle' => static::handle(),
+                'kind' => $kind,
+                'class' => static::class,
+            ],
             'paths' => [],
             'generatedPaths' => [],
         ];

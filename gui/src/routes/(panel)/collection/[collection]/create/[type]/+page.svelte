@@ -12,7 +12,7 @@
             node.published = true;
         }
 
-        create(node, node.type, `collection/${collection.slug}`);
+        create(node, node.type.handle, `collection/${collection.slug}`);
     }
 </script>
 

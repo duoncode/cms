@@ -59,7 +59,7 @@ class Node
             ->context
             ->registry
             ->tag(CmsNode::class)
-            ->entry($data['typehandle'])
+            ->entry($data['handle'])
             ->definition();
 
         if (is_subclass_of($class, CmsNode::class)) {

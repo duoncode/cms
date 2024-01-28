@@ -36,7 +36,7 @@ class Block
             ->context
             ->registry
             ->tag(Node::class)
-            ->entry($data['typehandle'])
+            ->entry($data['handle'])
             ->definition();
 
         if (!is_subclass_of($class, BlockNode::class)) {

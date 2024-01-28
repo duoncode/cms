@@ -122,10 +122,24 @@ export interface Collection {
     blueprints: Blueprint[];
 }
 
+export interface Type {
+    handle: string;
+    class: string;
+    kind: string;
+}
+
+export interface Editor {
+    uid: string;
+    email: string;
+    username: string;
+    data: {
+        name: string;
+    };
+}
+
 export interface Node {
     uid: string;
     title: string;
-    type: string;
     published: boolean;
     hidden: boolean;
     locked: boolean;
@@ -133,7 +147,7 @@ export interface Node {
     created: string;
     changed: string;
     deleted: null | string;
-    nodetype: string;
+    type: Type;
     paths: Record<string, string>;
     generatedPaths: Record<string, string>;
     route?: Route;
@@ -141,18 +155,8 @@ export interface Node {
     fields: Field[];
     content: Content;
 
-    creator_uid: string;
-    creator_email: string;
-    creator_username: string;
-    creator_data: {
-        name: string;
-    };
-    editor_uid: string;
-    editor_email: string;
-    editor_username: string;
-    editor_data: {
-        name: string;
-    };
+    creator: Editor;
+    editor: Editor;
 }
 
 export interface RoutedNode {

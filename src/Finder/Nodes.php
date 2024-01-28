@@ -37,7 +37,7 @@ final class Nodes implements Iterator
             'published' => 'n.published',
             'hidden' => 'n.hidden',
             'type' => 't.handle',
-            'typehandle' => 't.handle',
+            'handle' => 't.handle',
             'uid' => 'n.uid',
             'kind' => 't.kind',
         ];
@@ -125,7 +125,7 @@ final class Nodes implements Iterator
         $class = $context
             ->registry
             ->tag(Node::class)
-            ->entry($page['typehandle'])
+            ->entry($page['handle'])
             ->definition();
 
         return new $class($context, $this->find, $page);

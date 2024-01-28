@@ -35,7 +35,7 @@
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
-    {#if node.nodetype === 'page'}
+    {#if node.type.kind === 'page'}
         <div class="paths mb-8">
             {#each $system.locales as locale}
                 <div class="path">
@@ -51,7 +51,7 @@
             {/each}
         </div>
     {/if}
-    {#if node.nodetype !== 'document'}
+    {#if node.type.kind !== 'document'}
         <div class="max-w-xl">
             <div class="mb-4">
                 <ToggleLine
