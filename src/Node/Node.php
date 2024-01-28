@@ -152,7 +152,6 @@ abstract class Node
             $content[$fieldName]['type'] = $structure['type'];
         }
 
-        error_log(print_r($content, true));
         $result['content'] = $content;
         $result['deletable'] = $this->deletable();
 
