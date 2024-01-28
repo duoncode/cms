@@ -1,5 +1,4 @@
-import type { Field } from '$types/fields';
-import type { Document, Node } from '$types/data';
+import type { RoutedNode, Node } from '$types/data';
 import req from '$lib/req';
 
 export const load = async ({ params, fetch, parent, route }) => {
@@ -7,17 +6,12 @@ export const load = async ({ params, fetch, parent, route }) => {
     const response = await req.get(`blueprint/${params.type}`, {}, fetch);
 
     if (response.ok) {
-        const fields = response.data.fields as Field[];
-        const doc = response.data.data as Document;
+        const node = response.data as Node;
 
         return {
             collection,
-            title: response.data.title,
-            type: params.type,
-            uid: response.data.uid,
-            fields,
-            doc,
-            routeId: route.id,
-        } satisfies Node;
+            node,
+            route,
+        } satisfies RoutedNode;
     }
 };

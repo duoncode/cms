@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { Document } from '$types/data';
+    import type { Node } from '$types/data';
     import type { Field } from '$types/fields';
     import controls from '$lib/controls';
 
-    export let doc: Document;
+    export let node: Node;
     export let fields: Field[];
 
     function fieldSpan(value: number | null, type: 'row' | 'col') {
@@ -31,8 +31,8 @@
                 <svelte:component
                     this={controls[field.type]}
                     {field}
-                    node={doc.uid}
-                    bind:data={doc.content[field.name]} />
+                    node={node.uid}
+                    bind:data={node.content[field.name]} />
             {:else}
                 {field.type}
             {/if}

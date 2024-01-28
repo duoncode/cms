@@ -1,28 +1,28 @@
-import type { Document, Route } from '$types/data';
-import type { System, Locale } from '$lib/sys';
+import type { Route, Node } from '$types/data';
+import type { System } from '$lib/sys';
 import { localesMap } from '$lib/sys';
 import { error } from '$lib/state';
 
-export function generatePaths(doc: Document, route: Route, system: System) {
+export function generatePaths(node: Node, route: Route, system: System) {
     const paths = {};
 
     [...system.locales].map(locale => {
         const path = typeof route === 'string' ? route : route[locale.id];
 
         if (path) {
-            paths[locale.id] = transformPath(path, doc, locale.id, system);
+            paths[locale.id] = transformPath(path, node, locale.id, system);
         }
     });
 
     return paths;
 }
 
-function transformPath(path: string, doc: Document, localeId: string, system: System) {
+function transformPath(path: string, node: Node, localeId: string, system: System) {
     const routePattern = /[^{}]+(?=})/g;
     const extractParams = path.match(routePattern);
 
     extractParams.map(param => {
-        const value = doc.content[param];
+        const value = node.content[param];
         if (value) {
             switch (value.type) {
                 case 'number':

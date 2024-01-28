@@ -1,3 +1,4 @@
+import type { RouteDefinition } from '@sveltejs/kit';
 import type { Field } from '$types/fields';
 
 export interface User {
@@ -121,8 +122,10 @@ export interface Collection {
     blueprints: Blueprint[];
 }
 
-export interface Document {
+export interface Node {
     uid: string;
+    title: string;
+    type: string;
     published: boolean;
     hidden: boolean;
     locked: boolean;
@@ -130,12 +133,14 @@ export interface Document {
     created: string;
     changed: string;
     deleted: null | string;
-    type: string;
     nodetype: string;
     paths: Record<string, string>;
     generatedPaths: Record<string, string>;
     route?: Route;
+
+    fields: Field[];
     content: Content;
+
     creator_uid: string;
     creator_email: string;
     creator_username: string;
@@ -150,12 +155,8 @@ export interface Document {
     };
 }
 
-export interface Node {
+export interface RoutedNode {
+    route: RouteDefinition;
     collection: Collection;
-    type: string;
-    title: string;
-    uid: string;
-    fields: Field[];
-    doc: Document;
-    routeId: string;
+    node: Node;
 }

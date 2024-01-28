@@ -10,7 +10,7 @@
     import IcoSave from '$shell/icons/IcoSave.svelte';
     import IcoEye from '$shell/icons/IcoEye.svelte';
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
-    import node from '$lib/node';
+    import { remove as removeNode } from '$lib/node';
 
     export let uid: string;
     export let collectionPath: string;
@@ -27,7 +27,7 @@
             {
                 close: modal.close,
                 proceed: () => {
-                    node.remove(uid, collectionPath);
+                    removeNode(uid, collectionPath);
                     modal.close();
                 },
             },

@@ -1,21 +1,21 @@
 <script lang="ts">
-    import type { Document } from '$types/data';
+    import type { Node } from '$types/data';
     import type { Locale } from '$lib/sys';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import ToggleLine from '$shell/ToggleLine.svelte';
 
-    export let doc: Document;
+    export let node: Node;
 
     function getPathPlaceholder(locale: Locale) {
-        if (!doc.generatedPaths) {
+        if (!node.generatedPaths) {
             return '';
         }
 
         const localeId = locale.id;
 
         while (locale) {
-            const value = doc.paths[locale.id];
+            const value = node.paths[locale.id];
 
             if (value) {
                 return value;
@@ -24,7 +24,7 @@
             locale = $system.locales.find(l => l.id === locale.fallback);
         }
 
-        const value = doc.generatedPaths[localeId];
+        const value = node.generatedPaths[localeId];
 
         if (value) {
             return value;
@@ -35,7 +35,7 @@
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
-    {#if doc.nodetype === 'page'}
+    {#if node.nodetype === 'page'}
         <div class="paths mb-8">
             {#each $system.locales as locale}
                 <div class="path">
@@ -43,7 +43,7 @@
                     <div class="value">
                         <input
                             type="text"
-                            bind:value={doc.paths[locale.id]}
+                            bind:value={node.paths[locale.id]}
                             placeholder={getPathPlaceholder(locale)}
                             required={locale.id === $system.defaultLocale} />
                     </div>
@@ -51,13 +51,13 @@
             {/each}
         </div>
     {/if}
-    {#if doc.nodetype !== 'document'}
+    {#if node.nodetype !== 'document'}
         <div class="max-w-xl">
             <div class="mb-4">
                 <ToggleLine
                     title={_('Veröffentlicht')}
                     subtitle={_('Legt fest, ob die Seite für alle Besucher erreichbar ist.')}
-                    bind:value={doc.published} />
+                    bind:value={node.published} />
             </div>
             <!--<div class="my-4">
                 <ToggleLine
@@ -65,13 +65,13 @@
                     subtitle={_(
                         'Seiten die gesperrt sind, können nicht verändert werden.',
                     )}
-                    bind:value={doc.locked} />
+                    bind:value={node.locked} />
             </div>-->
             <div class="mt-4">
                 <ToggleLine
                     title={_('Versteckt')}
                     subtitle={_('Versteckte Seiten werden in Auflistungen ignoriert.')}
-                    bind:value={doc.hidden} />
+                    bind:value={node.hidden} />
             </div>
         </div>
     {/if}

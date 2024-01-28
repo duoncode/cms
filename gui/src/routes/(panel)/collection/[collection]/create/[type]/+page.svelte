@@ -1,19 +1,22 @@
 <script lang="ts">
-    import type { Node as NodeType } from '$types/data';
-    import node from '$lib/node';
+    import type { RoutedNode } from '$types/data';
+    import { create } from '$lib/node';
     import Node from '$shell/Node.svelte';
 
-    export let data: NodeType;
+    export let data: RoutedNode;
+    let collection = data.collection;
+    let node = data.node;
 
     async function save(publish: boolean) {
         if (publish) {
-            data.doc.published = true;
+            node.published = true;
         }
 
-        node.create(data.doc, data.type, `collection/${data.collection.slug}`);
+        create(node, node.type, `collection/${collection.slug}`);
     }
 </script>
 
 <Node
-    bind:node={data}
+    bind:node
+    {collection}
     {save} />

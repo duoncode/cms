@@ -38,7 +38,7 @@ abstract class Node
         'read' => 'everyone',
         'create' => 'authenticated',
         'change' => 'authenticated',
-        'delete' => 'authenticated',
+        'deeete' => 'authenticated',
     ];
     protected readonly Database $db;
     protected readonly Registry $registry;
@@ -154,18 +154,16 @@ abstract class Node
         return [
             'title' => _('Neues Dokument:') . ' ' . $this->name(),
             'fields' => $this->fields(),
-            'data' => [
-                'uid' => nanoid(),
-                'published' => false,
-                'hidden' => false,
-                'locked' => false,
-                'deletable' => $this->deletable(),
-                'content' => $result,
-                'type' => static::handle(),
-                'nodetype' => $nodetype,
-                'paths' => [],
-                'generatedPaths' => [],
-            ],
+            'uid' => nanoid(),
+            'published' => false,
+            'hidden' => false,
+            'locked' => false,
+            'deletable' => $this->deletable(),
+            'content' => $result,
+            'type' => static::handle(),
+            'nodetype' => $nodetype,
+            'paths' => [],
+            'generatedPaths' => [],
         ];
     }
 
@@ -294,12 +292,11 @@ abstract class Node
     {
         $data = $this->data();
 
-        return [
+        return array_merge([
             'title' => $this->title(),
             'uid' => $this->meta('uid'),
             'fields' => $this->fields(),
-            'data' => $data,
-        ];
+        ], $data);
     }
 
     /**

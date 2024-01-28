@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Node } from '$types/data';
+    import type { Collection, Node } from '$types/data';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import { generatePaths } from '$lib/urlpaths';
@@ -13,7 +13,10 @@
     import Settings from '$shell/Settings.svelte';
 
     export let node: Node;
+    export let collection: Collection;
     export let save: (published: boolean) => Promise<void>;
+
+    console.log(node);
 
     let activeTab = 'content';
     let showPreview: string | null = null;
@@ -26,12 +29,12 @@
 
     async function preview() {
         await save(false);
-        showPreview = node.doc.paths.de;
+        showPreview = node.paths.de;
     }
 
     $: {
-        if (node?.doc?.route) {
-            node.doc.generatedPaths = generatePaths(node.doc, node.doc.route, $system);
+        if (node.route) {
+            node.generatedPaths = generatePaths(node, node.route, $system);
         }
     }
 </script>
@@ -39,17 +42,17 @@
 <div class="flex flex-col h-screen">
     <NodeControlBar
         bind:uid={node.uid}
-        collectionPath="collection/{node.collection.slug}"
-        deletable={node.doc.deletable}
-        preview={node.doc.nodetype === 'page' ? preview : null}
+        collectionPath="collection/{collection.slug}"
+        deletable={node.deletable}
+        preview={node.nodetype === 'page' ? preview : null}
         {save} />
     <Document>
         <Breadcrumbs
-            slug={node.collection.slug}
-            name={node.collection.name} />
+            slug={collection.slug}
+            name={collection.name} />
         <Headline
-            published={node.doc.published}
-            showPublished={node.doc.nodetype !== 'document'}>
+            published={node.published}
+            showPublished={node.nodetype !== 'document'}>
             {@html node.title}
         </Headline>
         <Tabs>
@@ -59,7 +62,7 @@
                 class="tab">
                 {_('Inhalt')}
             </button>
-            {#if node.doc.nodetype !== 'document'}
+            {#if node.nodetype !== 'document'}
                 <button
                     on:click={changeTab('settings')}
                     class:active={activeTab === 'settings'}
@@ -72,9 +75,9 @@
             {#if activeTab === 'content'}
                 <Content
                     bind:fields={node.fields}
-                    bind:doc={node.doc} />
+                    bind:node />
             {:else}
-                <Settings bind:doc={node.doc} />
+                <Settings bind:node />
             {/if}
         </Pane>
     </Document>

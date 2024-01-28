@@ -1,4 +1,4 @@
-import type { Document } from '$types/data';
+import type { Node } from '$types/data';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 import { _ } from '$lib/locale';
@@ -10,8 +10,8 @@ export interface Result {
     uid: string;
 }
 
-async function save(uid: string, doc: Document) {
-    const response = await req.put(`node/${uid}`, doc);
+export async function save(uid: string, node: Node) {
+    const response = await req.put(`node/${uid}`, node);
 
     if (response.ok) {
         toast.add({
@@ -34,11 +34,11 @@ async function save(uid: string, doc: Document) {
     }
 }
 
-async function create(doc: Document, type: string, collectionPath: string) {
-    const response = await req.post(`node/${type}`, doc);
+export async function create(node: Node, type: string, collectionPath: string) {
+    const response = await req.post(`node/${type}`, node);
 
     if (response.ok) {
-        await goto(`${base}/${collectionPath}/${doc.uid}`, {
+        await goto(`${base}/${collectionPath}/${node.uid}`, {
             invalidateAll: true,
         });
 
@@ -58,7 +58,7 @@ async function create(doc: Document, type: string, collectionPath: string) {
     }
 }
 
-async function remove(uid: string, collectionPath: string) {
+export async function remove(uid: string, collectionPath: string) {
     const response = await req.del(`node/${uid}`);
 
     if (response.ok) {
@@ -75,5 +75,3 @@ async function remove(uid: string, collectionPath: string) {
         });
     }
 }
-
-export default { save, remove, create };

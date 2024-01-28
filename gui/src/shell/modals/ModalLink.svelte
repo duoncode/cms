@@ -1,6 +1,6 @@
 <script>
     import { _ } from '$lib/locale';
-    import { currentDocument as doc, currentFields as fields } from '$lib/state';
+    import { currentNode as node, currentFields as fields } from '$lib/state';
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoImage from '$shell/icons/IcoImage.svelte';
     import IcoLink from '$shell/icons/IcoLink.svelte';
@@ -67,11 +67,11 @@
                     <div class="flex flex-row flex-wrap gap-2">
                         {#each $fields as field (field)}
                             {#if field.type === 'Conia\\Cms\\Field\\Image'}
-                                {#if $doc.content[field.name] && $doc.content[field.name].files}
-                                    {#each $doc.content[field.name].files as file}
+                                {#if $node.content[field.name] && $node.content[field.name].files}
+                                    {#each $node.content[field.name].files as file}
                                         {#if file.file}
                                             <Image
-                                                node={$doc.uid}
+                                                node={$node.uid}
                                                 file={file.file}
                                                 on:click={clickFile}
                                                 bind:current={value} />
@@ -87,11 +87,11 @@
                     <div>
                         {#each $fields as field (field)}
                             {#if field.type === 'Conia\\Cms\\Field\\File'}
-                                {#if $doc.content[field.name] && $doc.content[field.name].files}
-                                    {#each $doc.content[field.name].files as file}
+                                {#if $node.content[field.name] && $node.content[field.name].files}
+                                    {#each $node.content[field.name].files as file}
                                         {#if file.file}
                                             <File
-                                                node={$doc.uid}
+                                                node={$node.uid}
                                                 file={file.file}
                                                 on:click={clickFile}
                                                 bind:current={value} />

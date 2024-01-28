@@ -1,9 +1,9 @@
 import req from '$lib/req';
 import type { Collection } from '$types/data';
-import { currentDocument, currentFields } from '$lib/state';
+import { currentNode, currentFields } from '$lib/state';
 
 export const load = async ({ params, fetch }) => {
-    currentDocument.set(null);
+    currentNode.set(null);
     currentFields.set(null);
 
     const response = await req.get(`collection/${params.collection}`, {}, fetch);
