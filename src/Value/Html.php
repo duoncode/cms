@@ -23,7 +23,7 @@ class Html extends Text
 
     public function excerpt(
         int $words = 30,
-        string $allowedTags = '<a><i><b><em><strong>',
+        string $allowedTags = '',
     ): string {
         return HtmlUtil::excerpt($this->unwrap(), $words, $allowedTags);
     }

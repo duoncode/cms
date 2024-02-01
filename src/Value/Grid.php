@@ -126,7 +126,7 @@ class Grid extends Value
 
     public function excerpt(
         int $words = 30,
-        string $allowedTags = '<a><i><b><u><em><strong>',
+        string $allowedTags = '',
         int $index = 1
     ): string {
         $i = 0;
