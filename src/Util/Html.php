@@ -12,7 +12,7 @@ class Html
     public static function excerpt(
         string $html,
         $limit = 30,
-        $allowedtags = '<a><i><b><em><strong>',
+        $allowedtags = '',
         $ellipsis = '…'
     ) {
         $result = strip_tags($html, $allowedtags);
