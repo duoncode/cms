@@ -199,7 +199,7 @@ abstract class Node
 
     public function fillData(array $data): array
     {
-        return $this->blueprint($data)['data'];
+        return $this->blueprint($data);
     }
 
     /**
