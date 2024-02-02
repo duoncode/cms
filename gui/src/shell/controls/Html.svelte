@@ -18,6 +18,11 @@
         bind:lang>
         {field.label}
     </LabelDiv>
+    {#if field.description}
+        <div class="text-sm text-gray-400 mt-1">
+            {field.description}
+        </div>
+    {/if}
     <div class="mt-2">
         {#if field.translate}
             {#each $system.locales as locale}
