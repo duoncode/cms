@@ -161,6 +161,7 @@ abstract class Node
     public function blueprint(array $values = []): array
     {
         $result = [];
+        $paths = [];
 
         foreach ($this->fieldNames as $fieldName) {
             $field = $this->{$fieldName};
@@ -178,6 +179,10 @@ abstract class Node
             }
         }
 
+        foreach ($this->context->locales() as $locale) {
+            $paths[$locale->id] = '';
+        }
+
         return [
             'title' => _('Neues Dokument:') . ' ' . $this->name(),
             'fields' => $this->fields(),
@@ -192,7 +197,7 @@ abstract class Node
                 'kind' => $kind,
                 'class' => static::class,
             ],
-            'paths' => [],
+            'paths' => $paths,
             'generatedPaths' => [],
         ];
     }
