@@ -155,7 +155,16 @@ abstract class Page extends Node
 
     protected function persistUrlPaths(Database $db, array $data, int $editor, int $node): void
     {
-        if (empty($data['paths'] ?? [])) {
+        $noPathsGiven = true;
+
+        foreach ($data['paths'] ?? [] as $path) {
+            if ($path) {
+                $noPathsGiven = false;
+                break;
+            }
+        }
+
+        if ($noPathsGiven) {
             $data['paths'] = $data['generatedPaths'];
         }
 
