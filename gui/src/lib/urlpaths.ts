@@ -21,6 +21,10 @@ function transformPath(path: string, node: Node, localeId: string, system: Syste
     const routePattern = /[^{}]+(?=})/g;
     const extractParams = path.match(routePattern);
 
+    if (!extractParams) {
+        return path;
+    }
+
     extractParams.map(param => {
         const value = node.content[param];
         if (value) {

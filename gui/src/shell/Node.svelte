@@ -16,8 +16,6 @@
     export let collection: Collection;
     export let save: (published: boolean) => Promise<void>;
 
-    console.log(node);
-
     let activeTab = 'content';
     let showPreview: string | null = null;
 
