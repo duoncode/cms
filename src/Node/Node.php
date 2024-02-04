@@ -372,7 +372,16 @@ abstract class Node
      */
     public function create(): array|Response
     {
-        return $this->save($this->getRequestData());
+        $data = $this->getRequestData();
+        $node = $this->db->nodes->find(['uid' => $data['uid']])->one();
+
+        if ($node) {
+            throw new HttpBadRequest($this->request, payload: [
+                'message' => _('A node with the same uid already exists: ') . $data['uid'],
+            ]);
+        }
+
+        return $this->save($data);
     }
 
     /**
