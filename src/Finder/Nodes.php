@@ -182,6 +182,10 @@ final class Nodes implements Iterator
         $result = [];
 
         foreach ($types as $type) {
+            if (class_exists($type)) {
+                $type = $type::handle();
+            }
+
             $result[] = 't.handle = ' . $this->context->db->quote($type);
         }
 
