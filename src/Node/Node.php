@@ -186,7 +186,7 @@ abstract class Node
         return [
             'title' => _('Neues Dokument:') . ' ' . $this->name(),
             'fields' => $this->fields(),
-            'uid' => nanoid(),
+            'uid' => $this->newUid(),
             'published' => false,
             'hidden' => false,
             'locked' => false,
@@ -200,6 +200,11 @@ abstract class Node
             'paths' => $paths,
             'generatedPaths' => [],
         ];
+    }
+
+    protected function newUid(): string
+    {
+        return nanoid();
     }
 
     public function fillData(array $data): array
