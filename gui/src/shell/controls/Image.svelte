@@ -26,7 +26,7 @@
             {#each $system.locales as locale}
                 {#if locale.id === lang}
                     <Upload
-                        image
+                        type="image"
                         multiple={field.multiple}
                         path="{$system.prefix}/media/image/node/{node}"
                         required={field.required}
@@ -37,7 +37,7 @@
             {/each}
         {:else}
             <Upload
-                image
+                type="image"
                 multiple={field.multiple}
                 path="{$system.prefix}/media/image/node/{node}"
                 required={field.required}

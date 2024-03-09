@@ -23,7 +23,7 @@ export interface TranslatedFile {
 }
 
 export interface TextData {
-    type: 'text' | 'html' | 'hidden' | 'date' | 'time' | 'datetime' | 'option';
+    type: 'text' | 'html' | 'hidden' | 'date' | 'time' | 'datetime' | 'option' | 'iframe';
     value?: string | Record<string, string>;
 }
 
@@ -38,7 +38,7 @@ export interface BooleanData {
 }
 
 export interface FileData {
-    type: 'picture' | 'image';
+    type: 'picture' | 'image' | 'video';
     files: FileItem[] | Record<string, TranslatedFile[]>;
 }
 
@@ -47,6 +47,8 @@ export interface UploadResponse {
     file: string;
     error: string;
 }
+
+export type UploadType = 'image' | 'file' | 'video';
 
 export interface GridBase {
     type: string;
@@ -61,8 +63,18 @@ export interface GridHtml extends GridBase {
     value: string;
 }
 
+export interface GridIframe extends GridBase {
+    type: 'iframe';
+    value: string;
+}
+
 export interface GridImage extends GridBase {
     type: 'image';
+    files: TranslatedFile[];
+}
+
+export interface GridVideo extends GridBase {
+    type: 'video';
     files: TranslatedFile[];
 }
 
@@ -73,7 +85,9 @@ export interface GridYoutube extends GridBase {
     aspectRatioY: number;
 }
 
-export type GridItem = GridHtml | GridImage | GridYoutube;
+export type GridType = 'html' | 'image' | 'youtube' | 'images' | 'video' | 'iframe';
+
+export type GridItem = GridHtml | GridImage | GridYoutube | GridVideo | GridIframe;
 
 export interface LocalizedGridValue {
     [key: string]: GridItem[];

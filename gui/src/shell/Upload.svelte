@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
-    import type { FileItem, UploadResponse } from '$types/data';
+    import type { FileItem, UploadResponse, UploadType } from '$types/data';
     import type { Toast } from '$lib/toast';
 
     import { getContext, createEventDispatcher } from 'svelte';
@@ -15,7 +15,7 @@
     import MediaList from '$shell/MediaList.svelte';
 
     export let path: string;
-    export let image = false; // if present thumbs will be rendered
+    export let type: UploadType;
     export let name: string;
     export let translate: boolean;
     export let assets: FileItem[];
@@ -177,9 +177,10 @@
         };
     }
 
-    $: allowedExtensions = image
-        ? $system.allowedFiles.image.join(', ')
-        : $system.allowedFiles.file.join(', ');
+    $: allowedExtensions =
+        type === 'image'
+            ? $system.allowedFiles.image.join(', ')
+            : $system.allowedFiles.file.join(', ');
 </script>
 
 {#if disabled}
@@ -194,16 +195,15 @@
     {/if}
 {:else}
     <div
-        class="upload"
+        class="upload upload-{type}"
         class:required
-        class:upload-image={image}
         class:upload-multiple={multiple}
         class:mt-6={inline}>
         <MediaList
             bind:assets
             bind:this={mediaList}
             {multiple}
-            {image}
+            {type}
             {path}
             {remove}
             {loading}
@@ -212,7 +212,7 @@
             <label
                 class="dragdrop"
                 class:dragging
-                class:image
+                class:image={type === 'image'}
                 for={name}
                 on:drop|preventDefault={onFile(getFilesFromDrop)}
                 on:dragover|preventDefault={startDragging}

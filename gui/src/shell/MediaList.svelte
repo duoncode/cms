@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
-    import type { FileItem } from '$types/data';
+    import type { FileItem, UploadType } from '$types/data';
     import type { SortableEvent } from 'sortablejs';
     import { getContext } from 'svelte';
     import Sortable from 'sortablejs';
@@ -12,12 +12,11 @@
     export let assets: FileItem[];
     export let multiple: boolean;
     export let translate: boolean;
-    export let image: boolean;
+    export let type: UploadType;
     export let loading: boolean;
     export let path: string;
     export let remove: (index: number) => void;
 
-    const file = !image;
     const modal: Modal = getContext('simple-modal');
 
     let sorterElement: HTMLElement;
@@ -54,7 +53,7 @@
     onMount(createSorter);
 </script>
 
-{#if multiple && image}
+{#if multiple && type === 'image'}
     <div
         class="multiple-images"
         bind:this={sorterElement}>
@@ -69,7 +68,7 @@
                 {loading} />
         {/each}
     </div>
-{:else if !multiple && image && assets && assets.length > 0}
+{:else if !multiple && type === 'image' && assets && assets.length > 0}
     <Image
         upload
         {path}
@@ -78,7 +77,7 @@
         remove={() => remove(null)}
         edit={() => edit(0, true)}
         {loading} />
-{:else if multiple && file}
+{:else if multiple && type === 'file'}
     <div
         class="multiple-files flex flex-col gap-3 mb-3"
         bind:this={sorterElement}>

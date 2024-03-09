@@ -21,7 +21,7 @@
     </LabelDiv>
     <div class="mt-2">
         <Upload
-            image
+            type="image"
             multiple={true}
             path="{$system.prefix}/media/image/node/{node}"
             name={field.name}

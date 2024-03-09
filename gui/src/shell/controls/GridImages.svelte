@@ -20,7 +20,7 @@
         <div>Keine Einstellungsmöglichkeiten vorhanden</div>
     {:else}
         <Upload
-            image
+            type="image"
             multiple={true}
             path="{$system.prefix}/media/image/node/{node}"
             name={field.name + '_' + index}
