@@ -6,6 +6,7 @@
     import Sortable from 'sortablejs';
     import { onMount } from 'svelte';
     import Image from '$shell/Image.svelte';
+    import Video from '$shell/Video.svelte';
     import File from '$shell/File.svelte';
     import ModalEditImage from '$shell/modals/ModalEditImage.svelte';
 
@@ -90,6 +91,14 @@
                 edit={() => edit(index, false)} />
         {/each}
     </div>
+{:else if !multiple && type === 'video' && assets && assets.length > 0}
+    <Video
+        upload
+        {path}
+        file={assets[0]}
+        remove={() => remove(null)}
+        edit={() => edit(0, true)}
+        {loading} />
 {:else if assets && assets.length > 0}
     <File
         {path}

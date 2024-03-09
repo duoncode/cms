@@ -48,6 +48,10 @@ class Config implements ConfigInterface
                 'image/webp' => ['webp'],
                 'image/svg+xml' => ['svg'],
             ],
+            'upload.mimetypes.video' => [
+                'video/mp4' => ['mp4'],
+                'video/ogg' => ['ogg'],
+            ],
             'upload.maxsize' => 10 * 1024 * 1024,
             // 'password.algorithm' => PASSWORD_* PHP constant
             // 'password.entropy' => float

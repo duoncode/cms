@@ -50,6 +50,7 @@ class NodeSchemaFactory
             \Conia\Cms\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
             \Conia\Cms\Field\Decmial::class => $this->addText($field, 'decimal', $validators),
             \Conia\Cms\Field\File::class => $this->addFile($field, 'file', $validators),
+            \Conia\Cms\Field\Video::class => $this->addFile($field, 'video', $validators),
             \Conia\Cms\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
             \Conia\Cms\Field\Html::class => $this->addText($field, 'html', $validators),
             \Conia\Cms\Field\Iframe::class => $this->addText($field, 'iframe', $validators),

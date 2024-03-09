@@ -50,13 +50,14 @@ class Routes
         $app->get($this->panelPath . '/', [Panel::class, 'index'], 'conia.panel.slash');
 
         $postMediaRoute = $app->post(
-            '/media/{mediatype:(image|file)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
+            '/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
             [Media::class, 'upload'],
             'conia.media.upload'
         );
 
         $app->get('/media/image/...slug', [Media::class, 'image'], 'conia.media.image');
         $app->get('/media/file/...slug', [Media::class, 'file'], 'conia.media.file');
+        $app->get('/media/video/...slug', [Media::class, 'file'], 'conia.media.video');
 
         $catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'conia.preview.catchall');
 

@@ -6,6 +6,7 @@
         GridHtml as GridHtmlData,
         GridImage as GridImageData,
         GridYoutube as GridYoutubeData,
+        GridType,
     } from '$types/data';
     import type { GridField } from '$types/fields';
 
@@ -22,6 +23,8 @@
     import GridImages from './GridImages.svelte';
     import GridHtml from './GridHtml.svelte';
     import GridYoutube from './GridYoutube.svelte';
+    import GridIframe from './GridIframe.svelte';
+    import GridVideo from './GridVideo.svelte';
 
     export let field: GridField;
     export let data: GridItem[];
@@ -33,16 +36,20 @@
         html: GridHtml,
         youtube: GridYoutube,
         images: GridImages,
+        video: GridVideo,
+        iframe: GridIframe,
     };
     const types = [
         { id: 'html', label: 'Text' },
         { id: 'image', label: 'Einzelbild' },
         { id: 'youtube', label: 'Youtube-Video' },
         { id: 'images', label: 'Mehrere Bilder' },
+        { id: 'video', label: 'Video' },
+        { id: 'iframe', label: 'Iframe' },
     ];
     const modal: Modal = getContext('simple-modal');
 
-    function add(index: number, before: boolean, type: 'html' | 'image' | 'youtube' | 'images') {
+    function add(index: number, before: boolean, type: GridType) {
         let content: GridBase = {
             type,
             colspan: 12,

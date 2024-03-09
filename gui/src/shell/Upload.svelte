@@ -29,7 +29,6 @@
     let loading = false;
     let dragging = false;
     let allowedExtensions = '';
-    let mediaList;
 
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
@@ -201,7 +200,6 @@
         class:mt-6={inline}>
         <MediaList
             bind:assets
-            bind:this={mediaList}
             {multiple}
             {type}
             {path}

@@ -38,6 +38,7 @@ class Media
         if (!$result['ok']) {
             return $response->json($result, 400);
         }
+
         $public = $this->config->get('path.public');
         $assets = $this->config->get('path.assets');
         $dir = "{$public}{$assets}/{$doctype}/{$uid}";

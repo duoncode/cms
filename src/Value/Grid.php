@@ -213,6 +213,8 @@ class Grid extends Value
             'image' => $this->renderImage($value->data, $args),
             'images' => $this->renderImages($value->data, $args),
             'youtube' => $this->getValueObject(Field\Youtube::class, $value)->__toString(),
+            'video' =>  $this->getValueObject(Field\Video::class, $value)->__toString(),
+            'iframe' => $this->getValueObject(Field\Iframe::class, $value)->__toString(),
         };
         $out .= '</div>';
 
