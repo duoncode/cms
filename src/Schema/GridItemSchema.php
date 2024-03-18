@@ -10,7 +10,7 @@ class GridItemSchema extends Schema
 {
     protected function rules(): void
     {
-        $this->add('type', 'text', 'required', 'in:html,image,youtube,images,video');
+        $this->add('type', 'text', 'required', 'in:html,image,youtube,images,video,iframe');
         $this->add('rowspan', 'int', 'required');
         $this->add('colspan', 'int', 'required');
         $this->add('colstart', 'int');
@@ -57,6 +57,10 @@ class GridItemSchema extends Schema
             } elseif ($type === 'html') {
                 if (!($value['value'] ?? null)) {
                     $this->addError('value', _('Grid Text'), _('Bitte Textfeld ausfüllen oder Block löschen.'));
+                }
+            } elseif ($type === 'iframe') {
+                if (!($value['value'] ?? null)) {
+                    $this->addError('value', _('Grid Text'), _('Bitte Iframe-Feld ausfüllen oder Block löschen.'));
                 }
             }
         }
