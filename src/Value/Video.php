@@ -8,8 +8,9 @@ class Video extends File
 {
     public function __toString(): string
     {
-        $url   = $this->url();
+        $url = $this->url();
+        $mimetype = $this->mimeType();
 
-        return "<video controls><source src=\"{$url}\" type=\"video/mp4\"/></video>";
+        return "<video controls><source src=\"{$url}\" type=\"{$mimetype}\"/></video>";
     }
 }
