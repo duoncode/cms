@@ -51,6 +51,11 @@ class File extends Value
         return $this->getFileName($this->index);
     }
 
+    public function mimetype(): string
+    {
+        return mime_content_type($this->getFileName($this->index));
+    }
+
     public function unwrap(): ?array
     {
         return $this->data['files'][0] ?? null;
