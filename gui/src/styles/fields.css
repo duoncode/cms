@@ -49,4 +49,5 @@ textarea[required] {
 textarea.iframe {
     font-family: 'JetBrains Mono', 'Menlo', 'DejaVu Sans Mono', 'Liberation Mono', 'Consolas',
         'Ubuntu Mono', 'Courier New', 'andale mono', 'lucida console', monospace;
+    @apply bg-gray-700 text-gray-100;
 }

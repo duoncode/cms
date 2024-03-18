@@ -6,6 +6,7 @@
         GridHtml as GridHtmlData,
         GridImage as GridImageData,
         GridYoutube as GridYoutubeData,
+        GridIframe as GridIframeData,
         GridType,
     } from '$types/data';
     import type { GridField } from '$types/fields';
@@ -60,8 +61,12 @@
             (content as GridHtmlData).value = '';
         } else if (type === 'image' || type === 'images') {
             (content as GridImageData).files = [];
-        } else {
+        } else if (type === 'youtube') {
             (content as GridYoutubeData).value = '';
+            (content as GridYoutubeData).aspectRatioX = 16;
+            (content as GridYoutubeData).aspectRatioY = 9;
+        } else if (type === 'iframe') {
+            (content as GridIframeData).value = '';
         }
 
         if (!data) {

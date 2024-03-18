@@ -1,8 +1,7 @@
 <script lang="ts">
+    import { _ } from '$lib/locale';
     import type { GridYoutube } from '$types/data';
     import type { GridField } from '$types/fields';
-
-    import { _ } from '$lib/locale';
     import Setting from '$shell/Setting.svelte';
 
     export let field: GridField;

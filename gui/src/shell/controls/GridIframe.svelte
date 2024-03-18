@@ -18,6 +18,7 @@
     {:else}
         <textarea
             class="iframe"
+            rows="5"
             id={`${field.name}_${index}`}
             name={`${field.name}_${index}`}
             bind:value={item.value} />
