@@ -210,11 +210,11 @@ class Grid extends Value
             'h4' => '<h4>' . $value->data['value'] . '</h4>',
             'h5' => '<h5>' . $value->data['value'] . '</h5>',
             'h6' => '<h6>' . $value->data['value'] . '</h6>',
+            'iframe' => $value->data['value'],
             'image' => $this->renderImage($value->data, $args),
             'images' => $this->renderImages($value->data, $args),
             'youtube' => $this->getValueObject(Field\Youtube::class, $value)->__toString(),
             'video' =>  $this->getValueObject(Field\Video::class, $value)->__toString(),
-            'iframe' => $this->getValueObject(Field\Iframe::class, $value)->__toString(),
         };
         $out .= '</div>';
 
