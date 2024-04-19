@@ -10,3 +10,10 @@
         alt={_('Vorschau')}
         style="max-height: 90vh" />
 </div>
+
+<style lang="postcss">
+    img {
+        max-width: 100%;
+        min-width: 40rem;
+    }
+</style>
