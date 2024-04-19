@@ -23,6 +23,7 @@ class Image
         string $file,
     ) {
         $this->file = Path::inside($assets->assetsDir, $file, checkIsFile: true);
+        $this->isResizable();
         $this->relativeFile = substr($this->file, strlen($assets->assetsDir));
     }
 
@@ -48,8 +49,23 @@ class Image
         return $this->request->origin() . $this->publicPath($bust);
     }
 
+    public function isResizable(): bool
+    {
+        return match (mime_content_type($this->file)) {
+            'image/gif' => true,
+            'image/jpeg' => true,
+            'image/png' => true,
+            'image/webp' => true,
+            default => false,
+        };
+    }
+
     public function resize(Size $size, ResizeMode $mode, bool $enlarge, ?int $quality): static
     {
+        if (!$this->isResizable()) {
+            return $this;
+        }
+
         $this->cacheFile = $this->getCacheFilePath($size, $mode, $enlarge);
 
         if (is_file($this->cacheFile)) {
