@@ -23,7 +23,7 @@ class File
 
     public function publicPath(bool $bust = false): string
     {
-        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $this->path()))));
+        $path = implode('/', explode('/', str_replace('\\', '/', $this->path())));
 
         if ($bust) {
             $path = $this->bust($path);

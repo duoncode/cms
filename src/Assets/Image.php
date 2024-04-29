@@ -34,7 +34,7 @@ class Image
 
     public function publicPath(bool $bust = false): string
     {
-        $path = implode('/', array_map('urlencode', explode('/', str_replace('\\', '/', $this->path()))));
+        $path = implode('/', explode('/', str_replace('\\', '/', $this->path())));
 
         if ($bust) {
             $buster = hash('xxh32', (string)filemtime($this->file));
@@ -139,6 +139,9 @@ class Image
         $relativeDir = $info['dirname'] ?? null;
         // pathinfo does not handle multiple dots like .tar.gz well
         $filenameSegments = explode('.', $info['basename']);
+        $filenameExtension = array_pop($filenameSegments);
+        $filenameBasename = implode('.', $filenameSegments);
+
         $cacheDir = $this->assets->cacheDir;
 
         if ($relativeDir !== '/') {
@@ -169,9 +172,9 @@ class Image
             $suffix .= '-enl';
         }
 
-        $cacheFile = $cacheDir . '/' . $filenameSegments[0] . $suffix;
+        $cacheFile = $cacheDir . '/' . $filenameBasename . $suffix;
 
         // Add extension
-        return $cacheFile . '.' . implode('.', array_slice($filenameSegments, 1));
+        return $cacheFile . '.' . $filenameExtension;
     }
 }
