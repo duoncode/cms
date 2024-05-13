@@ -53,7 +53,7 @@ class File extends Value
 
     public function mimetype(): string
     {
-        return mime_content_type($this->getFileName($this->index));
+        return mime_content_type($this->getFile($this->index)->path());
     }
 
     public function unwrap(): ?array
@@ -109,6 +109,6 @@ class File extends Value
 
     protected function getFile(int $index): Assets\File
     {
-        return $this->getAssets()->file($this->assetsPath() . $this->data['files'][$index]['file']);
+        return $this->getAssets()->file($this->assetsPath() . $this->getFileName($index));
     }
 }
