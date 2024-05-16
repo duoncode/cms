@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { GridHtml } from '$types/data';
+    import type { GridText } from '$types/data';
     import type { GridField } from '$types/fields';
 
     export let field: GridField;
-    export let item: GridHtml;
+    export let item: GridText;
     export let index: number;
 
     let showSettings = false;

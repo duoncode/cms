@@ -20,6 +20,7 @@ class GridItemSchema extends Schema
     {
         foreach ($this->values() as $value) {
             $type = $value['type'] ?? null;
+            error_log($type);
 
             if ($type === 'image' || $type === 'images' || $type === 'video') {
                 $files = $value['files'] ?? [];
@@ -54,7 +55,7 @@ class GridItemSchema extends Schema
                 if (!$aspectRatioY || !is_numeric($aspectRatioY)) {
                     $this->addError('aspectRatioY', _('Youtube Seitenverhältnis Höhe'), _('Bitte gültige Zahl eingeben.'));
                 }
-            } elseif ($type === 'html') {
+            } elseif ($type === 'html' || $type === 'text') {
                 if (!($value['value'] ?? null)) {
                     $this->addError('value', _('Grid Text'), _('Bitte Textfeld ausfüllen oder Block löschen.'));
                 }

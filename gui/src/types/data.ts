@@ -58,6 +58,11 @@ export interface GridBase {
     width?: number; // will be added while rendering the grid
 }
 
+export interface GridText extends GridBase {
+    type: 'text';
+    value: string;
+}
+
 export interface GridHtml extends GridBase {
     type: 'html';
     value: string;
@@ -85,9 +90,9 @@ export interface GridYoutube extends GridBase {
     aspectRatioY: number;
 }
 
-export type GridType = 'html' | 'image' | 'youtube' | 'images' | 'video' | 'iframe';
+export type GridType = 'text' | 'html' | 'image' | 'youtube' | 'images' | 'video' | 'iframe';
 
-export type GridItem = GridHtml | GridImage | GridYoutube | GridVideo | GridIframe;
+export type GridItem = GridText | GridHtml | GridImage | GridYoutube | GridVideo | GridIframe;
 
 export interface LocalizedGridValue {
     [key: string]: GridItem[];

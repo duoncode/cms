@@ -3,6 +3,7 @@
     import type {
         GridItem,
         GridBase,
+        GridText as GridTextData,
         GridHtml as GridHtmlData,
         GridImage as GridImageData,
         GridYoutube as GridYoutubeData,
@@ -62,6 +63,8 @@
         };
         if (type === 'html') {
             (content as GridHtmlData).value = '';
+        } else if (type === 'text') {
+            (content as GridTextData).value = '';
         } else if (type === 'image' || type === 'images') {
             (content as GridImageData).files = [];
         } else if (type === 'youtube') {
