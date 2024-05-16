@@ -10,7 +10,7 @@ class GridItemSchema extends Schema
 {
     protected function rules(): void
     {
-        $this->add('type', 'text', 'required', 'in:html,image,youtube,images,video,iframe');
+        $this->add('type', 'text', 'required', 'in:text,html,image,youtube,images,video,iframe');
         $this->add('rowspan', 'int', 'required');
         $this->add('colspan', 'int', 'required');
         $this->add('colstart', 'int');
