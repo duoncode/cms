@@ -23,6 +23,7 @@
     import GridImage from './GridImage.svelte';
     import GridImages from './GridImages.svelte';
     import GridHtml from './GridHtml.svelte';
+    import GridText from './GridText.svelte';
     import GridYoutube from './GridYoutube.svelte';
     import GridIframe from './GridIframe.svelte';
     import GridVideo from './GridVideo.svelte';
@@ -35,13 +36,15 @@
     const controls = {
         image: GridImage,
         html: GridHtml,
+        text: GridText,
         youtube: GridYoutube,
         images: GridImages,
         video: GridVideo,
         iframe: GridIframe,
     };
     const types = [
-        { id: 'html', label: 'Text' },
+        { id: 'html', label: 'Formatierter Text (wysiwyg)' },
+        { id: 'text', label: 'Einfacher Text' },
         { id: 'image', label: 'Einzelbild' },
         { id: 'youtube', label: 'Youtube-Video' },
         { id: 'images', label: 'Mehrere Bilder' },
@@ -118,7 +121,7 @@
                 class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null
                     ? ''
                     : 'col-start-' +
-                      item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative"
+                      item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative flex flex-col"
                 animate:flip={{ duration: 300 }}
                 use:resize={resizeCell(item)}>
                 <svelte:component
