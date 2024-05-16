@@ -20,7 +20,6 @@ class GridItemSchema extends Schema
     {
         foreach ($this->values() as $value) {
             $type = $value['type'] ?? null;
-            error_log($type);
 
             if ($type === 'image' || $type === 'images' || $type === 'video') {
                 $files = $value['files'] ?? [];
