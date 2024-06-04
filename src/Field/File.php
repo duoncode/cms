@@ -14,7 +14,15 @@ class File extends Field
     public function value(): Value\File|Value\Files
     {
         if ($this->multiple) {
+            if ($this->translateFile) {
+                return new Value\TranslatedFiles($this->node, $this, $this->valueContext);
+            }
+
             return new Value\Files($this->node, $this, $this->valueContext);
+        }
+
+        if ($this->translateFile) {
+            return new Value\TranslatedFile($this->node, $this, $this->valueContext);
         }
 
         return new Value\File($this->node, $this, $this->valueContext);

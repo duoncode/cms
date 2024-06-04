@@ -49,14 +49,6 @@ class Image extends Field
         return $this->translateFile;
     }
 
-    public function properties(): array
-    {
-        return array_merge(parent::properties(), [
-            'multiple' => $this->multiple,
-            'translateFile' => $this->translateFile,
-        ]);
-    }
-
     public function structure(mixed $value = null): array
     {
         if ($this->translateFile) {
@@ -64,5 +56,13 @@ class Image extends Field
         }
 
         return $this->getFileStructure('image', $value);
+    }
+
+    public function properties(): array
+    {
+        return array_merge(parent::properties(), [
+            'multiple' => $this->multiple,
+            'translateFile' => $this->translateFile,
+        ]);
     }
 }
