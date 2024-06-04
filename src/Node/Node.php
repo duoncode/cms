@@ -566,8 +566,10 @@ abstract class Node
                     $field->default($attr->newInstance()->get());
                     break;
                 case Attr\TranslateFile::class:
-                    if (!($field instanceof \Conia\Cms\Field\Image || !$field instanceof \Conia\Cms\Field\File)) {
-                        throw new RuntimeException('Cannot apply attribute Multiple to ' . $field::class);
+                    if (!($field instanceof \Conia\Cms\Field\Image) && !($field instanceof \Conia\Cms\Field\File)) {
+                        throw new RuntimeException(
+                            'Cannot apply attribute TranslateFile to field ' . $fieldName . ' of type ' . $field::class
+                        );
                     }
 
                     $field->translateFile(true);
