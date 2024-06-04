@@ -1,32 +1,15 @@
 <script lang="ts">
-    import { system } from '$lib/sys';
-    import Field from '$shell/Field.svelte';
-    import Upload from '$shell/Upload.svelte';
-    import Label from '$shell/Label.svelte';
     import type { FileData } from '$types/data';
-    import type { FileField } from '$types/fields';
+    import type { ImageField } from '$types/fields';
+    import FileLike from './FileLike.svelte';
 
-    export let field: FileField;
+    export let field: ImageField;
     export let data: FileData;
     export let node: string;
-
-    let lang = $system.locale;
 </script>
 
-<Field required={field.required}>
-    <Label
-        of={field.name}
-        translate={field.translate}
-        bind:lang>
-        {field.label}
-    </Label>
-    <div class="mt-2">
-        <Upload
-            type="file"
-            path="{$system.prefix}/media/file/node/{node}"
-            multiple={field.multiple}
-            name={field.name}
-            translate={field.translateFile ? false : field.translate}
-            bind:assets={data.files} />
-    </div>
-</Field>
+<FileLike
+    type="file"
+    {field}
+    {data}
+    {node} />

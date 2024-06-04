@@ -11,6 +11,7 @@ export interface SimpleField {
 
 export interface FileField extends SimpleField {
     multiple: boolean;
+    translateFile: boolean;
 }
 
 export interface ImageField extends FileField {
