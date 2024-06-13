@@ -34,7 +34,7 @@ class Image
 
     public function publicPath(bool $bust = false): string
     {
-        $path = implode('/', explode('/', str_replace('\\', '/', $this->path())));
+        $path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $this->path()))));
 
         if ($bust) {
             $buster = hash('xxh32', (string)filemtime($this->file));
