@@ -22,7 +22,12 @@ class Image
         protected readonly Assets $assets,
         string $file,
     ) {
-        $this->file = Path::inside($assets->assetsDir, $file, checkIsFile: true);
+        try {
+            $this->file = Path::inside($assets->assetsDir, $file, checkIsFile: true);
+        } catch(RuntimeException) {
+            $this->file = Path::inside($assets->assetsDir, 'not-found.jpg', checkIsFile: true);
+        }
+
         $this->isResizable();
         $this->relativeFile = substr($this->file, strlen($assets->assetsDir));
     }
