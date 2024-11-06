@@ -63,7 +63,7 @@ WHERE
     AND n.hidden = :hidden
 <?php endif ?>
 <?php if (isset($condition) && !empty(trim($condition))) : ?>
-    AND <?= $condition ?>
+    AND (<?= $condition ?>)
 <?php endif ?>
 <?php if (isset($path)) : ?>
     AND up.path = :path
