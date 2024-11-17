@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder\Output;
+namespace FiveOrbs\Cms\Finder\Output;
 
-use Conia\Cms\Finder\Input\Token;
+use FiveOrbs\Cms\Finder\Input\Token;
 
 class RightParen implements Output
 {
-    public function __construct(
-        public Token $token
-    ) {
-    }
+	public function __construct(
+		public Token $token,
+	) {}
 
-    public function get(): string
-    {
-        return ')';
-    }
+	public function get(): string
+	{
+		return ')';
+	}
 }

@@ -2,55 +2,55 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Value;
+namespace FiveOrbs\Cms\Value;
 
-use Conia\Cms\Assets;
+use FiveOrbs\Cms\Assets;
 
 class TranslatedFile extends File
 {
-    public function isset(): bool
-    {
-        $locale = $this->locale;
+	public function isset(): bool
+	{
+		$locale = $this->locale;
 
-        while ($locale) {
-            $value = $this->data['files'][$locale->id][$this->index]['file'] ?? null;
+		while ($locale) {
+			$value = $this->data['files'][$locale->id][$this->index]['file'] ?? null;
 
-            if ($value) {
-                return true;
-            }
+			if ($value) {
+				return true;
+			}
 
-            $locale = $locale->fallback();
-        }
+			$locale = $locale->fallback();
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    protected function textValue(string $key, int $index): string
-    {
-        return $this->translated($key, $index);
-    }
+	protected function textValue(string $key, int $index): string
+	{
+		return $this->translated($key, $index);
+	}
 
-    protected function translated(string $key, int $index): string
-    {
-        $locale = $this->locale;
+	protected function translated(string $key, int $index): string
+	{
+		$locale = $this->locale;
 
-        while ($locale) {
-            $value = $this->data['files'][$locale->id][$index][$key] ?? null;
+		while ($locale) {
+			$value = $this->data['files'][$locale->id][$index][$key] ?? null;
 
-            if ($value) {
-                return $value;
-            }
+			if ($value) {
+				return $value;
+			}
 
-            $locale = $locale->fallback();
-        }
+			$locale = $locale->fallback();
+		}
 
-        return '';
-    }
+		return '';
+	}
 
-    protected function getFile(int $index): Assets\File
-    {
-        $file = $this->translated('file', $index);
+	protected function getFile(int $index): Assets\File
+	{
+		$file = $this->translated('file', $index);
 
-        return $this->getAssets()->file($this->assetsPath() . $file);
-    }
+		return $this->getAssets()->file($this->assetsPath() . $file);
+	}
 }

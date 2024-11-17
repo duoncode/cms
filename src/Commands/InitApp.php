@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Commands;
+namespace FiveOrbs\Cms\Commands;
 
-use Conia\Cli\Command;
+use FiveOrbs\Cli\Command;
 
 class InitApp extends Command
 {
-    protected string $group = 'General';
-    protected string $name = 'init-app';
-    protected string $description = 'Initialize the Conia app';
+	protected string $group = 'General';
+	protected string $name = 'init-app';
+	protected string $description = 'Initialize the FiveOrbs app';
 
-    public function run(): int
-    {
-        return 0;
-    }
+	public function run(): int
+	{
+		return 0;
+	}
 }

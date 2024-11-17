@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder;
+namespace FiveOrbs\Cms\Finder;
 
-use Conia\Cms\Context;
-use Conia\Cms\Exception\RuntimeException;
+use FiveOrbs\Cms\Context;
+use FiveOrbs\Cms\Exception\RuntimeException;
 
 /**
  * @psalm-property-read Nodes  $nodes
@@ -16,45 +16,43 @@ use Conia\Cms\Exception\RuntimeException;
  */
 class Finder
 {
-    public function __construct(private readonly Context $context)
-    {
-    }
+	public function __construct(private readonly Context $context) {}
 
-    public function __get($key): Nodes|Node|Block|Menu
-    {
-        return match ($key) {
-            'nodes' => new Nodes($this->context, $this),
-            'node' => new Node($this->context, $this),
-            default => throw new RuntimeException('Property not supported')
-        };
-    }
+	public function __get($key): Nodes|Node|Block|Menu
+	{
+		return match ($key) {
+			'nodes' => new Nodes($this->context, $this),
+			'node' => new Node($this->context, $this),
+			default => throw new RuntimeException('Property not supported'),
+		};
+	}
 
-    public function nodes(
-        string $query = '',
-    ): Nodes {
-        return (new Nodes($this->context, $this))->filter($query);
-    }
+	public function nodes(
+		string $query = '',
+	): Nodes {
+		return (new Nodes($this->context, $this))->filter($query);
+	}
 
-    public function node(
-        string $query,
-        array $types = [],
-        int $limit = 0,
-        string $order = '',
-    ): array {
-        return (new Node($this->context, $this))->find($query, $types, $limit, $order);
-    }
+	public function node(
+		string $query,
+		array $types = [],
+		int $limit = 0,
+		string $order = '',
+	): array {
+		return (new Node($this->context, $this))->find($query, $types, $limit, $order);
+	}
 
-    public function menu(string $menu): Menu
-    {
-        return new Menu($this->context, $menu);
-    }
+	public function menu(string $menu): Menu
+	{
+		return new Menu($this->context, $menu);
+	}
 
-    public function block(
-        string $uid,
-        array $templateContext = [],
-        ?bool $deleted = false,
-        ?bool $published = true
-    ): Block {
-        return new Block($this->context, $this, $uid, $templateContext, $deleted, $published);
-    }
+	public function block(
+		string $uid,
+		array $templateContext = [],
+		?bool $deleted = false,
+		?bool $published = true,
+	): Block {
+		return new Block($this->context, $this, $uid, $templateContext, $deleted, $published);
+	}
 }

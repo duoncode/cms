@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace FiveOrbs\Cms;
 
-use Conia\Route\After;
+use FiveOrbs\Route\After;
 
-interface AfterRenderer extends After
-{
-}
+interface AfterRenderer extends After {}

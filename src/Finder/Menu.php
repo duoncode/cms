@@ -2,137 +2,137 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Finder;
+namespace FiveOrbs\Cms\Finder;
 
-use Conia\Cms\Context;
-use Conia\Cms\Exception\RuntimeException;
+use FiveOrbs\Cms\Context;
+use FiveOrbs\Cms\Exception\RuntimeException;
 use Iterator;
 
 class Menu implements Iterator
 {
-    protected array $items;
-    protected int $pointer = 0;
+	protected array $items;
+	protected int $pointer = 0;
 
-    public function __construct(
-        protected readonly Context $context,
-        string $menu
-    ) {
-        $this->items = $this->makeTree(
-            $context->db->menus->get(['menu' => $menu])->all()
-        );
+	public function __construct(
+		protected readonly Context $context,
+		string $menu,
+	) {
+		$this->items = $this->makeTree(
+			$context->db->menus->get(['menu' => $menu])->all(),
+		);
 
-        if (count($this->items) === 0) {
-            throw new RuntimeException('Menu not found');
-        }
-    }
+		if (count($this->items) === 0) {
+			throw new RuntimeException('Menu not found');
+		}
+	}
 
-    public function rewind(): void
-    {
-        reset($this->items);
-    }
+	public function rewind(): void
+	{
+		reset($this->items);
+	}
 
-    public function current(): MenuItem
-    {
-        return new MenuItem($this->context, current($this->items));
-    }
+	public function current(): MenuItem
+	{
+		return new MenuItem($this->context, current($this->items));
+	}
 
-    public function key(): string
-    {
-        return key($this->items);
-    }
+	public function key(): string
+	{
+		return key($this->items);
+	}
 
-    public function next(): void
-    {
-        next($this->items);
-    }
+	public function next(): void
+	{
+		next($this->items);
+	}
 
-    public function valid(): bool
-    {
-        return key($this->items) !== null;
-    }
+	public function valid(): bool
+	{
+		return key($this->items) !== null;
+	}
 
-    public function html(string $class = '', string $tag = 'nav'): string
-    {
-        return $this->compileHtml($this, $class, $tag);
-    }
+	public function html(string $class = '', string $tag = 'nav'): string
+	{
+		return $this->compileHtml($this, $class, $tag);
+	}
 
-    protected function compileHtml(
-        Iterator $items,
-        string $class = '',
-        string $tag = 'nav',
-    ): string {
-        $out = '';
+	protected function compileHtml(
+		Iterator $items,
+		string $class = '',
+		string $tag = 'nav',
+	): string {
+		$out = '';
 
-        foreach ($items as $item) {
-            $class = $item->class();
-            $image = $item->image() ?: '';
+		foreach ($items as $item) {
+			$class = $item->class();
+			$image = $item->image() ?: '';
 
-            if ($image) {
-                $image = sprintf('<div class="nav-image"><img src="%s" alt="Navigation Icon"/></div>', $image);
-            }
+			if ($image) {
+				$image = sprintf('<div class="nav-image"><img src="%s" alt="Navigation Icon"/></div>', $image);
+			}
 
-            $submenu = $this->compileHtml($item->children(), tag: '');
+			$submenu = $this->compileHtml($item->children(), tag: '');
 
-            if ($submenu) {
-                $submenu = sprintf('<div class="nav-submenu">%s</div>', $submenu);
-            }
+			if ($submenu) {
+				$submenu = sprintf('<div class="nav-submenu">%s</div>', $submenu);
+			}
 
-            $content = sprintf(
-                '%s<div class="nav-label"><span>%s</span></div>%s',
-                $image,
-                $item->title(),
-                $submenu,
-            );
+			$content = sprintf(
+				'%s<div class="nav-label"><span>%s</span></div>%s',
+				$image,
+				$item->title(),
+				$submenu,
+			);
 
-            $content = match ($item->type()) {
-                'page' => sprintf('<a href="%s">%s</a>', $item->path(), $content),
-                default => $content,
-            };
+			$content = match ($item->type()) {
+				'page' => sprintf('<a href="%s">%s</a>', $item->path(), $content),
+				default => $content,
+			};
 
-            $out .= sprintf(
-                '<li class="nav-level-%s%s%s">%s</li>',
-                (string)$item->level(),
-                $item->hasChildren() ? ' nav-has-children' : '',
-                $class ? ' ' . $class : '',
-                $content,
-            );
-        }
+			$out .= sprintf(
+				'<li class="nav-level-%s%s%s">%s</li>',
+				(string) $item->level(),
+				$item->hasChildren() ? ' nav-has-children' : '',
+				$class ? ' ' . $class : '',
+				$content,
+			);
+		}
 
-        if ($out) {
-            $class = $class ? sprintf(' class="%s"', $class) : '';
+		if ($out) {
+			$class = $class ? sprintf(' class="%s"', $class) : '';
 
-            return $tag ?
-                sprintf(
-                    '<%s%s><ul class="nav-level-%s">%s</ul></%s>',
-                    $tag,
-                    $class,
-                    $item->level(),
-                    $out,
-                    $tag
-                ) :
-                sprintf('<ul%s class="nav-level-%s">%s</ul>', $class, $item->level(), $out);
-        }
+			return $tag ?
+				sprintf(
+					'<%s%s><ul class="nav-level-%s">%s</ul></%s>',
+					$tag,
+					$class,
+					$item->level(),
+					$out,
+					$tag,
+				) :
+				sprintf('<ul%s class="nav-level-%s">%s</ul>', $class, $item->level(), $out);
+		}
 
-        return '';
-    }
+		return '';
+	}
 
-    protected function makeTree(array $items): array
-    {
-        $tree = [];
+	protected function makeTree(array $items): array
+	{
+		$tree = [];
 
-        foreach ($items as $item) {
-            $arr = &$tree;
+		foreach ($items as $item) {
+			$arr = &$tree;
 
-            foreach (explode('.', $item['path']) as $segment) {
-                if (isset($arr[$segment])) {
-                    $arr = &$arr[$segment]['children'];
-                } else {
-                    $arr[$segment] = $item;
-                    $arr[$segment]['children'] = [];
-                }
-            }
-        }
+			foreach (explode('.', $item['path']) as $segment) {
+				if (isset($arr[$segment])) {
+					$arr = &$arr[$segment]['children'];
+				} else {
+					$arr[$segment] = $item;
+					$arr[$segment]['children'] = [];
+				}
+			}
+		}
 
-        return $tree;
-    }
+		return $tree;
+	}
 }

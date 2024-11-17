@@ -2,67 +2,67 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Field;
+namespace FiveOrbs\Cms\Field;
 
-use Conia\Cms\Field\Field;
-use Conia\Cms\Value;
+use FiveOrbs\Cms\Field\Field;
+use FiveOrbs\Cms\Value;
 
 class Image extends Field
 {
-    protected bool $multiple = false;
-    protected bool $translateFile = false;
+	protected bool $multiple = false;
+	protected bool $translateFile = false;
 
-    public function value(): Value\Images|Value\Image
-    {
-        if ($this->multiple) {
-            if ($this->translateFile) {
-                return new Value\TranslatedImages($this->node, $this, $this->valueContext);
-            }
+	public function value(): Value\Images|Value\Image
+	{
+		if ($this->multiple) {
+			if ($this->translateFile) {
+				return new Value\TranslatedImages($this->node, $this, $this->valueContext);
+			}
 
-            return new Value\Images($this->node, $this, $this->valueContext);
-        }
+			return new Value\Images($this->node, $this, $this->valueContext);
+		}
 
-        if ($this->translateFile) {
-            return new Value\TranslatedImage($this->node, $this, $this->valueContext);
-        }
+		if ($this->translateFile) {
+			return new Value\TranslatedImage($this->node, $this, $this->valueContext);
+		}
 
-        return new Value\Image($this->node, $this, $this->valueContext);
-    }
+		return new Value\Image($this->node, $this, $this->valueContext);
+	}
 
-    public function multiple(bool $multiple = true): static
-    {
-        $this->multiple = $multiple;
+	public function multiple(bool $multiple = true): static
+	{
+		$this->multiple = $multiple;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function translateFile(bool $translate = true): static
-    {
-        $this->translateFile = $translate;
-        $this->translate = $translate;
+	public function translateFile(bool $translate = true): static
+	{
+		$this->translateFile = $translate;
+		$this->translate = $translate;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function isFileTranslatable(): bool
-    {
-        return $this->translateFile;
-    }
+	public function isFileTranslatable(): bool
+	{
+		return $this->translateFile;
+	}
 
-    public function structure(mixed $value = null): array
-    {
-        if ($this->translateFile) {
-            return $this->getTranslatableFileStructure('image', $value);
-        }
+	public function structure(mixed $value = null): array
+	{
+		if ($this->translateFile) {
+			return $this->getTranslatableFileStructure('image', $value);
+		}
 
-        return $this->getFileStructure('image', $value);
-    }
+		return $this->getFileStructure('image', $value);
+	}
 
-    public function properties(): array
-    {
-        return array_merge(parent::properties(), [
-            'multiple' => $this->multiple,
-            'translateFile' => $this->translateFile,
-        ]);
-    }
+	public function properties(): array
+	{
+		return array_merge(parent::properties(), [
+			'multiple' => $this->multiple,
+			'translateFile' => $this->translateFile,
+		]);
+	}
 }

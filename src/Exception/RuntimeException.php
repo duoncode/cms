@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Exception;
+namespace FiveOrbs\Cms\Exception;
 
-class RuntimeException extends \RuntimeException implements CmsException
-{
-}
+class RuntimeException extends \RuntimeException implements CmsException {}

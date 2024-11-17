@@ -2,139 +2,131 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\View;
+namespace FiveOrbs\Cms\View;
 
-use Conia\Cms\Config;
-use Conia\Cms\Middleware\Permission;
-use Conia\Cms\Util\Password;
-use Conia\Core\Exception\HttpBadRequest;
-use Conia\Core\Request;
-use Conia\Quma\Database;
+use FiveOrbs\Cms\Config;
+use FiveOrbs\Cms\Middleware\Permission;
+use FiveOrbs\Cms\Util\Password;
+use FiveOrbs\Core\Exception\HttpBadRequest;
+use FiveOrbs\Core\Request;
+use FiveOrbs\Quma\Database;
 
 class User
 {
-    public function __construct(protected readonly Database $db)
-    {
-    }
+	public function __construct(protected readonly Database $db) {}
 
-    #[Permission('authenticated')]
-    public function list()
-    {
-    }
+	#[Permission('authenticated')]
+	public function list() {}
 
-    #[Permission('authenticated')]
-    public function profile(Request $request): array
-    {
-        $usr = $request->get('session')->authenticatedUserId();
-        $user = $this->db->users->get(['usr' => $usr])->one();
+	#[Permission('authenticated')]
+	public function profile(Request $request): array
+	{
+		$usr = $request->get('session')->authenticatedUserId();
+		$user = $this->db->users->get(['usr' => $usr])->one();
 
-        if ($user['data']) {
-            $data = json_decode($user['data'], true);
-            $name = $data['name'] ?? '';
-        } else {
-            $name = '';
-        }
+		if ($user['data']) {
+			$data = json_decode($user['data'], true);
+			$name = $data['name'] ?? '';
+		} else {
+			$name = '';
+		}
 
-        return [
-            'uid' => $user['uid'],
-            'username' => $user['username'],
-            'email' => $user['email'],
-            'name' => $name,
-        ];
-    }
+		return [
+			'uid' => $user['uid'],
+			'username' => $user['username'],
+			'email' => $user['email'],
+			'name' => $name,
+		];
+	}
 
-    #[Permission('authenticated')]
-    public function saveProfile(Request $request, Config $config): array
-    {
-        $data = $request->json();
+	#[Permission('authenticated')]
+	public function saveProfile(Request $request, Config $config): array
+	{
+		$data = $request->json();
 
-        $usr = $request->get('session')->authenticatedUserId();
-        $user = $this->db->users->get(['usr' => $usr])->one();
-        $user['data'] = json_decode($user['data'], true);
+		$usr = $request->get('session')->authenticatedUserId();
+		$user = $this->db->users->get(['usr' => $usr])->one();
+		$user['data'] = json_decode($user['data'], true);
 
-        if ($data['uid'] !== $user['uid']) {
-            throw new HttpBadRequest($request, payload: ['error' => 'Falsche uid']);
-        }
+		if ($data['uid'] !== $user['uid']) {
+			throw new HttpBadRequest($request, payload: ['error' => 'Falsche uid']);
+		}
 
-        // E-Mail
-        $email = trim($data['email'] ?? '');
+		// E-Mail
+		$email = trim($data['email'] ?? '');
 
-        if ($email) {
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist ungültig!']);
-            }
-        } else {
-            throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse muss angegeben werden!']);
-        }
+		if ($email) {
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist ungültig!']);
+			}
+		} else {
+			throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse muss angegeben werden!']);
+		}
 
-        if (strtolower($email) !== strtolower($user['email'])) {
-            $existing = $this->db->users->get(['login' => $email])->one();
+		if (strtolower($email) !== strtolower($user['email'])) {
+			$existing = $this->db->users->get(['login' => $email])->one();
 
-            if ($existing) {
-                throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist bereits vergeben']);
-            }
-        }
+			if ($existing) {
+				throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist bereits vergeben']);
+			}
+		}
 
-        // User name
-        $username = trim($data['username'] ?? '');
+		// User name
+		$username = trim($data['username'] ?? '');
 
-        if ($username) {
-            if ($username !== ($user['username'] ?? null) && strlen($username) > 64) {
-                throw new HttpBadRequest($request, ['error' => 'Der Benutzername ist zu lang']);
-            }
-        } else {
-            $username = $user['username'] ?? null;
-        }
+		if ($username) {
+			if ($username !== ($user['username'] ?? null) && strlen($username) > 64) {
+				throw new HttpBadRequest($request, ['error' => 'Der Benutzername ist zu lang']);
+			}
+		} else {
+			$username = $user['username'] ?? null;
+		}
 
-        // Full name
-        $name = trim($data['name'] ?? '');
+		// Full name
+		$name = trim($data['name'] ?? '');
 
-        if ($name) {
-            if ($name !== ($user['data']['name'] ?? '') && strlen($name) > 64) {
-                throw new HttpBadRequest($request, ['error' => 'Der vollständige Name ist zu lang']);
-            }
-        } else {
-            $name = $user['data']['name'] ?? null;
-        }
+		if ($name) {
+			if ($name !== ($user['data']['name'] ?? '') && strlen($name) > 64) {
+				throw new HttpBadRequest($request, ['error' => 'Der vollständige Name ist zu lang']);
+			}
+		} else {
+			$name = $user['data']['name'] ?? null;
+		}
 
-        // Password
-        $pw = trim($data['password'] ?? '');
+		// Password
+		$pw = trim($data['password'] ?? '');
 
-        if ($pw) {
-            $passwordUtil = Password::fromConfig($config);
+		if ($pw) {
+			$passwordUtil = Password::fromConfig($config);
 
-            if (!$passwordUtil->strongEnough($pw)) {
-                throw new HttpBadRequest($request, ['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
-            }
+			if (!$passwordUtil->strongEnough($pw)) {
+				throw new HttpBadRequest($request, ['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
+			}
 
-            if (trim($data['password']) !== trim($data['passwordRepeat'])) {
-                throw new HttpBadRequest($request, ['error' => 'Die neuen Passwörder stimmen nicht überein']);
-            }
+			if (trim($data['password']) !== trim($data['passwordRepeat'])) {
+				throw new HttpBadRequest($request, ['error' => 'Die neuen Passwörder stimmen nicht überein']);
+			}
 
-            $pwHash = $passwordUtil->hash($pw);
-        } else {
-            $pwHash = $user['pwhash'];
-        }
+			$pwHash = $passwordUtil->hash($pw);
+		} else {
+			$pwHash = $user['pwhash'];
+		}
 
-        $this->db->users->save([
-            'usr' => $usr,
-            'email' => $email,
-            'username' => $username,
-            'data' => ['name' => $name],
-            'pwhash' => $pwHash,
-            'editor' => $usr,
-        ])->run();
+		$this->db->users->save([
+			'usr' => $usr,
+			'email' => $email,
+			'username' => $username,
+			'data' => ['name' => $name],
+			'pwhash' => $pwHash,
+			'editor' => $usr,
+		])->run();
 
-        return ['success' => true];
-    }
+		return ['success' => true];
+	}
 
-    #[Permission('authenticated')]
-    public function save(string $uid)
-    {
-    }
+	#[Permission('authenticated')]
+	public function save(string $uid) {}
 
-    #[Permission('authenticated')]
-    public function create()
-    {
-    }
+	#[Permission('authenticated')]
+	public function create() {}
 }

@@ -2,160 +2,159 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace FiveOrbs\Cms;
 
-use Conia\Cms\Config;
-use Conia\Cms\Util\Time;
+use FiveOrbs\Cms\Config;
+use FiveOrbs\Cms\Util\Time;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
 
 class Auth
 {
-    public function __construct(
-        protected Request $request,
-        protected Users $users,
-        protected Config $config,
-        protected Session $session,
-    ) {
-    }
+	public function __construct(
+		protected Request $request,
+		protected Users $users,
+		protected Config $config,
+		protected Session $session,
+	) {}
 
-    public function logout(): void
-    {
-        $session = $this->session;
-        $hash = $this->getTokenHash();
+	public function logout(): void
+	{
+		$session = $this->session;
+		$hash = $this->getTokenHash();
 
-        if ($hash) {
-            $this->users->forget($hash);
-            $session->forgetRemembered();
-        }
+		if ($hash) {
+			$this->users->forget($hash);
+			$session->forgetRemembered();
+		}
 
-        $session->forget();
-    }
+		$session->forget();
+	}
 
-    public function authenticate(
-        string $login,
-        string $password,
-        bool $remember,
-        bool $initSession,
-    ): User|false {
-        $user = $this->users->byLogin($login);
+	public function authenticate(
+		string $login,
+		string $password,
+		bool $remember,
+		bool $initSession,
+	): User|false {
+		$user = $this->users->byLogin($login);
 
-        if (!$user) {
-            return false;
-        }
+		if (!$user) {
+			return false;
+		}
 
-        if (password_verify($password, $user->pwhash)) {
-            if ($initSession) {
-                $this->login($user->id, $remember);
-            }
+		if (password_verify($password, $user->pwhash)) {
+			if ($initSession) {
+				$this->login($user->id, $remember);
+			}
 
-            return $user;
-        }
+			return $user;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function user(): ?User
-    {
-        static $user = false;
+	public function user(): ?User
+	{
+		static $user = false;
 
-        if ($user !== false) {
-            return $user;
-        }
+		if ($user !== false) {
+			return $user;
+		}
 
-        // Verify if user is logged in via cookie session
-        $userId = $this->session->authenticatedUserId();
+		// Verify if user is logged in via cookie session
+		$userId = $this->session->authenticatedUserId();
 
-        if ($userId) {
-            $user = $this->users->byId($userId);
+		if ($userId) {
+			$user = $this->users->byId($userId);
 
-            return $user;
-        }
+			return $user;
+		}
 
-        $hash = $this->getTokenHash();
+		$hash = $this->getTokenHash();
 
-        if ($hash) {
-            $user = $this->users->bySession($hash);
+		if ($hash) {
+			$user = $this->users->bySession($hash);
 
-            if ($user && !(strtotime($user->expires) < time())) {
-                $this->login($user->id, false);
+			if ($user && !(strtotime($user->expires) < time())) {
+				$this->login($user->id, false);
 
-                return $user;
-            }
-        }
+				return $user;
+			}
+		}
 
-        $user = null; // set static var
+		$user = null; // set static var
 
-        return $user;
-    }
+		return $user;
+	}
 
-    public function permissions(): array
-    {
-        $user = $this->user();
+	public function permissions(): array
+	{
+		$user = $this->user();
 
-        if ($user === null) {
-            return [];
-        }
+		if ($user === null) {
+			return [];
+		}
 
-        return $user->permissions();
-    }
+		return $user->permissions();
+	}
 
-    protected function remember(int $userId): RememberDetails
-    {
-        $token = new Token($this->config->get('app.secret'));
-        $expires = time() + $this->config->get('session.options', [])['cache_expire'];
+	protected function remember(int $userId): RememberDetails
+	{
+		$token = new Token($this->config->get('app.secret'));
+		$expires = time() + $this->config->get('session.options', [])['cache_expire'];
 
-        $remembered = $this->users->remember(
-            $token->hash(),
-            $userId,
-            Time::toIsoDateTime($expires),
-        );
+		$remembered = $this->users->remember(
+			$token->hash(),
+			$userId,
+			Time::toIsoDateTime($expires),
+		);
 
-        if ($remembered) {
-            return new RememberDetails($token, $expires);
-        }
+		if ($remembered) {
+			return new RememberDetails($token, $expires);
+		}
 
-        throw new RuntimeException('Could not remember user');
-    }
+		throw new RuntimeException('Could not remember user');
+	}
 
-    protected function login(int $userId, bool $remember): void
-    {
-        $session = $this->session;
+	protected function login(int $userId, bool $remember): void
+	{
+		$session = $this->session;
 
-        // Regenerate the session id before setting the user id
-        // to mitigate session fixation attack.
-        $session->regenerate();
-        $session->setUser($userId);
+		// Regenerate the session id before setting the user id
+		// to mitigate session fixation attack.
+		$session->regenerate();
+		$session->setUser($userId);
 
-        if ($remember) {
-            $details = $this->remember($userId);
+		if ($remember) {
+			$details = $this->remember($userId);
 
-            if ($details) {
-                $session->remember(
-                    $details->token,
-                    $details->expires
-                );
-            }
-        } else {
-            // Remove the user entry from loginsessions table as the user
-            // has not checked "remember me". In that case the session is
-            // only valid as long as the browser is not closed.
-            $token = $session->getAuthToken();
+			if ($details) {
+				$session->remember(
+					$details->token,
+					$details->expires,
+				);
+			}
+		} else {
+			// Remove the user entry from loginsessions table as the user
+			// has not checked "remember me". In that case the session is
+			// only valid as long as the browser is not closed.
+			$token = $session->getAuthToken();
 
-            if ($token !== null) {
-                $this->users->forget($token);
-            }
-        }
-    }
+			if ($token !== null) {
+				$this->users->forget($token);
+			}
+		}
+	}
 
-    protected function getTokenHash(): ?string
-    {
-        $token = $this->session->getAuthToken();
+	protected function getTokenHash(): ?string
+	{
+		$token = $this->session->getAuthToken();
 
-        if ($token) {
-            return (new Token($this->config->get('app.secret'), $token))->hash();
-        }
+		if ($token) {
+			return (new Token($this->config->get('app.secret'), $token))->hash();
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

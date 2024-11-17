@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Node;
+namespace FiveOrbs\Cms\Node;
 
-abstract class Document extends Node
-{
-}
+abstract class Document extends Node {}

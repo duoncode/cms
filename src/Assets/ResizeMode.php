@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Assets;
+namespace FiveOrbs\Cms\Assets;
 
 enum ResizeMode: string
 {
-    case Crop = 'crop';
-    case Fit = 'fit';
-    case FreeCrop = 'freecrop';
-    case Height = 'height';
-    case LongSide = 'longside';
-    case Resize = 'resize';
-    case ShortSide = 'shortside';
-    case Width = 'width';
+	case Crop = 'crop';
+	case Fit = 'fit';
+	case FreeCrop = 'freecrop';
+	case Height = 'height';
+	case LongSide = 'longside';
+	case Resize = 'resize';
+	case ShortSide = 'shortside';
+	case Width = 'width';
 }

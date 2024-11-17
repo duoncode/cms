@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Value;
+namespace FiveOrbs\Cms\Value;
 
 use IntlDateFormatter;
 
 class Time extends DateTime
 {
-    public const FORMAT = 'H:i:s';
+	public const FORMAT = 'H:i:s';
 
-    public function localize(
-        int $dateFormat = IntlDateFormatter::NONE,
-        int $timeFormat = IntlDateFormatter::SHORT,
-    ): string {
-        return parent::localize($dateFormat, $timeFormat);
-    }
+	public function localize(
+		int $dateFormat = IntlDateFormatter::NONE,
+		int $timeFormat = IntlDateFormatter::SHORT,
+	): string {
+		return parent::localize($dateFormat, $timeFormat);
+	}
 }

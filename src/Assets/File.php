@@ -2,45 +2,44 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Assets;
+namespace FiveOrbs\Cms\Assets;
 
-use Conia\Cms\Util\Path;
-use Conia\Core\Request;
+use FiveOrbs\Cms\Util\Path;
+use FiveOrbs\Core\Request;
 
 class File
 {
-    public function __construct(
-        protected readonly Request $request,
-        protected readonly Assets $assets,
-        protected readonly string $file,
-    ) {
-    }
+	public function __construct(
+		protected readonly Request $request,
+		protected readonly Assets $assets,
+		protected readonly string $file,
+	) {}
 
-    public function path(): string
-    {
-        return Path::inside($this->assets->assetsDir, $this->file);
-    }
+	public function path(): string
+	{
+		return Path::inside($this->assets->assetsDir, $this->file);
+	}
 
-    public function publicPath(bool $bust = false): string
-    {
-        $path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $this->path()))));
+	public function publicPath(bool $bust = false): string
+	{
+		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $this->path()))));
 
-        if ($bust) {
-            $path = $this->bust($path);
-        }
+		if ($bust) {
+			$path = $this->bust($path);
+		}
 
-        return substr($path, strlen($this->assets->publicDir));
-    }
+		return substr($path, strlen($this->assets->publicDir));
+	}
 
-    public function url(bool $bust = true): string
-    {
-        return $this->request->origin() . $this->publicPath($bust);
-    }
+	public function url(bool $bust = true): string
+	{
+		return $this->request->origin() . $this->publicPath($bust);
+	}
 
-    protected function bust(string $path): string
-    {
-        $buster = hash('xxh32', (string)filemtime($path));
+	protected function bust(string $path): string
+	{
+		$buster = hash('xxh32', (string) filemtime($path));
 
-        return $path . '?v=' . $buster;
-    }
+		return $path . '?v=' . $buster;
+	}
 }

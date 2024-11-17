@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Util;
+namespace FiveOrbs\Cms\Util;
 
-use Conia\Cms\Exception\RuntimeException;
+use FiveOrbs\Cms\Exception\RuntimeException;
 
 class Path
 {
-    public static function inside(string $parent, string $child, bool $checkIsFile = false): string
-    {
-        $parent = realpath($parent);
+	public static function inside(string $parent, string $child, bool $checkIsFile = false): string
+	{
+		$parent = realpath($parent);
 
-        if (!$parent) {
-            throw new RuntimeException('Parent directory does not exist.');
-        }
+		if (!$parent) {
+			throw new RuntimeException('Parent directory does not exist.');
+		}
 
-        $path = realpath(rtrim($parent, '\\/') . DIRECTORY_SEPARATOR . ltrim($child, '\\/'));
+		$path = realpath(rtrim($parent, '\\/') . DIRECTORY_SEPARATOR . ltrim($child, '\\/'));
 
-        if (!$path || strncmp($path, $parent, strlen($parent)) !== 0) {
-            throw new RuntimeException('File or directory does not exist or is not in the expected location.');
-        }
+		if (!$path || strncmp($path, $parent, strlen($parent)) !== 0) {
+			throw new RuntimeException('File or directory does not exist or is not in the expected location.');
+		}
 
-        if ($checkIsFile && !is_file($path)) {
-            throw new RuntimeException('Path is not a file: ' . $path);
-        }
+		if ($checkIsFile && !is_file($path)) {
+			throw new RuntimeException('Path is not a file: ' . $path);
+		}
 
-        return $path;
-    }
+		return $path;
+	}
 }

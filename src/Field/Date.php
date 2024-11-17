@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Field;
+namespace FiveOrbs\Cms\Field;
 
-use Conia\Cms\Value\Date as DateValue;
+use FiveOrbs\Cms\Value\Date as DateValue;
 
 class Date extends Field
 {
-    public function value(): DateValue
-    {
-        return new DateValue($this->node, $this, $this->valueContext);
-    }
+	public function value(): DateValue
+	{
+		return new DateValue($this->node, $this, $this->valueContext);
+	}
 
-    public function structure(mixed $value = null): array
-    {
-        return $this->getSimpleStructure('date', $value);
-    }
+	public function structure(mixed $value = null): array
+	{
+		return $this->getSimpleStructure('date', $value);
+	}
 }

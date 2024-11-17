@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Exception;
+namespace FiveOrbs\Cms\Exception;
 
-interface CmsException
-{
-}
+interface CmsException {}

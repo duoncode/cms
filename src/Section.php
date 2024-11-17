@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms;
+namespace FiveOrbs\Cms;
 
 class Section
 {
-    public function __construct(
-        public readonly string $name,
-    ) {
-    }
+	public function __construct(
+		public readonly string $name,
+	) {}
 }

@@ -2,46 +2,46 @@
 
 declare(strict_types=1);
 
-namespace Conia\Cms\Commands;
+namespace FiveOrbs\Cms\Commands;
 
-use Conia\Cli\Command;
-use Conia\Quma\Connection;
-use Conia\Quma\Database;
+use FiveOrbs\Cli\Command;
+use FiveOrbs\Quma\Connection;
+use FiveOrbs\Quma\Database;
 
 class Superuser extends Command
 {
-    protected string $group = 'General';
-    protected string $name = 'add-superuser';
-    protected string $description = 'Add a superuser';
-    protected Database $db;
+	protected string $group = 'General';
+	protected string $name = 'add-superuser';
+	protected string $description = 'Add a superuser';
+	protected Database $db;
 
-    public function __construct(Connection $connection)
-    {
-        $this->db = new Database($connection);
-    }
+	public function __construct(Connection $connection)
+	{
+		$this->db = new Database($connection);
+	}
 
-    public function run(): int|string
-    {
-        $params = [];
+	public function run(): int|string
+	{
+		$params = [];
 
-        echo "Create a superuser\n\n";
-        $params['email'] = readline('Email: ');
-        $params['full_name'] = readline('Full Name: ');
-        $params['display_name'] = readline('Display Name: ');
-        $params['pwhash'] = password_hash(
-            readline('Password: '),
-            PASSWORD_ARGON2ID
-        );
+		echo "Create a superuser\n\n";
+		$params['email'] = readline('Email: ');
+		$params['full_name'] = readline('Full Name: ');
+		$params['display_name'] = readline('Display Name: ');
+		$params['pwhash'] = password_hash(
+			readline('Password: '),
+			PASSWORD_ARGON2ID,
+		);
 
-        $result = $this->db->users->addSuperuser($params);
+		$result = $this->db->users->addSuperuser($params);
 
-        if ($result['success']) {
-            echo "\nSuccessfully created superuser: " . $params['email'] . "\n";
-        } else {
-            echo "\nError occured. Please review your data!\n";
-            echo $result['message'] . "\n";
-        }
+		if ($result['success']) {
+			echo "\nSuccessfully created superuser: " . $params['email'] . "\n";
+		} else {
+			echo "\nError occured. Please review your data!\n";
+			echo $result['message'] . "\n";
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 }
