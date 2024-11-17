@@ -1,8 +1,8 @@
 SELECT
-    up.path,
-    up.locale
+	up.path,
+	up.locale
 FROM
-    conia.urlpaths up
+	cms.urlpaths up
 WHERE
-    up.node = :node
-    AND up.inactive IS NULL;
+	up.node = :node
+	AND up.inactive IS NULL;

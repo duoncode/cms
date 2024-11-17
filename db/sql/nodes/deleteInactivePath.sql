@@ -1,4 +1,4 @@
-DELETE FROM conia.urlpaths
+DELETE FROM cms.urlpaths
 WHERE
-    path = :path
-    AND inactive IS NOT NULL;
+	path = :path
+	AND inactive IS NOT NULL;

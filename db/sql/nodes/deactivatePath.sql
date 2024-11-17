@@ -1,7 +1,7 @@
-UPDATE conia.urlpaths
+UPDATE cms.urlpaths
 SET
-    inactive = now(),
-    editor = :editor
+	inactive = now(),
+	editor = :editor
 WHERE
-    path = :path
-    AND locale = :locale;
+	path = :path
+	AND locale = :locale;

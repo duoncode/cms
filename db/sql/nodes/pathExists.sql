@@ -1,6 +1,6 @@
 SELECT
-    true
+	true
 FROM
-    conia.urlpaths
+	cms.urlpaths
 WHERE
-    path = :path;
+	path = :path;

@@ -1,13 +1,13 @@
-INSERT INTO conia.urlpaths (
-    node,
-    path,
-    locale,
-    editor,
-    creator
+INSERT INTO cms.urlpaths (
+	node,
+	path,
+	locale,
+	editor,
+	creator
 ) VALUES (
-    :node,
-    :path,
-    :locale,
-    :editor,
-    :editor
+	:node,
+	:path,
+	:locale,
+	:editor,
+	:editor
 );

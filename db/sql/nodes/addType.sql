@@ -1,7 +1,7 @@
-INSERT INTO conia.types (
-    handle,
-    kind
+INSERT INTO cms.types (
+	handle,
+	kind
 ) VALUES (
-    :handle,
-    :kind
+	:handle,
+	:kind
 );

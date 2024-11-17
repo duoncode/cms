@@ -1,87 +1,87 @@
 SELECT
-    -- n.node,
-    n.uid,
-    n.published,
-    n.hidden,
-    n.locked,
-    n.created,
-    n.changed,
-    n.deleted,
-    n.content,
-    t.handle,
-    t.kind,
-    uc.uid AS creator_uid,
-    uc.email AS creator_email,
-    uc.username AS creator_username,
-    uc.data AS creator_data,
-    ue.uid AS editor_uid,
-    ue.email AS editor_email,
-    ue.username AS editor_username,
-    ue.data AS editor_data,
-    coalesce(
-        jsonb_object_agg(sup.locale, sup.path)
-            FILTER (WHERE up.inactive IS NULL AND sup.path IS NOT NULL),
-        '{}')::jsonb AS paths
+	-- n.node,
+	n.uid,
+	n.published,
+	n.hidden,
+	n.locked,
+	n.created,
+	n.changed,
+	n.deleted,
+	n.content,
+	t.handle,
+	t.kind,
+	uc.uid AS creator_uid,
+	uc.email AS creator_email,
+	uc.username AS creator_username,
+	uc.data AS creator_data,
+	ue.uid AS editor_uid,
+	ue.email AS editor_email,
+	ue.username AS editor_username,
+	ue.data AS editor_data,
+	coalesce(
+		jsonb_object_agg(sup.locale, sup.path)
+			FILTER (WHERE up.inactive IS NULL AND sup.path IS NOT NULL),
+		'{}')::jsonb AS paths
 FROM
-    conia.nodes n
-    INNER JOIN conia.types t USING(type)
-    INNER JOIN conia.users uc ON
-        uc.usr = n.creator
-    INNER JOIN conia.users ue ON
-        ue.usr = n.editor
-    LEFT JOIN conia.urlpaths up ON
-        up.node = n.node
-    LEFT JOIN (
-        SELECT
-            sup.node,
-            sup.path,
-            sup.locale
-        FROM
-            conia.urlpaths sup
-        WHERE
-            sup.inactive IS NULL
-    ) sup ON sup.node = n.node
+	cms.nodes n
+	INNER JOIN cms.types t USING(type)
+	INNER JOIN cms.users uc ON
+		uc.usr = n.creator
+	INNER JOIN cms.users ue ON
+		ue.usr = n.editor
+	LEFT JOIN cms.urlpaths up ON
+		up.node = n.node
+	LEFT JOIN (
+		SELECT
+			sup.node,
+			sup.path,
+			sup.locale
+		FROM
+			cms.urlpaths sup
+		WHERE
+			sup.inactive IS NULL
+	) sup ON sup.node = n.node
 WHERE
-    1 = 1
+	1 = 1
 <?php if (isset($kind)) : ?>
-    AND t.kind = :kind
+	AND t.kind = :kind
 <?php endif ?>
 <?php if (isset($uid)) : ?>
-    AND n.uid = :uid
+	AND n.uid = :uid
 <?php endif ?>
 <?php if (isset($deleted)) : ?>
 <?php if ($deleted) : ?>
-    AND n.deleted IS NOT NULL
+	AND n.deleted IS NOT NULL
 <?php else: ?>
-    AND n.deleted IS NULL
+	AND n.deleted IS NULL
 <?php endif ?>
 <?php endif ?>
 <?php if (isset($published)) : ?>
-    AND n.published = :published
+	AND n.published = :published
 <?php endif ?>
 <?php if (isset($hidden)) : ?>
-    AND n.hidden = :hidden
+	AND n.hidden = :hidden
 <?php endif ?>
 <?php if (isset($condition) && !empty(trim($condition))) : ?>
-    AND (<?= $condition ?>)
+	AND (<?= $condition ?>)
 <?php endif ?>
 <?php if (isset($path)) : ?>
-    AND up.path = :path
-    AND up.inactive IS NULL
+	AND up.path = :path
+	AND up.inactive IS NULL
 <?php endif ?>
 
 GROUP BY
-    n.node,
-    uc.uid,
-    uc.email,
-    uc.username,
-    uc.data,
-    ue.uid,
-    ue.email,
-    ue.username,
-    ue.data,
-    t.handle,
-    t.kind
+	n.node,
+	uc.uid,
+	uc.email,
+	uc.username,
+	uc.data,
+	ue.uid,
+	ue.email,
+	ue.username,
+	ue.data,
+	t.handle,
+	t.kind
 <?php if (isset($order)) : ?>
 ORDER BY <?= $order ?>
 <?php endif ?>

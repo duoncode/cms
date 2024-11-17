@@ -1,53 +1,53 @@
 SELECT
-    u.usr,
-    u.uid,
-    u.username,
-    u.email,
-    u.pwhash,
-    u.userrole AS role,
-    u.active,
-    u.data,
-    COALESCE(c.data->>'name', c.username, c.email) AS creator,
-    COALESCE(e.data->>'name', e.username, e.email) AS editor,
+	u.usr,
+	u.uid,
+	u.username,
+	u.email,
+	u.pwhash,
+	u.userrole AS role,
+	u.active,
+	u.data,
+	COALESCE(c.data->>'name', c.username, c.email) AS creator,
+	COALESCE(e.data->>'name', e.username, e.email) AS editor,
 <?php if (isset($sessionhash)) : ?>
-    s.expires,
+	s.expires,
 <?php endif ?>
-    u.created,
-    u.changed,
-    u.deleted
+	u.created,
+	u.changed,
+	u.deleted
 FROM
-    conia.users u
+	cms.users u
 INNER JOIN
-    conia.users c ON
-        u.creator = c.usr
+	cms.users c ON
+		u.creator = c.usr
 INNER JOIN
-    conia.users e ON
-        u.editor = e.usr
+	cms.users e ON
+		u.editor = e.usr
 
 <?php if (isset($sessionhash)) : ?>
 INNER JOIN
-    conia.loginsessions s ON
-        s.uid = u.uid
+	cms.loginsessions s ON
+		s.uid = u.uid
 <?php endif ?>
 
 WHERE
 
 <?php if (isset($login)) : ?>
-    (u.email = :login OR u.username = :login)
+	(u.email = :login OR u.username = :login)
 <?php elseif (isset($sessionhash)): ?>
-    s.hash = :sessionhash
+	s.hash = :sessionhash
 <?php elseif (isset($usr)): ?>
-    u.usr = :usr
+	u.usr = :usr
 <?php else: ?>
-    u.uid = :uid
+	u.uid = :uid
 <?php endif ?>
 
-    AND u.userrole != 'system'
+	AND u.userrole != 'system'
 
 <?php if (!isset($deletedAlso) || $deletedAlso === false) : ?>
-    AND u.deleted IS NULL
+	AND u.deleted IS NULL
 <?php endif ?>
 
 <?php if (!isset($inactiveAlso) || $inactiveAlso === false) : ?>
-    AND u.active = true
+	AND u.active = true
 <?php endif ?>

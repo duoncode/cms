@@ -1,16 +1,15 @@
 UPDATE
-    conia.nodes
+	cms.nodes
 SET
-    deleted = now()
+	deleted = now()
 WHERE
-    uid = :uid;
+	uid = :uid;
 
 UPDATE
-    conia.urlpaths
+	cms.urlpaths
 SET
-    inactive = now(),
-    editor = :editor
+	inactive = now(),
+	editor = :editor
 WHERE node IN (
-    SELECT n.node FROM conia.nodes n WHERE n.uid = :uid
+	SELECT n.node FROM cms.nodes n WHERE n.uid = :uid
 );
-

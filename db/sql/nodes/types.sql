@@ -1,6 +1,6 @@
 SELECT
-    type,
-    handle,
-    kind
+	type,
+	handle,
+	kind
 FROM
-    conia.types;
+	cms.types;

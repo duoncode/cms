@@ -1,12 +1,12 @@
 SELECT
-    path,
-    locale,
-    creator,
-    editor,
-    created,
-    inactive
+	path,
+	locale,
+	creator,
+	editor,
+	created,
+	inactive
 FROM
-    conia.urlpaths
+	cms.urlpaths
 WHERE
-    node = :node
-    AND inactive IS NULL;
+	node = :node
+	AND inactive IS NULL;
