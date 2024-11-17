@@ -11,7 +11,7 @@
             alt="Panel Logo" />
     {:else}
         <Logo />
-        <span>CONIA</span>
+        <span>FiveOrbs</span>
     {/if}
 </div>
 

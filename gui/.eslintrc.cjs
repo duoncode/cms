@@ -1,7 +1,7 @@
 module.exports = {
     root: true,
     globals: {
-        __CONIA_CONFIG__: 'readonly',
+        __FIVEORBS_CONFIG__: 'readonly',
     },
     extends: [
         'eslint:recommended',

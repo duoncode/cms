@@ -3,7 +3,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 const devport = 1983;
-const host = process.env.CONIA_DEV_HOST ? process.env.CONIA_DEV_HOST : 'localhost';
+const host = process.env.FIVEORBS_DEV_HOST ? process.env.FIVEORBS_DEV_HOST : 'localhost';
 
 export default defineConfig({
     plugins: [sveltekit()],
