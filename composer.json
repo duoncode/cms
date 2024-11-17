@@ -1,51 +1,51 @@
 {
-    "name": "conia/cms",
-    "description": "Conia Content Management Framework",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "ebene fünf GmbH",
-            "email": "info@ebenefuenf.de"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "php": ">=8.3",
-        "conia/core": "dev-main",
-        "conia/error": "dev-main",
-        "conia/quma": "dev-main",
-        "conia/registry": "dev-main",
-        "conia/session": "dev-main",
-        "conia/sire": "dev-main",
-        "gumlet/php-image-resize": "2.0.*",
-        "hidehalo/nanoid-php": "^1.1",
-        "laminas/laminas-httphandlerrunner": "^2.4",
-        "psr/http-message-implementation": "^1.0",
-        "symfony/html-sanitizer": "^6.2"
-    },
-    "require-dev": {
-        "conia/development": "^1.0",
-        "laminas/laminas-diactoros": "^2",
-        "phpunit/phpunit": "^10"
-    },
-    "autoload": {
-        "psr-4": {
-            "Conia\\Cms\\": "src"
-        },
-        "files": [
-            "src/Util/functions.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Conia\\Cms\\Tests\\": "tests"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    }
+	"name": "fiveorbs/cms",
+	"description": "FiveOrbs Content Management Framework",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "ebene fünf GmbH",
+			"email": "info@ebenefuenf.de"
+		}
+	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"php": ">=8.3",
+		"fiveorbs/core": "dev-main",
+		"fiveorbs/error": "dev-main",
+		"fiveorbs/quma": "dev-main",
+		"fiveorbs/registry": "dev-main",
+		"fiveorbs/session": "dev-main",
+		"fiveorbs/sire": "dev-main",
+		"gumlet/php-image-resize": "2.0.*",
+		"hidehalo/nanoid-php": "^1.1",
+		"laminas/laminas-httphandlerrunner": "^2.4",
+		"psr/http-message-implementation": "^1.0",
+		"symfony/html-sanitizer": "^6.2"
+	},
+	"require-dev": {
+		"fiveorbs/dev": "^1.1",
+		"laminas/laminas-diactoros": "^2",
+		"phpunit/phpunit": "^10"
+	},
+	"autoload": {
+		"psr-4": {
+			"FiveOrbs\\Cms\\": "src"
+		},
+		"files": [
+			"src/Util/functions.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"FiveOrbs\\Cms\\Tests\\": "tests"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
 }

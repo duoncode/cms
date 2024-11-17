@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Conia\Cli\Runner;
-use Conia\Cms\Commands\RecreateDb;
-use Conia\I18n\I18n;
-use Conia\I18n\Source;
-use Conia\Quma\Connection;
-use Conia\Quma\MigrationCommands;
+use FiveOrbs\Cli\Runner;
+use FiveOrbs\Cms\Commands\RecreateDb;
+use FiveOrbs\I18n\I18n;
+use FiveOrbs\I18n\Source;
+use FiveOrbs\Quma\Connection;
+use FiveOrbs\Quma\MigrationCommands;
 
 $connection = new Connection(
-    'pgsql:host=localhost;dbname=conia_db;user=conia_user;password=conia_password',
+    'pgsql:host=localhost;dbname=fiveorbs_db;user=fiveorbs_user;password=fiveorbs_password',
     __DIR__ . '/db/sql',
     __DIR__ . '/db/migrations',
     fetchMode: PDO::FETCH_ASSOC,
@@ -22,7 +22,7 @@ $connection = new Connection(
 
 // $commands = I18n::commands(
 //     dir: __DIR__ . '/locale',
-//     domain: 'conia',
+//     domain: 'fiveorbs',
 //     sources: [
 //         new Source(__DIR__ . '/src', '*.php', 'PHP'),
 //         new Source(__DIR__ . '/gui', '*.svelte', 'Python'),
@@ -30,7 +30,7 @@ $connection = new Connection(
 //     jsonDir: __DIR__ . '/gui/src/locale',
 // );
 $commands = MigrationCommands::get($connection);
-$commands->add(new RecreateDb('conia_db', 'conia_user', 'conia_password'));
+$commands->add(new RecreateDb('fiveorbs_db', 'fiveorbs_user', 'fiveorbs_password'));
 
 $runner = new Runner($commands);
 
