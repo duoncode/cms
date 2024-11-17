@@ -66,7 +66,7 @@
                 {#if $fields}
                     <div class="flex flex-row flex-wrap gap-2">
                         {#each $fields as field (field)}
-                            {#if field.type === 'Conia\\Cms\\Field\\Image'}
+                            {#if field.type === 'FiveOrbs\\Cms\\Field\\Image'}
                                 {#if $node.content[field.name] && $node.content[field.name].files}
                                     {#each $node.content[field.name].files as file}
                                         {#if file.file}
@@ -86,7 +86,7 @@
                 {#if $fields}
                     <div>
                         {#each $fields as field (field)}
-                            {#if field.type === 'Conia\\Cms\\Field\\File'}
+                            {#if field.type === 'FiveOrbs\\Cms\\Field\\File'}
                                 {#if $node.content[field.name] && $node.content[field.name].files}
                                     {#each $node.content[field.name].files as file}
                                         {#if file.file}

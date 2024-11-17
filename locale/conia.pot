@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the conia package.
+# This file is distributed under the same license as the fiveorbs package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: conia\n"
+"Project-Id-Version: fiveorbs\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-27 15:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -17,30 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:13
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:13
 msgid "Please provide username and password"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:109
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:109
 msgid "Username or email"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:120
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:120
 msgid "Password"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:137
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:137
 msgid "Remember me"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:140
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:140
 msgid "Forgot your password?"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/Login.svelte:156
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/Login.svelte:156
 msgid "Sign in"
 msgstr ""
 
-#: /home/ernst/Workspace/conia/core/gui/src/shell/Searchbar.svelte:83
+#: /home/ernst/Workspace/fiveorbs/core/gui/src/shell/Searchbar.svelte:83
 msgid "Search"
 msgstr ""
