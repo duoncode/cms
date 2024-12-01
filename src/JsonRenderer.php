@@ -6,7 +6,7 @@ namespace FiveOrbs\Cms;
 
 use FiveOrbs\Core\Factory;
 use FiveOrbs\Core\Response;
-use FiveOrbs\Route\After;
+use FiveOrbs\Router\After;
 use Psr\Http\Message\ResponseInterface as PsrResponse;
 use Traversable;
 

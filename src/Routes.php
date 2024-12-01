@@ -15,8 +15,8 @@ use FiveOrbs\Cms\View\User;
 use FiveOrbs\Core\App;
 use FiveOrbs\Core\Factory;
 use FiveOrbs\Quma\Database;
-use FiveOrbs\Route\Group;
-use FiveOrbs\Route\Route;
+use FiveOrbs\Router\Group;
+use FiveOrbs\Router\Route;
 
 class Routes
 {
@@ -125,3 +125,4 @@ class Routes
 		);
 	}
 }
+

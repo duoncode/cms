@@ -17,7 +17,7 @@ use FiveOrbs\Quma\Connection;
 use FiveOrbs\Quma\Database;
 use FiveOrbs\Registry\Entry;
 use FiveOrbs\Registry\Registry;
-use FiveOrbs\Route\Route;
+use FiveOrbs\Router\Route;
 use PDO;
 
 class Cms implements Plugin
