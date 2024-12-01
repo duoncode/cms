@@ -39,27 +39,27 @@ class Routes
 	{
 		$session = new Session($this->config, $this->db);
 
-		$indexRoute = $app->get('/', [Page::class, 'catchall'], 'fiveorbs.index.get');
-		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'fiveorbs.index.post');
+		$indexRoute = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
+		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
 		// All API routes
 		$this->addPanelApi($app, $session);
 
-		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'fiveorbs.panel.catchall');
-		$app->get($this->panelPath, [Panel::class, 'index'], 'fiveorbs.panel');
-		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'fiveorbs.panel.slash');
+		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall');
+		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel');
+		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash');
 
 		$postMediaRoute = $app->post(
 			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
 			[Media::class, 'upload'],
-			'fiveorbs.media.upload',
+			'cms.media.upload',
 		);
 
-		$app->get('/media/image/...slug', [Media::class, 'image'], 'fiveorbs.media.image');
-		$app->get('/media/file/...slug', [Media::class, 'file'], 'fiveorbs.media.file');
-		$app->get('/media/video/...slug', [Media::class, 'file'], 'fiveorbs.media.video');
+		$app->get('/media/image/...slug', [Media::class, 'image'], 'cms.media.image');
+		$app->get('/media/file/...slug', [Media::class, 'file'], 'cms.media.file');
+		$app->get('/media/video/...slug', [Media::class, 'file'], 'cms.media.video');
 
-		$catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'fiveorbs.preview.catchall');
+		$catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
 
 		if (!$this->sessionEnabled) {
 			$indexRoute->middleware($session);
@@ -73,7 +73,7 @@ class Routes
 		return Route::any(
 			'/...slug',
 			[Page::class, 'catchall'],
-			'fiveorbs.catchall',
+			'cms.catchall',
 		)->method('GET', 'POST')->middleware($this->initRequestMiddlware);
 	}
 
@@ -96,14 +96,14 @@ class Routes
 
 	protected function addSystem(Group $api): void
 	{
-		$api->get('/boot', [Panel::class, 'boot'], 'fiveorbs.boot');
-		$api->get('/collections', [Panel::class, 'collections'], 'fiveorbs.collections');
-		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'fiveorbs.collection');
-		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'fiveorbs.node.get');
-		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'fiveorbs.node.put');
-		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'fiveorbs.node.delet');
-		$api->post('/node/{type}', [Panel::class, 'createNode'], 'fiveorbs.node.create');
-		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'fiveorbs.blueprint');
+		$api->get('/boot', [Panel::class, 'boot'], 'cms.boot');
+		$api->get('/collections', [Panel::class, 'collections'], 'cms.collections');
+		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'cms.collection');
+		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.get');
+		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.put');
+		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.delet');
+		$api->post('/node/{type}', [Panel::class, 'createNode'], 'cms.node.create');
+		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'cms.blueprint');
 	}
 
 	protected function addPanelApi(App $app, Session $session): void
@@ -121,7 +121,7 @@ class Routes
 				$this->addUser($api);
 				$this->addSystem($api);
 			},
-			'fiveorbs.panel.',
+			'cms.panel.',
 		);
 	}
 }
