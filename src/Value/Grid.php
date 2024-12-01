@@ -151,14 +151,14 @@ class Grid extends Value
 
 	// Supported args:
 	//
-	// - prefix: All css classes are prefixed with this value. Default 'fiveorbs'
+	// - prefix: All css classes are prefixed with this value. Default 'cms'
 	// - tag: The tag of the container. Default 'div'
 	// - maxImageWidth: The maximum width of images. Images will be resized according to colspan. Default: 1280
 	// - class: An additional class added to the container
 	public function render(mixed ...$args): string
 	{
 		$args['tag'] = $tag = $args['tag'] ?? 'div';
-		$args['prefix'] = $prefix = $args['prefix'] ?? 'fiveorbs';
+		$args['prefix'] = $prefix = $args['prefix'] ?? 'cms';
 		$args['class'] = $class = ($args['class'] ?? '' ? ' ' . $args['class'] : '');
 
 		$columns = $this->columns();
@@ -265,11 +265,11 @@ class Grid extends Value
 			);
 			$url = $resized->url(true);
 
-			$result .= "<div class=\"fiveorbs-grid-images-image\"><img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\"></div>";
+			$result .= "<div class=\"cms-grid-images-image\"><img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\"></div>";
 		}
 
 		if ($result) {
-			return '<div class="fiveorbs-grid-images">' . $result . '</div>';
+			return '<div class="cms-grid-images">' . $result . '</div>';
 		}
 
 		return '';
