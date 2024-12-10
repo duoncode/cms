@@ -1,9 +1,9 @@
 <script lang="ts">
     import { run, preventDefault } from 'svelte/legacy';
 
-    import type { Modal } from 'svelte-simple-modal';
     import type { FileItem, UploadResponse, UploadType } from '$types/data';
     import type { Toast } from '$lib/toast';
+    import type { ModalFunctions } from '$shell/modal';
 
     import { getContext, createEventDispatcher } from 'svelte';
     import { _ } from '$lib/locale';
@@ -41,7 +41,7 @@
         disabled = false,
         disabledMsg = null,
         callback = null,
-        inline = false
+        inline = false,
     }: Props = $props();
 
     let loading = $state(false);
@@ -49,7 +49,7 @@
     let allowedExtensions = $state('');
 
     const dispatch = createEventDispatcher();
-    const { open, close }: Modal = getContext('simple-modal');
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     function remove(index: number | null) {
         if (index === null) {
@@ -86,9 +86,7 @@
                     type: 'error',
                     close,
                 },
-                {
-                    closeButton: false,
-                },
+                {},
             );
             return [];
         }

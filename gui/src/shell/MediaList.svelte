@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
     import type { FileItem, UploadType } from '$types/data';
+    import type { ModalFunctions } from '$shell/modal';
     import type { SortableEvent } from 'sortablejs';
     import { getContext } from 'svelte';
     import Sortable from 'sortablejs';
@@ -27,11 +27,9 @@
         type,
         loading,
         path,
-        remove
+        remove,
     }: Props = $props();
-
-    const modal: Modal = getContext('simple-modal');
-
+    let { open, close } = getContext<ModalFunctions>('modal');
     let sorterElement: HTMLElement = $state();
 
     function createSorter() {
@@ -51,16 +49,20 @@
     function edit(index: number, hasAlt: boolean) {
         const apply = (asset: FileItem) => {
             assets[index] = asset;
-            modal.close();
+            close();
         };
 
-        modal.open(ModalEditImage, {
-            asset: assets[index],
-            close: modal.close,
-            apply,
-            translate,
-            hasAlt,
-        });
+        open(
+            ModalEditImage,
+            {
+                asset: assets[index],
+                close,
+                apply,
+                translate,
+                hasAlt,
+            },
+            {},
+        );
     }
 
     onMount(createSorter);

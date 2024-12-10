@@ -1,5 +1,6 @@
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
+    import type { ModalFunctions } from '$shell/modal';
+
     import { getContext } from 'svelte';
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
@@ -60,11 +61,11 @@
         editSource = true,
         required = false,
         toolbar = 'default',
-        embed = false
+        embed = false,
     }: Props = $props();
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     const dispatch = createEventDispatcher();
-    const { open, close }: Modal = getContext('simple-modal');
 
     let ref = $state();
     let bubble = $state();
@@ -216,10 +217,7 @@
                 value,
                 blank: target === '_blank',
             },
-            {
-                closeButton: false,
-                styleContent: { overflow: 'hidden' },
-            },
+            {},
         );
     }
 </script>
@@ -439,9 +437,7 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Text align right')}
-                            onclick={clickToolbar(
-                                editor.chain().focus().setTextAlign('right').run,
-                            )}
+                            onclick={clickToolbar(editor.chain().focus().setTextAlign('right').run)}
                             class:active={editor.isActive({
                                 textAlign: 'right',
                             })}>
@@ -578,13 +574,15 @@
         class="wysiwyg-editor prose relative z-0"
         bind:this={ref}
         class:hide={showSource}
-        onclick={() => (showDropdown = false)}></div>
+        onclick={() => (showDropdown = false)}>
+    </div>
     <div
         class="wysiwyg-source relative z-0"
         class:hide={!showSource}>
         <textarea
             onkeyup={changeSource}
             bind:value
-            class="border-0 w-full h-64 p-1 bg-gray-700 font-mono text-white"></textarea>
+            class="border-0 w-full h-64 p-1 bg-gray-700 font-mono text-white">
+        </textarea>
     </div>
 </div>

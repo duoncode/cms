@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from '$lib/locale';
+    import { ModalHeader, ModalBody, ModalFooter } from '$shell/modal';
     import { currentNode as node, currentFields as fields } from '$lib/state';
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoImage from '$shell/icons/IcoImage.svelte';
@@ -8,12 +9,7 @@
     import Image from './ModalLinkImage.svelte';
     import Button from '$shell/Button.svelte';
 
-    let {
-        close,
-        add,
-        value = $bindable(),
-        blank = $bindable()
-    } = $props();
+    let { close, add, value = $bindable(), blank = $bindable() } = $props();
 
     let currentTab = $state('manually');
 
@@ -33,8 +29,8 @@
     }
 </script>
 
-<div class="modal flex flex-col">
-    <h2 class="text-xl font-bold">{_('Add link')}</h2>
+<ModalHeader class="text-xl font-bold">{_('Add link')}</ModalHeader>
+<ModalBody>
     <div class="flex flex-col gap-4">
         <div class="tabs">
             <div class="border-b border-gray-200">
@@ -75,7 +71,7 @@
                                             <Image
                                                 node={$node.uid}
                                                 file={file.file}
-                                                on:click={clickFile}
+                                                onclick={clickFile}
                                                 bind:current={value} />
                                         {/if}
                                     {/each}
@@ -95,7 +91,7 @@
                                             <File
                                                 node={$node.uid}
                                                 file={file.file}
-                                                on:click={clickFile}
+                                                onclick={clickFile}
                                                 bind:current={value} />
                                         {/if}
                                     {/each}
@@ -139,23 +135,26 @@
             </div>
         </div>
     </div>
+</ModalBody>
+<ModalFooter>
     <div class="controls">
         <Button
             class="danger"
-            on:click={close}>
+            onclick={close}>
             {_('Abbrechen')}
         </Button>
         <Button
             class="primary"
-            on:click={clickAdd}
-            disable={!value}>
+            onclick={clickAdd}
+            disabled={!value}>
             {_('Link hinzufügen')}
         </Button>
     </div>
-</div>
+</ModalFooter>
 
 <style lang="postcss">
     .files {
         max-height: 50vh;
     }
 </style>
+

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { run } from 'svelte/legacy';
 
-    import type { Modal } from 'svelte-simple-modal';
     import type { GridItem } from '$types/data';
+    import type { ModalFunctions } from '$shell/modal';
+
     import { getContext } from 'svelte';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoArrowUp from '$shell/icons/IcoArrowUp.svelte';
@@ -19,33 +20,24 @@
         dropdown?: boolean;
     }
 
-    let {
-        data = $bindable(),
-        item,
-        index,
-        add,
-        dropdown = false
-    }: Props = $props();
-
-    const modal: Modal = getContext('simple-modal');
+    let { data = $bindable(), item, index, add, dropdown = false }: Props = $props();
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     let first = $state(false);
     let last = $state(false);
 
     async function remove() {
-        modal.open(
+        open(
             ModalRemove,
             {
-                close: modal.close,
+                close,
                 proceed: () => {
                     data.splice(index, 1);
                     data = data;
-                    modal.close();
+                    close();
                 },
             },
-            {
-                closeButton: false,
-            },
+            {},
         );
     }
 

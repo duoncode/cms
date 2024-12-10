@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
     import type {
         GridItem,
         GridBase,
@@ -11,6 +10,7 @@
         GridType,
     } from '$types/data';
     import type { GridField } from '$types/fields';
+    import type { ModalFunctions } from '$shell/modal';
 
     import { _ } from '$lib/locale';
     import resize from '$lib/resize';
@@ -36,12 +36,8 @@
         cols?: number;
     }
 
-    let {
-        field,
-        data = $bindable(),
-        node,
-        cols = 12
-    }: Props = $props();
+    let { field, data = $bindable(), node, cols = 12 }: Props = $props();
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     const controls = {
         image: GridImage,
@@ -61,7 +57,6 @@
         { id: 'video', label: 'Video' },
         { id: 'iframe', label: 'Iframe' },
     ];
-    const modal: Modal = getContext('simple-modal');
 
     function add(index: number, before: boolean, type: GridType) {
         let content: GridBase = {
@@ -104,19 +99,15 @@
 
     function openAddModal(index: number) {
         return () => {
-            modal.open(
+            open(
                 ModalAdd,
                 {
                     index,
                     add,
-                    close: modal.close,
+                    close,
                     types,
                 },
-                {
-                    closeButton: false,
-                    styleWindow: { width: '45rem' },
-                    styleContent: { overflow: 'hidden', 'overflow-y': 'auto' },
-                },
+                {},
             );
         };
     }
@@ -141,25 +132,24 @@
                     bind:item
                     {node}
                     {index}
-                    {field}
-                    >
+                    {field}>
                     {#snippet children({ edit })}
-                                        <GridControls
+                        <GridControls
                             bind:data
                             bind:item
                             {index}
                             {field}
                             {edit}
                             on:addcontent={openAddModal(index)} />
-                                                        {/snippet}
-                                </SvelteComponent>
+                    {/snippet}
+                </SvelteComponent>
             </div>
         {/each}
     {:else}
         <div class="p-4 col-span-{cols} flex flex-row justify-center">
             <Button
                 class="secondary"
-                on:click={openAddModal(null)}>
+                onclick={openAddModal(null)}>
                 <span class="h-5 w-5 mr-2">
                     <IcoCirclePlus />
                 </span>

@@ -1,14 +1,12 @@
 <script lang="ts">
-    import Modal from 'svelte-simple-modal';
+    import Modal from '$shell/modal/Modal.svelte';
     import Nav from '$shell/Nav.svelte';
     import Toasts from '$shell/Toasts.svelte';
 
     let { data, children } = $props();
 </script>
 
-<Modal
-    classWindow="modal"
-    classCloseButton="modal-close">
+<Modal>
     <div class="flex flex-row relative">
         <Nav collections={data.system.collections} />
         <main class="flex-grow">

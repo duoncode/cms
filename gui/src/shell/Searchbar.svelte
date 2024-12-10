@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
     import type { Blueprint } from '$types/data';
+    import type { ModalFunctions } from '$shell/modal';
 
     import { _ } from '$lib/locale';
     import { getContext } from 'svelte';
@@ -16,21 +16,18 @@
     }
 
     let { searchTerm = $bindable(), blueprints, collectionSlug }: Props = $props();
-
-    const modal: Modal = getContext('simple-modal');
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     async function create() {
         if (blueprints.length > 1) {
-            modal.open(
+            open(
                 ModalCreate,
                 {
                     blueprints,
                     collectionSlug,
-                    close: modal.close,
+                    close,
                 },
-                {
-                    closeButton: false,
-                },
+                {},
             );
         } else {
             goto(`${base}/collection/${collectionSlug}/create/${blueprints[0].slug}`);
@@ -57,7 +54,9 @@
                 bind:value={searchTerm} />
         </div>
         {#if blueprints.length > 0}
-            <button onclick={create}>
+            <button
+                onclick={create}
+                aria-label="create">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"

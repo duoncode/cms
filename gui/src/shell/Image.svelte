@@ -1,7 +1,7 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot split a chunk that has already been edited (90:30 – "on:click={remove}") -->
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
     import type { FileItem } from '$types/data';
+    import type { ModalFunctions } from '$shell/modal';
+
     import { getContext } from 'svelte';
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
@@ -10,15 +10,18 @@
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    export let path: string;
-    export let image: FileItem;
-    export let loading: boolean;
-    export let upload: boolean;
-    export let multiple: boolean;
-    export let remove: () => void;
-    export let edit: () => void;
+    interface Props {
+        path: string;
+        image: FileItem;
+        loading: boolean;
+        upload: boolean;
+        multiple: boolean;
+        remove: () => void;
+        edit: () => void;
+    }
 
-    const modal: Modal = getContext('simple-modal');
+    let { path, image, loading, upload, multiple, remove, edit }: Props = $props();
+    const { open, close } = getContext<ModalFunctions>('modal');
 
     let orig: string;
     let thumb: string;
@@ -27,14 +30,13 @@
     let title = '';
 
     function preview() {
-        modal.open(
+        open(
             ImagePreview,
             {
                 image: orig,
+                close,
             },
-            {
-                styleWindow: { width: 'fit-content', maxWidth: '70rem' },
-            },
+            {},
         );
     }
 
@@ -163,7 +165,9 @@
         @apply flex flex-row items-center justify-center gap-2;
         @apply invisible opacity-0;
         @apply absolute top-1 bottom-1 left-1 right-1;
-        transition: visibility 0.1s, opacity 0.2s linear;
+        transition:
+            visibility 0.1s,
+            opacity 0.2s linear;
         background: rgba(0, 0, 0, 0.3);
     }
 
@@ -187,6 +191,10 @@
 
     .icobtn {
         @apply text-xs text-white text-center;
-        text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        text-shadow:
+            -1px 0 #000,
+            0 1px #000,
+            1px 0 #000,
+            0 -1px #000;
     }
 </style>
