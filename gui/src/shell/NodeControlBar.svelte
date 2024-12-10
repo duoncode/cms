@@ -73,7 +73,7 @@
                 icon={IcoSave}
                 onclick={() => save(false)}
                 label={_('Speichern')}>
-                {#snippet children({ closeMenu })}
+                {#snippet children(closeMenu)}
                     <ButtonMenuEntry
                         onclick={() => {
                             save(true), closeMenu();

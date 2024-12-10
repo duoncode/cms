@@ -12,7 +12,7 @@
         class?: string;
         icon?: Component;
         label: string;
-        children: Snippet<[{ closeMenu: () => void }]>;
+        children: Snippet<[closeMenu: () => void]>;
     };
 
     let {
@@ -67,7 +67,7 @@
                 <div
                     class="py-1"
                     role="none">
-                    {@render children({ closeMenu })}
+                    {@render children(closeMenu)}
                 </div>
             </div>
         {/if}
