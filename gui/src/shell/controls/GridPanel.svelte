@@ -129,14 +129,14 @@
                 animate:flip={{ duration: 300 }}
                 use:resize={resizeCell(item)}>
                 <SvelteComponent
-                    bind:item
+                    {item}
                     {node}
                     {index}
                     {field}>
                     {#snippet children({ edit })}
                         <GridControls
                             bind:data
-                            bind:item
+                            {item
                             {index}
                             {field}
                             {edit}

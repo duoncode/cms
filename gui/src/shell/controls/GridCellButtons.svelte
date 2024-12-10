@@ -20,7 +20,13 @@
         dropdown?: boolean;
     }
 
-    let { data = $bindable(), item, index, add, dropdown = false }: Props = $props();
+    let {
+        data = $bindable(),
+        item = $bindable(),
+        index = $bindable(),
+        add,
+        dropdown = false,
+    }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');
 
     let first = $state(false);

@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot split a chunk that has already been edited (37:30 – "on:click={remove}") -->
 <script lang="ts">
     import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
@@ -18,7 +17,7 @@
 </script>
 
 <div
-    class="video {$$props.class !== undefined ? $$props.class : ''}"
+    class="video"
     class:empty={!file}
     class:upload>
     {#if loading}
@@ -65,7 +64,9 @@
         @apply flex flex-row items-center justify-center gap-2;
         @apply invisible opacity-0;
         @apply absolute top-1 bottom-1 left-1 right-1;
-        transition: visibility 0.1s, opacity 0.2s linear;
+        transition:
+            visibility 0.1s,
+            opacity 0.2s linear;
         background: rgba(0, 0, 0, 0.3);
     }
 
@@ -89,6 +90,10 @@
 
     .icobtn {
         @apply text-xs text-white text-center;
-        text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        text-shadow:
+            -1px 0 #000,
+            0 1px #000,
+            1px 0 #000,
+            0 -1px #000;
     }
 </style>

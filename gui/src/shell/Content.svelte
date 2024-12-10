@@ -8,7 +8,7 @@
         fields: Field[];
     }
 
-    let { node = $bindable(), fields }: Props = $props();
+    let { node = $bindable(), fields = $bindable() }: Props = $props();
 
     function fieldSpan(value: number | null, type: 'row' | 'col') {
         if (value) {

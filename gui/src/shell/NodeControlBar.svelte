@@ -1,5 +1,6 @@
 <script lang="ts">
-    import type { Modal } from 'svelte-simple-modal';
+    import type { ModalFunctions } from '$shell/modal';
+
     import { getContext } from 'svelte';
     import { _ } from '$lib/locale';
     import NavToggle from '$shell/NavToggle.svelte';
@@ -22,29 +23,27 @@
     }
 
     let {
-        uid,
+        uid = $bindable(),
         collectionPath,
         deletable,
         locked = false,
         save,
-        preview
+        preview,
     }: Props = $props();
 
-    const modal: Modal = getContext('simple-modal');
+    let { open, close } = getContext<ModalFunctions>('modal');
 
     async function remove() {
-        modal.open(
+        open(
             ModalRemove,
             {
-                close: modal.close,
+                close,
                 proceed: () => {
                     removeNode(uid, collectionPath);
                     modal.close();
                 },
             },
-            {
-                closeButton: false,
-            },
+            {},
         );
     }
 </script>
@@ -73,17 +72,16 @@
                 class="primary"
                 icon={IcoSave}
                 on:click={() => save(false)}
-                label={_('Speichern')}
-                >
+                label={_('Speichern')}>
                 {#snippet children({ closeMenu })}
-                                <ButtonMenuEntry
+                    <ButtonMenuEntry
                         on:click={() => {
                             save(true), closeMenu();
                         }}>
                         {_('Speichern und veröffentlichen')}
                     </ButtonMenuEntry>
-                                            {/snippet}
-                        </ButtonMenu>
+                {/snippet}
+            </ButtonMenu>
         {/if}
     </div>
 </div>

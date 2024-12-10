@@ -1,7 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot split a chunk that has already been edited (90:30 – "on:click={remove}") -->
 <script lang="ts">
+    import type { Modal } from 'svelte-simple-modal';
     import type { FileItem } from '$types/data';
-    import type { ModalFunctions } from '$shell/modal';
-
     import { getContext } from 'svelte';
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
@@ -10,18 +10,15 @@
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    interface Props {
-        path: string;
-        image: FileItem;
-        loading: boolean;
-        upload: boolean;
-        multiple: boolean;
-        remove: () => void;
-        edit: () => void;
-    }
+    export let path: string;
+    export let image: FileItem;
+    export let loading: boolean;
+    export let upload: boolean;
+    export let multiple: boolean;
+    export let remove: () => void;
+    export let edit: () => void;
 
-    let { path, image, loading, upload, multiple, remove, edit }: Props = $props();
-    const { open, close } = getContext<ModalFunctions>('modal');
+    const modal: Modal = getContext('simple-modal');
 
     let orig: string;
     let thumb: string;
@@ -30,13 +27,14 @@
     let title = '';
 
     function preview() {
-        open(
+        modal.open(
             ImagePreview,
             {
                 image: orig,
-                close,
             },
-            {},
+            {
+                styleWindow: { width: 'fit-content', maxWidth: '70rem' },
+            },
         );
     }
 

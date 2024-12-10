@@ -15,7 +15,7 @@
         dropdown?: boolean;
     }
 
-    let { item = $bindable(), field, dropdown = false }: Props = $props();
+    let { item = $bindable(), field = $bindable(), dropdown = false }: Props = $props();
 
     let widest = $state(false);
     let narrowest = $state(false);
@@ -67,7 +67,8 @@
         unindented = item.colstart === null;
     });
     run(() => {
-        fullyindented = item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
+        fullyindented =
+            item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
     });
 </script>
 
