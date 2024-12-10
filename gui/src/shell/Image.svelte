@@ -1,5 +1,6 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot split a chunk that has already been edited (90:30 – "on:click={remove}") -->
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { Modal } from 'svelte-simple-modal';
     import type { FileItem } from '$types/data';
     import { getContext } from 'svelte';
@@ -10,21 +11,35 @@
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    export let path: string;
-    export let image: FileItem;
-    export let loading: boolean;
-    export let upload: boolean;
-    export let multiple: boolean;
-    export let remove: () => void;
-    export let edit: () => void;
+    interface Props {
+        path: string;
+        image: FileItem;
+        loading: boolean;
+        upload: boolean;
+        multiple: boolean;
+        remove: () => void;
+        edit: () => void;
+        class?: string;
+    }
+
+    let {
+        path,
+        image,
+        loading,
+        upload,
+        multiple,
+        remove,
+        edit,
+        class: classes = '',
+    }: Props = $props();
 
     const modal: Modal = getContext('simple-modal');
 
-    let orig: string;
-    let thumb: string;
+    let orig: string = $state();
+    let thumb: string = $state();
     let hover = false;
-    let ext = '';
-    let title = '';
+    let ext = $state('');
+    let title = $state('');
 
     function preview() {
         modal.open(
@@ -58,7 +73,7 @@
         return '';
     }
 
-    $: {
+    run(() => {
         ext = image.file.split('.').pop()?.toLowerCase();
 
         orig = `${path}/${image.file}`;
@@ -68,13 +83,15 @@
         } else {
             thumb = `${path}/${thumbIt(image.file)}`;
         }
-    }
+    });
 
-    $: title = getTitle(image, 'title') || getTitle(image, 'alt');
+    run(() => {
+        title = getTitle(image, 'title') || getTitle(image, 'alt');
+    });
 </script>
 
 <div
-    class="image {$$props.class !== undefined ? $$props.class : ''}"
+    class="image {classes}"
     class:empty={!image}
     class:upload
     class:multiple
@@ -89,7 +106,7 @@
             {#if remove}
                 <button
                     class="text-rose-700"
-                    on:click={remove}>
+                    onclick={remove}>
                     <span class="ico">
                         <IcoTrash />
                     </span>
@@ -98,7 +115,7 @@
             {/if}
             <button
                 class="text-sky-700"
-                on:click={preview}>
+                onclick={preview}>
                 <span class="ico">
                     <IcoEye />
                 </span>
@@ -106,7 +123,7 @@
             </button>
             <button
                 class="text-sky-700"
-                on:click={edit}>
+                onclick={edit}>
                 <span class="ico">
                     <IcoPencil />
                 </span>
@@ -117,7 +134,7 @@
     {#if title}
         <button
             class="title absolute left-1 bottom-1 rounded text-gray-600 bg-white text-xs px-1 mb-px ml-px"
-            on:click={edit}>
+            onclick={edit}>
             {title}
         </button>
     {/if}

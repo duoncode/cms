@@ -1,23 +1,30 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
 
-    export let path: string;
-    export let file: FileItem;
-    export let loading: boolean;
-    export let upload: boolean;
-    export let remove: () => void;
-
-    let ext = '';
-
-    $: {
-        ext = file.file.split('.').pop()?.toLowerCase();
+    interface Props {
+        path: string;
+        file: FileItem;
+        loading: boolean;
+        upload: boolean;
+        remove: () => void;
+        class?: string;
     }
+
+    let { path, file, loading, upload, remove, class: classes = '' }: Props = $props();
+
+    let ext = $state('');
+
+    run(() => {
+        ext = file.file.split('.').pop()?.toLowerCase();
+    });
 </script>
 
 <div
-    class="video"
+    class="video {classes}"
     class:empty={!file}
     class:upload>
     {#if loading}
@@ -35,7 +42,7 @@
             {#if remove}
                 <button
                     class="text-rose-700"
-                    on:click={remove}>
+                    onclick={remove}>
                     <span class="ico">
                         <IcoTrash />
                     </span>

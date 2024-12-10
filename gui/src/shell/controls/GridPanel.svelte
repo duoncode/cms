@@ -136,7 +136,7 @@
                     {#snippet children({ edit })}
                         <GridControls
                             bind:data
-                            {item
+                            {item}
                             {index}
                             {field}
                             {edit}
