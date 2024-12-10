@@ -9,13 +9,23 @@
 
     const dispatch = createEventDispatcher();
 
-    export let data: GridItem[];
-    export let item: GridItem;
-    export let field: GridField;
-    export let index: number;
-    export let edit: () => void;
+    interface Props {
+        data: GridItem[];
+        item: GridItem;
+        field: GridField;
+        index: number;
+        edit: () => void;
+    }
 
-    let showDropdown = false;
+    let {
+        data = $bindable(),
+        item = $bindable(),
+        field = $bindable(),
+        index = $bindable(),
+        edit
+    }: Props = $props();
+
+    let showDropdown = $state(false);
 
     function add() {
         dispatch('addcontent', { data, item });
@@ -30,7 +40,7 @@
                     <button
                         type="button"
                         class="flex items-center"
-                        on:click={() => (showDropdown = !showDropdown)}>
+                        onclick={() => (showDropdown = !showDropdown)}>
                         <span class="sr-only">Open options</span>
                         <IcoThreeDots />
                     </button>
@@ -75,7 +85,7 @@
     <div class="flex flex-row flex-shrink items-center justify-end">
         <button
             class="edit"
-            on:click={edit}>
+            onclick={edit}>
             <IcoGear />
         </button>
     </div>

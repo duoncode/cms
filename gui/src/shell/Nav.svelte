@@ -25,7 +25,7 @@
     {/each}
     <h2>{_('Benutzer')}</h2>
     <div class="mt-1 ml-4"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></div>
-    <div class="mt-1 ml-4"><button on:click={logoutUser}>{_('Abmelden')}</button></div>
+    <div class="mt-1 ml-4"><button onclick={logoutUser}>{_('Abmelden')}</button></div>
 </div>
 
 <style lang="postcss">

@@ -1,29 +1,43 @@
 <script lang="ts">
+    import { createBubbler } from 'svelte/legacy';
+
+    const bubble = createBubbler();
     import type { ComponentType } from 'svelte';
-    let cls = 'primary';
-    let openMenu = false;
+    let openMenu = $state(false);
 
     function closeMenu() {
         openMenu = false;
     }
 
-    export let icon: ComponentType = null;
-    export let label: string;
-    export { cls as class };
+    interface Props {
+        class?: string;
+        icon?: ComponentType;
+        label: string;
+        children?: import('svelte').Snippet<[any]>;
+    }
+
+    let {
+        class: cls = 'primary',
+        icon = null,
+        label,
+        children
+    }: Props = $props();
+    
 </script>
 
 <div class="inline-flex rounded-md shadow-sm">
     <button
         type="button"
         class="{cls} px-3.5 py-2.5 gap-x-2 inline-flex items-center justify-center rounded-l-md text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus:z-10"
-        on:click
-        on:mouseover
-        on:mouseenter
-        on:mouseleave
-        on:focus>
+        onclick={bubble('click')}
+        onmouseover={bubble('mouseover')}
+        onmouseenter={bubble('mouseenter')}
+        onmouseleave={bubble('mouseleave')}
+        onfocus={bubble('focus')}>
         {#if icon}
+            {@const SvelteComponent = icon}
             <span class="-ml-0.5 h-5 w-5">
-                <svelte:component this={icon} />
+                <SvelteComponent />
             </span>
         {/if}
         {label}
@@ -35,7 +49,7 @@
             id="option-menu-button"
             aria-expanded="true"
             aria-haspopup="true"
-            on:click={() => (openMenu = !openMenu)}>
+            onclick={() => (openMenu = !openMenu)}>
             <span class="sr-only">Open options</span>
             <svg
                 class="h-5 w-5"
@@ -58,7 +72,7 @@
                 <div
                     class="py-1"
                     role="none">
-                    <slot {closeMenu} />
+                    {@render children?.({ closeMenu, })}
                 </div>
             </div>
         {/if}

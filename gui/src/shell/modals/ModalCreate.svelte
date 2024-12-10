@@ -5,9 +5,13 @@
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    export let close: () => void;
-    export let collectionSlug: string;
-    export let blueprints: Blueprint[];
+    interface Props {
+        close: () => void;
+        collectionSlug: string;
+        blueprints: Blueprint[];
+    }
+
+    let { close, collectionSlug, blueprints }: Props = $props();
 
     function createNode(slug: string) {
         return () => {

@@ -1,7 +1,11 @@
 <script lang="ts">
     import type { Toast } from '$lib/toast';
 
-    export let toast: Toast;
+    interface Props {
+        toast: Toast;
+    }
+
+    let { toast }: Props = $props();
 </script>
 
 <div class="text-white text-left">

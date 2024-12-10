@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { Collection, Node } from '$types/data';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
@@ -12,12 +14,16 @@
     import Content from '$shell/Content.svelte';
     import Settings from '$shell/Settings.svelte';
 
-    export let node: Node;
-    export let collection: Collection;
-    export let save: (published: boolean) => Promise<void>;
+    interface Props {
+        node: Node;
+        collection: Collection;
+        save: (published: boolean) => Promise<void>;
+    }
 
-    let activeTab = 'content';
-    let showPreview: string | null = null;
+    let { node = $bindable(), collection, save }: Props = $props();
+
+    let activeTab = $state('content');
+    let showPreview: string | null = $state(null);
 
     function changeTab(tab: string) {
         return () => {
@@ -30,11 +36,11 @@
         showPreview = node.paths.de;
     }
 
-    $: {
+    run(() => {
         if (node.route) {
             node.generatedPaths = generatePaths(node, node.route, $system);
         }
-    }
+    });
 </script>
 
 <div class="flex flex-col h-screen">
@@ -55,14 +61,14 @@
         </Headline>
         <Tabs>
             <button
-                on:click={changeTab('content')}
+                onclick={changeTab('content')}
                 class:active={activeTab === 'content'}
                 class="tab">
                 {_('Inhalt')}
             </button>
             {#if node.type.kind !== 'document'}
                 <button
-                    on:click={changeTab('settings')}
+                    onclick={changeTab('settings')}
                     class:active={activeTab === 'settings'}
                     class="tab">
                     {_('Einstellungen')}
@@ -82,10 +88,10 @@
 </div>
 {#if showPreview}
     <div class="preview">
-        <button on:click={() => (showPreview = null)}>schließen</button>
+        <button onclick={() => (showPreview = null)}>schließen</button>
         <iframe
             src="/preview{showPreview}"
-            title="Preview" />
+            title="Preview"></iframe>
     </div>
 {/if}
 

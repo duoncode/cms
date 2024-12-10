@@ -4,16 +4,27 @@
     import Upload from '$shell/Upload.svelte';
     import { system } from '$lib/sys';
 
-    export let field: GridField;
-    export let item: GridImage;
-    export let node: string;
-    export let index: number;
+    interface Props {
+        field: GridField;
+        item: GridImage;
+        node: string;
+        index: number;
+        children?: import('svelte').Snippet<[any]>;
+    }
 
-    let showSettings = false;
+    let {
+        field,
+        item = $bindable(),
+        node,
+        index,
+        children
+    }: Props = $props();
+
+    let showSettings = $state(false);
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => (showSettings = !showSettings)} />
+    {@render children?.({ edit: () => (showSettings = !showSettings), })}
 </div>
 <div class="grid-cell-body">
     {#if showSettings}

@@ -5,7 +5,7 @@
 
 <button
     class="nav"
-    on:click={toggleNav}>
+    onclick={toggleNav}>
     <IcoBarsCenterLeft />
 </button>
 

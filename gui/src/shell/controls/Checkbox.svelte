@@ -3,8 +3,12 @@
     import type { BooleanData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    export let field: SimpleField;
-    export let data: BooleanData;
+    interface Props {
+        field: SimpleField;
+        data: BooleanData;
+    }
+
+    let { field, data = $bindable() }: Props = $props();
     console.log(data);
 </script>
 

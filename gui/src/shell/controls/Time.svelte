@@ -4,8 +4,12 @@
     import type { TextData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    export let field: SimpleField;
-    export let data: TextData;
+    interface Props {
+        field: SimpleField;
+        data: TextData;
+    }
+
+    let { field, data = $bindable() }: Props = $props();
 </script>
 
 <Field required={field.required}>

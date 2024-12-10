@@ -1,11 +1,20 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    export let title = null;
-    export let body;
-    export let type = 'info';
-    export let close;
+    interface Props {
+        title?: any;
+        body: any;
+        type?: string;
+        close: any;
+    }
+
+    let {
+        title = null,
+        body,
+        type = 'info',
+        close
+    }: Props = $props();
 </script>
 
 <div class="modal {type}">

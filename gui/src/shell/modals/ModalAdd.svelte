@@ -1,14 +1,25 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    export let add: (index: number, before: boolean, type: string) => void;
-    export let close: () => void;
-    export let index: number | null;
-    export let types: { id: string; label: string }[];
+    interface Props {
+        add: (index: number, before: boolean, type: string) => void;
+        close: () => void;
+        index: number | null;
+        types: { id: string; label: string }[];
+    }
 
-    let type: string | null = null;
-    let disabled = true;
+    let {
+        add,
+        close,
+        index,
+        types
+    }: Props = $props();
+
+    let type: string | null = $state(null);
+    let disabled = $state(true);
 
     function addContent(before: boolean) {
         return () => {
@@ -23,7 +34,9 @@
         return () => (type = t);
     }
 
-    $: disabled = type === null;
+    run(() => {
+        disabled = type === null;
+    });
 </script>
 
 <div class="modal">

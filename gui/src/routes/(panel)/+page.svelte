@@ -2,7 +2,7 @@
     import { fade } from 'svelte/transition';
     import NavLogo from '$shell/NavLogo.svelte';
 
-    export let data;
+    let { data } = $props();
 </script>
 
 {#key data.pathname}

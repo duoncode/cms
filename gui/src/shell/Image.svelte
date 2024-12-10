@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot split a chunk that has already been edited (90:30 – "on:click={remove}") -->
 <script lang="ts">
     import type { Modal } from 'svelte-simple-modal';
     import type { FileItem } from '$types/data';

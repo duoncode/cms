@@ -6,11 +6,15 @@
     import type { FileData } from '$types/data';
     import type { ImageField } from '$types/fields';
 
-    export let field: ImageField;
-    export let data: FileData;
-    export let node: string;
+    interface Props {
+        field: ImageField;
+        data: FileData;
+        node: string;
+    }
 
-    let lang = $system.locale;
+    let { field, data = $bindable(), node }: Props = $props();
+
+    let lang = $state($system.locale);
 </script>
 
 <Field

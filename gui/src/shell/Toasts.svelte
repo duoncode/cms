@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { quintOut } from 'svelte/easing';
     import { crossfade } from 'svelte/transition';
     import { flip } from 'svelte/animate';
@@ -6,7 +6,11 @@
     import toasts from '$lib/toast';
     import Toast from './Toast.svelte';
 
-    export let center = false;
+    interface Props {
+        center?: boolean;
+    }
+
+    let { center = false }: Props = $props();
 
     const [send, receive] = crossfade({
         duration: d => Math.sqrt(d * 200),
@@ -39,7 +43,7 @@
     class:pos-center={center}>
     {#each $toasts as toast (toast)}
         <button
-            on:click={remove(toast)}
+            onclick={remove(toast)}
             class="block toast pt-4 pb-5 px-4 mb-2 last:mb-4 relative"
             class:mr-4={!center}
             class:bg-emerald-600={toast.kind === 'success'}

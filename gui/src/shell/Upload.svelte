@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run, preventDefault } from 'svelte/legacy';
+
     import type { Modal } from 'svelte-simple-modal';
     import type { FileItem, UploadResponse, UploadType } from '$types/data';
     import type { Toast } from '$lib/toast';
@@ -14,21 +16,37 @@
     import Message from '$shell/Message.svelte';
     import MediaList from '$shell/MediaList.svelte';
 
-    export let path: string;
-    export let type: UploadType;
-    export let name: string;
-    export let translate: boolean;
-    export let assets: FileItem[];
-    export let multiple = false;
-    export let required = false;
-    export let disabled = false;
-    export let disabledMsg = null;
-    export let callback = null;
-    export let inline = false;
+    interface Props {
+        path: string;
+        type: UploadType;
+        name: string;
+        translate: boolean;
+        assets: FileItem[];
+        multiple?: boolean;
+        required?: boolean;
+        disabled?: boolean;
+        disabledMsg?: any;
+        callback?: any;
+        inline?: boolean;
+    }
 
-    let loading = false;
-    let dragging = false;
-    let allowedExtensions = '';
+    let {
+        path,
+        type,
+        name,
+        translate,
+        assets = $bindable(),
+        multiple = false,
+        required = false,
+        disabled = false,
+        disabledMsg = null,
+        callback = null,
+        inline = false
+    }: Props = $props();
+
+    let loading = $state(false);
+    let dragging = $state(false);
+    let allowedExtensions = $state('');
 
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
@@ -176,10 +194,12 @@
         };
     }
 
-    $: allowedExtensions =
-        type === 'image'
-            ? $system.allowedFiles.image.join(', ')
-            : $system.allowedFiles.file.join(', ');
+    run(() => {
+        allowedExtensions =
+            type === 'image'
+                ? $system.allowedFiles.image.join(', ')
+                : $system.allowedFiles.file.join(', ');
+    });
 </script>
 
 {#if disabled}
@@ -212,9 +232,9 @@
                 class:dragging
                 class:image={type === 'image'}
                 for={name}
-                on:drop|preventDefault={onFile(getFilesFromDrop)}
-                on:dragover|preventDefault={startDragging}
-                on:dragleave|preventDefault={stopDragging}>
+                ondrop={preventDefault(onFile(getFilesFromDrop))}
+                ondragover={preventDefault(startDragging)}
+                ondragleave={preventDefault(stopDragging)}>
                 <div class="label">
                     <span class="inline-block w-6 h-6"><IcoUpload /></span>
                     {_('Neue Dateien per Drag and Drop hier einfügen oder')}
@@ -227,7 +247,7 @@
                     type="file"
                     id={name}
                     {multiple}
-                    on:input={onFile(getFilesFromInput)} />
+                    oninput={onFile(getFilesFromInput)} />
             </label>
         {/if}
     </div>

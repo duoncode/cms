@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
@@ -7,13 +9,23 @@
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
 
-    export let path: string;
-    export let asset: FileItem;
-    export let remove: () => void;
-    export let edit: () => void;
-    export let loading: boolean;
+    interface Props {
+        path: string;
+        asset: FileItem;
+        remove: () => void;
+        edit: () => void;
+        loading: boolean;
+    }
 
-    let title = '';
+    let {
+        path,
+        asset,
+        remove,
+        edit,
+        loading
+    }: Props = $props();
+
+    let title = $state('');
 
     function getTitle(asset: FileItem) {
         if (asset.title) {
@@ -31,7 +43,9 @@
         return '';
     }
 
-    $: title = getTitle(asset);
+    run(() => {
+        title = getTitle(asset);
+    });
 </script>
 
 {#if asset}
@@ -53,7 +67,7 @@
         </a>
 
         <button
-            on:click={edit}
+            onclick={edit}
             class="text-sky-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">
                 <IcoPencil />
@@ -61,7 +75,7 @@
         </button>
 
         <button
-            on:click={remove}
+            onclick={remove}
             class="text-rose-800">
             <span class="inline-block h-4 w-4 ml-4 flex items-center">
                 <IcoTrash />

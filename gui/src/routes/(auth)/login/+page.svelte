@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { preventDefault } from 'svelte/legacy';
+
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import { loginUser } from '$lib/user';
@@ -7,7 +9,11 @@
     import Button from '$shell/Button.svelte';
     import IcoLogin from '$shell/icons/IcoLogin.svelte';
 
-    export let message = '';
+    interface Props {
+        message?: string;
+    }
+
+    let { message = $bindable('') }: Props = $props();
 
     async function handleSubmit() {
         const data = new FormData(this);
@@ -64,7 +70,7 @@
         <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
             <form
                 method="POST"
-                on:submit|preventDefault={handleSubmit}
+                onsubmit={preventDefault(handleSubmit)}
                 class="space-y-6">
                 <div>
                     <label

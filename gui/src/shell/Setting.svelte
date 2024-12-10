@@ -1,9 +1,14 @@
 <script lang="ts">
-    export let required = false;
+    interface Props {
+        required?: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let { required = false, children }: Props = $props();
 </script>
 
 <div
     class="setting"
     class:required>
-    <slot />
+    {@render children?.()}
 </div>

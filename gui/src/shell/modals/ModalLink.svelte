@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import { currentNode as node, currentFields as fields } from '$lib/state';
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
@@ -8,12 +8,14 @@
     import Image from './ModalLinkImage.svelte';
     import Button from '$shell/Button.svelte';
 
-    export let close;
-    export let add;
-    export let value;
-    export let blank;
+    let {
+        close,
+        add,
+        value = $bindable(),
+        blank = $bindable()
+    } = $props();
 
-    let currentTab = 'manually';
+    let currentTab = $state('manually');
 
     function clickAdd() {
         if (value) {
@@ -40,21 +42,21 @@
                     <button
                         class="tab"
                         class:active={currentTab === 'manually'}
-                        on:click={changeTab('manually')}>
+                        onclick={changeTab('manually')}>
                         <IcoLink />
                         <span>{_('Manueller Link')}</span>
                     </button>
                     <button
                         class="tab"
                         class:active={currentTab === 'images'}
-                        on:click={changeTab('images')}>
+                        onclick={changeTab('images')}>
                         <IcoImage />
                         <span>{_('Bilder')}</span>
                     </button>
                     <button
                         class="tab"
                         class:active={currentTab === 'files'}
-                        on:click={changeTab('files')}>
+                        onclick={changeTab('files')}>
                         <IcoDocument />
                         <span>{_('Dateien/Dokumente')}</span>
                     </button>

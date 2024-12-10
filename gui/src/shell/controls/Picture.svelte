@@ -6,11 +6,15 @@
     import Upload from '$shell/Upload.svelte';
     import LabelDiv from '$shell/LabelDiv.svelte';
 
-    export let field: ImageField;
-    export let data: FileData;
-    export let node: string;
+    interface Props {
+        field: ImageField;
+        data: FileData;
+        node: string;
+    }
 
-    let lang = $system.locale;
+    let { field, data = $bindable(), node }: Props = $props();
+
+    let lang = $state($system.locale);
 </script>
 
 <Field required={field.required}>

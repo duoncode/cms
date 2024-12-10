@@ -11,7 +11,11 @@
     import IcoSave from '$shell/icons/IcoSave.svelte';
     import Pane from '$shell/Pane.svelte';
 
-    export let data: { user: User };
+    interface Props {
+        data: { user: User };
+    }
+
+    let { data = $bindable() }: Props = $props();
 
     async function save() {
         saveProfile(data.user);

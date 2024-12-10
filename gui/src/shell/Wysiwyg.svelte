@@ -45,21 +45,32 @@
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoLineBreak from '$shell/icons/IcoLineBreak.svelte';
 
-    export let value;
-    export let name;
-    export let editSource = true;
-    export let required = false;
-    export let toolbar = 'default';
-    export let embed = false;
+    interface Props {
+        value: any;
+        name: any;
+        editSource?: boolean;
+        required?: boolean;
+        toolbar?: string;
+        embed?: boolean;
+    }
+
+    let {
+        value = $bindable(),
+        name,
+        editSource = true,
+        required = false,
+        toolbar = 'default',
+        embed = false
+    }: Props = $props();
 
     const dispatch = createEventDispatcher();
     const { open, close }: Modal = getContext('simple-modal');
 
-    let ref;
-    let bubble;
-    let editor;
-    let showSource = false;
-    let showDropdown = false;
+    let ref = $state();
+    let bubble = $state();
+    let editor = $state();
+    let showSource = $state(false);
+    let showDropdown = $state(false);
 
     function fireUpdate(html) {
         dispatch('input', html);
@@ -220,25 +231,25 @@
         {#if editor}
             <button
                 class="wysiwyg-toolbar-btn"
-                on:click={clickToolbar(editor.chain().focus().toggleBold().run)}
+                onclick={clickToolbar(editor.chain().focus().toggleBold().run)}
                 class:active={editor.isActive('bold')}>
                 <IcoBold />
             </button>
             <button
                 class="wysiwyg-toolbar-btn"
-                on:click={clickToolbar(editor.chain().focus().toggleItalic().run)}
+                onclick={clickToolbar(editor.chain().focus().toggleItalic().run)}
                 class:active={editor.isActive('italic')}>
                 <IcoItalic />
             </button>
             <button
                 class="wysiwyg-toolbar-btn"
-                on:click={clickToolbar(editor.chain().focus().toggleStrike().run)}
+                onclick={clickToolbar(editor.chain().focus().toggleStrike().run)}
                 class:active={editor.isActive('strike')}>
                 <IcoStrikethrough />
             </button>
             <button
                 class="wysiwyg-toolbar-btn"
-                on:click={clickToolbar(editor.chain().focus().unsetAllMarks().run)}>
+                onclick={clickToolbar(editor.chain().focus().unsetAllMarks().run)}>
                 <IcoRemoveFormat />
             </button>
         {/if}
@@ -257,7 +268,7 @@
                 {#if showSource}
                     <div class="wysiwyg-extras text-right">
                         <button
-                            on:click={toggleSource}
+                            onclick={toggleSource}
                             class="wysiwyg-source-btn my-1 p-1">
                             <IcoDocument />
                             <span class="ml-1">
@@ -273,7 +284,7 @@
                                 class="wysiwyg-dropdown-button"
                                 aria-expanded="true"
                                 aria-haspopup="true"
-                                on:click={clickDropdown(null)}>
+                                onclick={clickDropdown(null)}>
                                 {_('Absatz')}
                                 <svg
                                     class="-mr-1 ml-2 h-5 w-5"
@@ -299,7 +310,7 @@
                                     class="py-1"
                                     role="none">
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor.chain().focus().toggleHeading({ level: 1 }).run,
                                         )}
                                         role="menuitem"
@@ -312,7 +323,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor.chain().focus().toggleHeading({ level: 2 }).run,
                                         )}
                                         role="menuitem"
@@ -325,7 +336,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor.chain().focus().toggleHeading({ level: 3 }).run,
                                         )}
                                         role="menuitem"
@@ -338,7 +349,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor.chain().focus().setParagraph().run,
                                         )}
                                         role="menuitem"
@@ -352,7 +363,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor
                                                 .chain()
                                                 .focus()
@@ -372,7 +383,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor
                                                 .chain()
                                                 .focus()
@@ -392,7 +403,7 @@
                                         </span>
                                     </button>
                                     <button
-                                        on:click={clickDropdown(
+                                        onclick={clickDropdown(
                                             editor.chain().focus().clearNodes().run,
                                         )}
                                         role="menuitem"
@@ -411,13 +422,13 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Text align left')}
-                            on:click={clickToolbar(editor.chain().focus().unsetTextAlign().run)}>
+                            onclick={clickToolbar(editor.chain().focus().unsetTextAlign().run)}>
                             <IcoAlignLeft />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Text align center')}
-                            on:click={clickToolbar(
+                            onclick={clickToolbar(
                                 editor.chain().focus().setTextAlign('center').run,
                             )}
                             class:active={editor.isActive({
@@ -428,7 +439,7 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Text align right')}
-                            on:click={clickToolbar(
+                            onclick={clickToolbar(
                                 editor.chain().focus().setTextAlign('right').run,
                             )}
                             class:active={editor.isActive({
@@ -439,7 +450,7 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Justify text')}
-                            on:click={clickToolbar(
+                            onclick={clickToolbar(
                                 editor.chain().focus().setTextAlign('justify').run,
                             )}
                             class:active={editor.isActive({
@@ -450,89 +461,89 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Bold text')}
-                            on:click={clickToolbar(editor.chain().focus().toggleBold().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleBold().run)}
                             class:active={editor.isActive('bold')}>
                             <IcoBold />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Italic text')}
-                            on:click={clickToolbar(editor.chain().focus().toggleItalic().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleItalic().run)}
                             class:active={editor.isActive('italic')}>
                             <IcoItalic />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Strike through')}
-                            on:click={clickToolbar(editor.chain().focus().toggleStrike().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleStrike().run)}
                             class:active={editor.isActive('strike')}>
                             <IcoStrikethrough />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Bulleted list')}
-                            on:click={clickToolbar(editor.chain().focus().toggleBulletList().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleBulletList().run)}
                             class:active={editor.isActive('bulletList')}>
                             <IcoListUl />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Numbered list')}
-                            on:click={clickToolbar(editor.chain().focus().toggleOrderedList().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleOrderedList().run)}
                             class:active={editor.isActive('orderedList')}>
                             <IcoListOl />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Subscript')}
-                            on:click={clickToolbar(editor.chain().focus().toggleSubscript().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleSubscript().run)}
                             class:active={editor.isActive('subscript')}>
                             <IcoSubscript />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Superscript')}
-                            on:click={clickToolbar(editor.chain().focus().toggleSuperscript().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleSuperscript().run)}
                             class:active={editor.isActive('superscript')}>
                             <IcoSuperscript />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Block quote')}
-                            on:click={clickToolbar(editor.chain().focus().toggleBlockquote().run)}
+                            onclick={clickToolbar(editor.chain().focus().toggleBlockquote().run)}
                             class:active={editor.isActive('blockquote')}>
                             <IcoBlockQuoteRight />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Horizontal line')}
-                            on:click={clickToolbar(editor.chain().focus().setHorizontalRule().run)}>
+                            onclick={clickToolbar(editor.chain().focus().setHorizontalRule().run)}>
                             <IcoHorizontalRule />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Add link to page')}
-                            on:click={openAddLinkModal}>
+                            onclick={openAddLinkModal}>
                             <IcoLink />
                         </button>
                         {#if editor.isActive('link')}
                             <button
                                 class="wysiwyg-toolbar-btn"
                                 tooltip={_('Remove link')}
-                                on:click={clickToolbar(editor.chain().focus().unsetLink().run)}>
+                                onclick={clickToolbar(editor.chain().focus().unsetLink().run)}>
                                 <IcoUnlink />
                             </button>
                         {/if}
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Add a hard line break')}
-                            on:click={clickToolbar(editor.chain().focus().setHardBreak().run)}>
+                            onclick={clickToolbar(editor.chain().focus().setHardBreak().run)}>
                             <IcoLineBreak />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Remove formats')}
-                            on:click={clickToolbar(editor.chain().focus().unsetAllMarks().run)}>
+                            onclick={clickToolbar(editor.chain().focus().unsetAllMarks().run)}>
                             <IcoRemoveFormat />
                         </button>
                     </div>
@@ -540,18 +551,18 @@
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Undo last action')}
-                            on:click={clickToolbar(editor.chain().focus().undo().run)}>
+                            onclick={clickToolbar(editor.chain().focus().undo().run)}>
                             <IcoUndo />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
                             tooltip={_('Redo last undo')}
-                            on:click={clickToolbar(editor.chain().focus().redo().run)}>
+                            onclick={clickToolbar(editor.chain().focus().redo().run)}>
                             <IcoRedo />
                         </button>
                         {#if editSource}
                             <button
-                                on:click={toggleSource}
+                                onclick={toggleSource}
                                 class="wysiwyg-source-btn ml-3">
                                 <IcoCode />
                                 {_('Show source')}
@@ -567,13 +578,13 @@
         class="wysiwyg-editor prose relative z-0"
         bind:this={ref}
         class:hide={showSource}
-        on:click={() => (showDropdown = false)} />
+        onclick={() => (showDropdown = false)}></div>
     <div
         class="wysiwyg-source relative z-0"
         class:hide={!showSource}>
         <textarea
-            on:keyup={changeSource}
+            onkeyup={changeSource}
             bind:value
-            class="border-0 w-full h-64 p-1 bg-gray-700 font-mono text-white" />
+            class="border-0 w-full h-64 p-1 bg-gray-700 font-mono text-white"></textarea>
     </div>
 </div>

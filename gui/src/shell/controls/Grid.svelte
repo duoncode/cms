@@ -6,11 +6,15 @@
     import type { GridData } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    export let field: GridField;
-    export let data: GridData;
-    export let node: string;
+    interface Props {
+        field: GridField;
+        data: GridData;
+        node: string;
+    }
 
-    let lang = $system.locale;
+    let { field, data = $bindable(), node }: Props = $props();
+
+    let lang = $state($system.locale);
 </script>
 
 <Field required={field.required}>

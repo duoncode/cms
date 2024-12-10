@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { Modal } from 'svelte-simple-modal';
     import type { GridItem } from '$types/data';
     import { getContext } from 'svelte';
@@ -9,16 +11,26 @@
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import { setDirty } from '$lib/state';
 
-    export let data: GridItem[];
-    export let item: GridItem;
-    export let index: number;
-    export let add: () => void;
-    export let dropdown = false;
+    interface Props {
+        data: GridItem[];
+        item: GridItem;
+        index: number;
+        add: () => void;
+        dropdown?: boolean;
+    }
+
+    let {
+        data = $bindable(),
+        item,
+        index,
+        add,
+        dropdown = false
+    }: Props = $props();
 
     const modal: Modal = getContext('simple-modal');
 
-    let first = false;
-    let last = false;
+    let first = $state(false);
+    let last = $state(false);
 
     async function remove() {
         modal.open(
@@ -56,8 +68,12 @@
         data = data;
         setDirty();
     }
-    $: first = data.indexOf(item) === 0;
-    $: last = data.indexOf(item) === data.length - 1;
+    run(() => {
+        first = data.indexOf(item) === 0;
+    });
+    run(() => {
+        last = data.indexOf(item) === data.length - 1;
+    });
 </script>
 
 <div
@@ -67,24 +83,24 @@
     class:justify-center={dropdown}>
     <button
         class="remove"
-        on:click={remove}>
+        onclick={remove}>
         <IcoTrash />
     </button>
     <button
         class="up-down"
         disabled={last}
-        on:click={down}>
+        onclick={down}>
         <IcoArrowDown />
     </button>
     <button
         class="up-down"
         disabled={first}
-        on:click={up}>
+        onclick={up}>
         <IcoArrowUp />
     </button>
     <button
         class="add"
-        on:click={add}>
+        onclick={add}>
         <IcoCirclePlus />
     </button>
 </div>

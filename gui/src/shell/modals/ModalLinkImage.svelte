@@ -3,9 +3,13 @@
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
 
-    export let node: string;
-    export let file: string;
-    export let current: string;
+    interface Props {
+        node: string;
+        file: string;
+        current: string;
+    }
+
+    let { node, file, current }: Props = $props();
 
     const path = `${$system.prefix}/media/image/node/${node}/${file}`;
     const dispatch = createEventDispatcher();
@@ -15,7 +19,7 @@
 
 <button
     class="link-image"
-    on:click={sendFile}
+    onclick={sendFile}
     class:active={current && current.endsWith(`/${file}`)}>
     <img
         src="{path}?resize=fit&w=200&h=200"

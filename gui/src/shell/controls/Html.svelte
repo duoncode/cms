@@ -6,10 +6,14 @@
     import type { TextData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    export let field: SimpleField;
-    export let data: TextData;
+    interface Props {
+        field: SimpleField;
+        data: TextData;
+    }
 
-    let lang = $system.locale;
+    let { field, data = $bindable() }: Props = $props();
+
+    let lang = $state($system.locale);
 </script>
 
 <Field required={field.required}>

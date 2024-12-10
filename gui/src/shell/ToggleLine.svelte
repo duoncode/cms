@@ -1,9 +1,13 @@
 <script lang="ts">
     import Toggle from '$shell/Toggle.svelte';
 
-    export let title: string;
-    export let subtitle: string;
-    export let value: boolean;
+    interface Props {
+        title: string;
+        subtitle: string;
+        value: boolean;
+    }
+
+    let { title, subtitle, value = $bindable() }: Props = $props();
 </script>
 
 <div class="flex items-center justify-between">

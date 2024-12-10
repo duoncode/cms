@@ -4,9 +4,9 @@
     import Published from '$shell/Published.svelte';
     import Link from '$shell/Link.svelte';
 
-    export let data;
+    let { data } = $props();
 
-    let searchTerm = '';
+    let searchTerm = $state('');
 
     function fmtDate(d: string) {
         const date = new Date(d);
@@ -33,7 +33,7 @@
         };
     }
 
-    $: nodes = data.nodes.filter(search(searchTerm));
+    let nodes = $derived(data.nodes.filter(search(searchTerm)));
 </script>
 
 <div class="flex flex-col h-full">
@@ -53,7 +53,7 @@
                             <thead>
                                 <tr>
                                     {#if data.showPublished}
-                                        <th class="published" />
+                                        <th class="published"></th>
                                     {/if}
                                     {#each data.header as column}
                                         <th scope="col">{column}</th>

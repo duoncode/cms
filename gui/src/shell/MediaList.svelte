@@ -10,17 +10,29 @@
     import File from '$shell/File.svelte';
     import ModalEditImage from '$shell/modals/ModalEditImage.svelte';
 
-    export let assets: FileItem[];
-    export let multiple: boolean;
-    export let translate: boolean;
-    export let type: UploadType;
-    export let loading: boolean;
-    export let path: string;
-    export let remove: (index: number) => void;
+    interface Props {
+        assets: FileItem[];
+        multiple: boolean;
+        translate: boolean;
+        type: UploadType;
+        loading: boolean;
+        path: string;
+        remove: (index: number) => void;
+    }
+
+    let {
+        assets = $bindable(),
+        multiple,
+        translate,
+        type,
+        loading,
+        path,
+        remove
+    }: Props = $props();
 
     const modal: Modal = getContext('simple-modal');
 
-    let sorterElement: HTMLElement;
+    let sorterElement: HTMLElement = $state();
 
     function createSorter() {
         if (sorterElement) {

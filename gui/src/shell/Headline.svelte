@@ -1,8 +1,13 @@
 <script lang="ts">
     import Published from '$shell/Published.svelte';
 
-    export let showPublished = false;
-    export let published = false;
+    interface Props {
+        showPublished?: boolean;
+        published?: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let { showPublished = false, published = false, children }: Props = $props();
 </script>
 
 <h1 class="text-3xl font-semibold mb-6 flex flex-row items-center justify-start">
@@ -16,7 +21,7 @@
     <span
         class="flex items-center"
         class:pl-3={showPublished}>
-        <slot />
+        {@render children?.()}
     </span>
 </h1>
 

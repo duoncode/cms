@@ -4,11 +4,21 @@
     import Button from '$shell/Button.svelte';
     import Input from '$shell/controls/Input.svelte';
 
-    export let close: () => void;
-    export let apply: (asset: FileItem) => void;
-    export let asset: FileItem;
-    export let translate: boolean;
-    export let hasAlt: boolean;
+    interface Props {
+        close: () => void;
+        apply: (asset: FileItem) => void;
+        asset: FileItem;
+        translate: boolean;
+        hasAlt: boolean;
+    }
+
+    let {
+        close,
+        apply,
+        asset = $bindable(),
+        translate,
+        hasAlt
+    }: Props = $props();
 </script>
 
 <div class="modal">

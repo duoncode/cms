@@ -4,9 +4,13 @@
     import { save as saveNode } from '$lib/node';
     import Node from '$shell/Node.svelte';
 
-    export let data: RoutedNode;
+    interface Props {
+        data: RoutedNode;
+    }
+
+    let { data }: Props = $props();
     let collection = data.collection;
-    let node = data.node;
+    let node = $state(data.node);
 
     async function save(publish: boolean) {
         if (publish) {

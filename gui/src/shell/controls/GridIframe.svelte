@@ -2,15 +2,25 @@
     import type { GridIframe } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    export let field: GridField;
-    export let item: GridIframe;
-    export let index: number;
+    interface Props {
+        field: GridField;
+        item: GridIframe;
+        index: number;
+        children?: import('svelte').Snippet<[any]>;
+    }
 
-    let showSettings = false;
+    let {
+        field,
+        item = $bindable(),
+        index,
+        children
+    }: Props = $props();
+
+    let showSettings = $state(false);
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => (showSettings = !showSettings)} />
+    {@render children?.({ edit: () => (showSettings = !showSettings), })}
 </div>
 <div class="grid-cell-body">
     {#if showSettings}
@@ -21,6 +31,6 @@
             rows="5"
             id={`${field.name}_${index}`}
             name={`${field.name}_${index}`}
-            bind:value={item.value} />
+            bind:value={item.value}></textarea>
     {/if}
 </div>

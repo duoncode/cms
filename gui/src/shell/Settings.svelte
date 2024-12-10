@@ -5,7 +5,11 @@
     import { system } from '$lib/sys';
     import ToggleLine from '$shell/ToggleLine.svelte';
 
-    export let node: Node;
+    interface Props {
+        node: Node;
+    }
+
+    let { node = $bindable() }: Props = $props();
 
     function getPathPlaceholder(locale: Locale) {
         if (!node.generatedPaths) {

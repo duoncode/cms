@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
 
-    export let image;
+    let { image } = $props();
 </script>
 
 <div class="image-preview flex justify-center items-center">

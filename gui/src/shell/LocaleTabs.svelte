@@ -1,7 +1,11 @@
 <script lang="ts">
     import { system } from '$lib/sys';
 
-    export let lang: string;
+    interface Props {
+        lang: string;
+    }
+
+    let { lang = $bindable() }: Props = $props();
 </script>
 
 <span class="locale-tabs">
@@ -9,7 +13,7 @@
         <button
             class="locale-tab"
             class:active={locale.id === lang}
-            on:click={() => (lang = locale.id)}>
+            onclick={() => (lang = locale.id)}>
             {locale.id.toUpperCase()}
         </button>
     {/each}

@@ -3,8 +3,12 @@
     import type { Field } from '$types/fields';
     import controls from '$lib/controls';
 
-    export let node: Node;
-    export let fields: Field[];
+    interface Props {
+        node: Node;
+        fields: Field[];
+    }
+
+    let { node = $bindable(), fields }: Props = $props();
 
     function fieldSpan(value: number | null, type: 'row' | 'col') {
         if (value) {
@@ -28,8 +32,8 @@
                 grid-column: {fieldSpan(field.width, 'col')};
                 grid-row: {fieldSpan(field.rows, 'row')}">
             {#if controls[field.type]}
-                <svelte:component
-                    this={controls[field.type]}
+                {@const SvelteComponent = controls[field.type]}
+                <SvelteComponent
                     {field}
                     node={node.uid}
                     bind:data={node.content[field.name]} />

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { GridItem } from '$types/data';
     import type { GridField } from '$types/fields';
     import GridButtonLabel from '$shell/controls/GridButtonLabel.svelte';
@@ -7,16 +9,20 @@
     import IcoIndent from '$shell/icons/IcoIndent.svelte';
     import IcoUnindent from '$shell/icons/IcoUnindent.svelte';
 
-    export let item: GridItem;
-    export let field: GridField;
-    export let dropdown = false;
+    interface Props {
+        item: GridItem;
+        field: GridField;
+        dropdown?: boolean;
+    }
 
-    let widest = false;
-    let narrowest = false;
-    let highest = false;
-    let onerow = false;
-    let unindented = false;
-    let fullyindented = false;
+    let { item = $bindable(), field, dropdown = false }: Props = $props();
+
+    let widest = $state(false);
+    let narrowest = $state(false);
+    let highest = $state(false);
+    let onerow = $state(false);
+    let unindented = $state(false);
+    let fullyindented = $state(false);
 
     function width(val: number) {
         return () => (item.colspan = item.colspan + val);
@@ -45,12 +51,24 @@
         };
     }
 
-    $: widest = item.colspan === field.columns;
-    $: narrowest = item.colspan === field.minCellWidth;
-    $: highest = item.rowspan === field.columns * 2; // This is arbitrary. Allow twice as many rows as columns
-    $: onerow = item.rowspan === 1;
-    $: unindented = item.colstart === null;
-    $: fullyindented = item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
+    run(() => {
+        widest = item.colspan === field.columns;
+    });
+    run(() => {
+        narrowest = item.colspan === field.minCellWidth;
+    });
+    run(() => {
+        highest = item.rowspan === field.columns * 2;
+    }); // This is arbitrary. Allow twice as many rows as columns
+    run(() => {
+        onerow = item.rowspan === 1;
+    });
+    run(() => {
+        unindented = item.colstart === null;
+    });
+    run(() => {
+        fullyindented = item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
+    });
 </script>
 
 <div
@@ -60,7 +78,7 @@
     <button
         class="width-plus"
         disabled={widest}
-        on:click={width(1)}>
+        onclick={width(1)}>
         <span class="icon">
             <IcoExpand />
         </span>
@@ -69,7 +87,7 @@
     <button
         class="width-minus"
         disabled={narrowest}
-        on:click={width(-1)}>
+        onclick={width(-1)}>
         <span class="icon">
             <IcoCollapse />
         </span>
@@ -78,28 +96,28 @@
     <button
         class="indent"
         disabled={fullyindented}
-        on:click={indent(1)}>
+        onclick={indent(1)}>
         <IcoIndent />
         <GridButtonLabel value={item.colstart} />
     </button>
     <button
         class="unindent"
         disabled={unindented}
-        on:click={indent(-1)}>
+        onclick={indent(-1)}>
         <IcoUnindent />
         <GridButtonLabel value={item.colstart} />
     </button>
     <button
         class="height-plus"
         disabled={highest}
-        on:click={height(1)}>
+        onclick={height(1)}>
         <IcoExpand />
         <GridButtonLabel value={item.rowspan} />
     </button>
     <button
         class="height-minus"
         disabled={onerow}
-        on:click={height(-1)}>
+        onclick={height(-1)}>
         <IcoCollapse />
         <GridButtonLabel value={item.rowspan} />
     </button>

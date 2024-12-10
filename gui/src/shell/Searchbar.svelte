@@ -9,9 +9,13 @@
     import NavToggle from './NavToggle.svelte';
     import ModalCreate from '$shell/modals/ModalCreate.svelte';
 
-    export let searchTerm: string;
-    export let blueprints: Blueprint[];
-    export let collectionSlug: string;
+    interface Props {
+        searchTerm: string;
+        blueprints: Blueprint[];
+        collectionSlug: string;
+    }
+
+    let { searchTerm = $bindable(), blueprints, collectionSlug }: Props = $props();
 
     const modal: Modal = getContext('simple-modal');
 
@@ -53,7 +57,7 @@
                 bind:value={searchTerm} />
         </div>
         {#if blueprints.length > 0}
-            <button on:click={create}>
+            <button onclick={create}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"

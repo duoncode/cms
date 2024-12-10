@@ -2,10 +2,19 @@
     import Field from '$shell/Field.svelte';
     import Label from '$shell/Label.svelte';
 
-    export let value: string;
-    export let label: string;
-    export let id: string;
-    export let required = false;
+    interface Props {
+        value: string;
+        label: string;
+        id: string;
+        required?: boolean;
+    }
+
+    let {
+        value = $bindable(),
+        label,
+        id,
+        required = false
+    }: Props = $props();
 </script>
 
 <Field {required}>

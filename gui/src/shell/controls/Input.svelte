@@ -3,14 +3,25 @@
     import Label from '$shell/Label.svelte';
     import { system } from '$lib/sys';
 
-    export let value: string | Record<string, string>;
-    export let label: string;
-    export let id: string;
-    export let required = false;
-    export let translate = false;
-    export let description = '';
+    interface Props {
+        value: string | Record<string, string>;
+        label: string;
+        id: string;
+        required?: boolean;
+        translate?: boolean;
+        description?: string;
+    }
 
-    let lang = $system.locale;
+    let {
+        value = $bindable(),
+        label,
+        id,
+        required = false,
+        translate = false,
+        description = ''
+    }: Props = $props();
+
+    let lang = $state($system.locale);
 </script>
 
 <Field {required}>

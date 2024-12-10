@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import Modal from 'svelte-simple-modal';
     import Nav from '$shell/Nav.svelte';
     import Toasts from '$shell/Toasts.svelte';
 
-    export let data;
+    let { data, children } = $props();
 </script>
 
 <Modal
@@ -12,7 +12,7 @@
     <div class="flex flex-row relative">
         <Nav collections={data.system.collections} />
         <main class="flex-grow">
-            <slot />
+            {@render children?.()}
         </main>
     </div>
     <Toasts />

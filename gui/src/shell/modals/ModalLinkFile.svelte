@@ -2,9 +2,13 @@
     import { createEventDispatcher } from 'svelte';
     import { system } from '$lib/sys';
 
-    export let node: string;
-    export let file: string;
-    export let current: string;
+    interface Props {
+        node: string;
+        file: string;
+        current: string;
+    }
+
+    let { node, file, current }: Props = $props();
 
     const path = `${$system.assets}/node/${node}/${file}`;
     const dispatch = createEventDispatcher();
@@ -14,7 +18,7 @@
 
 <div class="mt-2 pr-4">
     <button
-        on:click={sendFile}
+        onclick={sendFile}
         class="px-3 py-2 w-full border border-emerald-600 text-emerald-600 gap-x-1.5 inline-flex items-center rounded-md text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         class:active={current && current.endsWith(`/${file}`)}>
         {file}

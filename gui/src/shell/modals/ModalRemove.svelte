@@ -1,10 +1,14 @@
-<script>
+<script lang="ts">
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    export let close;
-    export let proceed;
-    export let message = null;
+    interface Props {
+        close: any;
+        proceed: any;
+        message?: any;
+    }
+
+    let { close, proceed, message = null }: Props = $props();
 </script>
 
 <div class="modal">

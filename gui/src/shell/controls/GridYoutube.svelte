@@ -1,30 +1,42 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { _ } from '$lib/locale';
     import type { GridYoutube } from '$types/data';
     import type { GridField } from '$types/fields';
     import Setting from '$shell/Setting.svelte';
 
-    export let field: GridField;
-    export let item: GridYoutube;
-    export let index: number;
+    interface Props {
+        field: GridField;
+        item: GridYoutube;
+        index: number;
+        children?: import('svelte').Snippet<[any]>;
+    }
 
-    let showSettings = false;
-    let percent = 56.25; // defaults to 16:9
+    let {
+        field,
+        item = $bindable(),
+        index,
+        children
+    }: Props = $props();
+
+    let showSettings = $state(false);
+    let percent = $state(56.25); // defaults to 16:9
 
     if (!item.value) {
         showSettings = true;
     }
 
-    $: {
+    run(() => {
         let x = item.aspectRatioX ? item.aspectRatioX : 16;
         let y = item.aspectRatioY ? item.aspectRatioY : 9;
 
         percent = parseFloat(((y / x) * 100).toFixed(2));
-    }
+    });
 </script>
 
 <div class="grid-cell-header">
-    <slot edit={() => (showSettings = !showSettings)} />
+    {@render children?.({ edit: () => (showSettings = !showSettings), })}
 </div>
 <div class="grid-cell-body">
     {#if showSettings}
@@ -74,7 +86,7 @@
                     class="youtube absolute top-0 left-0 w-full h-full"
                     title="Youtube Video"
                     src="https://www.youtube.com/embed/{item.value}"
-                    allowfullscreen />
+                    allowfullscreen></iframe>
             </div>
         </div>
     {/if}

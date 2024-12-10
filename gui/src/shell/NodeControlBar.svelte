@@ -12,12 +12,23 @@
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import { remove as removeNode } from '$lib/node';
 
-    export let uid: string;
-    export let collectionPath: string;
-    export let deletable: boolean;
-    export let locked = false;
-    export let save: (publish: boolean) => void;
-    export let preview: () => void | null;
+    interface Props {
+        uid: string;
+        collectionPath: string;
+        deletable: boolean;
+        locked?: boolean;
+        save: (publish: boolean) => void;
+        preview: () => void | null;
+    }
+
+    let {
+        uid,
+        collectionPath,
+        deletable,
+        locked = false,
+        save,
+        preview
+    }: Props = $props();
 
     const modal: Modal = getContext('simple-modal');
 
@@ -63,14 +74,16 @@
                 icon={IcoSave}
                 on:click={() => save(false)}
                 label={_('Speichern')}
-                let:closeMenu>
-                <ButtonMenuEntry
-                    on:click={() => {
-                        save(true), closeMenu();
-                    }}>
-                    {_('Speichern und veröffentlichen')}
-                </ButtonMenuEntry>
-            </ButtonMenu>
+                >
+                {#snippet children({ closeMenu })}
+                                <ButtonMenuEntry
+                        on:click={() => {
+                            save(true), closeMenu();
+                        }}>
+                        {_('Speichern und veröffentlichen')}
+                    </ButtonMenuEntry>
+                                            {/snippet}
+                        </ButtonMenu>
         {/if}
     </div>
 </div>

@@ -1,12 +1,17 @@
 <script lang="ts">
-    export let required = false;
-    export { cssclass as class };
+    
 
-    let cssclass = null;
+    interface Props {
+        required?: boolean;
+        class?: any;
+        children?: import('svelte').Snippet;
+    }
+
+    let { required = false, class: cssclass = null, children }: Props = $props();
 </script>
 
 <div
     class="field {cssclass}"
     class:required>
-    <slot />
+    {@render children?.()}
 </div>

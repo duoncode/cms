@@ -1,12 +1,22 @@
-<script>
+<script lang="ts">
     import IcoOctagonTimes from '$shell/icons/IcoOctagonTimes.svelte';
     import IcoShieldCheck from '$shell/icons/IcoShieldCheck.svelte';
     import IcoCircleInfo from '$shell/icons/IcoCircleInfo.svelte';
     import IcoTriangleExclamation from '$shell/icons/IcoTriangleExclamation.svelte';
 
-    export let type;
-    export let text = '';
-    export let narrow = false;
+    interface Props {
+        type: any;
+        text?: string;
+        narrow?: boolean;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        type,
+        text = '',
+        narrow = false,
+        children
+    }: Props = $props();
 
     function getColor() {
         switch (type) {
@@ -66,7 +76,7 @@
                     {#if text}
                         {@html text}
                     {:else}
-                        <slot />
+                        {@render children?.()}
                     {/if}
                 </div>
             </div>

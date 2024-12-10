@@ -3,8 +3,12 @@
     import IcoDocumentTree from '$shell/icons/IcoDocumentTree.svelte';
     import Link from '$shell/Link.svelte';
 
-    export let slug: string;
-    export let name: string;
+    interface Props {
+        slug: string;
+        name: string;
+    }
+
+    let { slug, name }: Props = $props();
 </script>
 
 <div class="breadcrumbs mt-8 mb-4 flex flex-row items-center gap-3">
