@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import type { GridItem } from '$types/data';
     import type { GridField } from '$types/fields';
     import GridSizeButtons from '$shell/controls/GridSizeButtons.svelte';
@@ -7,15 +6,14 @@
     import IcoThreeDots from '$shell/icons/IcoThreeDots.svelte';
     import IcoGear from '$shell/icons/IcoGear.svelte';
 
-    const dispatch = createEventDispatcher();
-
-    type Props = {
+    interface Props {
         data: GridItem[];
         item: GridItem;
         field: GridField;
         index: number;
         edit: () => void;
-    };
+        add: () => void;
+    }
 
     let {
         data = $bindable(),
@@ -23,13 +21,10 @@
         field = $bindable(),
         index = $bindable(),
         edit,
+        add,
     }: Props = $props();
 
     let showDropdown = $state(false);
-
-    function add() {
-        dispatch('addcontent', { data, item });
-    }
 </script>
 
 <div class="content-actions flex flex-row items-center justify-end">

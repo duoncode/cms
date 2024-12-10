@@ -120,7 +120,7 @@
 <div class="grid-field grid grid-cols-{cols} gap-3 rounded p-3 bg-gray-200 border border-gray-300">
     {#if data && data.length > 0}
         {#each data as item, index (item)}
-            {@const SvelteComponent = controls[item.type]}
+            {@const Control = controls[item.type]}
             <div
                 class="col-span-{item.colspan} row-span-{item.rowspan} {item.colstart === null
                     ? ''
@@ -128,7 +128,7 @@
                       item.colstart} border rounded px-2 pb-2 border-gray-300 bg-white relative flex flex-col"
                 animate:flip={{ duration: 300 }}
                 use:resize={resizeCell(item)}>
-                <SvelteComponent
+                <Control
                     {item}
                     {node}
                     {index}
@@ -140,9 +140,9 @@
                             {index}
                             {field}
                             {edit}
-                            on:addcontent={openAddModal(index)} />
+                            add={openAddModal(index)} />
                     {/snippet}
-                </SvelteComponent>
+                </Control>
             </div>
         {/each}
     {:else}

@@ -20,8 +20,8 @@
         }
     }
 
-    function clickFile(event) {
-        value = event.detail.file;
+    function clickFile(path: string) {
+        value = path;
     }
 
     function changeTab(tab) {
@@ -71,7 +71,7 @@
                                             <Image
                                                 node={$node.uid}
                                                 file={file.file}
-                                                onclick={clickFile}
+                                                {clickFile}
                                                 bind:current={value} />
                                         {/if}
                                     {/each}
@@ -157,4 +157,3 @@
         max-height: 50vh;
     }
 </style>
-

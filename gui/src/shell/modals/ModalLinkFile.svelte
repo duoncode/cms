@@ -1,24 +1,22 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import { system } from '$lib/sys';
 
     type Props = {
         node: string;
         file: string;
         current: string;
+        clickFile: (path: string) => void;
     };
 
-    let { node, file, current }: Props = $props();
+    let { node, file, current = $bindable(), clickFile }: Props = $props();
 
     const path = `${$system.assets}/node/${node}/${file}`;
-    const dispatch = createEventDispatcher();
-
-    const sendFile = () => dispatch('click', { file: path });
+    const onclick = () => clickFile(path);
 </script>
 
 <div class="mt-2 pr-4">
     <button
-        onclick={sendFile}
+        {onclick}
         class="px-3 py-2 w-full border border-emerald-600 text-emerald-600 gap-x-1.5 inline-flex items-center rounded-md text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         class:active={current && current.endsWith(`/${file}`)}>
         {file}

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
 
@@ -7,19 +6,18 @@
         node: string;
         file: string;
         current: string;
+        clickFile: (path: string) => void;
     };
 
-    let { node, file, current }: Props = $props();
+    let { node, file, current = $bindable(), clickFile }: Props = $props();
 
     const path = `${$system.prefix}/media/image/node/${node}/${file}`;
-    const dispatch = createEventDispatcher();
-
-    const sendFile = () => dispatch('click', { file: path });
+    const onclick = () => clickFile(path);
 </script>
 
 <button
     class="link-image"
-    onclick={sendFile}
+    {onclick}
     class:active={current && current.endsWith(`/${file}`)}>
     <img
         src="{path}?resize=fit&w=200&h=200"
