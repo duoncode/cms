@@ -13,7 +13,7 @@ class Config implements ConfigInterface
 	use AddsConfigInterface;
 
 	public function __construct(
-		public readonly string $app = 'fiveorbs',
+		public readonly string $app = 'cms',
 		public readonly bool $debug = false,
 		public readonly string $env = '',
 		array $settings = [],
@@ -82,5 +82,10 @@ class Config implements ConfigInterface
 					'letters and numbers. Its length must not be longer than 32 characters.',
 			);
 		}
+	}
+
+	public function printAll(): void
+	{
+		error_log(print_r($this->settings, true));
 	}
 }
