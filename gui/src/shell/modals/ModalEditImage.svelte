@@ -5,13 +5,13 @@
     import Button from '$shell/Button.svelte';
     import Input from '$shell/controls/Input.svelte';
 
-    interface Props {
+    type Props = {
         close: () => void;
         apply: (asset: FileItem) => void;
         asset: FileItem;
         translate: boolean;
         hasAlt: boolean;
-    }
+    };
 
     let { close, apply, asset = $bindable(), translate, hasAlt }: Props = $props();
 </script>

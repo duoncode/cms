@@ -1,22 +1,19 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
+
     import IcoOctagonTimes from '$shell/icons/IcoOctagonTimes.svelte';
     import IcoShieldCheck from '$shell/icons/IcoShieldCheck.svelte';
     import IcoCircleInfo from '$shell/icons/IcoCircleInfo.svelte';
     import IcoTriangleExclamation from '$shell/icons/IcoTriangleExclamation.svelte';
 
-    interface Props {
+    type Props = {
         type: any;
         text?: string;
         narrow?: boolean;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+    };
 
-    let {
-        type,
-        text = '',
-        narrow = false,
-        children
-    }: Props = $props();
+    let { type, text = '', narrow = false, children }: Props = $props();
 
     function getColor() {
         switch (type) {
@@ -76,7 +73,7 @@
                     {#if text}
                         {@html text}
                     {:else}
-                        {@render children?.()}
+                        {@render children()}
                     {/if}
                 </div>
             </div>

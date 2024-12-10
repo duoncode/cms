@@ -6,11 +6,11 @@
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    interface Props {
+    type Props = {
         close: () => void;
         collectionSlug: string;
         blueprints: Blueprint[];
-    }
+    };
 
     let { close, collectionSlug, blueprints }: Props = $props();
 

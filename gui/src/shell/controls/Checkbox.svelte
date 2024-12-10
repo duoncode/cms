@@ -3,10 +3,10 @@
     import type { BooleanData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: SimpleField;
         data: BooleanData;
-    }
+    };
 
     let { field, data = $bindable() }: Props = $props();
     console.log(data);

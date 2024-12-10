@@ -13,14 +13,14 @@
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import { remove as removeNode } from '$lib/node';
 
-    interface Props {
+    type Props = {
         uid: string;
         collectionPath: string;
         deletable: boolean;
         locked?: boolean;
         save: (publish: boolean) => void;
         preview: () => void | null;
-    }
+    };
 
     let {
         uid = $bindable(),
@@ -40,7 +40,7 @@
                 close,
                 proceed: () => {
                     removeNode(uid, collectionPath);
-                    modal.close();
+                    close();
                 },
             },
             {},
@@ -55,7 +55,7 @@
             <Button
                 class="danger"
                 icon={IcoTrash}
-                on:click={remove}>
+                onclick={remove}>
                 {_('Löschen')}
             </Button>
         {/if}
@@ -63,7 +63,7 @@
             <Button
                 class="secondary"
                 icon={IcoEye}
-                on:click={preview}>
+                onclick={preview}>
                 {_('Vorschau')}
             </Button>
         {/if}
@@ -71,11 +71,11 @@
             <ButtonMenu
                 class="primary"
                 icon={IcoSave}
-                on:click={() => save(false)}
+                onclick={() => save(false)}
                 label={_('Speichern')}>
                 {#snippet children({ closeMenu })}
                     <ButtonMenuEntry
-                        on:click={() => {
+                        onclick={() => {
                             save(true), closeMenu();
                         }}>
                         {_('Speichern und veröffentlichen')}

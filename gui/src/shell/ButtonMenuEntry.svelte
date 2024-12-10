@@ -1,18 +1,19 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
+    import type { Snippet } from 'svelte';
+    import type { HTMLButtonAttributes } from 'svelte/elements';
 
-    const bubble = createBubbler();
-    interface Props {
-        children?: import('svelte').Snippet;
-    }
+    type Props = {
+        children: Snippet;
+    };
 
-    let { children }: Props = $props();
+    let { children, ...attributes }: Props & HTMLButtonAttributes = $props();
 </script>
 
 <button
     class="block px-4 py-2 text-sm"
     role="menuitem"
     tabindex="-1"
-    onclick={bubble('click')}>
-    {@render children?.()}
+    {...attributes}>
+    >
+    {@render children()}
 </button>

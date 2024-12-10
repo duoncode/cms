@@ -13,11 +13,11 @@
     import Content from '$shell/Content.svelte';
     import Settings from '$shell/Settings.svelte';
 
-    interface Props {
+    type Props = {
         node: Node;
         collection: Collection;
         save: (published: boolean) => Promise<void>;
-    }
+    };
 
     let { node = $bindable(), collection, save }: Props = $props();
 

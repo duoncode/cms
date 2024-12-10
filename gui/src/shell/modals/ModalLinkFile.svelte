@@ -2,11 +2,11 @@
     import { createEventDispatcher } from 'svelte';
     import { system } from '$lib/sys';
 
-    interface Props {
+    type Props = {
         node: string;
         file: string;
         current: string;
-    }
+    };
 
     let { node, file, current }: Props = $props();
 

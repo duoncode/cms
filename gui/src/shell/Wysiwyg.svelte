@@ -46,14 +46,14 @@
     import IcoDocument from '$shell/icons/IcoDocument.svelte';
     import IcoLineBreak from '$shell/icons/IcoLineBreak.svelte';
 
-    interface Props {
+    type Props = {
         value: any;
         name: any;
         editSource?: boolean;
         required?: boolean;
         toolbar?: string;
         embed?: boolean;
-    }
+    };
 
     let {
         value = $bindable(),

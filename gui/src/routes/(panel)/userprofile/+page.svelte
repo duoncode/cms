@@ -11,9 +11,9 @@
     import IcoSave from '$shell/icons/IcoSave.svelte';
     import Pane from '$shell/Pane.svelte';
 
-    interface Props {
+    type Props = {
         data: { user: User };
-    }
+    };
 
     let { data = $bindable() }: Props = $props();
 
@@ -29,7 +29,7 @@
             <Button
                 class="primary"
                 icon={IcoSave}
-                on:click={save}>
+                onclick={save}>
                 Speichern
             </Button>
         </div>

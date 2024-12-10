@@ -1,21 +1,21 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
+
     import { base } from '$app/paths';
 
-    let target = '';
-
-    
-    interface Props {
+    type Props = {
         class?: string;
         href: string;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+        target?: string;
+    };
 
-    let { class: cls = '', href, children }: Props = $props();
+    let { class: cls = '', href, children, target = '' }: Props = $props();
 </script>
 
 <a
     href="{base}/{href}"
     class={cls}
     {target}>
-    {@render children?.()}
+    {@render children()}
 </a>

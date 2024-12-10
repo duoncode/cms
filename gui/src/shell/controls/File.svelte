@@ -3,11 +3,11 @@
     import type { ImageField } from '$types/fields';
     import FileLike from './FileLike.svelte';
 
-    interface Props {
+    type Props = {
         field: ImageField;
         data: FileData;
         node: string;
-    }
+    };
 
     let { field, data = $bindable(), node }: Props = $props();
 </script>

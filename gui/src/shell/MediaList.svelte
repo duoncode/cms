@@ -10,7 +10,7 @@
     import File from '$shell/File.svelte';
     import ModalEditImage from '$shell/modals/ModalEditImage.svelte';
 
-    interface Props {
+    type Props = {
         assets: FileItem[];
         multiple: boolean;
         translate: boolean;
@@ -18,7 +18,7 @@
         loading: boolean;
         path: string;
         remove: (index: number) => void;
-    }
+    };
 
     let {
         assets = $bindable(),

@@ -29,12 +29,12 @@
     import GridIframe from './GridIframe.svelte';
     import GridVideo from './GridVideo.svelte';
 
-    interface Props {
+    type Props = {
         field: GridField;
         data: GridItem[];
         node: string;
         cols?: number;
-    }
+    };
 
     let { field, data = $bindable(), node, cols = 12 }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');
@@ -113,7 +113,7 @@
     }
 
     function resizeCell(item: GridItem) {
-        return element => (item.width = element.clientWidth);
+        return (element: HTMLElement) => (item.width = element.clientWidth);
     }
 </script>
 

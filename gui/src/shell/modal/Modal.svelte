@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Component, Snippet } from 'svelte';
     import type { ModalOptions } from '.';
+
     import { setContext } from 'svelte';
 
     let { children }: { children: Snippet } = $props();

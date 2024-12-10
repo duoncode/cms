@@ -1,11 +1,11 @@
 <script lang="ts">
     import Toggle from '$shell/Toggle.svelte';
 
-    interface Props {
+    type Props = {
         title: string;
         subtitle: string;
         value: boolean;
-    }
+    };
 
     let { title, subtitle, value = $bindable() }: Props = $props();
 </script>

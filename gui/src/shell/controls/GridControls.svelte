@@ -9,20 +9,20 @@
 
     const dispatch = createEventDispatcher();
 
-    interface Props {
+    type Props = {
         data: GridItem[];
         item: GridItem;
         field: GridField;
         index: number;
         edit: () => void;
-    }
+    };
 
     let {
         data = $bindable(),
         item = $bindable(),
         field = $bindable(),
         index = $bindable(),
-        edit
+        edit,
     }: Props = $props();
 
     let showDropdown = $state(false);

@@ -1,8 +1,10 @@
 <script lang="ts">
-    interface Props {
+    import type { Snippet } from 'svelte';
+
+    type Props = {
         required?: boolean;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+    };
 
     let { required = false, children }: Props = $props();
 </script>
@@ -10,5 +12,5 @@
 <div
     class="setting"
     class:required>
-    {@render children?.()}
+    {@render children()}
 </div>

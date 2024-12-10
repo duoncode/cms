@@ -1,11 +1,13 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
+
     import Published from '$shell/Published.svelte';
 
-    interface Props {
+    type Props = {
         showPublished?: boolean;
         published?: boolean;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+    };
 
     let { showPublished = false, published = false, children }: Props = $props();
 </script>
@@ -21,7 +23,7 @@
     <span
         class="flex items-center"
         class:pl-3={showPublished}>
-        {@render children?.()}
+        {@render children()}
     </span>
 </h1>
 

@@ -6,19 +6,14 @@
     import type { FileData } from '$types/data';
     import type { ImageField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: ImageField;
         data: FileData;
         node: string;
         type: 'image' | 'file';
-    }
+    };
 
-    let {
-        field,
-        data = $bindable(),
-        node,
-        type
-    }: Props = $props();
+    let { field, data = $bindable(), node, type }: Props = $props();
 
     let lang = $state($system.locale);
 </script>

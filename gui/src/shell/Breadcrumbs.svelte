@@ -3,7 +3,7 @@
     import IcoDocumentTree from '$shell/icons/IcoDocumentTree.svelte';
     import Link from '$shell/Link.svelte';
 
-    interface Props {
+    type Props = {
         slug: string;
         name: string;
     }

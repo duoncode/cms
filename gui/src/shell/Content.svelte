@@ -3,10 +3,10 @@
     import type { Field } from '$types/fields';
     import controls from '$lib/controls';
 
-    interface Props {
+    type Props = {
         node: Node;
         fields: Field[];
-    }
+    };
 
     let { node = $bindable(), fields = $bindable() }: Props = $props();
 

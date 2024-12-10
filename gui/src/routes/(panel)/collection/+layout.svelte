@@ -1,14 +1,21 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
+
     import { fade } from 'svelte/transition';
 
-    let { data, children } = $props();
+    type Props = {
+        data: any;
+        children: Snippet;
+    };
+
+    let { data, children }: Props = $props();
 </script>
 
 {#key data.pathname}
     <div
         in:fade={{ duration: 300, delay: 100 }}
         out:fade={{ duration: 300 }}>
-        {@render children?.()}
+        {@render children()}
     </div>
 {/key}
 

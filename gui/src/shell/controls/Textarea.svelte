@@ -5,10 +5,10 @@
     import type { TextData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: SimpleField;
         data: TextData;
-    }
+    };
 
     let { field, data = $bindable() }: Props = $props();
 
@@ -30,7 +30,8 @@
                         id={field.name}
                         name={field.name}
                         required={field.required}
-                        bind:value={data.value[locale.id]}></textarea>
+                        bind:value={data.value[locale.id]}>
+                    </textarea>
                 {/if}
             {/each}
         {:else}
@@ -38,7 +39,8 @@
                 id={field.name}
                 name={field.name}
                 required={field.required}
-                bind:value={data.value}></textarea>
+                bind:value={data.value}>
+            </textarea>
         {/if}
     </div>
 </Field>

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { _ } from '$lib/locale';
 
-    interface Props {
+    type Props = {
         large?: boolean;
         published?: boolean;
-    }
+    };
 
     let { large = false, published = false }: Props = $props();
 </script>
@@ -12,7 +12,8 @@
 <span
     class:large
     class:published
-    title={published ? _('Veröffentlich') : _('Unveröffentlicht')}></span>
+    title={published ? _('Veröffentlich') : _('Unveröffentlicht')}>
+</span>
 
 <style lang="postcss">
     span {

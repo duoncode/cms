@@ -10,7 +10,7 @@
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
     import ImagePreview from '$shell/ImagePreview.svelte';
 
-    interface Props {
+    type Props = {
         path: string;
         image: FileItem;
         loading: boolean;
@@ -19,7 +19,7 @@
         remove: () => void;
         edit: () => void;
         class?: string;
-    }
+    };
 
     let {
         path,

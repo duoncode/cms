@@ -10,13 +10,13 @@
     import ModalRemove from '$shell/modals/ModalRemove.svelte';
     import { setDirty } from '$lib/state';
 
-    interface Props {
+    type Props = {
         data: GridItem[];
         item: GridItem;
         index: number;
         add: () => void;
         dropdown?: boolean;
-    }
+    };
 
     let {
         data = $bindable(),

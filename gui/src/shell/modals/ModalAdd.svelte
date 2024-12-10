@@ -3,12 +3,12 @@
     import { ModalHeader, ModalBody, ModalFooter } from '$shell/modal';
     import Button from '$shell/Button.svelte';
 
-    interface Props {
+    type Props = {
         add: (index: number, before: boolean, type: string) => void;
         close: () => void;
         index: number | null;
         types: { id: string; label: string }[];
-    }
+    };
 
     let { add, close, index, types }: Props = $props();
 

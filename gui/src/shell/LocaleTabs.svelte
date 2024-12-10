@@ -1,9 +1,9 @@
 <script lang="ts">
     import { system } from '$lib/sys';
 
-    interface Props {
+    type Props = {
         lang: string;
-    }
+    };
 
     let { lang = $bindable() }: Props = $props();
 </script>

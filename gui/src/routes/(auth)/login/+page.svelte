@@ -9,9 +9,9 @@
     import Button from '$shell/Button.svelte';
     import IcoLogin from '$shell/icons/IcoLogin.svelte';
 
-    interface Props {
+    type Props = {
         message?: string;
-    }
+    };
 
     let { message = $bindable('') }: Props = $props();
 

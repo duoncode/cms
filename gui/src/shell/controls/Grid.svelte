@@ -6,11 +6,11 @@
     import type { GridData } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: GridField;
         data: GridData;
         node: string;
-    }
+    };
 
     let { field, data = $bindable(), node }: Props = $props();
 

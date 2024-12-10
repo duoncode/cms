@@ -6,11 +6,11 @@
     import Upload from '$shell/Upload.svelte';
     import LabelDiv from '$shell/LabelDiv.svelte';
 
-    interface Props {
+    type Props = {
         field: ImageField;
         data: FileData;
         node: string;
-    }
+    };
 
     let { field, data = $bindable(), node }: Props = $props();
 

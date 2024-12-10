@@ -9,11 +9,11 @@
     import NavToggle from './NavToggle.svelte';
     import ModalCreate from '$shell/modals/ModalCreate.svelte';
 
-    interface Props {
+    type Props = {
         searchTerm: string;
         blueprints: Blueprint[];
         collectionSlug: string;
-    }
+    };
 
     let { searchTerm = $bindable(), blueprints, collectionSlug }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');

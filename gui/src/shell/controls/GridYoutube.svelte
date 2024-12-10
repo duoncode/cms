@@ -1,15 +1,17 @@
 <script lang="ts">
-    import { _ } from '$lib/locale';
+    import type { Snippet } from 'svelte';
     import type { GridYoutube } from '$types/data';
     import type { GridField } from '$types/fields';
+
+    import { _ } from '$lib/locale';
     import Setting from '$shell/Setting.svelte';
 
-    interface Props {
+    type Props = {
         field: GridField;
         item: GridYoutube;
         index: number;
-        children?: import('svelte').Snippet<[any]>;
-    }
+        children: Snippet<[{ edit: () => void }]>;
+    };
 
     let { field, item = $bindable(), index, children }: Props = $props();
 
@@ -24,7 +26,7 @@
 </script>
 
 <div class="grid-cell-header">
-    {@render children?.({ edit: () => (showSettings = !showSettings) })}
+    {@render children({ edit: () => (showSettings = !showSettings) })}
 </div>
 <div class="grid-cell-body">
     {#if showSettings}

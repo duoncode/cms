@@ -2,19 +2,14 @@
     import Field from '$shell/Field.svelte';
     import Label from '$shell/Label.svelte';
 
-    interface Props {
+    type Props = {
         value: string;
         label: string;
         id: string;
         required?: boolean;
-    }
+    };
 
-    let {
-        value = $bindable(),
-        label,
-        id,
-        required = false
-    }: Props = $props();
+    let { value = $bindable(), label, id, required = false }: Props = $props();
 </script>
 
 <Field {required}>

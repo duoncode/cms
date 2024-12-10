@@ -3,11 +3,11 @@
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
 
-    interface Props {
+    type Props = {
         node: string;
         file: string;
         current: string;
-    }
+    };
 
     let { node, file, current }: Props = $props();
 

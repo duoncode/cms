@@ -1,11 +1,11 @@
 <script lang="ts">
-    
+    import type { Snippet } from 'svelte';
 
-    interface Props {
+    type Props = {
         required?: boolean;
         class?: any;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+    };
 
     let { required = false, class: cssclass = null, children }: Props = $props();
 </script>
@@ -13,5 +13,5 @@
 <div
     class="field {cssclass}"
     class:required>
-    {@render children?.()}
+    {@render children()}
 </div>

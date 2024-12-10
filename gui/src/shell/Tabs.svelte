@@ -1,7 +1,9 @@
 <script lang="ts">
-    interface Props {
-        children?: import('svelte').Snippet;
-    }
+    import type { Snippet } from 'svelte';
+
+    type Props = {
+        children: Snippet;
+    };
 
     let { children }: Props = $props();
 </script>
@@ -11,7 +13,7 @@
         <nav
             class="-mb-px flex space-x-8"
             aria-label="Tabs">
-            {@render children?.()}
+            {@render children()}
         </nav>
     </div>
 </div>

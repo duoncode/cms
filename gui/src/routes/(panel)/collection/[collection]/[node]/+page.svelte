@@ -4,9 +4,9 @@
     import { save as saveNode } from '$lib/node';
     import Node from '$shell/Node.svelte';
 
-    interface Props {
+    type Props = {
         data: RoutedNode;
-    }
+    };
 
     let { data }: Props = $props();
     let collection = data.collection;

@@ -5,9 +5,9 @@
     import { system } from '$lib/sys';
     import ToggleLine from '$shell/ToggleLine.svelte';
 
-    interface Props {
+    type Props = {
         node: Node;
-    }
+    };
 
     let { node = $bindable() }: Props = $props();
 

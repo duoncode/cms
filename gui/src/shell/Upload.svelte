@@ -16,7 +16,7 @@
     import Message from '$shell/Message.svelte';
     import MediaList from '$shell/MediaList.svelte';
 
-    interface Props {
+    type Props = {
         path: string;
         type: UploadType;
         name: string;
@@ -28,7 +28,7 @@
         disabledMsg?: string;
         callback?: () => void | null;
         inline?: boolean;
-    }
+    };
 
     let {
         path,

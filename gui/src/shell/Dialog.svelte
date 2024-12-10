@@ -2,19 +2,14 @@
     import { _ } from '$lib/locale';
     import Button from '$shell/Button.svelte';
 
-    interface Props {
+    type Props = {
         title?: any;
         body: any;
         type?: string;
         close: any;
-    }
+    };
 
-    let {
-        title = null,
-        body,
-        type = 'info',
-        close
-    }: Props = $props();
+    let { title = null, body, type = 'info', close }: Props = $props();
 </script>
 
 <div class="modal {type}">
@@ -27,7 +22,7 @@
     <div class="controls">
         <Button
             class="secondary"
-            on:click={close}>
+            onclick={close}>
             {_('OK')}
         </Button>
     </div>

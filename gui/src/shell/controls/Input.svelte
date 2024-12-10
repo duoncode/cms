@@ -3,14 +3,14 @@
     import Label from '$shell/Label.svelte';
     import { system } from '$lib/sys';
 
-    interface Props {
+    type Props = {
         value: string | Record<string, string>;
         label: string;
         id: string;
         required?: boolean;
         translate?: boolean;
         description?: string;
-    }
+    };
 
     let {
         value = $bindable(),
@@ -18,7 +18,7 @@
         id,
         required = false,
         translate = false,
-        description = ''
+        description = '',
     }: Props = $props();
 
     let lang = $state($system.locale);

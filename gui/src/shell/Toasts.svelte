@@ -6,9 +6,9 @@
     import toasts from '$lib/toast';
     import Toast from './Toast.svelte';
 
-    interface Props {
+    type Props = {
         center?: boolean;
-    }
+    };
 
     let { center = false }: Props = $props();
 

@@ -7,11 +7,11 @@
     import IcoIndent from '$shell/icons/IcoIndent.svelte';
     import IcoUnindent from '$shell/icons/IcoUnindent.svelte';
 
-    interface Props {
+    type Props = {
         item: GridItem;
         field: GridField;
         dropdown?: boolean;
-    }
+    };
 
     let { item = $bindable(), field = $bindable(), dropdown = false }: Props = $props();
     let widest = $derived(item.colspan === field.columns);

@@ -6,10 +6,10 @@
     import type { TextData } from '$types/data';
     import type { SimpleField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: SimpleField;
         data: TextData;
-    }
+    };
 
     let { field, data = $bindable() }: Props = $props();
 

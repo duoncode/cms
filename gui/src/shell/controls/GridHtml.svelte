@@ -1,27 +1,24 @@
 <script lang="ts">
-    import Wysiwyg from '$shell/Wysiwyg.svelte';
+    import type { Snippet } from 'svelte';
     import type { GridHtml } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    interface Props {
+    import Wysiwyg from '$shell/Wysiwyg.svelte';
+
+    type Props = {
         field: GridField;
         item: GridHtml;
         index: number;
-        children?: import('svelte').Snippet<[any]>;
-    }
+        children: Snippet<[{ edit: () => void }]>;
+    };
 
-    let {
-        field,
-        item = $bindable(),
-        index,
-        children
-    }: Props = $props();
+    let { field, item = $bindable(), index, children }: Props = $props();
 
     let showSettings = $state(false);
 </script>
 
 <div class="grid-cell-header">
-    {@render children?.({ edit: () => (showSettings = !showSettings), })}
+    {@render children({ edit: () => (showSettings = !showSettings) })}
 </div>
 <div class="grid-cell-body">
     {#if showSettings}

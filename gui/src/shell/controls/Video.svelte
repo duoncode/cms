@@ -6,11 +6,11 @@
     import type { FileData } from '$types/data';
     import type { ImageField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: ImageField;
         data: FileData;
         node: string;
-    }
+    };
 
     let { field, data = $bindable(), node }: Props = $props();
 

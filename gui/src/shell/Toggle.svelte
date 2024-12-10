@@ -1,7 +1,7 @@
 <script lang="ts">
-    interface Props {
+    type Props = {
         value: boolean;
-    }
+    };
 
     let { value = $bindable() }: Props = $props();
 

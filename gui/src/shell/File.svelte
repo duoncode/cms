@@ -7,13 +7,13 @@
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
     import IcoPencil from '$shell/icons/IcoPencil.svelte';
 
-    interface Props {
+    type Props = {
         path: string;
         asset: FileItem;
         remove: () => void;
         edit: () => void;
         loading: boolean;
-    }
+    };
 
     let { path, asset, remove, edit, loading }: Props = $props();
 

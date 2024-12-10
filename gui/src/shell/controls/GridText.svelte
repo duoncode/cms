@@ -1,26 +1,22 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
     import type { GridText } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    interface Props {
+    type Props = {
         field: GridField;
         item: GridText;
         index: number;
-        children?: import('svelte').Snippet<[any]>;
-    }
+        children: Snippet<[{ edit: () => void }]>;
+    };
 
-    let {
-        field,
-        item = $bindable(),
-        index,
-        children
-    }: Props = $props();
+    let { field, item = $bindable(), index, children }: Props = $props();
 
     let showSettings = $state(false);
 </script>
 
 <div class="grid-cell-header">
-    {@render children?.({ edit: () => (showSettings = !showSettings), })}
+    {@render children({ edit: () => (showSettings = !showSettings) })}
 </div>
 <div class="grid-cell-body flex-grow">
     {#if showSettings}
@@ -28,7 +24,8 @@
     {:else}
         <textarea
             name={field.name + '_' + index}
-            bind:value={item.value}></textarea>
+            bind:value={item.value}>
+        </textarea>
     {/if}
 </div>
 

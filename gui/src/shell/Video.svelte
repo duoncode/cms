@@ -3,14 +3,14 @@
     import { _ } from '$lib/locale';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
 
-    interface Props {
+    type Props = {
         path: string;
         file: FileItem;
         loading: boolean;
         upload: boolean;
         remove: () => void;
         class?: string;
-    }
+    };
 
     let { path, file, loading, upload, remove, class: classes = '' }: Props = $props();
 

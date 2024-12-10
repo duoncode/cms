@@ -1,15 +1,16 @@
 <script lang="ts">
+    import type { Snippet } from 'svelte';
     import type { HTMLButtonAttributes } from 'svelte/elements';
     import type { Component } from 'svelte';
 
-    interface Props {
+    type Props = {
         class?: string;
         icon?: Component;
         disabled?: boolean;
         type?: 'submit' | 'button' | 'reset';
         small?: boolean;
-        children?: import('svelte').Snippet;
-    }
+        children: Snippet;
+    };
 
     let {
         class: cls = 'primary',
@@ -35,5 +36,5 @@
             <Icon />
         </span>
     {/if}
-    {@render children?.()}
+    {@render children()}
 </button>

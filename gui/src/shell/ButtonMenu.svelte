@@ -1,43 +1,38 @@
 <script lang="ts">
-    import { createBubbler } from 'svelte/legacy';
+    import type { Component, Snippet } from 'svelte';
+    import type { HTMLButtonAttributes } from 'svelte/elements';
 
-    const bubble = createBubbler();
-    import type { ComponentType } from 'svelte';
     let openMenu = $state(false);
 
     function closeMenu() {
         openMenu = false;
     }
 
-    interface Props {
+    type Props = {
         class?: string;
-        icon?: ComponentType;
+        icon?: Component;
         label: string;
-        children?: import('svelte').Snippet<[any]>;
-    }
+        children: Snippet<[{ closeMenu: () => void }]>;
+    };
 
     let {
         class: cls = 'primary',
         icon = null,
         label,
-        children
-    }: Props = $props();
-    
+        children,
+        ...attributes
+    }: Props & HTMLButtonAttributes = $props();
 </script>
 
 <div class="inline-flex rounded-md shadow-sm">
     <button
         type="button"
         class="{cls} px-3.5 py-2.5 gap-x-2 inline-flex items-center justify-center rounded-l-md text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus:z-10"
-        onclick={bubble('click')}
-        onmouseover={bubble('mouseover')}
-        onmouseenter={bubble('mouseenter')}
-        onmouseleave={bubble('mouseleave')}
-        onfocus={bubble('focus')}>
+        {...attributes}>
         {#if icon}
-            {@const SvelteComponent = icon}
+            {@const Icon = icon}
             <span class="-ml-0.5 h-5 w-5">
-                <SvelteComponent />
+                <Icon />
             </span>
         {/if}
         {label}
@@ -72,7 +67,7 @@
                 <div
                     class="py-1"
                     role="none">
-                    {@render children?.({ closeMenu, })}
+                    {@render children({ closeMenu })}
                 </div>
             </div>
         {/if}
