@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
@@ -17,15 +15,9 @@
         loading: boolean;
     }
 
-    let {
-        path,
-        asset,
-        remove,
-        edit,
-        loading
-    }: Props = $props();
+    let { path, asset, remove, edit, loading }: Props = $props();
 
-    let title = $state('');
+    let title = $derived(getTitle(asset));
 
     function getTitle(asset: FileItem) {
         if (asset.title) {
@@ -42,10 +34,6 @@
 
         return '';
     }
-
-    run(() => {
-        title = getTitle(asset);
-    });
 </script>
 
 {#if asset}

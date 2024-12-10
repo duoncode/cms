@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
-    import type { Modal } from 'svelte-simple-modal';
     import type { FileItem } from '$types/data';
+    import type { ModalFunctions } from '$shell/modal';
+
     import { getContext } from 'svelte';
     import { system } from '$lib/sys';
     import { _ } from '$lib/locale';
@@ -33,23 +32,22 @@
         class: classes = '',
     }: Props = $props();
 
-    const modal: Modal = getContext('simple-modal');
+    let { open, close } = getContext<ModalFunctions>('modal');
 
-    let orig: string = $state();
-    let thumb: string = $state();
-    let hover = false;
-    let ext = $state('');
-    let title = $state('');
+    let hover = $state(false);
+    let ext = $derived(image.file.split('.').pop()?.toLowerCase());
+    let orig = $derived(`${path}/${image.file}`);
+    let thumb = $derived(ext === 'svg' ? orig : `${path}/${thumbIt(image.file)}`);
+    let title = $derived(getTitle(image, 'title') || getTitle(image, 'alt'));
 
     function preview() {
-        modal.open(
+        open(
             ImagePreview,
             {
+                close,
                 image: orig,
             },
-            {
-                styleWindow: { width: 'fit-content', maxWidth: '70rem' },
-            },
+            {},
         );
     }
 
@@ -72,22 +70,6 @@
 
         return '';
     }
-
-    run(() => {
-        ext = image.file.split('.').pop()?.toLowerCase();
-
-        orig = `${path}/${image.file}`;
-
-        if (ext === 'svg') {
-            thumb = orig;
-        } else {
-            thumb = `${path}/${thumbIt(image.file)}`;
-        }
-    });
-
-    run(() => {
-        title = getTitle(image, 'title') || getTitle(image, 'alt');
-    });
 </script>
 
 <div

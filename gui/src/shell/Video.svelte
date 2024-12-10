@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { FileItem } from '$types/data';
     import { _ } from '$lib/locale';
     import IcoTrash from '$shell/icons/IcoTrash.svelte';
@@ -16,11 +14,7 @@
 
     let { path, file, loading, upload, remove, class: classes = '' }: Props = $props();
 
-    let ext = $state('');
-
-    run(() => {
-        ext = file.file.split('.').pop()?.toLowerCase();
-    });
+    let ext = $derived(file.file.split('.').pop()?.toLowerCase());
 </script>
 
 <div

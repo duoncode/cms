@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { run, preventDefault } from 'svelte/legacy';
+    import { preventDefault } from 'svelte/legacy';
 
     import type { FileItem, UploadResponse, UploadType } from '$types/data';
     import type { Toast } from '$lib/toast';
@@ -25,8 +25,8 @@
         multiple?: boolean;
         required?: boolean;
         disabled?: boolean;
-        disabledMsg?: any;
-        callback?: any;
+        disabledMsg?: string;
+        callback?: () => void | null;
         inline?: boolean;
     }
 
@@ -39,14 +39,18 @@
         multiple = false,
         required = false,
         disabled = false,
-        disabledMsg = null,
+        disabledMsg = '',
         callback = null,
         inline = false,
     }: Props = $props();
 
     let loading = $state(false);
     let dragging = $state(false);
-    let allowedExtensions = $state('');
+    let allowedExtensions = $derived(
+        type === 'image'
+            ? $system.allowedFiles.image.join(', ')
+            : $system.allowedFiles.file.join(', '),
+    );
 
     const dispatch = createEventDispatcher();
     let { open, close } = getContext<ModalFunctions>('modal');
@@ -191,13 +195,6 @@
             dispatch('dirty');
         };
     }
-
-    run(() => {
-        allowedExtensions =
-            type === 'image'
-                ? $system.allowedFiles.image.join(', ')
-                : $system.allowedFiles.file.join(', ');
-    });
 </script>
 
 {#if disabled}

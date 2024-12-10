@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { Collection, Node } from '$types/data';
+
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import { generatePaths } from '$lib/urlpaths';
@@ -36,7 +35,7 @@
         showPreview = node.paths.de;
     }
 
-    run(() => {
+    $effect(() => {
         if (node.route) {
             node.generatedPaths = generatePaths(node, node.route, $system);
         }
@@ -91,7 +90,8 @@
         <button onclick={() => (showPreview = null)}>schließen</button>
         <iframe
             src="/preview{showPreview}"
-            title="Preview"></iframe>
+            title="Preview">
+        </iframe>
     </div>
 {/if}
 

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { GridItem } from '$types/data';
     import type { ModalFunctions } from '$shell/modal';
 
@@ -28,9 +26,8 @@
         dropdown = false,
     }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');
-
-    let first = $state(false);
-    let last = $state(false);
+    let first = $derived(data?.indexOf(item) === 0);
+    let last = $derived(data?.indexOf(item) === data.length - 1);
 
     async function remove() {
         open(
@@ -66,12 +63,6 @@
         data = data;
         setDirty();
     }
-    run(() => {
-        first = data.indexOf(item) === 0;
-    });
-    run(() => {
-        last = data.indexOf(item) === data.length - 1;
-    });
 </script>
 
 <div

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { GridItem } from '$types/data';
     import type { GridField } from '$types/fields';
     import GridButtonLabel from '$shell/controls/GridButtonLabel.svelte';
@@ -16,13 +14,14 @@
     }
 
     let { item = $bindable(), field = $bindable(), dropdown = false }: Props = $props();
-
-    let widest = $state(false);
-    let narrowest = $state(false);
-    let highest = $state(false);
-    let onerow = $state(false);
-    let unindented = $state(false);
-    let fullyindented = $state(false);
+    let widest = $derived(item.colspan === field.columns);
+    let narrowest = $derived(item.colspan === field.minCellWidth);
+    let highest = $derived(item.rowspan === field.columns * 2);
+    let onerow = $derived(item.rowspan === 1);
+    let unindented = $derived(item.colstart === null);
+    let fullyindented = $derived(
+        item.colstart !== null && item.colstart + item.colspan - 1 === field.columns,
+    );
 
     function width(val: number) {
         return () => (item.colspan = item.colspan + val);
@@ -50,26 +49,6 @@
             item.colstart = colstart;
         };
     }
-
-    run(() => {
-        widest = item.colspan === field.columns;
-    });
-    run(() => {
-        narrowest = item.colspan === field.minCellWidth;
-    });
-    run(() => {
-        highest = item.rowspan === field.columns * 2;
-    }); // This is arbitrary. Allow twice as many rows as columns
-    run(() => {
-        onerow = item.rowspan === 1;
-    });
-    run(() => {
-        unindented = item.colstart === null;
-    });
-    run(() => {
-        fullyindented =
-            item.colstart !== null && item.colstart + item.colspan - 1 === field.columns;
-    });
 </script>
 
 <div

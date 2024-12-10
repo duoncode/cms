@@ -9,7 +9,7 @@
         node: string;
     }
 
-    let { field, data, node }: Props = $props();
+    let { field, data = $bindable(), node }: Props = $props();
 </script>
 
 <FileLike
