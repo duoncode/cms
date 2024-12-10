@@ -5,7 +5,7 @@
     import type { Toast } from '$lib/toast';
     import type { ModalFunctions } from '$shell/modal';
 
-    import { getContext, createEventDispatcher } from 'svelte';
+    import { getContext } from 'svelte';
     import { _ } from '$lib/locale';
     import { system } from '$lib/sys';
     import { setDirty } from '$lib/state';
@@ -52,7 +52,6 @@
             : $system.allowedFiles.file.join(', '),
     );
 
-    const dispatch = createEventDispatcher();
     let { open, close } = getContext<ModalFunctions>('modal');
 
     function remove(index: number | null) {
@@ -63,7 +62,6 @@
             assets = assets;
         }
         setDirty();
-        dispatch('dirty');
     }
 
     function readItems(items: DataTransferItemList) {
@@ -192,7 +190,6 @@
 
             loading = false;
             setDirty();
-            dispatch('dirty');
         };
     }
 </script>

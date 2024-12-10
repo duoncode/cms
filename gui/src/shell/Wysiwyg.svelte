@@ -2,7 +2,7 @@
     import type { ModalFunctions } from '$shell/modal';
 
     import { getContext } from 'svelte';
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 
     import { setDirty } from '$lib/state';
     import { _ } from '$lib/locale';
@@ -64,9 +64,6 @@
         embed = false,
     }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');
-
-    const dispatch = createEventDispatcher();
-
     let ref = $state();
     let bubble = $state();
     let editor = $state();
@@ -74,9 +71,7 @@
     let showDropdown = $state(false);
 
     function fireUpdate(html) {
-        dispatch('input', html);
         setDirty();
-        dispatch('dirty');
     }
 
     const CustomParagraph = Paragraph.extend({
