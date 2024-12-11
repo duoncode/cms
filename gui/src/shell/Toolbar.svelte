@@ -1,11 +1,11 @@
 <script>
-    import NavToggle from './NavToggle.svelte';
+	import NavToggle from './NavToggle.svelte';
 </script>
 
 <div
-    id="toolbar"
-    class="headerbar">
-    <NavToggle />
+	id="toolbar"
+	class="headerbar">
+	<NavToggle />
 </div>
 
 <style type="postcss">

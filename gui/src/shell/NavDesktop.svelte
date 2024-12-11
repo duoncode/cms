@@ -1,10 +1,10 @@
 <script>
-    import NavContent from './NavContent.svelte';
+	import NavContent from './NavContent.svelte';
 </script>
 
 <nav></nav>
 
 <style>
-    nav {
-    }
+	nav {
+	}
 </style>

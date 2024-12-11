@@ -7,10 +7,10 @@ import ModalHeader from './ModalHeader.svelte';
 export { ModalBody, ModalFooter, ModalHeader };
 
 export type ModalOptions = {
-    hideClose?: boolean;
+	hideClose?: boolean;
 };
 
 export type ModalFunctions = {
-    open: (content: Component, attributes: object, options: ModalOptions) => void;
-    close: () => void;
+	open: (content: Component, attributes: object, options: ModalOptions) => void;
+	close: () => void;
 };

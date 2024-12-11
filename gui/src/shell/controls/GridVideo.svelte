@@ -1,37 +1,37 @@
 <script lang="ts">
-    import type { Snippet } from 'svelte';
-    import type { GridImage } from '$types/data';
-    import type { GridField } from '$types/fields';
+	import type { Snippet } from 'svelte';
+	import type { GridImage } from '$types/data';
+	import type { GridField } from '$types/fields';
 
-    import Upload from '$shell/Upload.svelte';
-    import { system } from '$lib/sys';
+	import Upload from '$shell/Upload.svelte';
+	import { system } from '$lib/sys';
 
-    type Props = {
-        field: GridField;
-        item: GridImage;
-        node: string;
-        index: number;
-        children: Snippet<[{ edit: () => void }]>;
-    };
+	type Props = {
+		field: GridField;
+		item: GridImage;
+		node: string;
+		index: number;
+		children: Snippet<[{ edit: () => void }]>;
+	};
 
-    let { field, item = $bindable(), node, index, children }: Props = $props();
+	let { field, item = $bindable(), node, index, children }: Props = $props();
 
-    let showSettings = $state(false);
+	let showSettings = $state(false);
 </script>
 
 <div class="grid-cell-header">
-    {@render children({ edit: () => (showSettings = !showSettings) })}
+	{@render children({ edit: () => (showSettings = !showSettings) })}
 </div>
 <div class="grid-cell-body">
-    {#if showSettings}
-        <div>Keine Einstellungsmöglichkeiten vorhanden</div>
-    {:else}
-        <Upload
-            type="video"
-            multiple={false}
-            path="{$system.prefix}/media/video/node/{node}"
-            name={field.name + '_' + index}
-            translate={false}
-            bind:assets={item.files} />
-    {/if}
+	{#if showSettings}
+		<div>Keine Einstellungsmöglichkeiten vorhanden</div>
+	{:else}
+		<Upload
+			type="video"
+			multiple={false}
+			path="{$system.prefix}/media/video/node/{node}"
+			name={field.name + '_' + index}
+			translate={false}
+			bind:assets={item.files} />
+	{/if}
 </div>

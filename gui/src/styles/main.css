@@ -13,65 +13,65 @@
 @import './modal.css';
 
 html {
-    @apply bg-gray-50;
+	@apply bg-gray-50;
 
-    height: 100%;
+	height: 100%;
 }
 
 body {
-    /**
+	/**
      * In Chrome, there is an issue with Upload components that
      * are rendered further down the page. When they are clicked
      * on to choose a file, the page gets either completely white
      * or the body moves up like it has a negative margin.
      * When we position the body fixed it does not occur.
      */
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    top: 0;
-    left: 0;
-    /* fix end */
-    font-family: var(--font);
-    overflow: hidden;
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	top: 0;
+	left: 0;
+	/* fix end */
+	font-family: var(--font);
+	overflow: hidden;
 }
 
 #panel {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
 
-    #nav {
-        z-index: 1;
-    }
+	#nav {
+		z-index: 1;
+	}
 
-    main {
-        z-index: 2;
-        flex-grow: 1;
-        height: 100vh;
-    }
+	main {
+		z-index: 2;
+		flex-grow: 1;
+		height: 100vh;
+	}
 }
 
 .headerbar {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    height: var(--s-16);
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	height: var(--s-16);
 
-    background-color: var(--white);
-    border-bottom: var(--border);
+	background-color: var(--white);
+	border-bottom: var(--border);
 }
 
 a,
 a:visited,
 a:focus {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 a:visited {
-    text-decoration: underline;
-    color: var(--high-dark);
+	text-decoration: underline;
+	color: var(--high-dark);
 }

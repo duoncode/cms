@@ -1,105 +1,105 @@
 .wysiwyg {
-    @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm;
-    @apply ring-1 ring-inset ring-gray-300 placeholder:text-gray-400;
-    @apply focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6;
+	@apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm;
+	@apply ring-1 ring-inset ring-gray-300 placeholder:text-gray-400;
+	@apply focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6;
 
-    &.required {
-        @apply border-l-orange-600 border-l-4;
-    }
+	&.required {
+		@apply border-l-4 border-l-orange-600;
+	}
 
-    &.embed {
-        border: 0 !important;
-        padding: 0;
-        margin-top: 0;
-    }
+	&.embed {
+		border: 0 !important;
+		padding: 0;
+		margin-top: 0;
+	}
 
-    button.active {
-        @apply bg-sky-700 text-white;
-    }
+	button.active {
+		@apply bg-sky-700 text-white;
+	}
 
-    &.wysiwyg-inline {
-        @apply p-0 mt-0 shadow-sm relative;
+	&.wysiwyg-inline {
+		@apply relative mt-0 p-0 shadow-sm;
 
-        &::after {
-            --tw-text-opacity: 1;
-            color: rgba(156, 163, 175, var(--tw-text-opacity));
-            content: 'WYSIWYG';
-            display: inline-block;
-            font-size: 70%;
-            font-weight: 300;
-            position: absolute;
-            top: 9px;
-            right: 10px;
-            opacity: 1;
-            letter-spacing: 0.05em;
-            transition: opacity 0.4s linear;
-        }
-    }
+		&::after {
+			--tw-text-opacity: 1;
+			color: rgba(156, 163, 175, var(--tw-text-opacity));
+			content: 'WYSIWYG';
+			display: inline-block;
+			font-size: 70%;
+			font-weight: 300;
+			position: absolute;
+			top: 9px;
+			right: 10px;
+			opacity: 1;
+			letter-spacing: 0.05em;
+			transition: opacity 0.4s linear;
+		}
+	}
 
-    svg {
-        display: inline-block;
-    }
+	svg {
+		display: inline-block;
+	}
 
-    .hide {
-        display: none;
-    }
+	.hide {
+		display: none;
+	}
 
-    .wysiwyg-toolbar {
-        margin-bottom: 0;
-    }
+	.wysiwyg-toolbar {
+		margin-bottom: 0;
+	}
 
-    .wysiwyg-editor {
-        &.prose {
-            max-width: 100%;
-        }
-    }
+	.wysiwyg-editor {
+		&.prose {
+			max-width: 100%;
+		}
+	}
 
-    .wysiwyg-dropdown-button {
-        margin-left: 1px;
-    }
+	.wysiwyg-dropdown-button {
+		margin-left: 1px;
+	}
 
-    .wysiwyg-dropdown-button {
-        @apply inline-flex justify-center w-full;
-        @apply px-4 py-2 bg-white text-sm;
-        @apply font-semibold text-gray-700 hover:bg-gray-50;
-        @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-        @apply focus:ring-offset-gray-100 focus:ring-sky-500;
-    }
+	.wysiwyg-dropdown-button {
+		@apply inline-flex w-full justify-center;
+		@apply bg-white px-4 py-2 text-sm;
+		@apply font-semibold text-gray-700 hover:bg-gray-50;
+		@apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+		@apply focus:ring-sky-500 focus:ring-offset-gray-100;
+	}
 
-    .wysiwyg-dropdown-menu {
-        @apply origin-top-right absolute left-0 mt-2 w-64 rounded;
-        @apply shadow-lg bg-white ring-1 ring-black ring-opacity-5;
-        @apply divide-y divide-gray-100 focus:outline-none;
-    }
+	.wysiwyg-dropdown-menu {
+		@apply absolute left-0 mt-2 w-64 origin-top-right rounded;
+		@apply bg-white shadow-lg ring-1 ring-black ring-opacity-5;
+		@apply divide-y divide-gray-100 focus:outline-none;
+	}
 
-    .wysiwyg-dropdown-item {
-        @apply text-gray-700 flex items-center px-4 py-2 text-sm w-full;
-    }
+	.wysiwyg-dropdown-item {
+		@apply flex w-full items-center px-4 py-2 text-sm text-gray-700;
+	}
 
-    .wysiwyg-toolbar-btn {
-        @apply ml-px text-sm w-7 px-1 py-1 my-1 rounded relative;
-    }
+	.wysiwyg-toolbar-btn {
+		@apply relative my-1 ml-px w-7 rounded px-1 py-1 text-sm;
+	}
 
-    .wysiwyg-source-btn {
-        @apply text-sm mr-4;
-    }
+	.wysiwyg-source-btn {
+		@apply mr-4 text-sm;
+	}
 
-    .ProseMirror {
-        @apply py-1 px-2;
-        max-height: 60vh;
-        overflow-y: auto;
+	.ProseMirror {
+		@apply px-2 py-1;
+		max-height: 60vh;
+		overflow-y: auto;
 
-        a {
-            @apply text-sky-600 underline;
-        }
-    }
+		a {
+			@apply text-sky-600 underline;
+		}
+	}
 
-    .ProseMirror-focused {
-        @apply border-0 focus:outline-none;
-    }
+	.ProseMirror-focused {
+		@apply border-0 focus:outline-none;
+	}
 }
 
 .grid-field .wysiwyg {
-    border-radius: 0;
-    box-shadow: none;
+	border-radius: 0;
+	box-shadow: none;
 }

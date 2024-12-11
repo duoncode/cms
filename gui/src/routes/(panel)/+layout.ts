@@ -9,26 +9,29 @@ import req from '$lib/req';
 let iv: null | number = null;
 
 export const load = async ({ fetch }) => {
-    await loadUser(fetch);
-    const sessionExpires = get(system).sessionExpires;
+	await loadUser(fetch);
+	const sessionExpires = get(system).sessionExpires;
 
-    if (get(authenticated)) {
-        await fetchCollections(fetch);
+	if (get(authenticated)) {
+		await fetchCollections(fetch);
 
-        if (iv !== null) {
-            clearInterval(iv);
-        }
+		if (iv !== null) {
+			clearInterval(iv);
+		}
 
-        iv = setInterval(async function () {
-            const resp = await req.get('me', {}, fetch);
+		iv = setInterval(
+			async function () {
+				const resp = await req.get('me', {}, fetch);
 
-            if (!resp.ok) {
-                clearInterval(iv);
-                iv = null;
-                goto(`${base}/login`);
-            }
-        }, 1000 * Math.floor(sessionExpires / 3.14159));
-    } else {
-        goto(`${base}/login`);
-    }
+				if (!resp.ok) {
+					clearInterval(iv);
+					iv = null;
+					goto(`${base}/login`);
+				}
+			},
+			1000 * Math.floor(sessionExpires / 3.14159),
+		);
+	} else {
+		goto(`${base}/login`);
+	}
 };

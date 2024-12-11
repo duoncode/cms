@@ -3,33 +3,33 @@ import { writable } from 'svelte/store';
 let initNavVisibility = true;
 
 if (localStorage.getItem('navVisible') === 'false') {
-    initNavVisibility = false;
+	initNavVisibility = false;
 }
 
 const navVisible = writable(initNavVisibility);
 
 function closeNav() {
-    navVisible.set(false);
-    localStorage.setItem('navVisible', 'false');
+	navVisible.set(false);
+	localStorage.setItem('navVisible', 'false');
 }
 
 function openNav() {
-    navVisible.set(true);
-    localStorage.setItem('navVisible', 'true');
+	navVisible.set(true);
+	localStorage.setItem('navVisible', 'true');
 }
 
 function toggleNav() {
-    navVisible.update(state => {
-        let newState = !state;
+	navVisible.update(state => {
+		let newState = !state;
 
-        if (newState) {
-            localStorage.setItem('navVisible', 'true');
-        } else {
-            localStorage.setItem('navVisible', 'false');
-        }
+		if (newState) {
+			localStorage.setItem('navVisible', 'true');
+		} else {
+			localStorage.setItem('navVisible', 'false');
+		}
 
-        return newState;
-    });
+		return newState;
+	});
 }
 
 export { openNav, closeNav, toggleNav, navVisible };

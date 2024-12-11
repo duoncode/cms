@@ -3,24 +3,12 @@
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"paths": {
-			"$lib": [
-				"./src/lib"
-			],
-			"$lib/*": [
-				"./src/lib/*"
-			],
-			"$types": [
-				"./src/types"
-			],
-			"$types/*": [
-				"./src/types/*"
-			],
-			"$shell": [
-				"./src/shell"
-			],
-			"$shell/*": [
-				"./src/shell/*"
-			]
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$types": ["./src/types"],
+			"$types/*": ["./src/types/*"],
+			"$shell": ["./src/shell"],
+			"$shell/*": ["./src/shell/*"]
 		}
 	}
 }

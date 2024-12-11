@@ -4,101 +4,101 @@ import { localesMap } from '$lib/sys';
 import { error } from '$lib/state';
 
 export function generatePaths(node: Node, route: Route, system: System) {
-    const paths = {};
+	const paths = {};
 
-    [...system.locales].map(locale => {
-        const path = typeof route === 'string' ? route : route[locale.id];
+	[...system.locales].map(locale => {
+		const path = typeof route === 'string' ? route : route[locale.id];
 
-        if (path) {
-            paths[locale.id] = transformPath(path, node, locale.id, system);
-        }
-    });
+		if (path) {
+			paths[locale.id] = transformPath(path, node, locale.id, system);
+		}
+	});
 
-    return paths;
+	return paths;
 }
 
 function transformPath(path: string, node: Node, localeId: string, system: System) {
-    const routePattern = /[^{}]+(?=})/g;
-    const extractParams = path.match(routePattern);
+	const routePattern = /[^{}]+(?=})/g;
+	const extractParams = path.match(routePattern);
 
-    if (!extractParams) {
-        return path;
-    }
+	if (!extractParams) {
+		return path;
+	}
 
-    extractParams.map(param => {
-        const value = node.content[param];
-        if (value) {
-            switch (value.type) {
-                case 'number':
-                case 'date':
-                case 'time':
-                case 'option':
-                case 'datetime':
-                    if (value.value) {
-                        path = path.replace(`{${param}}`, slugify(value.value.toString(), null));
-                    }
-                    break;
-                case 'text':
-                    path = path.replace(
-                        `{${param}}`,
-                        getTextValue(param, value.value, system, localeId),
-                    );
-                    break;
-                default:
-                    error('Unsupported value type');
-            }
-        }
-    });
+	extractParams.map(param => {
+		const value = node.content[param];
+		if (value) {
+			switch (value.type) {
+				case 'number':
+				case 'date':
+				case 'time':
+				case 'option':
+				case 'datetime':
+					if (value.value) {
+						path = path.replace(`{${param}}`, slugify(value.value.toString(), null));
+					}
+					break;
+				case 'text':
+					path = path.replace(
+						`{${param}}`,
+						getTextValue(param, value.value, system, localeId),
+					);
+					break;
+				default:
+					error('Unsupported value type');
+			}
+		}
+	});
 
-    return path;
+	return path;
 }
 
 function getTextValue(
-    param: string,
-    value: string | Record<string, string>,
-    system: System,
-    localeId: string,
+	param: string,
+	value: string | Record<string, string>,
+	system: System,
+	localeId: string,
 ) {
-    if (typeof value === 'string') {
-        return slugify(value, system.transliterate);
-    } else {
-        const map = localesMap(system.locales);
-        let locale = map[localeId];
+	if (typeof value === 'string') {
+		return slugify(value, system.transliterate);
+	} else {
+		const map = localesMap(system.locales);
+		let locale = map[localeId];
 
-        while (locale) {
-            const lvalue = value[locale.id];
+		while (locale) {
+			const lvalue = value[locale.id];
 
-            if (lvalue) {
-                return slugify(lvalue, system.transliterate);
-            }
+			if (lvalue) {
+				return slugify(lvalue, system.transliterate);
+			}
 
-            locale = map[locale.fallback];
-        }
-    }
+			locale = map[locale.fallback];
+		}
+	}
 
-    return '{' + param + '}';
+	return '{' + param + '}';
 }
 
 export function slugify(orig: string, transliterate: Record<string, string> | null) {
-    let value = orig.trim().replace(/\s+/g, '-');
+	let value = orig.trim().replace(/\s+/g, '-');
 
-    value = value.slice(0, 255);
+	value = value.slice(0, 255);
 
-    if (transliterate) {
-        const newValue = value.split('').map(char => {
-            const trans = transliterate[char];
+	if (transliterate) {
+		const newValue = value.split('').map(char => {
+			const trans = transliterate[char];
 
-            if (trans) return trans;
+			if (trans) return trans;
 
-            return char;
-        });
+			return char;
+		});
 
-        value = newValue.join('');
-    }
+		value = newValue.join('');
+	}
 
-    return value
-        .toLowerCase()
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '-')
-        .replace(/^-+|-+$/g, '');
+	return value
+		.toLowerCase()
+		.replace(/[^\w-]+/g, '')
+		.replace(/--+/g, '-')
+		.replace(/^-+|-+$/g, '');
 }

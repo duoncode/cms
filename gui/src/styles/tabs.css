@@ -1,21 +1,21 @@
 .tabs {
-    @apply border-b border-gray-200;
+	@apply border-b border-gray-200;
 
-    nav {
-        @apply -mb-px flex space-x-8;
-    }
+	nav {
+		@apply -mb-px flex space-x-8;
+	}
 }
 
 .tab {
-    @apply border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700;
-    @apply whitespace-nowrap border-b-2 py-4 px-1 text-sm font-semibold;
-    @apply inline-flex items-center;
+	@apply border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700;
+	@apply whitespace-nowrap border-b-2 px-1 py-4 text-sm font-semibold;
+	@apply inline-flex items-center;
 
-    &.active {
-        @apply border-emerald-600 text-emerald-700;
-    }
+	&.active {
+		@apply border-emerald-600 text-emerald-700;
+	}
 
-    svg + span {
-        @apply pl-2;
-    }
+	svg + span {
+		@apply pl-2;
+	}
 }

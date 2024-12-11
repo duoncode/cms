@@ -7,9 +7,9 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {},
 	},
 
 	plugins: [typography, forms, containerQueries],
-    safelist: [{ pattern: /^col-span-/ }, { pattern: /^row-span-/ }],
+	safelist: [{ pattern: /^col-span-/ }, { pattern: /^row-span-/ }],
 } satisfies Config;

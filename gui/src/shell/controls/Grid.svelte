@@ -1,42 +1,42 @@
 <script lang="ts">
-    import { system } from '$lib/sys';
-    import Field from '$shell/Field.svelte';
-    import LabelDiv from '$shell/LabelDiv.svelte';
-    import GridPanel from './GridPanel.svelte';
-    import type { GridData } from '$types/data';
-    import type { GridField } from '$types/fields';
+	import { system } from '$lib/sys';
+	import Field from '$shell/Field.svelte';
+	import LabelDiv from '$shell/LabelDiv.svelte';
+	import GridPanel from './GridPanel.svelte';
+	import type { GridData } from '$types/data';
+	import type { GridField } from '$types/fields';
 
-    type Props = {
-        field: GridField;
-        data: GridData;
-        node: string;
-    };
+	type Props = {
+		field: GridField;
+		data: GridData;
+		node: string;
+	};
 
-    let { field, data = $bindable(), node }: Props = $props();
+	let { field, data = $bindable(), node }: Props = $props();
 
-    let lang = $state($system.locale);
+	let lang = $state($system.locale);
 </script>
 
 <Field required={field.required}>
-    <LabelDiv
-        translate={field.translate}
-        bind:lang>
-        {field.label}
-    </LabelDiv>
-    <div class="mt-2">
-        {#if data.value}
-            {#if field.translate}
-                {#each $system.locales as locale}
-                    {#if locale.id === lang}
-                        <GridPanel
-                            bind:data={data.value[lang]}
-                            {field}
-                            {node} />
-                    {/if}
-                {/each}
-            {:else}
-                <GridPanel bind:data={data.value} />
-            {/if}
-        {/if}
-    </div>
+	<LabelDiv
+		translate={field.translate}
+		bind:lang>
+		{field.label}
+	</LabelDiv>
+	<div class="mt-2">
+		{#if data.value}
+			{#if field.translate}
+				{#each $system.locales as locale}
+					{#if locale.id === lang}
+						<GridPanel
+							bind:data={data.value[lang]}
+							{field}
+							{node} />
+					{/if}
+				{/each}
+			{:else}
+				<GridPanel bind:data={data.value} />
+			{/if}
+		{/if}
+	</div>
 </Field>

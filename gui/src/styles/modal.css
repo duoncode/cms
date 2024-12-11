@@ -1,45 +1,45 @@
 .modal {
-    width: 100%;
+	width: 100%;
 
-    h2 {
-        @apply text-lg -mt-4 -mx-4 py-4 px-6 mb-0;
-        @apply border-b border-gray-300;
-    }
+	h2 {
+		@apply -mx-4 -mt-4 mb-0 px-6 py-4 text-lg;
+		@apply border-b border-gray-300;
+	}
 
-    p {
-        @apply mb-6;
+	p {
+		@apply mb-6;
 
-        &:last-child {
-            @apply mb-0;
-        }
-    }
+		&:last-child {
+			@apply mb-0;
+		}
+	}
 
-    .highlight {
-        @apply text-blue-600;
-    }
+	.highlight {
+		@apply text-blue-600;
+	}
 
-    .body {
-        @apply -mx-4 p-6;
-        @apply border-b border-gray-300;
-    }
+	.body {
+		@apply -mx-4 p-6;
+		@apply border-b border-gray-300;
+	}
 
-    .controls {
-        @apply -mx-4 pt-6 px-6 flex flex-row gap-2 justify-end;
-    }
+	.controls {
+		@apply -mx-4 flex flex-row justify-end gap-2 px-6 pt-6;
+	}
 
-    .modal-close.close {
-        @apply border-rose-600 bg-rose-600 text-white;
-        box-shadow: none;
-        top: -0.6rem;
-        right: -0.6rem;
+	.modal-close.close {
+		@apply border-rose-600 bg-rose-600 text-white;
+		box-shadow: none;
+		top: -0.6rem;
+		right: -0.6rem;
 
-        &:hover {
-            @apply border-rose-500 bg-rose-500;
-        }
+		&:hover {
+			@apply border-rose-500 bg-rose-500;
+		}
 
-        &::before,
-        &::after {
-            @apply bg-white;
-        }
-    }
+		&::before,
+		&::after {
+			@apply bg-white;
+		}
+	}
 }
