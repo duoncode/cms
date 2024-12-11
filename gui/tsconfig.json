@@ -2,13 +2,14 @@
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
-		"paths": {
-			"$lib": ["./src/lib"],
-			"$lib/*": ["./src/lib/*"],
-			"$types": ["./src/types"],
-			"$types/*": ["./src/types/*"],
-			"$shell": ["./src/shell"],
-			"$shell/*": ["./src/shell/*"]
-		}
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler"
 	}
 }

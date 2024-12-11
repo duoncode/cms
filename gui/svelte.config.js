@@ -14,6 +14,11 @@ const config = {
 			fallback: 'index.html',
 		}),
 		prerender: { entries: [] },
+		alias: {
+			$lib: './src/lib',
+			$types: './src/types',
+			$shell: './src/shell',
+		},
 	},
 };
 
