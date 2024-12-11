@@ -1,7 +1,7 @@
 <script lang="ts">
     import { system } from '$lib/sys';
     import Field from '$shell/Field.svelte';
-    import Wysiwyg from '$shell/Wysiwyg.svelte';
+    import Wysiwyg from '$shell/wysiwyg/Wysiwyg.svelte';
     import LabelDiv from '$shell/LabelDiv.svelte';
     import type { TextData } from '$types/data';
     import type { SimpleField } from '$types/fields';

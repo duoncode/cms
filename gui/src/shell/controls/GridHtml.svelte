@@ -3,7 +3,7 @@
     import type { GridHtml } from '$types/data';
     import type { GridField } from '$types/fields';
 
-    import Wysiwyg from '$shell/Wysiwyg.svelte';
+    import Wysiwyg from '$shell/wysiwyg/Wysiwyg.svelte';
 
     type Props = {
         field: GridField;
