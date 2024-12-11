@@ -1,14 +1,26 @@
 {
-    "extends": "./.svelte-kit/tsconfig.json",
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "paths": {
-            "$lib": ["./src/lib"],
-            "$lib/*": ["./src/lib/*"],
-            "$types": ["./src/types"],
-            "$types/*": ["./src/types/*"],
-            "$shell": ["./src/shell"],
-            "$shell/*": ["./src/shell/*"]
-        }
-    }
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"$lib": [
+				"./src/lib"
+			],
+			"$lib/*": [
+				"./src/lib/*"
+			],
+			"$types": [
+				"./src/types"
+			],
+			"$types/*": [
+				"./src/types/*"
+			],
+			"$shell": [
+				"./src/shell"
+			],
+			"$shell/*": [
+				"./src/shell/*"
+			]
+		}
+	}
 }
