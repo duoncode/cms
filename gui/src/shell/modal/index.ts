@@ -7,7 +7,7 @@ import ModalHeader from './ModalHeader.svelte';
 export { ModalBody, ModalFooter, ModalHeader };
 
 export type ModalOptions = {
-    showClose?: boolean;
+    hideClose?: boolean;
 };
 
 export type ModalFunctions = {
