@@ -8,7 +8,7 @@
     import { _ } from '$lib/locale';
     import ModalLink from '$shell/modals/ModalLink.svelte';
 
-    import { Editor } from '@tiptap/core';
+    import { Editor, type Extensions } from '@tiptap/core';
     import StarterKit from '@tiptap/starter-kit';
     import BubbleMenu from '@tiptap/extension-bubble-menu';
     import DropCursor from '@tiptap/extension-dropcursor';
@@ -47,8 +47,8 @@
     import IcoLineBreak from '$shell/icons/IcoLineBreak.svelte';
 
     type Props = {
-        value: any;
-        name: any;
+        value: string;
+        name: string;
         editSource?: boolean;
         required?: boolean;
         toolbar?: string;
@@ -64,13 +64,33 @@
         embed = false,
     }: Props = $props();
     let { open, close } = getContext<ModalFunctions>('modal');
-    let ref = $state();
-    let bubble = $state();
-    let editor = $state();
+    let ref = $state<HTMLElement>();
+    let bubble = $state<HTMLElement>();
+    let editor = $state<Editor|null>(null);
+	let editorState = $state({
+		bold: false,
+		heading1: false,
+		heading2: false,
+		heading3: false,
+		paragraphLarge: false,
+		paragraphRegular: false,
+		paragraphSmall: false,
+		center: false,
+		right: false,
+		justify: false,
+		italic: false,
+		strike: false,
+		bulletList: false,
+		orderedList: false,
+		subscript: false,
+		superscript: false,
+		blockquote: false,
+		link: false,
+	});
     let showSource = $state(false);
     let showDropdown = $state(false);
 
-    function fireUpdate(html) {
+    function fireUpdate() {
         setDirty();
     }
 
@@ -111,8 +131,8 @@
         },
     });
 
-    onMount(() => {
-        let extensions;
+    $effect(() => {
+        let extensions: Extensions;
 
         if (toolbar === 'inline') {
             extensions = [
@@ -143,12 +163,29 @@
             extensions,
             content: value,
             onTransaction: () => {
-                // force re-render so `editor.isActive` works as expected
-                editor = editor;
+                editorState.bold = editor.isActive('bold');
+				editorState.heading1 = editor.isActive('heading', { level: 1 });
+				editorState.heading2 = editor.isActive('heading', { level: 2 });
+				editorState.heading3 = editor.isActive('heading', { level: 3 });
+				editorState.paragraphLarge = editor.isActive('paragraph') && editor.getAttributes('paragraph')['class'] !== 'large';
+				editorState.paragraphRegular = editor.isActive('paragraph') && editor.getAttributes('paragraph')['class'] === 'large';
+				editorState.paragraphSmall = editor.isActive('paragraph') && editor.getAttributes('paragraph')['class'] === 'small';
+				editorState.center = editor.isActive({ textAlign: 'center' });
+				editorState.right = editor.isActive({ textAlign: 'right' });
+				editorState.justify = editor.isActive({ textAlign: 'justify' });
+				editorState.italic = editor.isActive('italic');
+				editorState.strike = editor.isActive('strike');
+				editorState.bulletList = editor.isActive('bulletList');
+				editorState.orderedList = editor.isActive('orderedList');
+				editorState.subscript = editor.isActive('subscript');
+				editorState.superscript = editor.isActive('superscript');
+				editorState.blockquote = editor.isActive('blockquote');
+				editorState.link = editor.isActive('link');
+				console.log(editorState.italic);
             },
-            onUpdate: () => {
+            onUpdate: ({ editor }) => {
                 let html = editor.getHTML();
-                fireUpdate(html);
+                fireUpdate();
                 value = html;
             },
         });
@@ -160,13 +197,15 @@
         }
     });
 
-    function changeSource(e) {
-        fireUpdate(e.target.value);
-        editor.commands.setContent(e.target.value);
-        value = e.target.value;
+    function changeSource(event: KeyboardEvent) {
+        const target = event.target as HTMLTextAreaElement;
+
+        fireUpdate();
+        editor.commands.setContent(target.value);
+        value = target.value;
     }
 
-    function clickDropdown(fn) {
+    function clickDropdown(fn: () => void) {
         return () => {
             if (fn) {
                 fn();
@@ -175,9 +214,11 @@
         };
     }
 
-    function clickToolbar(fn) {
-        showDropdown = false;
-        fn();
+    function clickToolbar(fn: () => void) {
+        return () => {
+            showDropdown = false;
+            fn();
+        };
     }
 
     function toggleSource() {
@@ -225,7 +266,7 @@
             <button
                 class="wysiwyg-toolbar-btn"
                 onclick={clickToolbar(editor.chain().focus().toggleBold().run)}
-                class:active={editor.isActive('bold')}>
+                class:active={editorState.bold}>
                 <IcoBold />
             </button>
             <button
@@ -414,126 +455,120 @@
                     <div class="wysiwyg-toolbar-btns flex-grow">
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Text align left')}
+                            title={_('Text align left')}
                             onclick={clickToolbar(editor.chain().focus().unsetTextAlign().run)}>
                             <IcoAlignLeft />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Text align center')}
+                            title={_('Text align center')}
                             onclick={clickToolbar(
                                 editor.chain().focus().setTextAlign('center').run,
                             )}
-                            class:active={editor.isActive({
-                                textAlign: 'center',
-                            })}>
+                            class:active={editor.isActive({ textAlign: 'center' })}>
                             <IcoAlignCenter />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Text align right')}
+                            title={_('Text align right')}
                             onclick={clickToolbar(editor.chain().focus().setTextAlign('right').run)}
-                            class:active={editor.isActive({
-                                textAlign: 'right',
-                            })}>
+                            class:active={editor.isActive({ textAlign: 'right' })}>
                             <IcoAlignRight />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Justify text')}
+                            title={_('Justify text')}
                             onclick={clickToolbar(
                                 editor.chain().focus().setTextAlign('justify').run,
                             )}
-                            class:active={editor.isActive({
-                                textAlign: 'justify',
-                            })}>
+                            class:active={editor.isActive({ textAlign: 'justify' })}>
                             <IcoAlignJustify />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Bold text')}
+                            title={_('Bold text')}
                             onclick={clickToolbar(editor.chain().focus().toggleBold().run)}
-                            class:active={editor.isActive('bold')}>
+                            class:active={editorState.bold}>
                             <IcoBold />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Italic text')}
+                            title={_('Italic text')}
                             onclick={clickToolbar(editor.chain().focus().toggleItalic().run)}
                             class:active={editor.isActive('italic')}>
                             <IcoItalic />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Strike through')}
+                            title={_('Strike through')}
                             onclick={clickToolbar(editor.chain().focus().toggleStrike().run)}
                             class:active={editor.isActive('strike')}>
                             <IcoStrikethrough />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Bulleted list')}
+                            title={_('Bulleted list')}
                             onclick={clickToolbar(editor.chain().focus().toggleBulletList().run)}
                             class:active={editor.isActive('bulletList')}>
                             <IcoListUl />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Numbered list')}
+                            title={_('Numbered list')}
                             onclick={clickToolbar(editor.chain().focus().toggleOrderedList().run)}
                             class:active={editor.isActive('orderedList')}>
                             <IcoListOl />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Subscript')}
+                            title={_('Subscript')}
                             onclick={clickToolbar(editor.chain().focus().toggleSubscript().run)}
                             class:active={editor.isActive('subscript')}>
                             <IcoSubscript />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Superscript')}
+                            title={_('Superscript')}
                             onclick={clickToolbar(editor.chain().focus().toggleSuperscript().run)}
                             class:active={editor.isActive('superscript')}>
                             <IcoSuperscript />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Block quote')}
+                            title={_('Block quote')}
                             onclick={clickToolbar(editor.chain().focus().toggleBlockquote().run)}
                             class:active={editor.isActive('blockquote')}>
                             <IcoBlockQuoteRight />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Horizontal line')}
+                            title={_('Horizontal line')}
                             onclick={clickToolbar(editor.chain().focus().setHorizontalRule().run)}>
                             <IcoHorizontalRule />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Add link to page')}
+                            title={_('Add link to page')}
                             onclick={openAddLinkModal}>
                             <IcoLink />
                         </button>
                         {#if editor.isActive('link')}
                             <button
                                 class="wysiwyg-toolbar-btn"
-                                tooltip={_('Remove link')}
+                                title={_('Remove link')}
                                 onclick={clickToolbar(editor.chain().focus().unsetLink().run)}>
                                 <IcoUnlink />
                             </button>
                         {/if}
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Add a hard line break')}
+                            title={_('Add a hard line break')}
                             onclick={clickToolbar(editor.chain().focus().setHardBreak().run)}>
                             <IcoLineBreak />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Remove formats')}
+                            title={_('Remove formats')}
                             onclick={clickToolbar(editor.chain().focus().unsetAllMarks().run)}>
                             <IcoRemoveFormat />
                         </button>
@@ -541,13 +576,13 @@
                     <div class="wysiwyg-extras">
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Undo last action')}
+                            title={_('Undo last action')}
                             onclick={clickToolbar(editor.chain().focus().undo().run)}>
                             <IcoUndo />
                         </button>
                         <button
                             class="wysiwyg-toolbar-btn"
-                            tooltip={_('Redo last undo')}
+                            title={_('Redo last undo')}
                             onclick={clickToolbar(editor.chain().focus().redo().run)}>
                             <IcoRedo />
                         </button>
@@ -568,14 +603,15 @@
     <div
         class="wysiwyg-editor prose relative z-0"
         bind:this={ref}
-        class:hide={showSource}
-        onclick={() => (showDropdown = false)}>
+        data-name={name}
+        class:hide={showSource}>
     </div>
     <div
         class="wysiwyg-source relative z-0"
         class:hide={!showSource}>
         <textarea
             onkeyup={changeSource}
+            {name}
             bind:value
             class="border-0 w-full h-64 p-1 bg-gray-700 font-mono text-white">
         </textarea>
