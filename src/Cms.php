@@ -153,6 +153,10 @@ class Cms implements Plugin
 
 	protected function synchronizeNodes(): void
 	{
+		if (!$this->db->sys->isInitialized()->one()['value']) {
+			return;
+		}
+
 		$types = array_map(fn($record) => $record['handle'], $this->db->nodes->types()->all());
 
 		foreach ($this->nodes as $handle => $class) {
