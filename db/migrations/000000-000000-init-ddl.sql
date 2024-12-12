@@ -1,6 +1,6 @@
-CREATE EXTENSION IF NOT EXISTS btree_gist;
-CREATE EXTENSION IF NOT EXISTS btree_gin;
-CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION btree_gist;
+CREATE EXTENSION btree_gin;
+CREATE EXTENSION unaccent;
 
 CREATE SCHEMA cms;
 CREATE SCHEMA audit;
@@ -39,10 +39,10 @@ CREATE TABLE cms.users (
 	deleted timestamp with time zone,
 	CONSTRAINT pk_users PRIMARY KEY (usr),
 	CONSTRAINT uc_users_uid UNIQUE (uid),
-	CONSTRAINT fk_users_users_creator FOREIGN KEY (creator)
-		REFERENCES cms.users (usr),
 	CONSTRAINT fk_users_userroles FOREIGN KEY (userrole)
 		REFERENCES cms.userroles (userrole) ON UPDATE CASCADE,
+	CONSTRAINT fk_users_users_creator FOREIGN KEY (creator)
+		REFERENCES cms.users (usr),
 	CONSTRAINT fk_users_users_editor FOREIGN KEY (editor)
 		REFERENCES cms.users (usr)
 );
@@ -67,32 +67,41 @@ EXCEPTION WHEN unique_violation THEN
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-CREATE FUNCTION cms.validate_user_credentials()
-	RETURNS TRIGGER AS $$
-BEGIN
-	IF NEW.username IS NULL AND NEW.email IS NULL THEN
-		RAISE EXCEPTION 'Either username or email must be provided.';
-		RETURN NULL;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 CREATE TRIGGER users_trigger_01_change BEFORE UPDATE ON cms.users
 	FOR EACH ROW EXECUTE FUNCTION cms.update_changed_column();
-CREATE TRIGGER users_trigger_02_verification BEFORE INSERT OR UPDATE ON cms.users
-	FOR EACH ROW EXECUTE FUNCTION cms.validate_user_credentials();
-CREATE TRIGGER users_trigger_03_audit AFTER UPDATE
+CREATE TRIGGER users_trigger_02_audit AFTER UPDATE
 	ON cms.users FOR EACH ROW EXECUTE PROCEDURE
 	cms.process_users_audit();
 
 
-CREATE TABLE cms.activationcodes (
+CREATE TABLE cms.authtokens (
 	usr integer NOT NULL,
-	uid text NOT NULL CHECK (char_length(uid) <= 128),
-	CONSTRAINT pk_activationcodes PRIMARY KEY (usr),
-	CONSTRAINT fk_activationcodes_users FOREIGN KEY (usr) REFERENCES cms.users(usr)
+	token text NOT NULL CHECK (char_length(token) <= 512),
+	created timestamp with time zone NOT NULL DEFAULT now(),
+	changed timestamp with time zone NOT NULL DEFAULT now(),
+	creator integer NOT NULL,
+	editor integer NOT NULL,
+	CONSTRAINT pk_authtokens PRIMARY KEY (usr),
+	CONSTRAINT fk_authtokens_users FOREIGN KEY (usr)
+		REFERENCES cms.users (usr),
+	CONSTRAINT fk_authtokens_users_creator FOREIGN KEY (creator)
+		REFERENCES cms.users (usr),
+	CONSTRAINT fk_authtokens_users_editor FOREIGN KEY (editor)
+		REFERENCES cms.users (usr)
 );
+CREATE TRIGGER authtokens_trigger_01_change BEFORE UPDATE ON cms.users
+	FOR EACH ROW EXECUTE FUNCTION cms.update_changed_column();
+
+
+CREATE TABLE cms.onetimetokens (
+	token text NOT NULL CHECK (char_length(token) <= 512),
+	usr integer NOT NULL,
+	created timestamp with time zone NOT NULL DEFAULT now(),
+	CONSTRAINT pk_onetimetokens PRIMARY KEY (token),
+	CONSTRAINT fk_onetimetokens_users FOREIGN KEY (usr)
+		REFERENCES cms.users (usr)
+);
+
 
 CREATE TABLE cms.loginsessions (
 	hash text NOT NULL,
