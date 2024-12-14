@@ -2,46 +2,48 @@ import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-const devport = 1983;
-const host = process.env.CMS_DEV_HOST ? process.env.CMS_DEV_HOST : 'localhost';
+const devport = process.env.CMS_DEV_PORT ? process.env.CMS_DEV_PORT : 2009;
+const devhost = process.env.CMS_DEV_HOST ? process.env.CMS_DEV_HOST : 'localhost';
+const appport = process.env.CMS_APP_PORT ? process.env.CMS_APP_PORT : 1983;
+const apphost = process.env.CMS_APP_HOST ? process.env.CMS_APP_HOST : 'localhost';
 
 export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
-		port: 2009,
-		host: '0.0.0.0',
+		port: devport,
+		host: devhost,
 		strictPort: true,
 		proxy: {
 			'/panel/api': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/assets': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/cache': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/media': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/images': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/preview': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/vendor': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 			'/fonts': {
-				target: `http://${host}:${devport}`,
+				target: `http://${apphost}:${appport}`,
 				secure: false,
 			},
 		},
