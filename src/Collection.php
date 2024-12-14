@@ -21,6 +21,7 @@ abstract class Collection
 
 	abstract public function entries(): Nodes;
 
+	/** @return list<class-name> */
 	public function blueprints(): array
 	{
 		return [];
