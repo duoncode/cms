@@ -49,7 +49,7 @@ CREATE TABLE cms.users (
 CREATE UNIQUE INDEX uix_users_username ON cms.users
 	USING btree (lower(username)) WHERE (deleted IS NULL AND username IS NOT NULL);
 CREATE UNIQUE INDEX uix_users_email ON cms.users
-	USING btree (lower(email)) WHERE (deleted IS NULL AND email IS NOT NULL);
+	USING btree (lower(email)) WHERE (deleted IS NULL);
 CREATE FUNCTION cms.process_users_audit()
 	RETURNS TRIGGER AS $$
 BEGIN
@@ -75,19 +75,20 @@ CREATE TRIGGER users_trigger_02_audit AFTER UPDATE
 
 
 CREATE TABLE cms.authtokens (
-	usr integer NOT NULL,
 	token text NOT NULL CHECK (char_length(token) <= 512),
+	usr integer NOT NULL,
 	created timestamp with time zone NOT NULL DEFAULT now(),
 	changed timestamp with time zone NOT NULL DEFAULT now(),
 	creator integer NOT NULL,
 	editor integer NOT NULL,
-	CONSTRAINT pk_authtokens PRIMARY KEY (usr),
+	CONSTRAINT pk_authtokens PRIMARY KEY (token),
 	CONSTRAINT fk_authtokens_users FOREIGN KEY (usr)
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_authtokens_users_creator FOREIGN KEY (creator)
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_authtokens_users_editor FOREIGN KEY (editor)
-		REFERENCES cms.users (usr)
+		REFERENCES cms.users (usr),
+	CONSTRAINT uc_authtokens_usr UNIQUE (usr)
 );
 CREATE TRIGGER authtokens_trigger_01_change BEFORE UPDATE ON cms.users
 	FOR EACH ROW EXECUTE FUNCTION cms.update_changed_column();
