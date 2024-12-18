@@ -26,7 +26,12 @@ function transformPath(path: string, node: Node, localeId: string, system: Syste
 	}
 
 	extractParams.map(param => {
+		if (param === 'uid') {
+			path = path.replace('{uid}', node.uid);
+		}
+
 		const value = node.content[param];
+
 		if (value) {
 			switch (value.type) {
 				case 'number':
