@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Node } from '$types/data';
 
+	import Modal from '$shell/modal/Modal.svelte';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
 	import { generatePaths } from '$lib/urlpaths';
@@ -32,32 +33,34 @@
 	});
 </script>
 
-<div class="flex h-screen flex-col">
-	<Document>
-		<Tabs>
-			<button
-				onclick={changeTab('content')}
-				class:active={activeTab === 'content'}
-				class="tab">
-				{_('Inhalt')}
-			</button>
-			{#if node.type.kind !== 'document'}
+<Modal>
+	<div class="flex h-screen flex-col">
+		<Document>
+			<Tabs>
 				<button
-					onclick={changeTab('settings')}
-					class:active={activeTab === 'settings'}
+					onclick={changeTab('content')}
+					class:active={activeTab === 'content'}
 					class="tab">
-					{_('Einstellungen')}
+					{_('Inhalt')}
 				</button>
-			{/if}
-		</Tabs>
-		<Pane>
-			{#if activeTab === 'content'}
-				<Content
-					bind:fields={node.fields}
-					bind:node />
-			{:else}
-				<Settings bind:node />
-			{/if}
-		</Pane>
-	</Document>
-</div>
+				{#if node.type.kind !== 'document'}
+					<button
+						onclick={changeTab('settings')}
+						class:active={activeTab === 'settings'}
+						class="tab">
+						{_('Einstellungen')}
+					</button>
+				{/if}
+			</Tabs>
+			<Pane>
+				{#if activeTab === 'content'}
+					<Content
+						bind:fields={node.fields}
+						bind:node />
+				{:else}
+					<Settings bind:node />
+				{/if}
+			</Pane>
+		</Document>
+	</div>
+</Modal>

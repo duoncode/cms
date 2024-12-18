@@ -6,28 +6,40 @@ import { _ } from '$lib/locale';
 import req from './req';
 import toast from '$lib/toast';
 
-const authenticated = writable(false);
-const user = writable(null);
-const rememberedRoute = writable(base);
+export const authenticated = writable(false);
+export const user = writable(null);
+export const rememberedRoute = writable(base);
 
-async function loginUser(login: string, password: string, rememberme: boolean) {
+export async function loginUser(login: string, password: string, rememberme: boolean) {
 	const resp = await req.post('login', { login, password, rememberme });
 
-	if (resp.ok) {
+	if (resp?.ok) {
 		await loadUser(window.fetch);
 		goto(get(rememberedRoute));
 
 		return true;
 	} else {
-		return resp.data.error;
+		return resp?.data.error;
 	}
 }
 
-async function logoutUser() {
+export async function loginUserByToken(token: string) {
+	const resp = await req.post('token-login', { token });
+
+	if (resp?.ok) {
+		await loadUser(window.fetch);
+
+		return true;
+	} else {
+		return resp?.data.error;
+	}
+}
+
+export async function logoutUser() {
 	authenticated.set(false);
 	const resp = await req.post('logout');
 
-	if (resp.ok) {
+	if (resp?.ok) {
 		user.set(null);
 		goto(`${base}/login`);
 	} else {
@@ -36,10 +48,10 @@ async function logoutUser() {
 	}
 }
 
-async function loadUser(fetchFn: typeof window.fetch) {
+export async function loadUser(fetchFn: typeof window.fetch) {
 	const resp = await req.get('me', {}, fetchFn);
 
-	if (resp.ok) {
+	if (resp?.ok) {
 		authenticated.set(true);
 		user.set(resp.data);
 	} else {
@@ -48,10 +60,10 @@ async function loadUser(fetchFn: typeof window.fetch) {
 	}
 }
 
-async function saveProfile(user: User) {
+export async function saveProfile(user: User) {
 	const resp = await req.put('profile', user);
 
-	if (resp.ok) {
+	if (resp?.ok) {
 		toast.add({
 			kind: 'success',
 			message: _('Benutzerprofil erfolgreich gespeichert!'),
@@ -59,9 +71,7 @@ async function saveProfile(user: User) {
 	} else {
 		toast.add({
 			kind: 'error',
-			message: resp.data.payload.error,
+			message: resp?.data.payload.error,
 		});
 	}
 }
-
-export { loginUser, logoutUser, loadUser, authenticated, rememberedRoute, user, saveProfile };
