@@ -31,7 +31,7 @@ export async function loginUserByToken(token: string) {
 
 		return true;
 	} else {
-		return resp?.data.error;
+		return false;
 	}
 }
 
@@ -54,10 +54,14 @@ export async function loadUser(fetchFn: typeof window.fetch) {
 	if (resp?.ok) {
 		authenticated.set(true);
 		user.set(resp.data);
-	} else {
-		authenticated.set(false);
-		user.set(null);
+
+		return true;
 	}
+
+	authenticated.set(false);
+	user.set(null);
+
+	return false;
 }
 
 export async function saveProfile(user: User) {

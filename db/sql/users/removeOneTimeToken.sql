@@ -1,4 +1,1 @@
-DELETE FROM cms.onetimetokens
-WHERE
-	usr = :usr
-	AND token = :token;
+DELETE FROM cms.onetimetokens WHERE token = :token;

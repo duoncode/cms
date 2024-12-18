@@ -1,18 +1,20 @@
+import type { LayoutLoad } from './$types';
+
 import { base } from '$app/paths';
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { fetchCollections } from '$lib/collections';
-import { loadUser, authenticated } from '$lib/user';
+import { loadUser } from '$lib/user';
 import { system } from '$lib/sys';
 import req from '$lib/req';
 
 let iv: null | number = null;
 
-export const load = async ({ fetch }) => {
-	await loadUser(fetch);
+export const load: LayoutLoad = async ({ fetch }) => {
+	const authenticated = await loadUser(fetch);
 	const sessionExpires = get(system).sessionExpires;
 
-	if (get(authenticated)) {
+	if (authenticated) {
 		await fetchCollections(fetch);
 
 		if (iv !== null) {
@@ -23,8 +25,11 @@ export const load = async ({ fetch }) => {
 			async function () {
 				const resp = await req.get('me', {}, fetch);
 
-				if (!resp.ok) {
-					clearInterval(iv);
+				if (!resp?.ok) {
+					if (iv !== null) {
+						clearInterval(iv);
+					}
+
 					iv = null;
 					goto(`${base}/login`);
 				}

@@ -94,8 +94,6 @@ class Auth
 			$authToken = $matches[1];
 		}
 
-		error_log($authToken);
-
 		if (!$authToken) {
 			return $this->unauthorized($response, _('No auth token provided'));
 		}
@@ -108,6 +106,19 @@ class Auth
 
 		return $response->json([
 			'onetimeToken' => $oneTimeToken,
+		], 200);
+	}
+
+	public function invalidateToken(Request $request): Response
+	{
+		$token = $request->json()['token'];
+
+		if ($token) {
+			$this->auth->invalidateOneTimeToken($token);
+		}
+
+		return  Response::create($this->factory)->json([
+			'success' => true,
 		], 200);
 	}
 

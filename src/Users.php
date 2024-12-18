@@ -33,10 +33,9 @@ class Users
 		])->one());
 
 		if ($user) {
-			// $this->db->users->removeOneTimeToken([
-			// 	'usr' => $user->id,
-			// 	'token' => $hashedToken,
-			// ])->run();
+			$this->db->users->removeOneTimeToken([
+				'token' => $hashedToken,
+			])->run();
 		}
 
 		return $user;
@@ -89,6 +88,13 @@ class Users
 		])->run();
 
 		return $token;
+	}
+
+	public function removeOneTimeToken(string $token): void
+	{
+		$this->db->users->removeOneTimeToken([
+			'token' => hash('sha256', $token),
+		])->run();
 	}
 
 	protected function getUserOrNull(?array $data): ?User

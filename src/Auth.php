@@ -83,6 +83,12 @@ class Auth
 		return $this->users->createOneTimeToken($user->id);
 	}
 
+	public function invalidateOneTimeToken(
+		string $token,
+	): void {
+		$this->users->removeOneTimeToken($token);
+	}
+
 	public function user(): ?User
 	{
 		static $user = false;
