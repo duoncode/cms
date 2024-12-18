@@ -8,16 +8,17 @@
 	};
 
 	let { data }: Props = $props();
+	let node = $state(data.node);
 
 	async function save(publish: boolean) {
 		if (publish) {
-			data.node.published = true;
+			node.published = true;
 		}
 
-		create(data.node, data.node.type.handle, `embed/${data.token}/node/${data.type}`);
+		create(node, node.type.handle, `embed/${data.token}/node/${data.type}`);
 	}
 </script>
 
 <EmbeddedNode
-	bind:node={data.node}
+	bind:node
 	{save} />

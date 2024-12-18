@@ -58,7 +58,7 @@
 		{ id: 'iframe', label: 'Iframe' },
 	];
 
-	function add(index: number, before: boolean, type: GridType) {
+	function add(index: number | null, before: boolean, type: GridType) {
 		let content: GridBase = {
 			type,
 			colspan: 12,
@@ -83,21 +83,26 @@
 			data = [];
 		}
 
-		if (before) {
-			data.splice(index, 0, content as GridItem);
+		if (index === null) {
+			data.push(content as GridItem);
 		} else {
-			if (data.length - 1 === index) {
-				data.push(content as GridItem);
+			if (before) {
+				data.splice(index, 0, content as GridItem);
 			} else {
-				data.splice(index + 1, 0, content as GridItem);
+				if (data.length - 1 === index) {
+					data.push(content as GridItem);
+				} else {
+					data.splice(index + 1, 0, content as GridItem);
+				}
 			}
 		}
 
-		data = data;
+		console.log(data);
+
 		setDirty();
 	}
 
-	function openAddModal(index: number) {
+	function openAddModal(index: number | null) {
 		return () => {
 			open(
 				ModalAdd,
