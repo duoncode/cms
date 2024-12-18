@@ -13,8 +13,6 @@ const rememberedRoute = writable(base);
 async function loginUser(login: string, password: string, rememberme: boolean) {
 	const resp = await req.post('login', { login, password, rememberme });
 
-	console.log(resp);
-
 	if (resp.ok) {
 		await loadUser(window.fetch);
 		goto(get(rememberedRoute));

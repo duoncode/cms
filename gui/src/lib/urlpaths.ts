@@ -59,6 +59,10 @@ function getTextValue(
 	system: System,
 	localeId: string,
 ) {
+	if (!value) {
+		return '{' + param + '}';
+	}
+
 	if (typeof value === 'string') {
 		return slugify(value, system.transliterate);
 	} else {
@@ -66,7 +70,7 @@ function getTextValue(
 		let locale = map[localeId];
 
 		while (locale) {
-			const lvalue = value[locale.id];
+			const lvalue = value?.[locale.id];
 
 			if (lvalue) {
 				return slugify(lvalue, system.transliterate);
@@ -75,8 +79,6 @@ function getTextValue(
 			locale = map[locale.fallback];
 		}
 	}
-
-	return '{' + param + '}';
 }
 
 export function slugify(orig: string, transliterate: Record<string, string> | null) {

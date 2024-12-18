@@ -9,7 +9,6 @@
 	};
 
 	let { field, data = $bindable() }: Props = $props();
-	console.log(data);
 </script>
 
 <Field>

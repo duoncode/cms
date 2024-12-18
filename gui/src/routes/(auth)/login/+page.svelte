@@ -5,7 +5,6 @@
 	import { system } from '$lib/sys';
 	import { loginUser } from '$lib/user';
 	import Logo from '$shell/Logo.svelte';
-	import Link from '$shell/Link.svelte';
 	import Button from '$shell/Button.svelte';
 	import IcoLogin from '$shell/icons/IcoLogin.svelte';
 
@@ -32,7 +31,6 @@
 
 		let result = await loginUser(login, password, rememberme);
 
-		console.log(result);
 		if (result !== true) {
 			message = result;
 		}

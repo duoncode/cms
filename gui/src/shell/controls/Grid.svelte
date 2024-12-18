@@ -35,7 +35,10 @@
 					{/if}
 				{/each}
 			{:else}
-				<GridPanel bind:data={data.value} />
+				<GridPanel
+					bind:data={data.value}
+					{field}
+					{node} />
 			{/if}
 		{/if}
 	</div>
