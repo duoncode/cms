@@ -3,24 +3,15 @@ import type { Node } from '$types/data';
 
 import { error } from '@sveltejs/kit';
 import req from '$lib/req';
-import { loadUser, loginUserByToken } from '$lib/user';
+import { loginUserByToken } from '$lib/user';
 import { currentNode, currentFields } from '$lib/state';
 
 export const load: PageLoad = async ({ params, fetch }) => {
-	const authenticated = await loadUser(fetch);
-	const token = params.token;
-
-	if (authenticated) {
-		req.post('invalidate-token', { token }, fetch);
-	} else {
-		const loginResult = await loginUserByToken(token);
-
-		if (!loginResult) {
-			error(401, 'Unauthorized');
-		}
+	if (!(await loginUserByToken(params.token))) {
+		error(401, 'Unauthorized');
 	}
 
-	const response = await req.get(`node/${params.node}`, {}, fetch);
+	const response = await req.get(`blueprint/${params.type}`, {}, fetch);
 
 	if (response?.ok) {
 		const node = response.data as Node;
@@ -29,6 +20,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		currentFields.set(node.fields);
 
 		return {
+			type: params.type,
+			token: params.token,
 			node,
 		};
 	}

@@ -13,7 +13,7 @@ export interface Result {
 export async function save(uid: string, node: Node) {
 	const response = await req.put(`node/${uid}`, node);
 
-	if (response.ok) {
+	if (response?.ok) {
 		toast.add({
 			kind: 'success',
 			message: _('Dokument erfolgreich gespeichert!'),
@@ -34,11 +34,11 @@ export async function save(uid: string, node: Node) {
 	}
 }
 
-export async function create(node: Node, type: string, collectionPath: string) {
+export async function create(node: Node, type: string, documentPath: string) {
 	const response = await req.post(`node/${type}`, node);
 
-	if (response.ok) {
-		await goto(`${base}/${collectionPath}/${node.uid}`, {
+	if (response?.ok) {
+		await goto(`${base}/${documentPath}/${node.uid}`, {
 			invalidateAll: true,
 		});
 

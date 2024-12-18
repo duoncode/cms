@@ -24,15 +24,21 @@ export async function loginUser(login: string, password: string, rememberme: boo
 }
 
 export async function loginUserByToken(token: string) {
+	const authenticated = await loadUser(fetch);
+
+	if (authenticated) {
+		req.post('invalidate-token', { token }, fetch);
+
+		return true;
+	}
+
 	const resp = await req.post('token-login', { token });
 
 	if (resp?.ok) {
-		await loadUser(window.fetch);
-
-		return true;
-	} else {
-		return false;
+		return await loadUser(window.fetch);
 	}
+
+	return false;
 }
 
 export async function logoutUser() {
@@ -57,6 +63,7 @@ export async function loadUser(fetchFn: typeof window.fetch) {
 
 		return true;
 	}
+
 	authenticated.set(false);
 	user.set(null);
 
