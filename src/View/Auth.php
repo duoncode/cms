@@ -42,7 +42,7 @@ class Auth
 
 			if ($user === false) {
 				return $response->json(array_merge(
-					['error' => _('Falscher Benutzername oder Passwort')],
+					['error' => _('Falscher Benutzername oder Passwort'), 'loginType' => 'panel'],
 					$schema->pristineValues(),
 				), 400);
 			}
@@ -52,7 +52,7 @@ class Auth
 
 		$response->json(
 			array_merge(
-				['error' => _('Bitte Benutzernamen und Passwort eingeben')],
+				['error' => _('Bitte Benutzernamen und Passwort eingeben'), 'loginType' => 'panel'],
 				$schema->pristineValues(),
 			),
 			400,
@@ -74,13 +74,13 @@ class Auth
 			);
 
 			if ($user === false) {
-				return $this->unauthorized($response, _('Invalid token'));
+				return $this->unauthorized($response, _('Invalid token'), 'token');
 			}
 
 			return $response->json($user->array());
 		}
 
-		return $this->unauthorized($response, _('No or invalid auth token provided'));
+		return $this->unauthorized($response, _('No or invalid auth token provided'), 'token');
 	}
 
 	public function token(Request $request): Response
@@ -95,13 +95,13 @@ class Auth
 		}
 
 		if (!$authToken) {
-			return $this->unauthorized($response, _('No auth token provided'));
+			return $this->unauthorized($response, _('No auth token provided'), 'token');
 		}
 
 		$oneTimeToken = $this->auth->getOneTimeToken($authToken);
 
 		if (!$oneTimeToken) {
-			return $this->unauthorized($response, _('Invalid auth token'));
+			return $this->unauthorized($response, _('Invalid auth token'), 'token');
 		}
 
 		return $response->json([
@@ -122,12 +122,13 @@ class Auth
 		], 200);
 	}
 
-	protected function unauthorized(Response $response, string $message)
+	protected function unauthorized(Response $response, string $message, string $loginType)
 	{
 		$response->header('WWW-Authenticate', 'Bearer realm="FiveOrbs CMS"');
 
 		return $response->json([
 			'error' => $message,
+			'loginType' => $loginType,
 		], 401);
 	}
 

@@ -80,16 +80,19 @@ async function fetchit(
 	}
 	const response = await fetchFn(url.href, options);
 
-	if (response.status === 401) {
-		goto(`${base}/login`);
-		return null;
-	}
-
 	if (response.status >= 400 && response.status < 800) {
 		let message: any;
 
 		try {
 			message = await response.json();
+
+			if (response.status === 401) {
+				if (message?.loginType !== 'token') {
+					goto(`${base}/login`);
+				}
+
+				return null;
+			}
 
 			// The user logged out in another tab and logged in again.
 			// Now the csrf token is invalid.

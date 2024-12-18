@@ -57,7 +57,6 @@ export async function loadUser(fetchFn: typeof window.fetch) {
 
 		return true;
 	}
-
 	authenticated.set(false);
 	user.set(null);
 
