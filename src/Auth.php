@@ -54,6 +54,23 @@ class Auth
 		return false;
 	}
 
+	public function authenticateByOneTimeToken(
+		string $token,
+		bool $initSession,
+	): User|false {
+		$user = $this->users->byOneTimeToken($token);
+
+		if (!$user) {
+			return false;
+		}
+
+		if ($initSession) {
+			$this->login($user->id, false);
+		}
+
+		return $user;
+	}
+
 	public function getOneTimeToken(
 		string $token,
 	): string|false {

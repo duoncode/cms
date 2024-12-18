@@ -24,6 +24,24 @@ class Users
 		])->one());
 	}
 
+	public function byOneTimeToken(string $token): ?User
+	{
+		$hashedToken = hash('sha256', $token);
+
+		$user = $this->getUserOrNull($this->db->users->get([
+			'onetimetoken' => $hashedToken,
+		])->one());
+
+		if ($user) {
+			// $this->db->users->removeOneTimeToken([
+			// 	'usr' => $user->id,
+			// 	'token' => $hashedToken,
+			// ])->run();
+		}
+
+		return $user;
+	}
+
 	public function bySession(string $hash): ?User
 	{
 		return $this->getUserOrNull($this->db->users->get([

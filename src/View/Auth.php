@@ -61,6 +61,28 @@ class Auth
 		return $response;
 	}
 
+	public function tokenLogin(Request $request): Response
+	{
+		$schema = new Schema\TokenLogin();
+		$response = Response::create($this->factory);
+
+		if ($schema->validate($request->json())) {
+			$values = $schema->values();
+			$user = $this->auth->authenticateByOneTimeToken(
+				$values['token'],
+				true,
+			);
+
+			if ($user === false) {
+				return $this->unauthorized($response, _('Invalid token'));
+			}
+
+			return $response->json($user->array());
+		}
+
+		return $this->unauthorized($response, _('No or invalid auth token provided'));
+	}
+
 	public function token(Request $request): Response
 	{
 		$response = Response::create($this->factory);

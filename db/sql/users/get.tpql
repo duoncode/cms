@@ -26,8 +26,14 @@ INNER JOIN
 
 <?php if (isset($token)): ?>
 INNER JOIN
-	cms.authtokens a ON
-		a.usr = u.usr
+	cms.authtokens at ON
+		at.usr = u.usr
+<?php endif ?>
+
+<?php if (isset($onetimetoken)): ?>
+INNER JOIN
+	cms.onetimetokens ott ON
+		ott.usr = u.usr
 <?php endif ?>
 
 <?php if (isset($sessionhash)) : ?>
@@ -45,7 +51,9 @@ WHERE
 <?php elseif (isset($usr)): ?>
 	u.usr = :usr
 <?php elseif (isset($token)): ?>
-	a.token = :token
+	at.token = :token
+<?php elseif (isset($onetimetoken)): ?>
+	ott.token = :onetimetoken
 <?php else: ?>
 	u.uid = :uid
 <?php endif ?>
