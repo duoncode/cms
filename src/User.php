@@ -22,7 +22,7 @@ class User
 	{
 		$this->id = $data['usr'];
 		$this->uid = $data['uid'];
-		$this->username = $data['username'];
+		$this->username = $data['username'] ?? '';
 		$this->email = $data['email'];
 		$this->pwhash = $data['pwhash'];
 		$this->role = $data['role'];

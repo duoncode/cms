@@ -24,6 +24,12 @@ INNER JOIN
 	cms.users e ON
 		u.editor = e.usr
 
+<?php if (isset($token)): ?>
+INNER JOIN
+	cms.authtokens a ON
+		a.usr = u.usr
+<?php endif ?>
+
 <?php if (isset($sessionhash)) : ?>
 INNER JOIN
 	cms.loginsessions s ON
@@ -38,6 +44,8 @@ WHERE
 	s.hash = :sessionhash
 <?php elseif (isset($usr)): ?>
 	u.usr = :usr
+<?php elseif (isset($token)): ?>
+	a.token = :token
 <?php else: ?>
 	u.uid = :uid
 <?php endif ?>

@@ -54,6 +54,18 @@ class Auth
 		return false;
 	}
 
+	public function getOneTimeToken(
+		string $token,
+	): string|false {
+		$user = $this->users->byAuthToken(hash('sha256', $token));
+
+		if (!$user) {
+			return false;
+		}
+
+		return $this->users->createOneTimeToken($user->id);
+	}
+
 	public function user(): ?User
 	{
 		static $user = false;

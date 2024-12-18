@@ -61,6 +61,43 @@ class Auth
 		return $response;
 	}
 
+	public function token(Request $request): Response
+	{
+		$response = Response::create($this->factory);
+
+		$authToken = '';
+		$bearer = $request->header('Authentication');
+
+		if (preg_match('/Bearer\s(\S+)/', $bearer, $matches)) {
+			$authToken = $matches[1];
+		}
+
+		error_log($authToken);
+
+		if (!$authToken) {
+			return $this->unauthorized($response, _('No auth token provided'));
+		}
+
+		$oneTimeToken = $this->auth->getOneTimeToken($authToken);
+
+		if (!$oneTimeToken) {
+			return $this->unauthorized($response, _('Invalid auth token'));
+		}
+
+		return $response->json([
+			'onetimeToken' => $oneTimeToken,
+		], 200);
+	}
+
+	protected function unauthorized(Response $response, string $message)
+	{
+		$response->header('WWW-Authenticate', 'Bearer realm="FiveOrbs CMS"');
+
+		return $response->json([
+			'error' => $message,
+		], 401);
+	}
+
 	public function logout(): array
 	{
 		$this->auth->logout();

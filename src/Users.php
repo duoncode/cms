@@ -17,6 +17,13 @@ class Users
 		])->one());
 	}
 
+	public function byAuthToken(string $token): ?User
+	{
+		return $this->getUserOrNull($this->db->users->get([
+			'token' => $token,
+		])->one());
+	}
+
 	public function bySession(string $hash): ?User
 	{
 		return $this->getUserOrNull($this->db->users->get([
@@ -52,6 +59,18 @@ class Users
 		return $this->db->users->forget([
 			'hash' => $hash,
 		])->run();
+	}
+
+	public function createOneTimeToken(int $userId): string
+	{
+		$token = bin2hex(random_bytes(32));
+
+		$this->db->users->saveOneTimeToken([
+			'token' => hash('sha256', $token),
+			'usr' => $userId,
+		])->run();
+
+		return $token;
 	}
 
 	protected function getUserOrNull(?array $data): ?User

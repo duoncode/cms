@@ -81,6 +81,7 @@ class Routes
 	{
 		$api->get('/me', [Auth::class, 'me'], 'auth.user');
 		$api->post('/login', [Auth::class, 'login'], 'auth.login');
+		$api->get('/login/token', [Auth::class, 'token'], 'auth.token');
 		$api->post('/logout', [Auth::class, 'logout'], 'auth.logout');
 	}
 
@@ -125,4 +126,3 @@ class Routes
 		);
 	}
 }
-
