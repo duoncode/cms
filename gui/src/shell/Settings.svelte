@@ -77,6 +77,10 @@
 					subtitle={_('Versteckte Seiten werden in Auflistungen ignoriert.')}
 					bind:value={node.hidden} />
 			</div>
+			<div class="mt-4 flex flex-row">
+				<div class="label">{_('Internal Document-ID')}:</div>
+				<div class="value pl-4">{node.uid}</div>
+			</div>
 		</div>
 	{/if}
 </div>
