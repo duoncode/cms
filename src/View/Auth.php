@@ -83,16 +83,10 @@ class Auth
 		return $this->unauthorized($response, _('No or invalid auth token provided'), 'token');
 	}
 
-	public function token(Request $request): Response
+	public function token(): Response
 	{
 		$response = Response::create($this->factory);
-
-		$authToken = '';
-		$bearer = $request->header('Authentication');
-
-		if (preg_match('/Bearer\s(\S+)/', $bearer, $matches)) {
-			$authToken = $matches[1];
-		}
+		$authToken = $this->auth->getAuthToken();
 
 		if (!$authToken) {
 			return $this->unauthorized($response, _('No auth token provided'), 'token');

@@ -15,13 +15,17 @@ class Auth
 		protected Request $request,
 		protected Users $users,
 		protected Config $config,
-		protected Session $session,
+		protected ?Session $session = null,
 	) {}
 
 	public function logout(): void
 	{
+		if (!$this->session) {
+			return;
+		}
+
 		$session = $this->session;
-		$hash = $this->getTokenHash();
+		$hash = $this->getSessionTokenHash();
 
 		if ($hash) {
 			$this->users->forget($hash);
@@ -74,7 +78,7 @@ class Auth
 	public function getOneTimeToken(
 		string $token,
 	): string|false {
-		$user = $this->users->byAuthToken(hash('sha256', $token));
+		$user = $this->users->byAuthToken($token);
 
 		if (!$user) {
 			return false;
@@ -91,22 +95,18 @@ class Auth
 
 	public function user(): ?User
 	{
-		static $user = false;
-
-		if ($user !== false) {
-			return $user;
+		if (!$this->session) {
+			return $this->userFromToken();
 		}
 
 		// Verify if user is logged in via cookie session
 		$userId = $this->session->authenticatedUserId();
 
 		if ($userId) {
-			$user = $this->users->byId($userId);
-
-			return $user;
+			return $this->users->byId($userId);
 		}
 
-		$hash = $this->getTokenHash();
+		$hash = $this->getSessionTokenHash();
 
 		if ($hash) {
 			$user = $this->users->bySession($hash);
@@ -118,9 +118,18 @@ class Auth
 			}
 		}
 
-		$user = null; // set static var
+		return null;
+	}
 
-		return $user;
+	protected function userFromToken(): ?User
+	{
+		$authToken = self::getAuthToken($this->request);
+
+		if ($authToken) {
+			return $this->users->byAuthToken($authToken);
+		}
+
+		return null;
 	}
 
 	public function permissions(): array
@@ -132,6 +141,18 @@ class Auth
 		}
 
 		return $user->permissions();
+	}
+
+	public function getAuthToken(): string
+	{
+		$authToken = '';
+		$bearer = $this->request->getHeaderLine('Authentication');
+
+		if (preg_match('/Bearer\s(\S+)/', $bearer, $matches)) {
+			$authToken = $matches[1];
+		}
+
+		return $authToken;
 	}
 
 	protected function remember(int $userId): RememberDetails
@@ -182,7 +203,7 @@ class Auth
 		}
 	}
 
-	protected function getTokenHash(): ?string
+	protected function getSessionTokenHash(): ?string
 	{
 		$token = $this->session->getAuthToken();
 

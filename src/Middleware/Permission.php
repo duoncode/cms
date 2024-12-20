@@ -28,10 +28,6 @@ class Permission implements Middleware
 	{
 		$session = $request->getAttribute('session', null);
 
-		if (!$session) {
-			throw new HttpUnauthorized($request);
-		}
-
 		$auth = new Auth(
 			$request,
 			$this->users,

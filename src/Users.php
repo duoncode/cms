@@ -20,7 +20,7 @@ class Users
 	public function byAuthToken(string $token): ?User
 	{
 		return $this->getUserOrNull($this->db->users->get([
-			'token' => $token,
+			'token' => hash('sha256', $token),
 		])->one());
 	}
 
