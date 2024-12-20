@@ -22,6 +22,7 @@ class Routes
 {
 	protected string $panelPath;
 	protected string $apiPath;
+	protected string $panelApiPath;
 	protected InitRequest $initRequestMiddlware;
 
 	public function __construct(
@@ -31,7 +32,8 @@ class Routes
 		protected bool $sessionEnabled,
 	) {
 		$this->panelPath = $config->get('panel.prefix');
-		$this->apiPath = $this->panelPath . '/api';
+		$this->apiPath = '/api';
+		$this->panelApiPath = $this->panelPath . $this->apiPath;
 		$this->initRequestMiddlware = new InitRequest($config);
 	}
 
@@ -43,6 +45,7 @@ class Routes
 		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
 		// All API routes
+		$this->addApi($app);
 		$this->addPanelApi($app, $session);
 
 		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall');
@@ -99,20 +102,35 @@ class Routes
 
 	protected function addSystem(Group $api): void
 	{
-		$api->get('/boot', [Panel::class, 'boot'], 'cms.boot');
-		$api->get('/collections', [Panel::class, 'collections'], 'cms.collections');
-		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'cms.collection');
-		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.get');
-		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.put');
-		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'cms.node.delet');
-		$api->post('/node/{type}', [Panel::class, 'createNode'], 'cms.node.create');
-		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'cms.blueprint');
+		$api->get('/boot', [Panel::class, 'boot'], 'boot');
+		$api->get('/collections', [Panel::class, 'collections'], 'collections');
+		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
+		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.get');
+		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.put');
+		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.delet');
+		$api->post('/node/{type}', [Panel::class, 'createNode'], 'node.create');
+		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'blueprint');
+	}
+
+	protected function addApi(App $app): void
+	{
+		$app->group(
+			$this->apiPath,
+			function (Group $api) {
+				$api->after(new JsonRenderer($this->factory));
+
+				$this->addAuth($api);
+				$this->addUser($api);
+				$this->addSystem($api);
+			},
+			'cms.api.',
+		);
 	}
 
 	protected function addPanelApi(App $app, Session $session): void
 	{
 		$app->group(
-			$this->apiPath,
+			$this->panelApiPath,
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
 
@@ -124,7 +142,7 @@ class Routes
 				$this->addUser($api);
 				$this->addSystem($api);
 			},
-			'cms.panel.',
+			'cms.panel.api.',
 		);
 	}
 }
