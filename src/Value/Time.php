@@ -8,7 +8,7 @@ use IntlDateFormatter;
 
 class Time extends DateTime
 {
-	public const FORMAT = 'H:i:s';
+	public const FORMAT = 'H:i';
 
 	public function localize(
 		int $dateFormat = IntlDateFormatter::NONE,
