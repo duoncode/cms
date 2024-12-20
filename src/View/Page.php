@@ -40,10 +40,10 @@ class Page
 				$path = Path::inside($config->get('path.public'), $path);
 
 				return Response::create($this->factory)->file($path);
-			} catch (RuntimeException) {
+			} catch (RuntimeException $e) {
 				$this->redirectIfExists($context, $path);
 
-				throw new HttpNotFound($request);
+				throw new HttpNotFound($request, previous: $e);
 			}
 		}
 

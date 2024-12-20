@@ -46,11 +46,7 @@ trait RendersTemplate
 		} catch (NotFoundException) {
 			return parent::render();
 		} catch (Throwable $e) {
-			if ($this->config->debug()) {
-				throw $e;
-			}
-
-			throw new HttpBadRequest($this->request);
+			throw new HttpBadRequest($this->request, previous: $e);
 		}
 	}
 }
