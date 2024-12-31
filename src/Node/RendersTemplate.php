@@ -45,8 +45,6 @@ trait RendersTemplate
 			);
 		} catch (NotFoundException) {
 			return parent::render();
-		} catch (Throwable $e) {
-			throw new HttpBadRequest($this->request, previous: $e);
 		}
 	}
 }
