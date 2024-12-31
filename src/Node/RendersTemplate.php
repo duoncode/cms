@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace FiveOrbs\Cms\Node;
 
 use FiveOrbs\Cms\Renderer;
-use FiveOrbs\Core\Exception\HttpBadRequest;
 use FiveOrbs\Core\Response;
 use FiveOrbs\Registry\Exception\NotFoundException;
-use Throwable;
 
 trait RendersTemplate
 {
