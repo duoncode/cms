@@ -2,343 +2,397 @@
 
 declare(strict_types=1);
 
+namespace FiveOrbs\Cms\Tests;
+
 use FiveOrbs\Cms\Exception\ParserException;
 use FiveOrbs\Cms\Finder\QueryLexer;
 use FiveOrbs\Cms\Tests\Setup\TestCase;
-
-uses(TestCase::class);
 
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |' .
 	'(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | ' .
 	' path !~~ \'url\' &field4 ~~\'%str%\' & field5 ~* "(a|b)" & field6 !~* "(a|b)" | ' .
 	' field7 ~~* /%abc%/ | field8 !~~* /%a\\/bc/)';
 
-test('Simple query', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = test');
+final class QueryLexerTest extends TestCase
+{
+	public function testSimpleQuery(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = test');
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('Field');
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('Field', $tokens[2]->type->name);
+	}
 
-test('Simple query with single quote string', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens("field = 'test'");
+	public function testSimpleQueryWithSingleQuoteString(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens("field = 'test'");
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+	}
 
-test('Simple query with double quote string', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = "test"');
+	public function testSimpleQueryWithDoubleQuoteString(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = "test"');
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+	}
 
-test('Simple query with pattern string', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = /test/');
+	public function testSimpleQueryWithPatternString(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = /test/');
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+	}
 
-test('Simple query with single quote string and escape', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens("field = '\"test\"\\'st/r\\ing\\'test'");
+	public function testSimpleQueryWithSingleQuoteStringAndEscape(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens("field = '\"test\"\\'st/r\\ing\\'test'");
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-	expect($tokens[2]->lexeme)->toBe('"test"\'st/r\\ing\'test');
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+		$this->assertSame('"test"\'st/r\\ing\'test', $tokens[2]->lexeme);
+	}
 
-test('Simple query with double quote string and escape', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = "\'test\'\\"str\\ing\\"test"');
+	public function testSimpleQueryWithDoubleQuoteStringAndEscape(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = "\'test\'\\"str\\ing\\"test"');
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-	expect($tokens[2]->lexeme)->toBe("'test'\"str\\ing\"test");
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+		$this->assertSame("'test'\"str\\ing\"test", $tokens[2]->lexeme);
+	}
 
-test('Simple query with pattern string and escape', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = /\'test\'\\/st"r\\i"ng\\/test/');
+	public function testSimpleQueryWithPatternStringAndEscape(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = /\'test\'\\/st"r\\i"ng\\/test/');
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
-	expect($tokens[2]->lexeme)->toBe("'test'/st\"r\\i\"ng/test");
-});
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
+		$this->assertSame("'test'/st\"r\\i\"ng/test", $tokens[2]->lexeme);
+	}
 
-test('Simple query with special character in identifier', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens(
-		'field.* = "test" | field.? = "test" | field.*.test = 1 | field.?.test = 1',
-	);
+	public function testSimpleQueryWithSpecialCharacterInIdentifier(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens(
+			'field.* = "test" | field.? = "test" | field.*.test = 1 | field.?.test = 1',
+		);
 
-	expect($tokens[0]->lexeme)->toBe('field.*');
-	expect($tokens[4]->lexeme)->toBe('field.?');
-	expect($tokens[8]->lexeme)->toBe('field.*.test');
-	expect($tokens[12]->lexeme)->toBe('field.?.test');
-});
+		$this->assertSame('field.*', $tokens[0]->lexeme);
+		$this->assertSame('field.?', $tokens[4]->lexeme);
+		$this->assertSame('field.*.test', $tokens[8]->lexeme);
+		$this->assertSame('field.?.test', $tokens[12]->lexeme);
+	}
 
-test('Invalid dot I', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field. = "test"');
-})->throws(ParserException::class, 'Invalid use of dot');
+	public function testInvalidDot1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid use of dot');
 
-test('Invalid dot II', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field..test = "test"');
-})->throws(ParserException::class, 'Invalid use of dot');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field. = "test"');
+	}
 
-test('Invalid dot III', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('.field = "test"');
-})->throws(ParserException::class, 'Syntax error');
+	public function testInvalidDot2(): void
+	{
+		$this->throws(ParserException::class, 'Invalid use of dot');
 
-test('Invalid special char I', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field.*h = "test"');
-})->throws(ParserException::class, 'Invalid use of special');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field..test = "test"');
+	}
 
-test('Invalid special char II', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field.h* = "test"');
-})->throws(ParserException::class, 'Syntax error');
+	public function testInvalidDot3(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-test('Invalid special char III', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field.?h = "test"');
-})->throws(ParserException::class, 'Invalid use of special');
+		$lexer = new QueryLexer();
+		$lexer->tokens('.field = "test"');
+	}
 
-test('Invalid special char IV', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field.h? = "test"');
-})->throws(ParserException::class, 'Syntax error');
+	public function testInvalidSpecialChar1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid use of special');
 
-test('Invalid special char V', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('fiel?d = "test"');
-})->throws(ParserException::class, 'Syntax error');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field.*h = "test"');
+	}
 
-test('Unterminated string', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field = "test');
-})->throws(ParserException::class, 'Unterminated string');
+	public function testInvalidSpecialChar2(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-test('Invalid operator', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field !- test');
-})->throws(ParserException::class, 'Invalid operator');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field.h* = "test"');
+	}
 
-test('Syntax error', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field # test');
-})->throws(ParserException::class, 'Syntax error');
+	public function testInvalidSpecialChar3(): void
+	{
+		$this->throws(ParserException::class, 'Invalid use of special');
 
-test('Invalid number', function () {
-	$lexer = new QueryLexer();
-	$lexer->tokens('field = 10.');
-})->throws(ParserException::class, 'Invalid number');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field.?h = "test"');
+	}
 
-test('Syntax error (special case minus)', function () {
-	// We need to test minus separately as a minus starts
-	// the number parser.
-	$lexer = new QueryLexer();
-	$lexer->tokens('field - test');
-})->throws(ParserException::class, 'Syntax error');
+	public function testInvalidSpecialChar4(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-test('And with grouped or query', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('field = "test" & (name.de = "test" | name.en = "test") ');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field.h? = "test"');
+	}
 
-	expect($tokens[0]->type->name)->toBe('Field');
-	expect($tokens[1]->type->name)->toBe('Equal');
-	expect($tokens[2]->type->name)->toBe('String');
+	public function testInvalidSpecialChar5(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-	expect($tokens[3]->type->name)->toBe('And');
+		$lexer = new QueryLexer();
+		$lexer->tokens('fiel?d = "test"');
+	}
 
-	expect($tokens[4]->type->name)->toBe('LeftParen');
+	public function testUnterminatedString(): void
+	{
+		$this->throws(ParserException::class, 'Unterminated string');
 
-	expect($tokens[5]->type->name)->toBe('Field');
-	expect($tokens[6]->type->name)->toBe('Equal');
-	expect($tokens[7]->type->name)->toBe('String');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field = "test');
+	}
 
-	expect($tokens[8]->type->name)->toBe('Or');
+	public function testInvalidOperator(): void
+	{
+		$this->throws(ParserException::class, 'Invalid operator');
 
-	expect($tokens[9]->type->name)->toBe('Field');
-	expect($tokens[10]->type->name)->toBe('Equal');
-	expect($tokens[11]->type->name)->toBe('String');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field !- test');
+	}
 
-	expect($tokens[12]->type->name)->toBe('RightParen');
-});
+	public function testSyntaxError(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-test('More nesting', function () {
-	$lexer = new QueryLexer();
-	$tokens = $lexer->tokens('(field = "test" & ((name.de = "test") | name.en = "test"))');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field # test');
+	}
 
-	expect($tokens[0]->type->name)->toBe('LeftParen');
+	public function testInvalidNumber(): void
+	{
+		$this->throws(ParserException::class, 'Invalid number');
 
-	expect($tokens[1]->type->name)->toBe('Field');
-	expect($tokens[2]->type->name)->toBe('Equal');
-	expect($tokens[3]->type->name)->toBe('String');
+		$lexer = new QueryLexer();
+		$lexer->tokens('field = 10.');
+	}
 
-	expect($tokens[4]->type->name)->toBe('And');
+	public function testSyntaxErrorSpecialCaseMinus(): void
+	{
+		$this->throws(ParserException::class, 'Syntax error');
 
-	expect($tokens[5]->type->name)->toBe('LeftParen');
-	expect($tokens[6]->type->name)->toBe('LeftParen');
+		// We need to test minus separately as a minus starts
+		// the number parser.
+		$lexer = new QueryLexer();
+		$lexer->tokens('field - test');
+	}
 
-	expect($tokens[7]->type->name)->toBe('Field');
-	expect($tokens[8]->type->name)->toBe('Equal');
-	expect($tokens[9]->type->name)->toBe('String');
-	expect($tokens[10]->type->name)->toBe('RightParen');
+	public function testAndWithGroupedOrQuery(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field = "test" & (name.de = "test" | name.en = "test") ');
 
-	expect($tokens[11]->type->name)->toBe('Or');
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('Equal', $tokens[1]->type->name);
+		$this->assertSame('String', $tokens[2]->type->name);
 
-	expect($tokens[12]->type->name)->toBe('Field');
-	expect($tokens[13]->type->name)->toBe('Equal');
-	expect($tokens[14]->type->name)->toBe('String');
+		$this->assertSame('And', $tokens[3]->type->name);
 
-	expect($tokens[15]->type->name)->toBe('RightParen');
-	expect($tokens[16]->type->name)->toBe('RightParen');
-});
+		$this->assertSame('LeftParen', $tokens[4]->type->name);
 
-test('Token groups', function () {
-	$lexer = new QueryLexer(['builtin1', 'builtin2', 'builtin3']);
-	$tokens = $lexer->tokens(QUERY_ALL_ELEMENTS);
+		$this->assertSame('Field', $tokens[5]->type->name);
+		$this->assertSame('Equal', $tokens[6]->type->name);
+		$this->assertSame('String', $tokens[7]->type->name);
 
-	expect($tokens[0]->group->name)->toBe('LeftParen');
-	expect($tokens[1]->group->name)->toBe('Operand');
-	expect($tokens[2]->group->name)->toBe('Operator');
-	expect($tokens[3]->group->name)->toBe('Operand');
-	expect($tokens[4]->group->name)->toBe('BooleanOperator');
-	expect($tokens[5]->group->name)->toBe('Operand');
-	expect($tokens[6]->group->name)->toBe('Operator');
-	expect($tokens[7]->group->name)->toBe('Operand');
-	expect($tokens[8]->group->name)->toBe('BooleanOperator');
-	expect($tokens[9]->group->name)->toBe('Operand');
-	expect($tokens[10]->group->name)->toBe('Operator');
-	expect($tokens[11]->group->name)->toBe('Operand');
-	expect($tokens[12]->group->name)->toBe('BooleanOperator');
-	expect($tokens[13]->group->name)->toBe('Operand');
-	expect($tokens[14]->group->name)->toBe('Operator');
-	expect($tokens[15]->group->name)->toBe('Operand');
-	expect($tokens[16]->group->name)->toBe('RightParen');
-	expect($tokens[17]->group->name)->toBe('BooleanOperator');
-	expect($tokens[18]->group->name)->toBe('LeftParen');
-	expect($tokens[19]->group->name)->toBe('Operand');
-	expect($tokens[20]->group->name)->toBe('Operator');
-	expect($tokens[21]->group->name)->toBe('Operand');
-	expect($tokens[22]->group->name)->toBe('BooleanOperator');
-	expect($tokens[23]->group->name)->toBe('Operand');
-	expect($tokens[24]->group->name)->toBe('Operator');
-	expect($tokens[25]->group->name)->toBe('Operand');
-	expect($tokens[26]->group->name)->toBe('BooleanOperator');
-	expect($tokens[27]->group->name)->toBe('Operand');
-	expect($tokens[28]->group->name)->toBe('Operator');
-	expect($tokens[29]->group->name)->toBe('Operand');
-	expect($tokens[30]->group->name)->toBe('BooleanOperator');
-	expect($tokens[31]->group->name)->toBe('Operand');
-	expect($tokens[32]->group->name)->toBe('Operator');
-	expect($tokens[33]->group->name)->toBe('Operand');
-	expect($tokens[34]->group->name)->toBe('BooleanOperator');
-	expect($tokens[35]->group->name)->toBe('Operand');
-	expect($tokens[36]->group->name)->toBe('Operator');
-	expect($tokens[37]->group->name)->toBe('Operand');
-	expect($tokens[38]->group->name)->toBe('BooleanOperator');
-	expect($tokens[39]->group->name)->toBe('Operand');
-	expect($tokens[40]->group->name)->toBe('Operator');
-	expect($tokens[41]->group->name)->toBe('Operand');
-	expect($tokens[42]->group->name)->toBe('BooleanOperator');
-	expect($tokens[43]->group->name)->toBe('Operand');
-	expect($tokens[44]->group->name)->toBe('Operator');
-	expect($tokens[45]->group->name)->toBe('Operand');
-	expect($tokens[46]->group->name)->toBe('BooleanOperator');
-	expect($tokens[47]->group->name)->toBe('Operand');
-	expect($tokens[48]->group->name)->toBe('Operator');
-	expect($tokens[49]->group->name)->toBe('Operand');
-	expect($tokens[50]->group->name)->toBe('BooleanOperator');
-	expect($tokens[51]->group->name)->toBe('Operand');
-	expect($tokens[52]->group->name)->toBe('Operator');
-	expect($tokens[53]->group->name)->toBe('Operand');
-	expect($tokens[54]->group->name)->toBe('BooleanOperator');
-	expect($tokens[55]->group->name)->toBe('Operand');
-	expect($tokens[56]->group->name)->toBe('Operator');
-	expect($tokens[57]->group->name)->toBe('Operand');
-	expect($tokens[58]->group->name)->toBe('RightParen');
-});
+		$this->assertSame('Or', $tokens[8]->type->name);
 
-test('Token types', function () {
-	$lexer = new QueryLexer(['builtin1', 'builtin2', 'builtin3']);
-	$tokens = $lexer->tokens(QUERY_ALL_ELEMENTS);
+		$this->assertSame('Field', $tokens[9]->type->name);
+		$this->assertSame('Equal', $tokens[10]->type->name);
+		$this->assertSame('String', $tokens[11]->type->name);
 
-	expect($tokens[0]->type->name)->toBe('LeftParen');
-	expect($tokens[1]->type->name)->toBe('Boolean');
-	expect($tokens[2]->type->name)->toBe('Equal');
-	expect($tokens[3]->type->name)->toBe('Field');
-	expect($tokens[4]->type->name)->toBe('And');
-	expect($tokens[5]->type->name)->toBe('Builtin');
-	expect($tokens[6]->type->name)->toBe('Greater');
-	expect($tokens[7]->type->name)->toBe('Keyword');
-	expect($tokens[8]->type->name)->toBe('And');
-	expect($tokens[9]->type->name)->toBe('Null');
-	expect($tokens[10]->type->name)->toBe('GreaterEqual');
-	expect($tokens[11]->type->name)->toBe('Number');
-	expect($tokens[12]->type->name)->toBe('And');
-	expect($tokens[13]->type->name)->toBe('Field');
-	expect($tokens[14]->type->name)->toBe('Less');
-	expect($tokens[15]->type->name)->toBe('String');
-	expect($tokens[16]->type->name)->toBe('RightParen');
-	expect($tokens[17]->type->name)->toBe('Or');
-	expect($tokens[18]->type->name)->toBe('LeftParen');
-	expect($tokens[19]->type->name)->toBe('Number');
-	expect($tokens[20]->type->name)->toBe('LessEqual');
-	expect($tokens[21]->type->name)->toBe('Builtin');
-	expect($tokens[22]->type->name)->toBe('Or');
-	expect($tokens[23]->type->name)->toBe('Field');
-	expect($tokens[24]->type->name)->toBe('Regex');
-	expect($tokens[25]->type->name)->toBe('String');
-	expect($tokens[26]->type->name)->toBe('Or');
-	expect($tokens[27]->type->name)->toBe('Builtin');
-	expect($tokens[28]->type->name)->toBe('NotRegex');
-	expect($tokens[29]->type->name)->toBe('String');
-	expect($tokens[30]->type->name)->toBe('Or');
-	expect($tokens[31]->type->name)->toBe('Path');
-	expect($tokens[32]->type->name)->toBe('Unequal');
-	expect($tokens[33]->type->name)->toBe('Number');
-	expect($tokens[34]->type->name)->toBe('Or');
-	expect($tokens[35]->type->name)->toBe('Path');
-	expect($tokens[36]->type->name)->toBe('Unlike');
-	expect($tokens[37]->type->name)->toBe('String');
-	expect($tokens[38]->type->name)->toBe('And');
-	expect($tokens[39]->type->name)->toBe('Field');
-	expect($tokens[40]->type->name)->toBe('Like');
-	expect($tokens[41]->type->name)->toBe('String');
-	expect($tokens[42]->type->name)->toBe('And');
-	expect($tokens[43]->type->name)->toBe('Field');
-	expect($tokens[44]->type->name)->toBe('IRegex');
-	expect($tokens[45]->type->name)->toBe('String');
-	expect($tokens[46]->type->name)->toBe('And');
-	expect($tokens[47]->type->name)->toBe('Field');
-	expect($tokens[48]->type->name)->toBe('INotRegex');
-	expect($tokens[49]->type->name)->toBe('String');
-	expect($tokens[50]->type->name)->toBe('Or');
-	expect($tokens[51]->type->name)->toBe('Field');
-	expect($tokens[52]->type->name)->toBe('ILike');
-	expect($tokens[53]->type->name)->toBe('String');
-	expect($tokens[54]->type->name)->toBe('Or');
-	expect($tokens[55]->type->name)->toBe('Field');
-	expect($tokens[56]->type->name)->toBe('IUnlike');
-	expect($tokens[57]->type->name)->toBe('String');
-	expect($tokens[58]->type->name)->toBe('RightParen');
-});
+		$this->assertSame('RightParen', $tokens[12]->type->name);
+	}
+
+	public function testMoreNesting(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('(field = "test" & ((name.de = "test") | name.en = "test"))');
+
+		$this->assertSame('LeftParen', $tokens[0]->type->name);
+
+		$this->assertSame('Field', $tokens[1]->type->name);
+		$this->assertSame('Equal', $tokens[2]->type->name);
+		$this->assertSame('String', $tokens[3]->type->name);
+
+		$this->assertSame('And', $tokens[4]->type->name);
+
+		$this->assertSame('LeftParen', $tokens[5]->type->name);
+		$this->assertSame('LeftParen', $tokens[6]->type->name);
+
+		$this->assertSame('Field', $tokens[7]->type->name);
+		$this->assertSame('Equal', $tokens[8]->type->name);
+		$this->assertSame('String', $tokens[9]->type->name);
+		$this->assertSame('RightParen', $tokens[10]->type->name);
+
+		$this->assertSame('Or', $tokens[11]->type->name);
+
+		$this->assertSame('Field', $tokens[12]->type->name);
+		$this->assertSame('Equal', $tokens[13]->type->name);
+		$this->assertSame('String', $tokens[14]->type->name);
+
+		$this->assertSame('RightParen', $tokens[15]->type->name);
+		$this->assertSame('RightParen', $tokens[16]->type->name);
+	}
+
+	public function testTokenGroups(): void
+	{
+		$lexer = new QueryLexer(['builtin1', 'builtin2', 'builtin3']);
+		$tokens = $lexer->tokens(QUERY_ALL_ELEMENTS);
+
+		$this->assertSame('LeftParen', $tokens[0]->group->name);
+		$this->assertSame('Operand', $tokens[1]->group->name);
+		$this->assertSame('Operator', $tokens[2]->group->name);
+		$this->assertSame('Operand', $tokens[3]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[4]->group->name);
+		$this->assertSame('Operand', $tokens[5]->group->name);
+		$this->assertSame('Operator', $tokens[6]->group->name);
+		$this->assertSame('Operand', $tokens[7]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[8]->group->name);
+		$this->assertSame('Operand', $tokens[9]->group->name);
+		$this->assertSame('Operator', $tokens[10]->group->name);
+		$this->assertSame('Operand', $tokens[11]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[12]->group->name);
+		$this->assertSame('Operand', $tokens[13]->group->name);
+		$this->assertSame('Operator', $tokens[14]->group->name);
+		$this->assertSame('Operand', $tokens[15]->group->name);
+		$this->assertSame('RightParen', $tokens[16]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[17]->group->name);
+		$this->assertSame('LeftParen', $tokens[18]->group->name);
+		$this->assertSame('Operand', $tokens[19]->group->name);
+		$this->assertSame('Operator', $tokens[20]->group->name);
+		$this->assertSame('Operand', $tokens[21]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[22]->group->name);
+		$this->assertSame('Operand', $tokens[23]->group->name);
+		$this->assertSame('Operator', $tokens[24]->group->name);
+		$this->assertSame('Operand', $tokens[25]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[26]->group->name);
+		$this->assertSame('Operand', $tokens[27]->group->name);
+		$this->assertSame('Operator', $tokens[28]->group->name);
+		$this->assertSame('Operand', $tokens[29]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[30]->group->name);
+		$this->assertSame('Operand', $tokens[31]->group->name);
+		$this->assertSame('Operator', $tokens[32]->group->name);
+		$this->assertSame('Operand', $tokens[33]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[34]->group->name);
+		$this->assertSame('Operand', $tokens[35]->group->name);
+		$this->assertSame('Operator', $tokens[36]->group->name);
+		$this->assertSame('Operand', $tokens[37]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[38]->group->name);
+		$this->assertSame('Operand', $tokens[39]->group->name);
+		$this->assertSame('Operator', $tokens[40]->group->name);
+		$this->assertSame('Operand', $tokens[41]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[42]->group->name);
+		$this->assertSame('Operand', $tokens[43]->group->name);
+		$this->assertSame('Operator', $tokens[44]->group->name);
+		$this->assertSame('Operand', $tokens[45]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[46]->group->name);
+		$this->assertSame('Operand', $tokens[47]->group->name);
+		$this->assertSame('Operator', $tokens[48]->group->name);
+		$this->assertSame('Operand', $tokens[49]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[50]->group->name);
+		$this->assertSame('Operand', $tokens[51]->group->name);
+		$this->assertSame('Operator', $tokens[52]->group->name);
+		$this->assertSame('Operand', $tokens[53]->group->name);
+		$this->assertSame('BooleanOperator', $tokens[54]->group->name);
+		$this->assertSame('Operand', $tokens[55]->group->name);
+		$this->assertSame('Operator', $tokens[56]->group->name);
+		$this->assertSame('Operand', $tokens[57]->group->name);
+		$this->assertSame('RightParen', $tokens[58]->group->name);
+	}
+
+	public function testTokenTypes(): void
+	{
+		$lexer = new QueryLexer(['builtin1', 'builtin2', 'builtin3']);
+		$tokens = $lexer->tokens(QUERY_ALL_ELEMENTS);
+
+		$this->assertSame('LeftParen', $tokens[0]->type->name);
+		$this->assertSame('Boolean', $tokens[1]->type->name);
+		$this->assertSame('Equal', $tokens[2]->type->name);
+		$this->assertSame('Field', $tokens[3]->type->name);
+		$this->assertSame('And', $tokens[4]->type->name);
+		$this->assertSame('Builtin', $tokens[5]->type->name);
+		$this->assertSame('Greater', $tokens[6]->type->name);
+		$this->assertSame('Keyword', $tokens[7]->type->name);
+		$this->assertSame('And', $tokens[8]->type->name);
+		$this->assertSame('Null', $tokens[9]->type->name);
+		$this->assertSame('GreaterEqual', $tokens[10]->type->name);
+		$this->assertSame('Number', $tokens[11]->type->name);
+		$this->assertSame('And', $tokens[12]->type->name);
+		$this->assertSame('Field', $tokens[13]->type->name);
+		$this->assertSame('Less', $tokens[14]->type->name);
+		$this->assertSame('String', $tokens[15]->type->name);
+		$this->assertSame('RightParen', $tokens[16]->type->name);
+		$this->assertSame('Or', $tokens[17]->type->name);
+		$this->assertSame('LeftParen', $tokens[18]->type->name);
+		$this->assertSame('Number', $tokens[19]->type->name);
+		$this->assertSame('LessEqual', $tokens[20]->type->name);
+		$this->assertSame('Builtin', $tokens[21]->type->name);
+		$this->assertSame('Or', $tokens[22]->type->name);
+		$this->assertSame('Field', $tokens[23]->type->name);
+		$this->assertSame('Regex', $tokens[24]->type->name);
+		$this->assertSame('String', $tokens[25]->type->name);
+		$this->assertSame('Or', $tokens[26]->type->name);
+		$this->assertSame('Builtin', $tokens[27]->type->name);
+		$this->assertSame('NotRegex', $tokens[28]->type->name);
+		$this->assertSame('String', $tokens[29]->type->name);
+		$this->assertSame('Or', $tokens[30]->type->name);
+		$this->assertSame('Path', $tokens[31]->type->name);
+		$this->assertSame('Unequal', $tokens[32]->type->name);
+		$this->assertSame('Number', $tokens[33]->type->name);
+		$this->assertSame('Or', $tokens[34]->type->name);
+		$this->assertSame('Path', $tokens[35]->type->name);
+		$this->assertSame('Unlike', $tokens[36]->type->name);
+		$this->assertSame('String', $tokens[37]->type->name);
+		$this->assertSame('And', $tokens[38]->type->name);
+		$this->assertSame('Field', $tokens[39]->type->name);
+		$this->assertSame('Like', $tokens[40]->type->name);
+		$this->assertSame('String', $tokens[41]->type->name);
+		$this->assertSame('And', $tokens[42]->type->name);
+		$this->assertSame('Field', $tokens[43]->type->name);
+		$this->assertSame('IRegex', $tokens[44]->type->name);
+		$this->assertSame('String', $tokens[45]->type->name);
+		$this->assertSame('And', $tokens[46]->type->name);
+		$this->assertSame('Field', $tokens[47]->type->name);
+		$this->assertSame('INotRegex', $tokens[48]->type->name);
+		$this->assertSame('String', $tokens[49]->type->name);
+		$this->assertSame('Or', $tokens[50]->type->name);
+		$this->assertSame('Field', $tokens[51]->type->name);
+		$this->assertSame('ILike', $tokens[52]->type->name);
+		$this->assertSame('String', $tokens[53]->type->name);
+		$this->assertSame('Or', $tokens[54]->type->name);
+		$this->assertSame('Field', $tokens[55]->type->name);
+		$this->assertSame('IUnlike', $tokens[56]->type->name);
+		$this->assertSame('String', $tokens[57]->type->name);
+		$this->assertSame('RightParen', $tokens[58]->type->name);
+	}
+}
