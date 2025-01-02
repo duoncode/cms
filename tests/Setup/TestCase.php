@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace FiveOrbs\Cms\Tests\Setup;
 
 use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Exception\ValueError;
+use FiveOrbs\Cms\Locales;
+use FiveOrbs\Core\Factory;
+use FiveOrbs\Core\Factory\Nyholm;
 use FiveOrbs\Core\Request;
 use FiveOrbs\Quma\Connection;
 use FiveOrbs\Quma\Database;
 use FiveOrbs\Registry\Registry;
-use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequest;
+use ValueError;
 
 /**
  * @internal
@@ -99,24 +101,6 @@ class TestCase extends BaseTestCase
 	{
 		$config = new Config('fiveorbs', debug: $debug, settings: $settings);
 
-		$config->locale(
-			'en',
-			title: 'English',
-			domains: ['www.example.com'],
-		);
-		$config->locale(
-			'de',
-			title: 'Deutsch',
-			domains: ['www.example.de'],
-			fallback: 'en',
-		);
-		$config->locale(
-			'it',
-			domains: ['www.example.it'],
-			title: 'Italiano',
-			fallback: 'en',
-		);
-
 		return $config;
 	}
 
@@ -185,17 +169,34 @@ class TestCase extends BaseTestCase
 
 	public function psrRequest(string $localeId = 'en'): PsrServerRequest
 	{
-		$factory = new Psr17Factory();
-		$creator = new \Nyholm\Psr7Server\ServerRequestCreator(
-			$factory, // ServerRequestFactory
-			$factory, // UriFactory
-			$factory, // UploadedFileFactory
-			$factory,  // StreamFactory
+		$request = $this->factory()->serverRequest();
+		$locales = new Locales();
+		$locales->add(
+			'en',
+			title: 'English',
+			domains: ['www.example.com'],
 		);
-		$request = $creator->fromGlobals();
-		$locale = $this->config()->locales()->get($localeId);
+		$locales->add(
+			'de',
+			title: 'Deutsch',
+			domains: ['www.example.de'],
+			fallback: 'en',
+		);
+		$locales->add(
+			'it',
+			domains: ['www.example.it'],
+			title: 'Italiano',
+			fallback: 'en',
+		);
 
-		return $request->withAttribute('locale', $locale);
+		return $request
+			->withAttribute('locales', $locales)
+			->withAttribute('locale', $locales->get($localeId));
+	}
+
+	public function factory(): Factory
+	{
+		return new Nyholm();
 	}
 
 	public function fullTrim(string $text): string
