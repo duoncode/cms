@@ -11,14 +11,14 @@ Settings
 
 Test database:
 
-    CREATE DATABASE fiveorbs_db WITH TEMPLATE = template0 ENCODING = 'UTF8';
-    CREATE USER fiveorbs_user PASSWORD 'fiveorbs_password';
-    GRANT ALL PRIVILEGES ON DATABASE fiveorbs_db TO fiveorbs_user;
-    ALTER DATABASE fiveorbs_db OWNER TO fiveorbs_user;
+    CREATE DATABASE fiveorbs_cms_test_db WITH TEMPLATE = template0 ENCODING = 'UTF8';
+	CREATE USER fiveorbs_cms_test_user PASSWORD 'fiveorbs_cms_test_password';
+	GRANT ALL PRIVILEGES ON DATABASE fiveorbs_cms_test_db TO fiveorbs_cms_test_user;
+	ALTER DATABASE fiveorbs_cms_test_db OWNER TO fiveorbs_cms_test_user;
 
 to allow recreation via command RecreateDb:
 
-    ALTER USER fiveorbs_user SUPERUSER;
+	ALTER USER fiveorbs_cms_test_user SUPERUSER;
 
 System Requirements:
 
