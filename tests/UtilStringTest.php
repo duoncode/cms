@@ -2,18 +2,25 @@
 
 declare(strict_types=1);
 
+namespace FiveOrbs\Cms\Tests;
+
+use FiveOrbs\Cms\Tests\Setup\TestCase;
 use FiveOrbs\Cms\Util\Strings;
 
-test('String entropy', function () {
-	$lower = Strings::entropy('spirit crusher');
-	$upper = Strings::entropy('SPIRIT CRUSHER');
-	$mixed = Strings::entropy('Spirit Crusher');
+final class UtilStringTest extends TestCase
+{
+	public function testStringEntropy(): void
+	{
+		$lower = Strings::entropy('spirit crusher');
+		$upper = Strings::entropy('SPIRIT CRUSHER');
+		$mixed = Strings::entropy('Spirit Crusher');
 
-	expect($lower)->toBe($upper);
-	expect($lower)->toBeLessThan($mixed);
-	expect(Strings::entropy('Correct Horse Battery Staple'))->toBeGreaterThan(100);
-	expect(Strings::entropy('evil-chuck-666'))->toBeGreaterThan(40);
-	expect(Strings::entropy('acegik'))->toBeLessThan(15);
-	expect(Strings::entropy('12345'))->toBeLessThan(10);
-	expect(Strings::entropy('1'))->toBe(0.0);
-});
+		$this->assertSame($upper, $lower);
+		$this->assertLessThan($mixed, $lower);
+		$this->assertGreaterThan(100, Strings::entropy('Correct Horse Battery Staple'));
+		$this->assertGreaterThan(40, Strings::entropy('evil-chuck-666'));
+		$this->assertLessThan(15, Strings::entropy('acegik'));
+		$this->assertLessThan(10, Strings::entropy('12345'));
+		$this->assertSame(0.0, Strings::entropy('1'));
+	}
+}
