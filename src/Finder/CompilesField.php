@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FiveOrbs\Cms\Finder;
 
+use FiveOrbs\Cms\Exception\ParserException;
+
 trait CompilesField
 {
 	private function compileField(
@@ -12,6 +14,13 @@ trait CompilesField
 		bool $asIs = false,
 	): string {
 		$parts = explode('.', $fieldName);
+
+		foreach ($parts as $part) {
+			if ($part === '') {
+				throw new ParserException('Invalid field name');
+			}
+		}
+
 		$count = count($parts);
 		$arrow = $asIs ? '->' : '->>';
 
