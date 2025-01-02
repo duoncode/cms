@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace FiveOrbs\Cms\Tests;
+
+use FiveOrbs\Cms\Context;
 use FiveOrbs\Cms\Exception\ParserException;
 use FiveOrbs\Cms\Finder\Output\Comparison;
 use FiveOrbs\Cms\Finder\Output\Exists;
@@ -12,77 +15,126 @@ use FiveOrbs\Cms\Finder\Output\UrlPath;
 use FiveOrbs\Cms\Finder\QueryParser;
 use FiveOrbs\Cms\Tests\Setup\TestCase;
 
-uses(TestCase::class);
+final class QueryParserTest extends TestCase
+{
+	protected QueryParser $parser;
 
-beforeEach(function () {
-	$this->parser = new QueryParser($this->db(), ['builtin' => 'c.builtin']);
-});
+	protected function setUp(): void
+	{
+		$this->parser = new QueryParser(new Context(
+			$this->db(),
+			$this->request(),
+			$this->config(),
+			$this->registry(),
+			$this->factory(),
+		), ['builtin' => 'c.builtin']);
+	}
 
-test('Parse query', function () {
-	$parser = new QueryParser($this->db());
-	$output = $parser->parse('builtin = 13 & field & (field ~ "%like" | path != test) & field');
+	public function testParseQuery(): void
+	{
+		$output = $this->parser->parse('builtin = 13 & field & (field ~ "%like" | path != test) & field');
 
-	expect($output[0])->toBeInstanceOf(Comparison::class);
-	expect($output[1])->toBeInstanceOf(Operator::class);
-	expect($output[2])->toBeInstanceOf(Exists::class);
-	expect($output[3])->toBeInstanceOf(Operator::class);
-	expect($output[4])->toBeInstanceOf(LeftParen::class);
-	expect($output[5])->toBeInstanceOf(Comparison::class);
-	expect($output[6])->toBeInstanceOf(Operator::class);
-	expect($output[7])->toBeInstanceOf(UrlPath::class);
-	expect($output[8])->toBeInstanceOf(RightParen::class);
-	expect($output[9])->toBeInstanceOf(Operator::class);
-	expect($output[10])->toBeInstanceOf(Exists::class);
-});
+		$this->assertInstanceOf(Comparison::class, $output[0]);
+		$this->assertInstanceOf(Operator::class, $output[1]);
+		$this->assertInstanceOf(Exists::class, $output[2]);
+		$this->assertInstanceOf(Operator::class, $output[3]);
+		$this->assertInstanceOf(LeftParen::class, $output[4]);
+		$this->assertInstanceOf(Comparison::class, $output[5]);
+		$this->assertInstanceOf(Operator::class, $output[6]);
+		$this->assertInstanceOf(UrlPath::class, $output[7]);
+		$this->assertInstanceOf(RightParen::class, $output[8]);
+		$this->assertInstanceOf(Operator::class, $output[9]);
+		$this->assertInstanceOf(Exists::class, $output[10]);
+	}
 
-test('Invalid postion for operator I', function () {
-	$this->parser->parse('( =');
-})->throws(ParserException::class, 'Invalid position for an operator');
+	public function testInvalidPostionForOperator1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid position for an operator');
 
-test('Invalid postion for operator II', function () {
-	$this->parser->parse('test = test ~');
-})->throws(ParserException::class, 'Invalid position for an operator');
+		$this->parser->parse('( =');
+	}
 
-test('Unbalanced parenthesis I', function () {
-	$this->parser->parse('((test=1)');
-})->throws(ParserException::class, 'Unbalanced parenthesis');
+	public function testInvalidPostionForOperator2(): void
+	{
+		$this->throws(ParserException::class, 'Invalid position for an operator');
 
-test('Unbalanced parenthesis II', function () {
-	$this->parser->parse('    )');
-})->throws(ParserException::class, 'Unbalanced parenthesis');
+		$this->parser->parse('test = test ~');
+	}
 
-test('Unbalanced parenthesis III', function () {
-	$this->parser->parse('(');
-})->throws(ParserException::class, 'Unbalanced parenthesis');
+	public function testUnbalancedParenthesis1(): void
+	{
+		$this->throws(ParserException::class, 'Unbalanced parenthesis');
 
-test('Invalid condition I   (position)', function () {
-	$this->parser->parse('1 = 1 1 = 1');
-})->throws(ParserException::class, 'Invalid position for a condition');
+		$this->parser->parse('((test=1)');
+	}
 
-test('Invalid condition II  (multiple operators)', function () {
-	$this->parser->parse('1 = 1 | 1 == 1');
-})->throws(ParserException::class, 'Multiple operators');
+	public function testUnbalancedParenthesis2(): void
+	{
+		$this->throws(ParserException::class, 'Unbalanced parenthesis');
 
-test('Invalid condition III (generally invalid)', function () {
-	$this->parser->parse('1 = 1 | 1 1 =');
-})->throws(ParserException::class, 'Invalid condition');
+		$this->parser->parse('    )');
+	}
 
-test('Invalid condition IV  (builtin in exists condition)', function () {
-	$this->parser->parse('1 = 1 | builtin');
-})->throws(ParserException::class, 'Conditions of type `field exists`');
+	public function testUnbalancedParenthesis3(): void
+	{
+		$this->throws(ParserException::class, 'Unbalanced parenthesis');
 
-test('Invalid boolean operator I', function () {
-	$this->parser->parse('field || 1 = 1');
-})->throws(ParserException::class, 'Invalid position for a boolean operator');
+		$this->parser->parse('(');
+	}
 
-test('Invalid boolean operator II', function () {
-	$this->parser->parse('1 = 1 |');
-})->throws(ParserException::class, 'Boolean operator at the end of the expression');
+	public function testInvalidCondition1Position(): void
+	{
+		$this->throws(ParserException::class, 'Invalid position for a condition');
 
-test('Invalid parenthesis I', function () {
-	$this->parser->parse('1 = 1 | ()');
-})->throws(ParserException::class, 'Invalid parenthesis: empty group');
+		$this->parser->parse('1 = 1 1 = 1');
+	}
 
-test('Invalid parenthesis II', function () {
-	$this->parser->parse('1 = 1 (1 = 1)');
-})->throws(ParserException::class, 'Invalid position for parenthesis');
+	public function testInvalidCondition2MultipleOperators(): void
+	{
+		$this->throws(ParserException::class, 'Multiple operators');
+
+		$this->parser->parse('1 = 1 | 1 == 1');
+	}
+
+	public function testInvalidCondition3GenerallyInvalid(): void
+	{
+		$this->throws(ParserException::class, 'Invalid condition');
+
+		$this->parser->parse('1 = 1 | 1 1 =');
+	}
+
+	public function testInvalidCondition4BuiltinInExistsCondition(): void
+	{
+		$this->throws(ParserException::class, 'Conditions of type `field exists`');
+
+		$this->parser->parse('1 = 1 | builtin');
+	}
+
+	public function testInvalidBooleanOperator1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid position for a boolean operator');
+
+		$this->parser->parse('field || 1 = 1');
+	}
+
+	public function testInvalidBooleanOperator2(): void
+	{
+		$this->throws(ParserException::class, 'Boolean operator at the end of the expression');
+
+		$this->parser->parse('1 = 1 |');
+	}
+
+	public function testInvalidParenthesis1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid parenthesis: empty group');
+
+		$this->parser->parse('1 = 1 | ()');
+	}
+
+	public function testInvalidParenthesis2(): void
+	{
+		$this->throws(ParserException::class, 'Invalid position for parenthesis');
+
+		$this->parser->parse('1 = 1 (1 = 1)');
+	}
+}
