@@ -21,7 +21,7 @@ final class OrderCompiler
 		$parsed = $this->parse($statement);
 
 		if (count($parsed) === 0) {
-			return '';
+			throw new ParserException('Invalid query');
 		}
 
 		$expressions = [];
@@ -57,7 +57,7 @@ final class OrderCompiler
 					'direction' => strtoupper($matches[2] ?? null ?: 'ASC'),
 				];
 			} else {
-				throw new ParserException('Invalid query');
+				throw new ParserException('Invalid order by clause');
 			}
 		}
 

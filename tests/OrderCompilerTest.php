@@ -2,97 +2,155 @@
 
 declare(strict_types=1);
 
+namespace FiveOrbs\Cms\Tests;
+
 use FiveOrbs\Cms\Exception\ParserException;
 use FiveOrbs\Cms\Finder\OrderCompiler;
 use FiveOrbs\Cms\Tests\Setup\TestCase;
 
-uses(TestCase::class);
+const OB = "\n    ";
 
-const OB = "\nORDER BY\n    ";
+final class OrderCompilerTest extends TestCase
+{
+	public function testFailOnEmptyStatement(): void
+	{
+		$this->throws(ParserException::class, 'Empty order by clause');
 
-test('Fail on empty statement', function () {
-	(new OrderCompiler([]))->compile('');
-})->throws(ParserException::class, 'Empty order by clause');
+		(new OrderCompiler([]))->compile('');
+	}
 
-test('Compile simple statement', function () {
-	$oc = new OrderCompiler([]);
+	public function testCompileSimpleStatement(): void
+	{
+		$oc = new OrderCompiler([]);
 
-	expect($oc->compile('test'))->toBe(OB . "n.content->'test'->>'value' ASC");
-});
+		$this->assertSame(OB . "n.content->'test'->'value' ASC", $oc->compile('test'));
+	}
 
-test('Compile statement with builtin', function () {
-	$oc = new OrderCompiler(['field' => 'n.field']);
+	public function testCompileStatementWithBuiltin(): void
+	{
+		$oc = new OrderCompiler(['field' => 'n.field']);
 
-	expect($oc->compile('field'))->toBe(OB . 'n.field ASC');
-});
+		$this->assertSame(OB . 'n.field ASC', $oc->compile('field'));
+	}
 
-test('Compile statement with dotted field', function () {
-	$oc = new OrderCompiler([]);
+	public function testCompileStatementWithDottedField(): void
+	{
+		$oc = new OrderCompiler([]);
 
-	expect($oc->compile('test.lang'))->toBe(OB . "n.content->'test'->>'lang' ASC");
-	expect($oc->compile('test.lang.de'))->toBe(OB . "n.content->'test'->'lang'->>'de' ASC");
-});
+		$this->assertSame(OB . "n.content->'test'->'lang' ASC", $oc->compile('test.lang'));
+		$this->assertSame(OB . "n.content->'test'->'lang'->'de' ASC", $oc->compile('test.lang.de'));
+	}
 
-test('Compile mixed statement', function () {
-	$oc = new OrderCompiler(['field' => 'n.field']);
-	$s = OB . "n.field ASC,\n    n.content->'test'->>'value' ASC";
+	public function testCompileMixedStatement(): void
+	{
+		$oc = new OrderCompiler(['field' => 'n.field']);
+		$s = OB . "n.field ASC,\n    n.content->'test'->'value' ASC";
 
-	expect($oc->compile('field, test'))->toBe($s);
-});
+		$this->assertSame($s, $oc->compile('field, test'));
+	}
 
-test('Change direction', function () {
-	$oc = new OrderCompiler([]);
+	public function testChangeDirection(): void
+	{
+		$oc = new OrderCompiler([]);
 
-	expect($oc->compile('test desc'))->toBe(OB . "n.content->'test'->>'value' DESC");
-});
+		$this->assertSame(OB . "n.content->'test'->'value' DESC", $oc->compile('test desc'));
+	}
 
-test('Change direction with builtin', function () {
-	$oc = new OrderCompiler(['field' => 'n.field']);
+	public function testChangeDirectionWithBuiltin(): void
+	{
+		$oc = new OrderCompiler(['field' => 'n.field']);
 
-	expect($oc->compile('field DeSc'))->toBe(OB . 'n.field DESC');
-});
+		$this->assertSame(OB . 'n.field DESC', $oc->compile('field DeSc'));
+	}
 
-test('Compile larger mixed statement', function () {
-	$oc = new OrderCompiler(['field' => 'n.field', 'column' => 'uc.column']);
-	$s = ",\n    ";
-	$result = OB . "n.field DESC{$s}n.content->'test'->>'value' ASC{$s}" .
-		"uc.column ASC{$s}n.content->'another'->'lang'->>'en' DESC";
+	public function testCompileLargerMixedStatement(): void
+	{
+		$oc = new OrderCompiler(['field' => 'n.field', 'column' => 'uc.column']);
+		$s = ",\n    ";
+		$result = OB . "n.field DESC{$s}n.content->'test'->'value' ASC{$s}" .
+			"uc.column ASC{$s}n.content->'another'->'lang'->'en' DESC";
 
-	expect($oc->compile('field DESC, test asc, column, another.lang.en Desc'))->toBe($result);
-});
+		$this->assertSame($result, $oc->compile('field DESC, test asc, column, another.lang.en Desc'));
+	}
 
-test('Fail on injection I', function () {
-	$oc = new OrderCompiler();
+	public function testFailOnInjection1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
 
-	$oc->compile('; DROP TABLE students;');
-})->throws(ParserException::class, 'Invalid query');
+		$oc = new OrderCompiler();
 
-test('Fail on injection II', function () {
-	$oc = new OrderCompiler();
+		$oc->compile('; DROP TABLE students;');
+	}
 
-	$oc->compile('--');
-})->throws(ParserException::class, 'Invalid query');
+	public function testFailOnInjection2(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
 
-test('Fail on injection III', function () {
-	$oc = new OrderCompiler();
+		$oc = new OrderCompiler();
 
-	$oc->compile('/*');
-})->throws(ParserException::class, 'Invalid query');
+		$oc->compile('--');
+	}
 
-test('Fail invalid field I', function () {
-	$oc = new OrderCompiler();
+	public function testFailOnInjection3(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
 
-	$oc->compile('field.to.');
-})->throws(ParserException::class, 'Invalid query');
+		$oc = new OrderCompiler();
 
-test('Fail invalid field II', function () {
-	$oc = new OrderCompiler();
+		$oc->compile('/*');
+	}
 
-	$oc->compile('.field.to');
-})->throws(ParserException::class, 'Invalid query');
+	public function testFailInvalidField1(): void
+	{
+		$this->throws(ParserException::class, 'Invalid field name');
 
-test('Fail multiple commas', function () {
-	$oc = new OrderCompiler();
+		$oc = new OrderCompiler();
 
-	$oc->compile('field1,,field2');
-})->throws(ParserException::class, 'Invalid query');
+		$oc->compile('field.to.');
+	}
+
+	public function testFailInvalidField2(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
+
+		$oc = new OrderCompiler();
+
+		$oc->compile('.field.to');
+	}
+
+	public function testFailInvalidField4(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
+
+		$oc = new OrderCompiler();
+
+		$oc->compile('field. .to');
+	}
+
+	public function testFailInvalidField3(): void
+	{
+		$this->throws(ParserException::class, 'Invalid field name');
+
+		$oc = new OrderCompiler();
+
+		$oc->compile('field..to');
+	}
+
+	public function testFailInvalidField5(): void
+	{
+		$this->throws(ParserException::class, 'Invalid field name');
+
+		$oc = new OrderCompiler();
+
+		$oc->compile('field.to. DESC');
+	}
+
+	public function testFailMultipleCommas(): void
+	{
+		$this->throws(ParserException::class, 'Invalid order by clause');
+
+		$oc = new OrderCompiler();
+
+		$oc->compile('field1,,field2');
+	}
+}
