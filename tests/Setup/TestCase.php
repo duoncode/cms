@@ -7,7 +7,7 @@ namespace FiveOrbs\Cms\Tests\Setup;
 use FiveOrbs\Cms\Config;
 use FiveOrbs\Cms\Locales;
 use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Factory\Nyholm;
+use FiveOrbs\Core\Factory\Laminas;
 use FiveOrbs\Core\Request;
 use FiveOrbs\Quma\Connection;
 use FiveOrbs\Quma\Database;
@@ -42,6 +42,15 @@ class TestCase extends BaseTestCase
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['REQUEST_URI'] = '/';
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+	}
+
+	public function throws(string $exception, string $message = null): void
+	{
+		$this->expectException($exception);
+
+		if ($message) {
+			$this->expectExceptionMessage($message);
+		}
 	}
 
 	protected function tearDown(): void
@@ -107,7 +116,7 @@ class TestCase extends BaseTestCase
 	public function conn(): Connection
 	{
 		return new Connection(
-			'pgsql:host=localhost;dbname=fiveorbs_db;user=fiveorbs_user;password=fiveorbs_password',
+			'pgsql:host=localhost;dbname=fiveorbs_cms_test_db;user=fiveorbs_cms_test_user;password=fiveorbs_cms_test_password',
 			C::root() . '/db/sql',
 			C::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,
@@ -196,7 +205,7 @@ class TestCase extends BaseTestCase
 
 	public function factory(): Factory
 	{
-		return new Nyholm();
+		return new Laminas();
 	}
 
 	public function fullTrim(string $text): string
