@@ -101,6 +101,20 @@ final class QueryLexerTest extends TestCase
 		$this->assertSame('field.?.test', $tokens[12]->lexeme);
 	}
 
+	public function testListQuery(): void
+	{
+		$lexer = new QueryLexer();
+		$tokens = $lexer->tokens('field @ ["chuck", "schuldiner", 13]');
+
+		$this->assertSame('Field', $tokens[0]->type->name);
+		$this->assertSame('In', $tokens[1]->type->name);
+		$this->assertSame('LeftBracket', $tokens[2]->type->name);
+		$this->assertSame('String', $tokens[3]->type->name);
+		$this->assertSame('String', $tokens[4]->type->name);
+		$this->assertSame('Number', $tokens[5]->type->name);
+		$this->assertSame('RightBracket', $tokens[6]->type->name);
+	}
+
 	public function testInvalidDot1(): void
 	{
 		$this->throws(ParserException::class, 'Invalid use of dot');

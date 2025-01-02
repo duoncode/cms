@@ -78,4 +78,29 @@ class Node
 			'nodes' => $obj->listing(),
 		];
 	}
+
+	#[Permission('panel')]
+	public function nodes(): array
+	{
+		$tag = $this->registry->tag(Collection::class);
+		$collections = [];
+
+		foreach ($tag->entries() as $id) {
+			$collection = $tag->get($id);
+			$collections[] = [
+				'slug' => $id,
+				'title' => $collection->title(),
+			];
+		}
+
+		return [
+			// 'locales' => $this->config->get('locales.list'),
+			// 'locale' => 'de',
+			'panelPath' => $this->config->get('panel.prefix'),
+			'debug' => $this->config->debug(),
+			'env' => $this->config->env(),
+			'csrfToken' => 'TOKEN', // TODO: real token
+			'collections' => $collections,
+		];
+	}
 }

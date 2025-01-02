@@ -6,9 +6,13 @@ namespace FiveOrbs\Cms\Finder\Input;
 
 enum TokenGroup
 {
-	// Prenthesis used to group boolean expressions: ( )
+	// Parenthesis used to group boolean expressions: ( )
 	case LeftParen;
 	case RightParen;
+
+	// Brackets used for lists: [ ]
+	case LeftBracket;
+	case RightBracket;
 
 	// Operators used in boolean expresssions: & |
 	case BooleanOperator;

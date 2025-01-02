@@ -43,15 +43,22 @@ final class QueryLexer
 
 		switch ($char) {
 			case ' ':
+			case ',': // comma is ignored that it can be used inside of lists
 			case "\t":
 			case "\n":
 			case "\r":
 				break;
 			case '(':
-				$this->addParen(TokenGroup::LeftParen, TokenType::LeftParen);
+				$this->addToken(TokenGroup::LeftParen, TokenType::LeftParen);
 				break;
 			case ')':
-				$this->addParen(TokenGroup::RightParen, TokenType::RightParen);
+				$this->addToken(TokenGroup::RightParen, TokenType::RightParen);
+				break;
+			case '[':
+				$this->addToken(TokenGroup::LeftBracket, TokenType::LeftBracket);
+				break;
+			case ']':
+				$this->addToken(TokenGroup::RightBracket, TokenType::RightBracket);
 				break;
 			case '&':
 				$this->addBooleanOperator(TokenType::And);
@@ -61,6 +68,9 @@ final class QueryLexer
 				break;
 			case '=':
 				$this->addOperator(TokenType::Equal);
+				break;
+			case '@':
+				$this->addOperator(TokenType::In);
 				break;
 			case '~':
 				if ($this->matchNext('~')) {
@@ -83,6 +93,8 @@ final class QueryLexer
 				if ($this->matchNext('=')) {
 					// !=
 					$this->addOperator(TokenType::Unequal);
+				} elseif ($this->matchNext('@')) {
+					$this->addOperator(TokenType::NotIn);
 				} elseif ($this->matchNext('~')) {
 					if ($this->matchNext('~')) {
 						if ($this->matchNext('*')) {
@@ -145,11 +157,6 @@ final class QueryLexer
 	private function addBooleanOperator(TokenType $type): void
 	{
 		$this->addToken(TokenGroup::BooleanOperator, $type);
-	}
-
-	private function addParen(TokenGroup $group, TokenType $type): void
-	{
-		$this->addToken($group, $type);
 	}
 
 	private function isIdentifier(string $char): bool

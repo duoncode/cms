@@ -31,6 +31,8 @@ abstract readonly class Expression
 			TokenType::IUnlike => 'NOT ILIKE',
 			TokenType::And => 'AND',
 			TokenType::Or => 'OR',
+			TokenType::In => 'IN',
+			TokenType::NotIn => 'NOT IN',
 			default => throw new ParserException('Invalid expression operator: ' . $type->name),
 		};
 	}
@@ -45,6 +47,7 @@ abstract readonly class Expression
 			TokenType::Null => 'NULL',
 			TokenType::Number => $token->lexeme,
 			TokenType::String => $db->quote($token->lexeme),
+			TokenType::List => $token->lexeme,
 		};
 	}
 

@@ -27,6 +27,9 @@ final readonly class Comparison extends Expression implements Output
 			case TokenType::ILike:
 			case TokenType::IUnlike:
 				return $this->getSqlExpression();
+			case TokenType::In:
+			case TokenType::NotIn:
+				return $this->getInExpression();
 		}
 
 		if ($this->left->type === TokenType::Field) {
@@ -58,6 +61,8 @@ final readonly class Comparison extends Expression implements Output
 			TokenType::IRegex => ['@?', '?', $this->getRegex(true), false],
 			TokenType::NotRegex => ['@?', '?', $this->getRegex(false), true],
 			TokenType::INotRegex => ['@?', '?', $this->getRegex(true), true],
+			TokenType::In => ['@@', 'in', $this->getRight(), false],
+			TokenType::NotIn => ['@@', 'nin', $this->getRight(), false],
 			default => ['@@', $this->operator->lexeme, $this->getRight(), false],
 		};
 
@@ -135,12 +140,22 @@ final readonly class Comparison extends Expression implements Output
 			TokenType::String => $this->quote($this->right->lexeme),
 			TokenType::Number,
 			TokenType::Boolean,
+			TokenType::List,
 			TokenType::Null => $this->right->lexeme,
 			default => throw new ParserOutputException(
 				$this->right,
 				'The right hand side in a field expression must be a literal',
 			),
 		};
+	}
+
+	private function getInExpression(): string
+	{
+		if ($this->left->type === TokenType::Builtin) {
+			return $this->getSqlExpression();
+		}
+
+		return $this->getJsonPathExpression();
 	}
 
 	private function getSqlExpression(): string

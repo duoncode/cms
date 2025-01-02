@@ -32,7 +32,9 @@ final class QueryParserTest extends TestCase
 
 	public function testParseQuery(): void
 	{
-		$output = $this->parser->parse('builtin = 13 & field & (field ~ "%like" | path != test) & field');
+		$output = $this->parser->parse(
+			'builtin = 13 & field & (field ~ "%like" | path != test) & field | field @ [1, 2, 3]',
+		);
 
 		$this->assertInstanceOf(Comparison::class, $output[0]);
 		$this->assertInstanceOf(Operator::class, $output[1]);
@@ -45,6 +47,9 @@ final class QueryParserTest extends TestCase
 		$this->assertInstanceOf(RightParen::class, $output[8]);
 		$this->assertInstanceOf(Operator::class, $output[9]);
 		$this->assertInstanceOf(Exists::class, $output[10]);
+		$this->assertInstanceOf(Operator::class, $output[11]);
+		$this->assertInstanceOf(Comparison::class, $output[12]);
+		$this->assertSame(false, isset($output[13]));
 	}
 
 	public function testInvalidPostionForOperator1(): void

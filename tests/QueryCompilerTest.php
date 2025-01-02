@@ -35,6 +35,37 @@ final class QueryCompilerTest extends TestCase
 		);
 	}
 
+	public function testSimpleInAndNotInQuery(): void
+	{
+		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+		$this->assertSame(
+			"builtin IN ('v1', 'v2', 'v3')",
+			$compiler->compile("builtin @ ['v1'  , 'v2''v3']"),
+		);
+		$this->assertSame(
+			"builtin IN (1, 2, 3, 4)",
+			$compiler->compile("builtin @ [,1, 2,3 4]"),
+		);
+		$this->assertSame(
+			"n.content @@ '$.field.value in (1, 2, 3, 4)'",
+			$compiler->compile("field @ [1,2 , 3 4]"),
+		);
+
+		$this->assertSame(
+			"builtin NOT IN ('v1', 'v2', 'v3')",
+			$compiler->compile("builtin !@ ['v1''v2''v3']"),
+		);
+		$this->assertSame(
+			"builtin NOT IN (1, 2, 3, 4)",
+			$compiler->compile("builtin !@ [1    2  3,,4]"),
+		);
+		$this->assertSame(
+			"n.content @@ '$.field.value nin (1, 2, 3, 4)'",
+			$compiler->compile("field !@ [1,2 , 3 4]"),
+		);
+	}
+
 	public function testSimpleOrQuery(): void
 	{
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);

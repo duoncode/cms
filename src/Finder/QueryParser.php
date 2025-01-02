@@ -45,7 +45,9 @@ final class QueryParser
 	public function parse(string $query): array
 	{
 		$this->query = $query;
-		$this->tokens = (new QueryLexer(array_keys($this->builtins)))->tokens($query);
+		$this->tokens = $this->materializeLists(
+			(new QueryLexer(array_keys($this->builtins)))->tokens($query),
+		);
 		$this->length = count($this->tokens);
 
 		$this->parensBalance = 0;
@@ -81,6 +83,65 @@ final class QueryParser
 		}
 
 		return $result;
+	}
+
+	private function materializeLists(array $tokens): array
+	{
+		$insideList = false;
+		$transformedTokens = [];
+		$currentList = [];
+		$currentListPos = null;
+
+		foreach ($tokens as $token) {
+			if ($token->type === TokenType::LeftBracket) {
+				if ($insideList) {
+					throw new ParserException('Invalid query: nested list');
+				}
+
+				$insideList = true;
+				$currentListPos = $token->position;
+
+				continue;
+			}
+
+			if ($token->type === TokenType::RightBracket) {
+				if (!$insideList) {
+					throw new ParserException('Invalid query: not inside list');
+				}
+
+				$insideList = false;
+
+				$transformedTokens[] = Token::fromList(
+					TokenGroup::Operand,
+					TokenType::List,
+					$currentListPos,
+					$currentList,
+					$this->context->db,
+				);
+				$currentList = [];
+				$currentListPos = null;
+
+				continue;
+			}
+
+			if ($insideList) {
+				if ($token->group === TokenGroup::Operand) {
+					$currentList[] = $token;
+				} else {
+					throw new ParserException('Invalid query: only operands are allowed as list members');
+				}
+
+				continue;
+			}
+
+			$transformedTokens[] = $token;
+		}
+
+		if ($insideList) {
+			throw new ParserException('Invalid query: unbalanced list');
+		}
+
+		return $transformedTokens;
 	}
 
 	/**

@@ -9,6 +9,8 @@ enum TokenType
 	// Single character tokens
 	case LeftParen;
 	case RightParen;
+	case LeftBracket;
+	case RightBracket;
 
 	// Operators
 	case Equal;
@@ -25,6 +27,8 @@ enum TokenType
 	case Regex;
 	case Unequal;
 	case Unlike;
+	case In;
+	case NotIn;
 
 	// Boolean Operators
 	case And;
@@ -39,4 +43,5 @@ enum TokenType
 	case Null;
 	case Number;
 	case String;
+	case List;
 }
