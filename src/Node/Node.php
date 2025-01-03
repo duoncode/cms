@@ -292,8 +292,9 @@ abstract class Node
 	public function jsonResponse(): Response
 	{
 		$request = $this->request;
+		$method = $request->method();
 
-		$content = json_encode(match ($request->method()) {
+		$content = json_encode(match ($method) {
 			'GET' => $this->read(),
 			'POST' => $this->create(),
 			'PUT' => $this->change(),
@@ -304,6 +305,7 @@ abstract class Node
 			new Response(
 				$this->factory
 					->response()
+					->withStatus($method === 'POST' ? 201 : 200)
 					->withHeader('Content-Type', 'application/json'),
 			)
 		)->body($content);

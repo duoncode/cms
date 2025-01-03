@@ -156,13 +156,22 @@ class Panel
 	}
 
 	#[Permission('panel')]
-	public function createNode(string $type, Context $context, Finder $find): array
-	{
+	public function createNode(
+		string $type,
+		Context $context,
+		Finder $find,
+		Factory $factory,
+	): Response {
 		$class = $this->registry->tag(Node::class)->entry($type)->definition();
 		$obj = new $class($context, $find, $this->request->json());
 		$obj->create();
 
-		return ['success' => true];
+		return (new Response(
+			$factory
+				->response()
+				->withStatus(201)
+				->withHeader('Content-Type', 'application/json'),
+		))->body(json_encode(['success' => true]));
 	}
 
 	#[Permission('panel')]
