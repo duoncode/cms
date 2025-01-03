@@ -40,8 +40,8 @@ final class QueryCompilerTest extends TestCase
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
 
 		$this->assertSame(
-			"builtin IN ('v1', 'v2', 'v3')",
-			$compiler->compile("builtin @ ['v1'  , 'v2''v3']"),
+			"builtin IN ('v1', 'v\"2', 'v3''')",
+			$compiler->compile("builtin @ ['v1'  , 'v\"2''v3\'']"),
 		);
 		$this->assertSame(
 			"builtin IN ('1', '2', '3', '4')",
@@ -49,8 +49,8 @@ final class QueryCompilerTest extends TestCase
 		);
 
 		$this->assertSame(
-			"builtin NOT IN ('v1', 'v2', 'v3')",
-			$compiler->compile("builtin !@ ['v1''v2''v3']"),
+			"builtin NOT IN ('''v1', 'v2', 'v3')",
+			$compiler->compile("builtin !@ ['\'v1''v2''v3']"),
 		);
 		$this->assertSame(
 			"builtin NOT IN ('1', '2', '3', '4')",
@@ -63,8 +63,8 @@ final class QueryCompilerTest extends TestCase
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
 
 		$this->assertSame(
-			"n.content->'field'->>'value' IN ('v1', 'v2', 'v3', 'v4')",
-			$compiler->compile("field @ ['v1', 'v2' , 'v3''v4' ,]"),
+			"n.content->'field'->>'value' IN ('v1', 'v2', 'v''3', 'v4')",
+			$compiler->compile("field @ ['v1', 'v2' , 'v\'3''v4' ,]"),
 		);
 		$this->assertSame(
 			"n.content->'field'->>'value' IN ('1', '2', '3', '4.513')",
