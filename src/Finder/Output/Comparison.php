@@ -26,10 +26,9 @@ final readonly class Comparison extends Expression implements Output
 			case TokenType::Unlike:
 			case TokenType::ILike:
 			case TokenType::IUnlike:
-				return $this->getSqlExpression();
 			case TokenType::In:
 			case TokenType::NotIn:
-				return $this->getInExpression();
+				return $this->getSqlExpression();
 		}
 
 		if ($this->left->type === TokenType::Field) {
@@ -147,15 +146,6 @@ final readonly class Comparison extends Expression implements Output
 				'The right hand side in a field expression must be a literal',
 			),
 		};
-	}
-
-	private function getInExpression(): string
-	{
-		if ($this->left->type === TokenType::Builtin) {
-			return $this->getSqlExpression();
-		}
-
-		return $this->getJsonPathExpression();
 	}
 
 	private function getSqlExpression(): string

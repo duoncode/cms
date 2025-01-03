@@ -47,12 +47,10 @@ readonly class Token
 				}
 			}
 
-			if ($type === TokenType::String) {
+			if ($type === TokenType::String || $type === TokenType::Number) {
 				$result[] = $db->quote($item->lexeme);
-			} elseif ($type === TokenType::Number) {
-				$result[] = $item->lexeme;
 			} else {
-				throw new ParserException('Invalid query: mixed list item types');
+				throw new ParserException('Invalid query: token type not supported in list');
 			}
 		}
 
