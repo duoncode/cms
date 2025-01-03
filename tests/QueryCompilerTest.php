@@ -35,7 +35,7 @@ final class QueryCompilerTest extends TestCase
 		);
 	}
 
-	public function testSimpleInAndNotInQuery(): void
+	public function testInAndNotInQueryWithBuiltin(): void
 	{
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
 
@@ -47,10 +47,6 @@ final class QueryCompilerTest extends TestCase
 			"builtin IN (1, 2, 3, 4)",
 			$compiler->compile("builtin @ [,1, 2,3 4]"),
 		);
-		$this->assertSame(
-			"n.content @@ '$.field.value in (1, 2, 3, 4)'",
-			$compiler->compile("field @ [1,2 , 3 4]"),
-		);
 
 		$this->assertSame(
 			"builtin NOT IN ('v1', 'v2', 'v3')",
@@ -60,6 +56,17 @@ final class QueryCompilerTest extends TestCase
 			"builtin NOT IN (1, 2, 3, 4)",
 			$compiler->compile("builtin !@ [1    2  3,,4]"),
 		);
+	}
+
+	public function testInAndNotInQueryWithField(): void
+	{
+		$compiler = new QueryCompiler($this->context, ['builtin' => 'builtin']);
+
+		$this->assertSame(
+			"n.content @@ '$.field.value in (1, 2, 3, 4)'",
+			$compiler->compile("field @ [1,2 , 3 4]"),
+		);
+
 		$this->assertSame(
 			"n.content @@ '$.field.value nin (1, 2, 3, 4)'",
 			$compiler->compile("field !@ [1,2 , 3 4]"),
