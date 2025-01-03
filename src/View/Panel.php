@@ -149,10 +149,18 @@ class Panel
 	#[Permission('panel')]
 	public function blueprint(string $type, Context $context, Finder $find): array
 	{
+		$content = [];
+		$defaults = $this->request->param('content', null);
+
+		if ($defaults !== null) {
+			// TODO: check security concerns
+			$content = json_decode($defaults, true);
+		}
+
 		$class = $this->registry->tag(Node::class)->entry($type)->definition();
 		$obj = new $class($context, $find, []);
 
-		return $obj->blueprint();
+		return $obj->blueprint($content);
 	}
 
 	#[Permission('panel')]
