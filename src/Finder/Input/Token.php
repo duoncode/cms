@@ -14,6 +14,7 @@ readonly class Token
 		public TokenType $type,
 		public int $position,
 		public string $lexeme,
+		private int|null $length = null,
 	) {}
 
 	public static function fromList(
@@ -22,14 +23,15 @@ readonly class Token
 		int $position,
 		/** @param array<Token> */
 		array $list,
+		int $length,
 		Database $db,
 	): self {
-		return new self($group, $type, $position, self::transformList($list, $db));
+		return new self($group, $type, $position, self::transformList($list, $db), $length);
 	}
 
 	public function len(): int
 	{
-		return strlen($this->lexeme);
+		return $this->length ?: strlen($this->lexeme);
 	}
 
 	/** @param $list array<Token> */
