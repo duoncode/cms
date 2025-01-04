@@ -16,6 +16,7 @@ abstract class Field
 	protected ?string $description = null;
 	protected bool $translate = false;
 	protected bool $immutable = false;
+	protected bool $hidden = false;
 	protected ?int $width = null;
 	protected ?int $rows = null;
 	protected array $validators = [];
@@ -113,6 +114,13 @@ abstract class Field
 		return $this;
 	}
 
+	public function hidden(bool $hidden = true): static
+	{
+		$this->hidden = $hidden;
+
+		return $this;
+	}
+
 	public function isTranslatable(): bool
 	{
 		return $this->translate;
@@ -162,6 +170,7 @@ abstract class Field
 			'translate' => $this->translate,
 			'required' => $this->isRequired(),
 			'immutable' => $this->immutable,
+			'hidden' => $this->hidden,
 			'description' => $this->description,
 			'label' => $this->label,
 			'name' => $this->name,

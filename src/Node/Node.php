@@ -538,6 +538,9 @@ abstract class Node
 				case Attr\Immutable::class:
 					$field->immutable(true);
 					break;
+				case Attr\Hidden::class:
+					$field->hidden(true);
+					break;
 				case Attr\Translate::class:
 					$field->translate(true);
 					break;
