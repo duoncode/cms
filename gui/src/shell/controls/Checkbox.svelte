@@ -19,6 +19,7 @@
 				name={field.name}
 				type="checkbox"
 				class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600"
+				disabled={field.immutable}
 				bind:checked={data.value} />
 		</div>
 		<div class="ml-3 text-sm leading-6">

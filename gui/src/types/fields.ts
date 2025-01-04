@@ -2,6 +2,7 @@ export interface SimpleField {
 	rows: number | null;
 	width: number | null;
 	required: boolean;
+	immutable: boolean;
 	description: string | null;
 	label: string;
 	name: string;

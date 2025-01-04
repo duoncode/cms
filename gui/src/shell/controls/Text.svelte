@@ -31,6 +31,7 @@
 						name={field.name}
 						type="text"
 						required={field.required}
+						disabled={field.immutable}
 						bind:value={data.value[locale.id]} />
 				{/if}
 			{/each}
@@ -40,6 +41,7 @@
 				name={field.name}
 				type="text"
 				required={field.required}
+				disabled={field.immutable}
 				bind:value={data.value} />
 		{/if}
 	</div>

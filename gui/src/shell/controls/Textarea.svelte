@@ -30,6 +30,7 @@
 						id={field.name}
 						name={field.name}
 						required={field.required}
+						disabled={field.immutable}
 						bind:value={data.value[locale.id]}>
 					</textarea>
 				{/if}
@@ -39,6 +40,7 @@
 				id={field.name}
 				name={field.name}
 				required={field.required}
+				disabled={field.immutable}
 				bind:value={data.value}>
 			</textarea>
 		{/if}

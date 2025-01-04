@@ -22,6 +22,7 @@
 			name={field.name}
 			type="time"
 			required={field.required}
+			disabled={field.immutable}
 			bind:value={data.value} />
 	</div>
 </Field>
