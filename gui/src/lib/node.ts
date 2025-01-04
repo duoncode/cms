@@ -19,9 +19,9 @@ export async function save(uid: string, node: Node) {
 			message: _('Dokument erfolgreich gespeichert!'),
 		});
 
-		return response.data as Result;
+		return response?.data as Result;
 	} else {
-		const data = response.data;
+		const data = response?.data;
 
 		toast.add({
 			kind: 'error',
@@ -30,7 +30,7 @@ export async function save(uid: string, node: Node) {
 				: _('Fehler beim Speichern des Dokuments aufgetreten!'),
 		});
 
-		return response.data as Result;
+		return response?.data as Result;
 	}
 }
 
@@ -54,14 +54,14 @@ export async function create(node: Node, type: string, documentPath: string) {
 			message: _('Fehler beim Erstellen des Dokuments aufgetreten!'),
 		});
 
-		return response.data as Result;
+		return response?.data as Result;
 	}
 }
 
 export async function remove(uid: string, collectionPath: string) {
 	const response = await req.del(`node/${uid}`);
 
-	if (response.ok) {
+	if (response?.ok) {
 		await goto(`${base}/${collectionPath}`, { invalidateAll: true });
 
 		toast.add({

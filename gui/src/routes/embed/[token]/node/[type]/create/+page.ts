@@ -30,7 +30,6 @@ export const load: PageLoad = async ({ params, fetch, url }) => {
 			type: params.type,
 			token: params.token,
 			node,
-			defaults,
 		};
 	}
 

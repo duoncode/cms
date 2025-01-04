@@ -62,7 +62,7 @@ async function fetchit(
 	path: string,
 	params: Record<string, string>,
 	options: RequestInit,
-	fetchFn: typeof window.fetch,
+	fetchFn: typeof window.fetch | null,
 ) {
 	const url = path.startsWith('/')
 		? new URL(path, domain)
@@ -111,27 +111,27 @@ async function fetchit(
 
 async function get(
 	url: string,
-	params?: Record<string, string>,
-	fetchFn: typeof window.fetch = null,
+	params: Record<string, string>,
+	fetchFn: typeof window.fetch | null = null,
 ) {
 	const options = getBodyOptions('GET');
 
 	return fetchit(url, params, options, fetchFn);
 }
 
-async function post(url: string, data = {}, fetchFn: typeof window.fetch = null) {
+async function post(url: string, data = {}, fetchFn: typeof window.fetch | null = null) {
 	const options = getBodyOptions('POST', data);
 
 	return fetchit(url, {}, options, fetchFn);
 }
 
-async function put(url: string, data = {}, fetchFn: typeof window.fetch = null) {
+async function put(url: string, data = {}, fetchFn: typeof window.fetch | null = null) {
 	const options = getBodyOptions('PUT', data);
 
 	return fetchit(url, {}, options, fetchFn);
 }
 
-async function del(url: string, fetchFn: typeof window.fetch = null) {
+async function del(url: string, fetchFn: typeof window.fetch | null = null) {
 	const options = getBodyOptions('DELETE');
 
 	return fetchit(url, {}, options, fetchFn);

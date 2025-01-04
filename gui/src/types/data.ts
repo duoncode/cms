@@ -1,4 +1,3 @@
-import type { RouteDefinition } from '@sveltejs/kit';
 import type { Field } from '$types/fields';
 
 export interface User {
@@ -176,10 +175,4 @@ export interface Node {
 
 	creator: Editor;
 	editor: Editor;
-}
-
-export interface RoutedNode {
-	route: RouteDefinition;
-	collection: Collection;
-	node: Node;
 }

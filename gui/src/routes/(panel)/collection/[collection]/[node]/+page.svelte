@@ -1,11 +1,12 @@
 <script lang="ts">
-	import type { RoutedNode, Node as NodeType } from '$types/data';
+	import type { PageData } from './$types';
+	import type { Node as NodeType } from '$types/data';
 	import req from '$lib/req';
 	import { save as saveNode } from '$lib/node';
 	import Node from '$shell/Node.svelte';
 
 	type Props = {
-		data: RoutedNode;
+		data: PageData;
 	};
 
 	let { data }: Props = $props();
@@ -20,9 +21,9 @@
 		const result = await saveNode(node.uid, node);
 
 		if (result.success) {
-			const response = await req.get(`node/${result.uid}`);
+			const response = await req.get(`node/${result.uid}`, {});
 
-			if (response.ok) {
+			if (response?.ok) {
 				node = response.data as NodeType;
 			}
 		}

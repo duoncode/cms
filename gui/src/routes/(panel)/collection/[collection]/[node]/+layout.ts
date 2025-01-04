@@ -1,5 +1,5 @@
 import type { LayoutLoad } from './$types';
-import type { RoutedNode, Node } from '$types/data';
+import type { Node } from '$types/data';
 import req from '$lib/req';
 import { currentNode, currentFields } from '$lib/state';
 
@@ -17,6 +17,6 @@ export const load: LayoutLoad = async ({ params, parent, route, fetch }) => {
 			collection,
 			route,
 			node,
-		} satisfies RoutedNode;
+		};
 	}
 };

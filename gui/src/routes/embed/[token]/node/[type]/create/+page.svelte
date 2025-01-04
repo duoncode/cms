@@ -10,15 +10,12 @@
 	let { data }: Props = $props();
 	let node = $state(data.node);
 
-	console.log('hansemann');
-	console.log(data.defaults, 'hans');
-
 	async function save(publish: boolean) {
 		if (publish) {
 			node.published = true;
 		}
 
-		create(node, node.type.handle, `embed/${data.token}/node/${data.type}`, data.defaults);
+		create(node, node.type.handle, `embed/${data.token}/node/${data.type}`);
 	}
 </script>
 
