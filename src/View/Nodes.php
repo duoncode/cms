@@ -28,13 +28,14 @@ class Nodes
 	{
 		$asDict = $this->request->param('asdict', 'false') === 'true' ? true : false;
 		$query = $this->request->param('query', null);
+		$order = $this->request->param('order', 'changed');
 		$fields = explode(',', $this->request->param('fields', ''));
 
 		if ($query === null) {
 			throw new HttpBadRequest($this->request);
 		}
 
-		$nodes = $find->nodes($query);
+		$nodes = $find->nodes($query)->order($order);
 		$result = [];
 
 		foreach ($nodes as $node) {

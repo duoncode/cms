@@ -20,14 +20,14 @@
 		"fiveorbs/session": "dev-main",
 		"fiveorbs/sire": "dev-main",
 		"gumlet/php-image-resize": "2.0.*",
-		"hidehalo/nanoid-php": "^1.1",
+		"hidehalo/nanoid-php": "^2",
 		"laminas/laminas-httphandlerrunner": "^2.4",
 		"psr/http-message-implementation": "^1.0",
 		"symfony/html-sanitizer": "^7.1"
 	},
 	"require-dev": {
 		"fiveorbs/dev": "^1.1",
-		"laminas/laminas-diactoros": "^2",
+		"laminas/laminas-diactoros": "^3",
 		"phpunit/phpunit": "^11"
 	},
 	"autoload": {
