@@ -26,6 +26,7 @@ class Nodes
 	#[Permission('panel')]
 	public function get(Finder $find, Factory $factory): Response
 	{
+		$asDict = $this->request->param('asdict', 'false') === 'true' ? true : false;
 		$query = $this->request->param('query', null);
 		$fields = explode(',', $this->request->param('fields', ''));
 
@@ -37,8 +38,9 @@ class Nodes
 		$result = [];
 
 		foreach ($nodes as $node) {
+			$uid = $node->meta('uid');
 			$n = [
-				'uid' => $node->meta('uid'),
+				'uid' => $uid,
 				'title' => $node->title(),
 				'published' => $node->meta('published'),
 				'hidden' => $node->meta('hidden'),
@@ -53,7 +55,11 @@ class Nodes
 				$n[$field] = $node->getValue($field)->unwrap();
 			}
 
-			$result[] = $n;
+			if ($asDict) {
+				$result[$uid] = $n;
+			} else {
+				$result[] = $n;
+			}
 		}
 
 		return (new Response($factory->response()))->json($result);
