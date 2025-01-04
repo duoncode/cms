@@ -9,6 +9,7 @@ use FiveOrbs\Cms\Middleware\InitRequest;
 use FiveOrbs\Cms\Middleware\Session;
 use FiveOrbs\Cms\View\Auth;
 use FiveOrbs\Cms\View\Media;
+use FiveOrbs\Cms\View\Nodes;
 use FiveOrbs\Cms\View\Page;
 use FiveOrbs\Cms\View\Panel;
 use FiveOrbs\Cms\View\User;
@@ -105,11 +106,12 @@ class Routes
 		$api->get('/boot', [Panel::class, 'boot'], 'boot');
 		$api->get('/collections', [Panel::class, 'collections'], 'collections');
 		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
+		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.get');
 		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.get');
-		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.put');
-		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.delet');
+		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.update');
+		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.delete');
 		$api->post('/node/{type}', [Panel::class, 'createNode'], 'node.create');
-		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'blueprint');
+		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'node.blueprint');
 	}
 
 	protected function addApi(App $app): void
