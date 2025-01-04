@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { RoutedNode } from '$types/data';
+	import type { PageData } from './$types';
 	import { create } from '$lib/node';
 	import Node from '$shell/Node.svelte';
 
 	type Props = {
-		data: RoutedNode;
+		data: PageData;
 	};
 
 	let { data }: Props = $props();
