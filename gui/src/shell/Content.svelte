@@ -27,20 +27,22 @@
 
 <div class="field-grid hans">
 	{#each fields as field}
-		<div
-			style="
-                grid-column: {fieldSpan(field.width, 'col')};
-                grid-row: {fieldSpan(field.rows, 'row')}">
-			{#if controls[field.type]}
-				{@const SvelteComponent = controls[field.type]}
-				<SvelteComponent
-					{field}
-					node={node.uid}
-					bind:data={node.content[field.name]} />
-			{:else}
-				{field.type}
-			{/if}
-		</div>
+		{#if !field.hidden}
+			<div
+				style="
+					grid-column: {fieldSpan(field.width, 'col')};
+					grid-row: {fieldSpan(field.rows, 'row')}">
+				{#if controls[field.type]}
+					{@const SvelteComponent = controls[field.type]}
+					<SvelteComponent
+						{field}
+						node={node.uid}
+						bind:data={node.content[field.name]} />
+				{:else}
+					{field.type}
+				{/if}
+			</div>
+		{/if}
 	{/each}
 </div>
 

@@ -3,6 +3,7 @@ export interface SimpleField {
 	width: number | null;
 	required: boolean;
 	immutable: boolean;
+	hidden: boolean;
 	description: string | null;
 	label: string;
 	name: string;
