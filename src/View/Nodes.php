@@ -28,14 +28,30 @@ class Nodes
 	{
 		$asDict = $this->request->param('asdict', 'false') === 'true' ? true : false;
 		$query = $this->request->param('query', null);
+		$uid = $this->request->param('uid', null);
 		$order = $this->request->param('order', 'changed');
 		$fields = explode(',', $this->request->param('fields', ''));
 
-		if ($query === null) {
+		if ($query) {
+			$nodes = $find->nodes($query)->order($order);
+		} elseif ($uid) {
+			$uids = array_map(fn(string $uid) => trim($uid), explode(',', $uid));
+
+			error_log(print_r($uids, true));
+
+			if(count($uids) > 1) {
+				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
+				$query = "uid @ [{$quoted}]";
+				error_log($query);
+			} else {
+				$query = "uid = '{$uid}'";
+			}
+
+			$nodes = $find->nodes($query)->order($order);
+		} else {
 			throw new HttpBadRequest($this->request);
 		}
 
-		$nodes = $find->nodes($query)->order($order);
 		$result = [];
 
 		foreach ($nodes as $node) {
@@ -53,7 +69,7 @@ class Nodes
 			];
 
 			foreach ($fields as $field) {
-				$n[$field] = $node->getValue($field)->unwrap();
+				$n[$field] = $node->getValue(trim($field))->unwrap();
 			}
 
 			if ($asDict) {
