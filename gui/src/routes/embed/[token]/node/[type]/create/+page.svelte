@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import EmbeddedNode from '$shell/EmbeddedNode.svelte';
 	import { create } from '$lib/node';
+	import Toasts from '$shell/Toasts.svelte';
 
 	type Props = {
 		data: PageData;
@@ -22,3 +23,4 @@
 <EmbeddedNode
 	bind:node
 	{save} />
+<Toasts />

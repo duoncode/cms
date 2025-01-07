@@ -4,6 +4,8 @@
 	import req from '$lib/req';
 	import { save as saveNode } from '$lib/node';
 	import EmbeddedNode from '$shell/EmbeddedNode.svelte';
+	import Modal from '$shell/modal/Modal.svelte';
+	import Toasts from '$shell/Toasts.svelte';
 
 	type Props = {
 		data: PageData;
@@ -29,6 +31,9 @@
 	}
 </script>
 
-<EmbeddedNode
-	bind:node
-	{save} />
+<Modal>
+	<EmbeddedNode
+		bind:node
+		{save} />
+	<Toasts />
+</Modal>
