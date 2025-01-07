@@ -12,7 +12,7 @@
 	let { field, data = $bindable() }: Props = $props();
 </script>
 
-<Field required={field.required}>
+<Field {field}>
 	<Label of={field.name}>
 		{field.label}
 	</Label>

@@ -15,7 +15,7 @@
 	let lang = $state($system.locale);
 </script>
 
-<Field required={field.required}>
+<Field {field}>
 	<Label
 		of={field.name}
 		translate={field.translate}

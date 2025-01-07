@@ -1,17 +1,23 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { SimpleField } from '$types/fields';
 
 	type Props = {
-		required?: boolean;
-		class?: any;
+		field: SimpleField;
+		class?: string | null;
 		children: Snippet;
 	};
 
-	let { required = false, class: cssclass = null, children }: Props = $props();
+	let { field, class: classes = null, children }: Props = $props();
 </script>
 
 <div
-	class="field {cssclass}"
-	class:required>
+	class="field {classes}"
+	class:required={field.required}>
 	{@render children()}
+	{#if field.description}
+		<div class="field-description">
+			{field.description}
+		</div>
+	{/if}
 </div>

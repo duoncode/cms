@@ -19,7 +19,7 @@
 </script>
 
 <Field
-	required={field.required}
+	{field}
 	class="flex h-full flex-col">
 	<LabelDiv
 		translate={field.translate}

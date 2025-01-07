@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Field from '$shell/Field.svelte';
 	import Label from '$shell/Label.svelte';
 	import { system } from '$lib/sys';
 
@@ -24,7 +23,9 @@
 	let lang = $state($system.locale);
 </script>
 
-<Field {required}>
+<div
+	class="field"
+	class:required>
 	<Label
 		of={id}
 		{translate}
@@ -59,4 +60,4 @@
 			{description}
 		</div>
 	{/if}
-</Field>
+</div>

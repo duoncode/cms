@@ -11,7 +11,7 @@
 	let { field, data = $bindable() }: Props = $props();
 </script>
 
-<Field>
+<Field {field}>
 	<div class="relative flex items-start">
 		<div class="flex h-6 items-center">
 			<input

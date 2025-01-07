@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Field from '$shell/Field.svelte';
 	import Label from '$shell/Label.svelte';
 
 	type Props = {
@@ -12,7 +11,9 @@
 	let { value = $bindable(), label, id, required = false }: Props = $props();
 </script>
 
-<Field {required}>
+<div
+	class="field"
+	class:required>
 	<Label of={id}>
 		{label}
 	</Label>
@@ -25,4 +26,4 @@
 			autocomplete="new-password"
 			bind:value />
 	</div>
-</Field>
+</div>
