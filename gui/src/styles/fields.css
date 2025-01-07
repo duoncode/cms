@@ -52,6 +52,10 @@ textarea[required] {
 	@apply px-4 py-2 sm:px-6 sm:py-3 md:p-8 md:py-4;
 }
 
+.field-description {
+	@apply pl-px pt-1 text-sm text-gray-400;
+}
+
 .setting {
 	@apply py-2 text-sm;
 }
