@@ -28,12 +28,15 @@ class Nodes
 	{
 		$asDict = $this->request->param('asdict', 'false') === 'true' ? true : false;
 		$query = $this->request->param('query', null);
+		$published = $this->tristateValue($this->request->param('published', null));
+		$hidden = $this->tristateValue($this->request->param('hidden', 'false'));
+		$deleted = $this->tristateValue($this->request->param('deleted', 'false'));
 		$uid = $this->request->param('uid', null);
 		$order = $this->request->param('order', 'changed');
 		$fields = explode(',', $this->request->param('fields', ''));
 
 		if ($query) {
-			$nodes = $find->nodes($query)->order($order);
+			$nodes = $find->nodes($query);
 		} elseif ($uid) {
 			$uids = array_map(fn(string $uid) => trim($uid), explode(',', $uid));
 
@@ -47,18 +50,19 @@ class Nodes
 				$query = "uid = '{$uid}'";
 			}
 
-			$nodes = $find->nodes($query)->order($order);
+			$nodes = $find->nodes($query);
 		} else {
 			throw new HttpBadRequest($this->request);
 		}
 
 		$result = [];
 
-		foreach ($nodes as $node) {
+		foreach ($nodes->published($published)->hidden($hidden)->order($order)->deleted($deleted) as $node) {
 			$uid = $node->meta('uid');
 			$n = [
 				'uid' => $uid,
 				'title' => $node->title(),
+				'handle' => $node->meta('handle'),
 				'published' => $node->meta('published'),
 				'hidden' => $node->meta('hidden'),
 				'locked' => $node->meta('locked'),
@@ -80,5 +84,18 @@ class Nodes
 		}
 
 		return (new Response($factory->response()))->json($result);
+	}
+
+	private function tristateValue(string|null $value): bool|null
+	{
+		if ($value === 'true') {
+			return true;
+		}
+
+		if ($value === 'false') {
+			return false;
+		}
+
+		return null;
 	}
 }
