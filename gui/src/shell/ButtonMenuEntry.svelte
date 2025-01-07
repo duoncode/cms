@@ -14,6 +14,5 @@
 	role="menuitem"
 	tabindex="-1"
 	{...attributes}>
-	>
 	{@render children()}
 </button>

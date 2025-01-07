@@ -48,7 +48,8 @@
 					{#snippet children(closeMenu)}
 						<ButtonMenuEntry
 							onclick={() => {
-								save(true), closeMenu();
+								save(true);
+								closeMenu();
 							}}>
 							{_('Speichern und veröffentlichen')}
 						</ButtonMenuEntry>

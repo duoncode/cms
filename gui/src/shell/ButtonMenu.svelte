@@ -59,7 +59,7 @@
 		</button>
 		{#if openMenu}
 			<div
-				class="button-menu {cls} absolute right-0 z-10 -mr-1 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+				class="button-menu {cls} absolute right-0 z-10 -mr-1 mt-2 w-64 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
 				role="menu"
 				aria-orientation="vertical"
 				aria-labelledby="option-menu-button"
