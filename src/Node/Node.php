@@ -112,6 +112,21 @@ abstract class Node
 		return $this->data[$fieldName];
 	}
 
+	public function content(): array
+	{
+		$content = [];
+
+		// Fill the field's value with missing keys from the structure and fix type
+		foreach ($this->fieldNames as $fieldName) {
+			$field = $this->{$fieldName};
+			$structure = $field->structure();
+			$content[$fieldName] = array_merge($structure, $data['content'][$fieldName] ?? []);
+			$content[$fieldName]['type'] = $structure['type'];
+		}
+
+		return $content;
+	}
+
 	public function data(): array
 	{
 		$data = $this->data;
@@ -141,19 +156,9 @@ abstract class Node
 				'username' => $data['creator_username'],
 				'data' => $data['creator_data'],
 			],
+			'content' => $this->content(),
+			'deletable' => $this->deletable(),
 		];
-		$content = [];
-
-		// Fill the field's value with missing keys from the structure and fix type
-		foreach ($this->fieldNames as $fieldName) {
-			$field = $this->{$fieldName};
-			$structure = $field->structure();
-			$content[$fieldName] = array_merge($structure, $data['content'][$fieldName] ?? []);
-			$content[$fieldName]['type'] = $structure['type'];
-		}
-
-		$result['content'] = $content;
-		$result['deletable'] = $this->deletable();
 
 		return $result;
 	}
