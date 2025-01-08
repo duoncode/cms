@@ -120,7 +120,7 @@ abstract class Node
 		foreach ($this->fieldNames as $fieldName) {
 			$field = $this->{$fieldName};
 			$structure = $field->structure();
-			$content[$fieldName] = array_merge($structure, $data['content'][$fieldName] ?? []);
+			$content[$fieldName] = array_merge($structure, $this->data['content'][$fieldName] ?? []);
 			$content[$fieldName]['type'] = $structure['type'];
 		}
 

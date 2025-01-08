@@ -31,6 +31,7 @@ class Nodes
 		$published = $this->tristateValue($this->request->param('published', null));
 		$hidden = $this->tristateValue($this->request->param('hidden', 'false'));
 		$deleted = $this->tristateValue($this->request->param('deleted', 'false'));
+		$content = $this->tristateValue($this->request->param('content', 'false'));
 		$uid = $this->request->param('uid', null);
 		$order = $this->request->param('order', 'changed');
 		$fields = explode(',', $this->request->param('fields', ''));
@@ -39,8 +40,6 @@ class Nodes
 			$nodes = $find->nodes($query);
 		} elseif ($uid) {
 			$uids = array_map(fn(string $uid) => trim($uid), explode(',', $uid));
-
-			error_log(print_r($uids, true));
 
 			if(count($uids) > 1) {
 				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
@@ -73,7 +72,13 @@ class Nodes
 			];
 
 			foreach ($fields as $field) {
-				$n[$field] = $node->getValue(trim($field))->unwrap();
+				if ($field) {
+					$n[$field] = $node->getValue(trim($field))->unwrap();
+				}
+			}
+
+			if ($content) {
+				$n['content'] = $node->content();
 			}
 
 			if ($asDict) {
