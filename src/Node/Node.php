@@ -165,24 +165,20 @@ abstract class Node
 
 	public function blueprint(array $values = []): array
 	{
-		$result = [];
+		$content = [];
 		$paths = [];
 
 		foreach ($this->fieldNames as $fieldName) {
 			$field = $this->{$fieldName};
-			$result[$fieldName] = $field->structure($values[$fieldName] ?? null);
+			$content[$fieldName] = $field->structure($values[$fieldName] ?? null);
 		}
 
 		// TODO: Improve the node kind determination or get rid of it
-		$kind = 'document';
-
-		if (is_subclass_of($this, Page::class)) {
-			$kind = 'page';
-		} else {
-			if (is_subclass_of($this, Block::class)) {
-				$kind = 'block';
-			}
-		}
+		$kind = match (true) {
+			is_subclass_of($this, Page::class) => 'page',
+			is_subclass_of($this, Block::class) => 'block',
+			default => 'document',
+		};
 
 		foreach ($this->context->locales() as $locale) {
 			$paths[$locale->id] = '';
@@ -196,7 +192,7 @@ abstract class Node
 			'hidden' => false,
 			'locked' => false,
 			'deletable' => $this->deletable(),
-			'content' => $result,
+			'content' => $content,
 			'type' => [
 				'handle' => static::handle(),
 				'kind' => $kind,
