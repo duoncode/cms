@@ -26,7 +26,7 @@ class Nodes
 	#[Permission('panel')]
 	public function get(Finder $find, Factory $factory): Response
 	{
-		$asDict = $this->request->param('asdict', 'false') === 'true' ? true : false;
+		$map = $this->tristateValue($this->request->param('map', 'false'));
 		$query = $this->request->param('query', null);
 		$published = $this->tristateValue($this->request->param('published', null));
 		$hidden = $this->tristateValue($this->request->param('hidden', 'false'));
@@ -81,7 +81,7 @@ class Nodes
 				$n['content'] = $node->content();
 			}
 
-			if ($asDict) {
+			if ($map) {
 				$result[$uid] = $n;
 			} else {
 				$result[] = $n;
