@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { GridItem } from '$types/data';
 	import type { GridField } from '$types/fields';
+
+	import { setDirty } from '$lib/state';
 	import GridButtonLabel from '$shell/controls/GridButtonLabel.svelte';
 	import IcoExpand from '$shell/icons/IcoExpand.svelte';
 	import IcoCollapse from '$shell/icons/IcoCollapse.svelte';
@@ -20,15 +22,23 @@
 	let onerow = $derived(item.rowspan === 1);
 	let unindented = $derived(item.colstart === null);
 	let fullyindented = $derived(
-		item.colstart !== null && item.colstart + item.colspan - 1 === field.columns,
+		item.colstart !== null &&
+			item.colstart !== undefined &&
+			item.colstart + item.colspan - 1 === field.columns,
 	);
 
 	function width(val: number) {
-		return () => (item.colspan = item.colspan + val);
+		return () => {
+			item.colspan = item.colspan + val;
+			setDirty();
+		};
 	}
 
 	function height(val: number) {
-		return () => (item.rowspan = item.rowspan + val);
+		return () => {
+			item.rowspan = item.rowspan + val;
+			setDirty();
+		};
 	}
 
 	function indent(val: number) {
@@ -37,16 +47,20 @@
 
 			if (val > 0 && colstart === null) {
 				item.colstart = 2;
+				setDirty();
 				return;
 			}
 
-			colstart += val;
+			if (colstart !== null && colstart !== undefined) {
+				colstart += val;
+			}
 
 			if (colstart === 0) {
 				colstart = null;
 			}
 
 			item.colstart = colstart;
+			setDirty();
 		};
 	}
 </script>

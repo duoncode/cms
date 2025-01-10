@@ -3,6 +3,8 @@
 	import type { GridText } from '$types/data';
 	import type { GridField } from '$types/fields';
 
+	import { setDirty } from '$lib/state';
+
 	type Props = {
 		field: GridField;
 		item: GridText;
@@ -11,8 +13,11 @@
 	};
 
 	let { field, item = $bindable(), index, children }: Props = $props();
-
 	let showSettings = $state(false);
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <div class="grid-cell-header">
@@ -24,7 +29,8 @@
 	{:else}
 		<textarea
 			name={field.name + '_' + index}
-			bind:value={item.value}>
+			bind:value={item.value}
+			{oninput}>
 		</textarea>
 	{/if}
 </div>

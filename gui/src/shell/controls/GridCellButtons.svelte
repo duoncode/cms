@@ -37,6 +37,7 @@
 				proceed: () => {
 					data.splice(index, 1);
 					data = data;
+					setDirty();
 					close();
 				},
 			},

@@ -3,6 +3,7 @@
 	import type { GridYoutube } from '$types/data';
 	import type { GridField } from '$types/fields';
 
+	import { setDirty } from '$lib/state';
 	import { _ } from '$lib/locale';
 	import Setting from '$shell/Setting.svelte';
 
@@ -23,6 +24,10 @@
 	if (!item.value) {
 		showSettings = true;
 	}
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <div class="grid-cell-header">
@@ -41,7 +46,8 @@
 					type="text"
 					maxlength="20"
 					placeholder={_('Fügen Sie hier die Youtube-ID ein')}
-					bind:value={item.value} />
+					bind:value={item.value}
+					{oninput} />
 			</div>
 		</Setting>
 		<Setting>
@@ -56,7 +62,8 @@
 					max="100"
 					min="1"
 					placeholder={_('Breite')}
-					bind:value={item.aspectRatioX} />
+					bind:value={item.aspectRatioX}
+					{oninput} />
 				<input
 					id={field.name + '_' + index + '_y'}
 					name={field.name + '_' + index + '_y'}
@@ -64,7 +71,8 @@
 					max="100"
 					min="1"
 					placeholder={_('Höhe')}
-					bind:value={item.aspectRatioY} />
+					bind:value={item.aspectRatioY}
+					{oninput} />
 			</div>
 		</Setting>
 	{:else}
