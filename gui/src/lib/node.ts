@@ -2,6 +2,7 @@ import type { Node } from '$types/data';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 import { _ } from '$lib/locale';
+import { setPristine } from '$lib/state';
 import req from '$lib/req';
 import toast from '$lib/toast';
 
@@ -19,6 +20,7 @@ export async function save(uid: string, node: Node) {
 			message: _('Dokument erfolgreich gespeichert!'),
 		});
 
+		setPristine();
 		return response?.data as Result;
 	} else {
 		const data = response?.data;
