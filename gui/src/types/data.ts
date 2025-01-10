@@ -53,8 +53,8 @@ export interface GridBase {
 	type: string;
 	colspan: number;
 	rowspan: number;
-	colstart?: number;
-	width?: number; // will be added while rendering the grid
+	colstart?: number | null;
+	width?: number | null; // will be added while rendering the grid
 }
 
 export interface GridText extends GridBase {
