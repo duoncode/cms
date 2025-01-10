@@ -29,6 +29,7 @@ export interface System {
 	allowedFiles: {
 		file: string[];
 		image: string[];
+		video: string[];
 	};
 }
 
@@ -47,6 +48,7 @@ export const system: Writable<System> = writable({
 	allowedFiles: {
 		file: [],
 		image: [],
+		video: [],
 	},
 });
 

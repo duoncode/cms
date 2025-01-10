@@ -49,7 +49,9 @@
 	let allowedExtensions = $derived(
 		type === 'image'
 			? $system.allowedFiles.image.join(', ')
-			: $system.allowedFiles.file.join(', '),
+			: type === 'video'
+				? $system.allowedFiles.video.join(', ')
+				: $system.allowedFiles.file.join(', '),
 	);
 
 	let { open, close } = getContext<ModalFunctions>('modal');

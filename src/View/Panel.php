@@ -64,6 +64,7 @@ class Panel
 			'allowedFiles' => [
 				'file' => array_merge(...array_values($config->get('upload.mimetypes.file'))),
 				'image' => array_merge(...array_values($config->get('upload.mimetypes.image'))),
+				'video' => array_merge(...array_values($config->get('upload.mimetypes.video'))),
 			],
 		];
 	}
