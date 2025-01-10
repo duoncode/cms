@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Node } from '$types/data';
 	import type { Locale } from '$lib/sys';
+
+	import { setDirty } from '$lib/state';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
 	import ToggleLine from '$shell/ToggleLine.svelte';
@@ -36,6 +38,10 @@
 
 		return '';
 	}
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
@@ -49,7 +55,8 @@
 							type="text"
 							bind:value={node.paths[locale.id]}
 							placeholder={getPathPlaceholder(locale)}
-							required={locale.id === $system.defaultLocale} />
+							required={locale.id === $system.defaultLocale}
+							{oninput} />
 					</div>
 				</div>
 			{/each}
