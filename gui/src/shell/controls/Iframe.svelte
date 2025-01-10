@@ -1,9 +1,11 @@
 <script lang="ts">
+	import type { TextData } from '$types/data';
+	import type { SimpleField } from '$types/fields';
+
+	import { setDirty } from '$lib/state';
 	import { system } from '$lib/sys';
 	import Field from '$shell/Field.svelte';
 	import Label from '$shell/Label.svelte';
-	import type { TextData } from '$types/data';
-	import type { SimpleField } from '$types/fields';
 
 	type Props = {
 		field: SimpleField;
@@ -11,8 +13,11 @@
 	};
 
 	let { field, data = $bindable() }: Props = $props();
-
 	let lang = $state($system.locale);
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <Field {field}>
@@ -31,7 +36,8 @@
 						id={field.name}
 						name={field.name}
 						required={field.required}
-						bind:value={data.value[locale.id]}>
+						bind:value={data.value[locale.id]}
+						{oninput}>
 					</textarea>
 				{/if}
 			{/each}
@@ -41,7 +47,8 @@
 				id={field.name}
 				name={field.name}
 				required={field.required}
-				bind:value={data.value}>
+				bind:value={data.value}
+				{oninput}>
 			</textarea>
 		{/if}
 	</div>

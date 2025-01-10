@@ -97,8 +97,6 @@
 			}
 		}
 
-		console.log(data);
-
 		setDirty();
 	}
 

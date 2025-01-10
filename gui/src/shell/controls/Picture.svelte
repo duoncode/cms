@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FileData } from '$types/data';
 	import type { ImageField } from '$types/fields';
+
 	import { system } from '$lib/sys';
 	import Field from '$shell/Field.svelte';
 	import Upload from '$shell/Upload.svelte';

@@ -1,8 +1,10 @@
 <script lang="ts">
-	import Field from '$shell/Field.svelte';
-	import Label from '$shell/Label.svelte';
 	import type { TextData } from '$types/data';
 	import type { SimpleField } from '$types/fields';
+
+	import { setDirty } from '$lib/state';
+	import Field from '$shell/Field.svelte';
+	import Label from '$shell/Label.svelte';
 
 	type Props = {
 		field: SimpleField;
@@ -10,6 +12,10 @@
 	};
 
 	let { field, data = $bindable() }: Props = $props();
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <Field {field}>
@@ -23,6 +29,7 @@
 			type="number"
 			required={field.required}
 			disabled={field.immutable}
-			bind:value={data.value} />
+			bind:value={data.value}
+			{oninput} />
 	</div>
 </Field>

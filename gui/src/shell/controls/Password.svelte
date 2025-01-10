@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { setDirty } from '$lib/state';
 	import Label from '$shell/Label.svelte';
 
 	type Props = {
@@ -9,6 +10,10 @@
 	};
 
 	let { value = $bindable(), label, id, required = false }: Props = $props();
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <div
@@ -24,6 +29,7 @@
 			type="password"
 			{required}
 			autocomplete="new-password"
-			bind:value />
+			bind:value
+			{oninput} />
 	</div>
 </div>

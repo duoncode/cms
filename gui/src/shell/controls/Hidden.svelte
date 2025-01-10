@@ -1,8 +1,9 @@
 <script lang="ts">
-	import Field from '$shell/Field.svelte';
-	import Label from '$shell/Label.svelte';
 	import type { TextData } from '$types/data';
 	import type { SimpleField } from '$types/fields';
+
+	import Field from '$shell/Field.svelte';
+	import Label from '$shell/Label.svelte';
 
 	type Props = {
 		field: SimpleField;

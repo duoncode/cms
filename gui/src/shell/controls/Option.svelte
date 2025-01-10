@@ -1,8 +1,10 @@
 <script lang="ts">
-	import Field from '$shell/Field.svelte';
-	import Label from '$shell/Label.svelte';
 	import type { TextData } from '$types/data';
 	import type { SimpleField } from '$types/fields';
+
+	import { setDirty } from '$lib/state';
+	import Field from '$shell/Field.svelte';
+	import Label from '$shell/Label.svelte';
 
 	type Props = {
 		field: SimpleField;
@@ -10,6 +12,10 @@
 	};
 
 	let { field, data = $bindable() }: Props = $props();
+
+	function onchange() {
+		setDirty();
+	}
 </script>
 
 <Field {field}>
@@ -21,7 +27,8 @@
 			id={field.name}
 			name={field.name}
 			required={field.required}
-			bind:value={data.value}>
+			bind:value={data.value}
+			{onchange}>
 			{#each field.options as option}
 				{#if typeof option === 'object'}
 					<option value={option.value}>{option.label}</option>

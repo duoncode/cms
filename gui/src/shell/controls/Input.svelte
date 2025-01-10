@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Label from '$shell/Label.svelte';
 	import { system } from '$lib/sys';
+	import { setDirty } from '$lib/state';
+	import Label from '$shell/Label.svelte';
 
 	type Props = {
 		value: string | Record<string, string>;
@@ -21,6 +22,10 @@
 	}: Props = $props();
 
 	let lang = $state($system.locale);
+
+	function oninput() {
+		setDirty();
+	}
 </script>
 
 <div
@@ -42,7 +47,8 @@
 						type="text"
 						{required}
 						autocomplete="off"
-						bind:value={value[locale.id]} />
+						bind:value={value[locale.id]}
+						{oninput} />
 				{/if}
 			{/each}
 		{:else}
@@ -52,7 +58,8 @@
 				type="text"
 				{required}
 				autocomplete="off"
-				bind:value />
+				bind:value
+				{oninput} />
 		{/if}
 	</div>
 	{#if description}
