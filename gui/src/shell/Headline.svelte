@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
+	import { dirty } from '$lib/state';
+	import { _ } from '$lib/locale';
 	import Published from '$shell/Published.svelte';
 
 	type Props = {
@@ -24,6 +26,12 @@
 		class="flex items-center"
 		class:pl-3={showPublished}>
 		{@render children()}
+		{#if $dirty}
+			<span
+				class="dirty-indicator ml-4 rounded-full bg-rose-600 px-2 pb-px text-sm font-bold text-white">
+				!
+			</span>
+		{/if}
 	</span>
 </h1>
 
