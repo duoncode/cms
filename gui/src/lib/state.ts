@@ -8,12 +8,28 @@ const dirty = derived(pristine, $pristine => !$pristine);
 const currentNode: Writable<null | Node> = writable(null);
 const currentFields: Writable<null | Field[]> = writable(null);
 
+function inIframe(): boolean {
+	try {
+		return window.self !== window.top;
+	} catch (_) {
+		return true;
+	}
+}
+
 function setDirty() {
 	pristine.set(false);
+
+	if (window.top && inIframe()) {
+		window.top.postMessage('cms-dirty', '*');
+	}
 }
 
 function setPristine() {
 	pristine.set(true);
+
+	if (window.top && inIframe()) {
+		window.top.postMessage('cms-pristine', '*');
+	}
 }
 
 function success(message: string) {
