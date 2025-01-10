@@ -1,8 +1,13 @@
 <script lang="ts">
+	import type { BeforeNavigate } from '@sveltejs/kit';
 	import type { Collection, Node } from '$types/data';
+	import type { ModalFunctions } from '$shell/modal';
 
+	import { getContext } from 'svelte';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
+	import { dirty, setPristine } from '$lib/state';
 	import { generatePaths } from '$lib/urlpaths';
 	import NodeControlBar from '$shell/NodeControlBar.svelte';
 	import Breadcrumbs from '$shell/Breadcrumbs.svelte';
@@ -12,6 +17,33 @@
 	import Tabs from '$shell/Tabs.svelte';
 	import Content from '$shell/Content.svelte';
 	import Settings from '$shell/Settings.svelte';
+	import ModalDirty from '$shell/modals/ModalDirty.svelte';
+
+	let { open, close } = getContext<ModalFunctions>('modal');
+
+	beforeNavigate(({ cancel, to }: BeforeNavigate) => {
+		if ($dirty) {
+			if (to === null) {
+				cancel();
+			} else {
+				cancel();
+				open(
+					ModalDirty,
+					{
+						proceed: () => {
+							setPristine();
+							close();
+							goto(to.url);
+						},
+						close,
+					},
+					{
+						hideClose: true,
+					},
+				);
+			}
+		}
+	});
 
 	type Props = {
 		node: Node;
