@@ -14,20 +14,22 @@
 	let { node = $bindable() }: Props = $props();
 
 	function getPathPlaceholder(locale: Locale) {
+		let localLocale: Locale | undefined = locale;
+
 		if (!node.generatedPaths) {
 			return '';
 		}
 
 		const localeId = locale.id;
 
-		while (locale) {
+		while (localLocale !== undefined) {
 			const value = node.paths[locale.id];
 
 			if (value) {
 				return value;
 			}
 
-			locale = $system.locales.find(l => l.id === locale.fallback);
+			localLocale = $system.locales.find(l => l.id === localLocale?.fallback);
 		}
 
 		const value = node.generatedPaths[localeId];
