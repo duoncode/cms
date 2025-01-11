@@ -15,24 +15,24 @@
 </script>
 
 <h1 class="mb-6 flex flex-row items-center justify-start text-3xl font-semibold">
-	{#if showPublished}
-		<span class="ml-1 inline-flex items-center">
-			<Published
-				{published}
-				large />
-		</span>
-	{/if}
-	<span
-		class="flex items-center"
-		class:pl-3={showPublished}>
+	<span class="flex items-center">
 		{@render children()}
+	</span>
+	<div class="status-bar flex flex-grow flex-row items-center justify-end">
 		{#if $dirty}
 			<span
 				class="dirty-indicator ml-4 rounded-full bg-rose-600 px-2 pb-px text-sm font-bold text-white">
 				!
 			</span>
 		{/if}
-	</span>
+		{#if showPublished}
+			<span class="ml-3 inline-flex items-center">
+				<Published
+					{published}
+					large />
+			</span>
+		{/if}
+	</div>
 </h1>
 
 <style lang="postcss">

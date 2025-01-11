@@ -12,23 +12,27 @@
 <span
 	class:large
 	class:published
-	title={published ? _('Veröffentlich') : _('Unveröffentlicht')}>
+	title={published ? _('veröffentlicht') : _('unveröffentlicht')}>
+	{#if large}
+		{published ? _('veröffentlicht') : _('unveröffentlicht')}
+	{/if}
 </span>
 
 <style lang="postcss">
 	span {
-		@apply inline-block rounded-full bg-gray-300;
+		@apply inline-block rounded-full bg-gray-300 text-sm;
 
-		width: 0.4rem;
 		height: 0.4rem;
+		width: 0.4rem;
 
 		&.large {
-			width: 0.5rem;
-			height: 0.5rem;
+			@apply px-2;
+			height: auto;
+			width: auto;
 		}
 
 		&.published {
-			@apply bg-green-600;
+			@apply bg-green-600 text-white;
 		}
 	}
 </style>
