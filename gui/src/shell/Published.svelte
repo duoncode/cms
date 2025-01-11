@@ -32,7 +32,7 @@
 		}
 
 		&.published {
-			@apply bg-green-600 text-white;
+			@apply bg-emerald-600 text-white;
 		}
 	}
 </style>
