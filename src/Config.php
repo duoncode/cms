@@ -70,6 +70,24 @@ class Config implements ConfigInterface
 		return $this->debug;
 	}
 
+	public function panelPath(): string
+	{
+		if ($this->env === 'development') {
+			return '/cms';
+		}
+
+		return $this->settings['path.panel'];
+	}
+
+	public function apiPath(): string
+	{
+		if ($this->env === 'development') {
+			return '/cms/api';
+		}
+
+		return $this->get('path.api', $this->panelPath() . '/api');
+	}
+
 	public function env(): string
 	{
 		return $this->env;
