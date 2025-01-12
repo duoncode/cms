@@ -27,7 +27,7 @@ export function getBase() {
 		}
 
 		const wlp = window.location.pathname.substring(1);
-		const basePath = wlp.substring(0, wlp.indexOf('/'));
+		const basePath = wlp.includes('/') ? wlp.substring(0, wlp.indexOf('/')) : wlp;
 
 		return `/${basePath}/`;
 	}
