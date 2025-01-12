@@ -1,4 +1,3 @@
-import { dev } from '$app/environment';
 import { get } from 'svelte/store';
 import req from '$lib/req';
 import { writable, type Writable } from 'svelte/store';
@@ -25,6 +24,7 @@ export interface System {
 	assets: string;
 	cache: string;
 	prefix: string;
+	api: string;
 	sessionExpires: number;
 	transliterate?: Record<string, string>;
 	allowedFiles: {
@@ -44,6 +44,7 @@ export const system: Writable<System> = writable({
 	assets: '',
 	cache: '',
 	prefix: '',
+	api: '',
 	sessionExpires: 3600,
 	locales: [],
 	allowedFiles: {
@@ -84,6 +85,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
 			assets: data.assets as string,
 			cache: data.cache as string,
 			prefix: data.prefix as string,
+			api: data.api as string,
 			sessionExpires: data.sessionExpires as number,
 			transliterate: data.transliterate as Record<string, string> | null,
 			allowedFiles: data.allowedFiles as {

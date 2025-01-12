@@ -8,9 +8,10 @@ import { system } from '$lib/sys';
 import { base } from '$lib/req';
 import req from '$lib/req';
 
-let iv: null | number = null;
+let iv: null | ReturnType<typeof setInterval> = null;
 
-export const load: LayoutLoad = async ({ fetch }) => {
+export const load: LayoutLoad = async ({ fetch, parent }) => {
+	await parent();
 	const authenticated = await loadUser(fetch);
 	const sessionExpires = get(system).sessionExpires;
 

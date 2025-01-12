@@ -27,7 +27,6 @@ class Config implements ConfigInterface
 
 			'panel.theme' => null,
 			'panel.logo' => '/images/logo.png',
-			'panel.debug' => $debug,
 			'panel.color-success' => '',
 			'panel.color-danger' => '',
 			'panel.color-info' => '',
@@ -72,7 +71,7 @@ class Config implements ConfigInterface
 
 	public function panelPath(): string
 	{
-		if ($this->env === 'development') {
+		if ($this->env === 'cms-development') {
 			return '/cms';
 		}
 
@@ -81,7 +80,7 @@ class Config implements ConfigInterface
 
 	public function apiPath(): string
 	{
-		if ($this->env === 'development') {
+		if ($this->env === 'cms-development') {
 			return '/cms/api';
 		}
 

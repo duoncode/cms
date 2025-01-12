@@ -1,13 +1,11 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-const paths = process.env.NODE_ENV === 'development' ? { base: '/cms' } : { relative: true };
-
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		paths,
+		paths: { base: '/cms' },
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',

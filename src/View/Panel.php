@@ -56,6 +56,7 @@ class Panel
 			'env' => $config->env(),
 			'csrfToken' => 'TOKEN', // TODO: real token
 			'logo' => $config->get('panel.logo', null),
+			'api' => $config->apiPath(),
 			'assets' => $config->get('path.assets'),
 			'cache' => $config->get('path.cache'),
 			'prefix' => $config->get('path.prefix'),

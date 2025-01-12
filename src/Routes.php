@@ -31,14 +31,8 @@ class Routes
 		protected Factory $factory,
 		protected bool $sessionEnabled,
 	) {
-		if ($config->env === 'development') {
-			$this->panelPath = '/cms';
-			$this->apiPath = '/cms/api';
-		} else {
-			$this->panelPath = $config->get('path.panel');
-			$this->apiPath = $config->get('path.api', $this->panelPath . '/api');
-		}
-
+		$this->panelPath = $config->panelPath();
+		$this->apiPath = $config->apiPath();
 		$this->initRequestMiddlware = new InitRequest($config);
 	}
 
