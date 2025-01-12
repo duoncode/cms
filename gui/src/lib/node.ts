@@ -1,5 +1,5 @@
 import type { Node } from '$types/data';
-import { base } from '$app/paths';
+import { base } from '$lib/req';
 import { goto } from '$app/navigation';
 import { _ } from '$lib/locale';
 import { setPristine } from '$lib/state';
@@ -40,7 +40,7 @@ export async function create(node: Node, type: string, documentPath: string) {
 	const response = await req.post(`node/${type}`, node);
 
 	if (response?.ok) {
-		await goto(`${base}/${documentPath}/${node.uid}`, {
+		await goto(`${base()}${documentPath}/${node.uid}`, {
 			invalidateAll: true,
 		});
 
@@ -64,7 +64,7 @@ export async function remove(uid: string, collectionPath: string) {
 	const response = await req.del(`node/${uid}`);
 
 	if (response?.ok) {
-		await goto(`${base}/${collectionPath}`, { invalidateAll: true });
+		await goto(`${base()}${collectionPath}`, { invalidateAll: true });
 
 		toast.add({
 			kind: 'success',

@@ -6,6 +6,10 @@ const devport = process.env.CMS_DEV_PORT ? parseInt(process.env.CMS_DEV_PORT, 10
 const devhost = process.env.CMS_DEV_HOST ? process.env.CMS_DEV_HOST : 'localhost';
 const appport = process.env.CMS_APP_PORT ? parseInt(process.env.CMS_APP_PORT, 10) : 1983;
 const apphost = process.env.CMS_APP_HOST ? process.env.CMS_APP_HOST : 'localhost';
+const target = {
+	target: `http://${apphost}:${appport}`,
+	secure: false,
+};
 
 export default defineConfig({
 	plugins: [sveltekit()],
@@ -14,38 +18,15 @@ export default defineConfig({
 		host: devhost,
 		strictPort: true,
 		proxy: {
-			'/panel/api': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/assets': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/cache': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/media': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/images': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/preview': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/vendor': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
-			'/fonts': {
-				target: `http://${apphost}:${appport}`,
-				secure: false,
-			},
+			'/cms/api': target,
+			'/cms/boot': target,
+			'/assets': target,
+			'/cache': target,
+			'/media': target,
+			'/images': target,
+			'/preview': target,
+			'/vendor': target,
+			'/fonts': target,
 		},
 	},
 	resolve: {

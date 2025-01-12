@@ -1,5 +1,5 @@
 import type { User } from '$types/data';
-import { base } from '$app/paths';
+import { base } from '$lib/req';
 import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { _ } from '$lib/locale';
@@ -8,7 +8,7 @@ import toast from '$lib/toast';
 
 export const authenticated = writable(false);
 export const user = writable(null);
-export const rememberedRoute = writable(base);
+export const rememberedRoute = writable(base());
 
 export async function loginUser(login: string, password: string, rememberme: boolean) {
 	const resp = await req.post('login', { login, password, rememberme });
@@ -47,7 +47,7 @@ export async function logoutUser() {
 
 	if (resp?.ok) {
 		user.set(null);
-		goto(`${base}/login`);
+		goto(`${base()}login`);
 	} else {
 		authenticated.set(true);
 		throw 'Error while logging out';

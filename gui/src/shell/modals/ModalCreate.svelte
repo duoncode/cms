@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Blueprint } from '$types/data';
 	import { ModalHeader, ModalBody, ModalFooter } from '$shell/modal';
-	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { _ } from '$lib/locale';
+	import { base } from '$lib/req';
 	import Button from '$shell/Button.svelte';
 
 	type Props = {
@@ -16,7 +16,7 @@
 
 	function createNode(slug: string) {
 		return () => {
-			goto(`${base}/collection/${collectionSlug}/create/${slug}`);
+			goto(`${base()}collection/${collectionSlug}/create/${slug}`);
 			close();
 		};
 	}

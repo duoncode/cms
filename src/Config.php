@@ -22,9 +22,10 @@ class Config implements ConfigInterface
 			'path.prefix' => '',
 			'path.assets' => '/assets',
 			'path.cache' => '/cache',
+			'path.panel' => '/cms',
+			'path.api' => null,
 
 			'panel.theme' => null,
-			'panel.prefix' => '/panel',
 			'panel.logo' => '/images/logo.png',
 			'panel.debug' => $debug,
 			'panel.color-success' => '',

@@ -197,6 +197,6 @@ class Panel
 
 	protected function getPanelIndex(): string
 	{
-		return $this->publicPath . $this->config->get('panel.prefix') . '/index.html';
+		return $this->publicPath . $this->config->get('path.panel') . '/index.html';
 	}
 }

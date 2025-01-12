@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { get } from 'svelte/store';
 import req from '$lib/req';
 import { writable, type Writable } from 'svelte/store';
@@ -64,9 +65,9 @@ export const setup = async (fetchFn: typeof window.fetch) => {
 	const sys = get(system);
 
 	if (!sys.initialized) {
-		const response = await req.get('boot', {}, fetchFn);
+		const response = await req.get(`${req.base()}boot`, {}, fetchFn);
 
-		if (!response.ok) {
+		if (!response?.ok) {
 			throw new Error('Fatal error while requesting settings');
 		}
 

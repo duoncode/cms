@@ -23,7 +23,6 @@ class Routes
 {
 	protected string $panelPath;
 	protected string $apiPath;
-	protected string $panelApiPath;
 	protected InitRequest $initRequestMiddlware;
 
 	public function __construct(
@@ -32,9 +31,14 @@ class Routes
 		protected Factory $factory,
 		protected bool $sessionEnabled,
 	) {
-		$this->panelPath = $config->get('panel.prefix');
-		$this->apiPath = '/api';
-		$this->panelApiPath = $this->panelPath . $this->apiPath;
+		if ($config->env === 'development') {
+			$this->panelPath = '/cms';
+			$this->apiPath = '/cms/api';
+		} else {
+			$this->panelPath = $config->get('path.panel');
+			$this->apiPath = $config->get('path.api', $this->panelPath . '/api');
+		}
+
 		$this->initRequestMiddlware = new InitRequest($config);
 	}
 
@@ -45,13 +49,7 @@ class Routes
 		$indexRoute = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
 		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
-		// All API routes
-		$this->addApi($app);
-		$this->addPanelApi($app, $session);
-
-		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall');
-		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel');
-		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash');
+		$this->addApi($app, $session);
 
 		$postMediaRoute = $app->post(
 			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
@@ -62,6 +60,15 @@ class Routes
 		$app->get('/media/image/...slug', [Media::class, 'image'], 'cms.media.image');
 		$app->get('/media/file/...slug', [Media::class, 'file'], 'cms.media.file');
 		$app->get('/media/video/...slug', [Media::class, 'file'], 'cms.media.video');
+
+		$app->get(
+			$this->panelPath . '/boot',
+			[Panel::class, 'boot'],
+			'cms.panel.boot',
+		)->after(new JsonRenderer($this->factory));
+		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall');
+		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel');
+		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash');
 
 		$catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
 
@@ -103,7 +110,6 @@ class Routes
 
 	protected function addSystem(Group $api): void
 	{
-		$api->get('/boot', [Panel::class, 'boot'], 'boot');
 		$api->get('/collections', [Panel::class, 'collections'], 'collections');
 		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
 		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.get');
@@ -114,25 +120,10 @@ class Routes
 		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'node.blueprint');
 	}
 
-	protected function addApi(App $app): void
+	protected function addApi(App $app, Session $session): void
 	{
 		$app->group(
 			$this->apiPath,
-			function (Group $api) {
-				$api->after(new JsonRenderer($this->factory));
-
-				$this->addAuth($api);
-				$this->addUser($api);
-				$this->addSystem($api);
-			},
-			'cms.api.',
-		);
-	}
-
-	protected function addPanelApi(App $app, Session $session): void
-	{
-		$app->group(
-			$this->panelApiPath,
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
 

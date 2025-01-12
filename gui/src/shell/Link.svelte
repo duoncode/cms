@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import { base } from '$app/paths';
+	import { base } from '$lib/req';
 
 	type Props = {
 		class?: string;
@@ -14,7 +14,7 @@
 </script>
 
 <a
-	href="{base}/{href}"
+	href="{base()}{href}"
 	class={cls}
 	{target}>
 	{@render children()}

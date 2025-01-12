@@ -1,11 +1,11 @@
 import type { LayoutLoad } from './$types';
 
-import { base } from '$app/paths';
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { fetchCollections } from '$lib/collections';
 import { loadUser } from '$lib/user';
 import { system } from '$lib/sys';
+import { base } from '$lib/req';
 import req from '$lib/req';
 
 let iv: null | number = null;
@@ -31,12 +31,12 @@ export const load: LayoutLoad = async ({ fetch }) => {
 					}
 
 					iv = null;
-					goto(`${base}/login`);
+					goto(`${base()}login`);
 				}
 			},
 			1000 * Math.floor(sessionExpires / 3.14159),
 		);
 	} else {
-		goto(`${base}/login`);
+		goto(`${base()}login`);
 	}
 };

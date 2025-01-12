@@ -1,10 +1,8 @@
 import { goto } from '$app/navigation';
-import { base } from '$app/paths';
-import { browser } from '$app/environment';
+import { browser, dev } from '$app/environment';
 import { get as getStore } from 'svelte/store';
 import { system } from '$lib/sys';
 
-const panelApi = `${base}/api/`;
 const domain = browser ? `${window.location.protocol}/${window.location.host}` : '';
 
 class Response {
@@ -20,6 +18,21 @@ type Headers = {
 	Accept: string;
 	'X-CSRF-Token'?: string;
 };
+
+export function base() {
+	if (browser) {
+		if (dev) {
+			return '/cms/';
+		}
+
+		const wlp = window.location.pathname.substring(1);
+		const basePath = wlp.substring(0, wlp.indexOf('/'));
+
+		return `/${basePath}/`;
+	}
+
+	return '/cms/';
+}
 
 function getDefaultOptions(): RequestInit {
 	const headers: Headers = {
@@ -64,6 +77,7 @@ async function fetchit(
 	options: RequestInit,
 	fetchFn: typeof window.fetch | null,
 ) {
+	const panelApi = `${base()}api/`;
 	const url = path.startsWith('/')
 		? new URL(path, domain)
 		: new URL(`${panelApi}${path}`, domain);
@@ -88,7 +102,7 @@ async function fetchit(
 
 			if (response.status === 401) {
 				if (message?.loginType !== 'token') {
-					goto(`${base}/login`);
+					goto(`${base()}login`);
 				}
 
 				return null;
@@ -142,4 +156,5 @@ export default {
 	get,
 	put,
 	del,
+	base,
 };

@@ -4,7 +4,7 @@
 
 	import { _ } from '$lib/locale';
 	import { getContext } from 'svelte';
-	import { base } from '$app/paths';
+	import { base } from '$lib/req';
 	import { goto } from '$app/navigation';
 	import NavToggle from './NavToggle.svelte';
 	import ModalCreate from '$shell/modals/ModalCreate.svelte';
@@ -30,7 +30,7 @@
 				{},
 			);
 		} else {
-			goto(`${base}/collection/${collectionSlug}/create/${blueprints[0].slug}`);
+			goto(`${base()}collection/${collectionSlug}/create/${blueprints[0].slug}`);
 		}
 	}
 </script>
