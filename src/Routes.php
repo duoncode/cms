@@ -22,6 +22,7 @@ use FiveOrbs\Router\Route;
 class Routes
 {
 	protected string $panelPath;
+	protected string $panelApiPath;
 	protected string $apiPath;
 	protected InitRequest $initRequestMiddlware;
 
@@ -32,6 +33,7 @@ class Routes
 		protected bool $sessionEnabled,
 	) {
 		$this->panelPath = $config->panelPath();
+		$this->panelApiPath = $this->panelPath . '/api';
 		$this->apiPath = $config->apiPath();
 		$this->initRequestMiddlware = new InitRequest($config);
 	}
@@ -43,6 +45,7 @@ class Routes
 		$indexRoute = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
 		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
+		$this->addPanelApi($app, $session);
 		$this->addApi($app, $session);
 
 		$postMediaRoute = $app->post(
@@ -114,10 +117,10 @@ class Routes
 		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'node.blueprint');
 	}
 
-	protected function addApi(App $app, Session $session): void
+	protected function addPanelApi(App $app, Session $session): void
 	{
 		$app->group(
-			$this->apiPath,
+			$this->panelApiPath,
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
 
@@ -131,5 +134,22 @@ class Routes
 			},
 			'cms.panel.api.',
 		);
+	}
+
+	protected function addApi(App $app): void
+	{
+		if ($this->apiPath) {
+			$app->group(
+				$this->panelApiPath,
+				function (Group $api) use ($session) {
+					$api->after(new JsonRenderer($this->factory));
+
+					$this->addAuth($api);
+					$this->addUser($api);
+					$this->addSystem($api);
+				},
+				'cms.panel.api.',
+			);
+		}
 	}
 }

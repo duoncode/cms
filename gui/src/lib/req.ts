@@ -5,7 +5,6 @@ import { system } from '$lib/sys';
 
 const domain = browser ? `${window.location.protocol}/${window.location.host}` : '';
 export const base = getBase();
-let apiPath = '';
 
 class Response {
 	constructor(
@@ -73,20 +72,6 @@ function getBodyOptions(method: Method, data?: any) {
 	return options;
 }
 
-function getApiPath() {
-	if (apiPath === '') {
-		const $system = getStore(system);
-
-		apiPath = $system.api;
-
-		if (!apiPath.endsWith('/')) {
-			apiPath = `${apiPath}/`;
-		}
-	}
-
-	return apiPath;
-}
-
 async function fetchit(
 	path: string,
 	params: Record<string, string>,
@@ -95,7 +80,7 @@ async function fetchit(
 ) {
 	const url = path.startsWith('/')
 		? new URL(path, domain)
-		: new URL(`${getApiPath()}${path}`, domain);
+		: new URL(`${base}/api/${path}`, domain);
 
 	if (fetchFn === null) {
 		fetchFn = window.fetch;
