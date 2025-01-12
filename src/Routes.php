@@ -23,7 +23,7 @@ class Routes
 {
 	protected string $panelPath;
 	protected string $panelApiPath;
-	protected string $apiPath;
+	protected string|null $apiPath;
 	protected InitRequest $initRequestMiddlware;
 
 	public function __construct(
@@ -138,17 +138,17 @@ class Routes
 
 	protected function addApi(App $app): void
 	{
-		if ($this->apiPath) {
+		if ($this->apiPath !== null) {
 			$app->group(
-				$this->panelApiPath,
-				function (Group $api) use ($session) {
+				$this->apiPath,
+				function (Group $api) {
 					$api->after(new JsonRenderer($this->factory));
 
 					$this->addAuth($api);
 					$this->addUser($api);
 					$this->addSystem($api);
 				},
-				'cms.panel.api.',
+				'cms.api.',
 			);
 		}
 	}

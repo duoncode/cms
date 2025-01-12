@@ -44,7 +44,6 @@ class Nodes
 			if(count($uids) > 1) {
 				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
 				$query = "uid @ [{$quoted}]";
-				error_log($query);
 			} else {
 				$query = "uid = '{$uid}'";
 			}

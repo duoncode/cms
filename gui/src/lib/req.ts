@@ -80,7 +80,7 @@ async function fetchit(
 ) {
 	const url = path.startsWith('/')
 		? new URL(path, domain)
-		: new URL(`${base}/api/${path}`, domain);
+		: new URL(`${base}api/${path}`, domain);
 
 	if (fetchFn === null) {
 		fetchFn = window.fetch;
