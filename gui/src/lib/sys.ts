@@ -65,7 +65,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
 	const sys = get(system);
 
 	if (!sys.initialized) {
-		const response = await req.get(`${req.base()}boot`, {}, fetchFn);
+		const response = await req.get(`${req.base}boot`, {}, fetchFn);
 
 		if (!response?.ok) {
 			throw new Error('Fatal error while requesting settings');

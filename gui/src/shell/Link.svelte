@@ -14,7 +14,7 @@
 </script>
 
 <a
-	href="{base()}{href}"
+	href="{base}{href}"
 	class={cls}
 	{target}>
 	{@render children()}

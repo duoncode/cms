@@ -4,6 +4,7 @@ import { get as getStore } from 'svelte/store';
 import { system } from '$lib/sys';
 
 const domain = browser ? `${window.location.protocol}/${window.location.host}` : '';
+export const base = getBase();
 
 class Response {
 	constructor(
@@ -19,7 +20,7 @@ type Headers = {
 	'X-CSRF-Token'?: string;
 };
 
-export function base() {
+export function getBase() {
 	if (browser) {
 		if (dev) {
 			return '/cms/';
@@ -77,7 +78,7 @@ async function fetchit(
 	options: RequestInit,
 	fetchFn: typeof window.fetch | null,
 ) {
-	const panelApi = `${base()}api/`;
+	const panelApi = `${base}api/`;
 	const url = path.startsWith('/')
 		? new URL(path, domain)
 		: new URL(`${panelApi}${path}`, domain);
@@ -102,7 +103,7 @@ async function fetchit(
 
 			if (response.status === 401) {
 				if (message?.loginType !== 'token') {
-					goto(`${base()}login`);
+					goto(`${base}login`);
 				}
 
 				return null;

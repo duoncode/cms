@@ -16,7 +16,7 @@
 
 	function createNode(slug: string) {
 		return () => {
-			goto(`${base()}collection/${collectionSlug}/create/${slug}`);
+			goto(`${base}collection/${collectionSlug}/create/${slug}`);
 			close();
 		};
 	}

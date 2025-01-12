@@ -31,12 +31,12 @@ export const load: LayoutLoad = async ({ fetch }) => {
 					}
 
 					iv = null;
-					goto(`${base()}login`);
+					goto(`${base}login`);
 				}
 			},
 			1000 * Math.floor(sessionExpires / 3.14159),
 		);
 	} else {
-		goto(`${base()}login`);
+		goto(`${base}login`);
 	}
 };
