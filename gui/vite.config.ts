@@ -17,6 +17,7 @@ export default defineConfig({
 		port: devport,
 		host: devhost,
 		strictPort: true,
+		allowedHosts: true, // TODO: Check if this is necessary. Currently active to allow working with OrbStack domains
 		proxy: {
 			'/cms/api': target,
 			'/cms/boot': target,
