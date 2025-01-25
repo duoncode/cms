@@ -80,7 +80,7 @@ class Config implements ConfigInterface
 
 	public function apiPath(): string|null
 	{
-		return $this->get('path.api');
+		return $this->get('path.api', null);
 	}
 
 	public function env(): string
