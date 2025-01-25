@@ -91,7 +91,7 @@
 											<File
 												node={$node.uid}
 												file={file.file}
-												onclick={clickFile}
+												{clickFile}
 												bind:current={value} />
 										{/if}
 									{/each}
