@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Commands;
+namespace Duon\Cms\Commands;
 
-use FiveOrbs\Cli\Command;
+use Duon\Cli\Command;
 
 class InitApp extends Command
 {
 	protected string $group = 'General';
 	protected string $name = 'init-app';
-	protected string $description = 'Initialize the FiveOrbs app';
+	protected string $description = 'Initialize the Duon app';
 
 	public function run(): int
 	{

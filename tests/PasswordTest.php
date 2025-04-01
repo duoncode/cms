@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Tests\Setup\TestCase;
-use FiveOrbs\Cms\Util\Password;
+use Duon\Cms\Config;
+use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Util\Password;
 
 final class PasswordTest extends TestCase
 {
@@ -37,7 +37,7 @@ final class PasswordTest extends TestCase
 
 	public function testPasswordInitFromConfig(): void
 	{
-		$config = new Config('fiveorbs');
+		$config = new Config('duon');
 		$hasArgon = Password::hasArgon2();
 
 		if ($hasArgon) {

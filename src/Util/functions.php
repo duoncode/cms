@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Util;
+namespace Duon\Cms\Util;
 
 use Hidehalo\Nanoid\Client;
 

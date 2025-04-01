@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Context;
+use Duon\Cms\Context;
 use Generator;
 use Iterator;
 

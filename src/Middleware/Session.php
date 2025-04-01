@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Middleware;
+namespace Duon\Cms\Middleware;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Users;
-use FiveOrbs\Quma\Database;
+use Duon\Cms\Config;
+use Duon\Cms\Users;
+use Duon\Quma\Database;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
@@ -18,7 +18,7 @@ class Session implements Middleware
 
 	public function process(Request $request, Handler $handler): Response
 	{
-		$session = new \FiveOrbs\Cms\Session(
+		$session = new \Duon\Cms\Session(
 			$this->config->app(),
 			$this->config->get('session.options'),
 			$this->config->get('session.handler', null),

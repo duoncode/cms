@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Schema;
+namespace Duon\Cms\Schema;
 
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Field\File;
-use FiveOrbs\Cms\Field\Image;
-use FiveOrbs\Cms\Field\Picture;
-use FiveOrbs\Cms\Locales;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Sire\Schema;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Field\File;
+use Duon\Cms\Field\Image;
+use Duon\Cms\Field\Picture;
+use Duon\Cms\Locales;
+use Duon\Cms\Node\Node;
+use Duon\Sire\Schema;
 
 class NodeSchemaFactory
 {
@@ -45,24 +45,24 @@ class NodeSchemaFactory
 		$validators = $field->validators();
 
 		$schema->add($fieldName, match ($field::class) {
-			\FiveOrbs\Cms\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
-			\FiveOrbs\Cms\Field\Date::class => $this->addText($field, 'date', $validators),
-			\FiveOrbs\Cms\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
-			\FiveOrbs\Cms\Field\Decimal::class => $this->addText($field, 'decimal', $validators),
-			\FiveOrbs\Cms\Field\File::class => $this->addFile($field, 'file', $validators),
-			\FiveOrbs\Cms\Field\Video::class => $this->addFile($field, 'video', $validators),
-			\FiveOrbs\Cms\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
-			\FiveOrbs\Cms\Field\Html::class => $this->addText($field, 'html', $validators),
-			\FiveOrbs\Cms\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
-			\FiveOrbs\Cms\Field\Image::class => $this->addImage($field, 'image', $validators),
-			\FiveOrbs\Cms\Field\Number::class => $this->addNumber($field, 'number', $validators),
-			\FiveOrbs\Cms\Field\Option::class => $this->addOption($field, 'option', $validators),
-			\FiveOrbs\Cms\Field\Picture::class => $this->addImage($field, 'picture', $validators),
-			\FiveOrbs\Cms\Field\Radio::class => $this->addText($field, 'radio', $validators),
-			\FiveOrbs\Cms\Field\Text::class => $this->addText($field, 'text', $validators),
-			\FiveOrbs\Cms\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
-			\FiveOrbs\Cms\Field\Time::class => $this->addText($field, 'time', $validators),
-			\FiveOrbs\Cms\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
+			\Duon\Cms\Field\Checkbox::class => $this->addBool($field, 'checkbox', $validators),
+			\Duon\Cms\Field\Date::class => $this->addText($field, 'date', $validators),
+			\Duon\Cms\Field\DateTime::class => $this->addText($field, 'datetime', $validators),
+			\Duon\Cms\Field\Decimal::class => $this->addText($field, 'decimal', $validators),
+			\Duon\Cms\Field\File::class => $this->addFile($field, 'file', $validators),
+			\Duon\Cms\Field\Video::class => $this->addFile($field, 'video', $validators),
+			\Duon\Cms\Field\Grid::class => $this->addGrid($field, 'grid', $validators),
+			\Duon\Cms\Field\Html::class => $this->addText($field, 'html', $validators),
+			\Duon\Cms\Field\Iframe::class => $this->addText($field, 'iframe', $validators),
+			\Duon\Cms\Field\Image::class => $this->addImage($field, 'image', $validators),
+			\Duon\Cms\Field\Number::class => $this->addNumber($field, 'number', $validators),
+			\Duon\Cms\Field\Option::class => $this->addOption($field, 'option', $validators),
+			\Duon\Cms\Field\Picture::class => $this->addImage($field, 'picture', $validators),
+			\Duon\Cms\Field\Radio::class => $this->addText($field, 'radio', $validators),
+			\Duon\Cms\Field\Text::class => $this->addText($field, 'text', $validators),
+			\Duon\Cms\Field\Textarea::class => $this->addText($field, 'textarea', $validators),
+			\Duon\Cms\Field\Time::class => $this->addText($field, 'time', $validators),
+			\Duon\Cms\Field\Youtube::class => $this->addText($field, 'youtube', $validators),
 		}, ...$validators)->label($field->getLabel());
 	}
 

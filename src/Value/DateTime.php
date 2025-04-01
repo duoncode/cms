@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Node\Node;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
 use IntlDateFormatter;
 
 class DateTime extends Value

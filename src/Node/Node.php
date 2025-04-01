@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Node;
+namespace Duon\Cms\Node;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\NoSuchField;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Field\Attr;
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Locale;
-use FiveOrbs\Cms\Schema\NodeSchemaFactory;
-use FiveOrbs\Cms\Value\Value;
-use FiveOrbs\Cms\Value\ValueContext;
-use FiveOrbs\Core\Exception\HttpBadRequest;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Quma\Database;
-use FiveOrbs\Registry\Registry;
+use Duon\Cms\Config;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\NoSuchField;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Attr;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Locale;
+use Duon\Cms\Schema\NodeSchemaFactory;
+use Duon\Cms\Value\Value;
+use Duon\Cms\Value\ValueContext;
+use Duon\Core\Exception\HttpBadRequest;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Core\Response;
+use Duon\Quma\Database;
+use Duon\Registry\Registry;
 use ReflectionClass;
 use ReflectionProperty;
 use ReflectionUnionType;
 use Throwable;
 
-use function FiveOrbs\Cms\Util\nanoid;
+use function Duon\Cms\Util\nanoid;
 
 abstract class Node
 {
@@ -573,7 +573,7 @@ abstract class Node
 					$field->default($attr->newInstance()->get());
 					break;
 				case Attr\TranslateFile::class:
-					if (!($field instanceof \FiveOrbs\Cms\Field\Image) && !($field instanceof \FiveOrbs\Cms\Field\File)) {
+					if (!($field instanceof \Duon\Cms\Field\Image) && !($field instanceof \Duon\Cms\Field\File)) {
 						throw new RuntimeException(
 							'Cannot apply attribute TranslateFile to field ' . $fieldName . ' of type ' . $field::class,
 						);
@@ -583,7 +583,7 @@ abstract class Node
 
 					break;
 				case Attr\Columns::class:
-					if (!$field instanceof \FiveOrbs\Cms\Field\Grid) {
+					if (!$field instanceof \Duon\Cms\Field\Grid) {
 						throw new RuntimeException('Cannot apply attribute Columns to ' . $field::class);
 					}
 

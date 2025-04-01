@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Finder\Nodes;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Finder\Nodes;
 
 abstract class Collection
 {

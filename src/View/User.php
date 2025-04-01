@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Cms\Util\Password;
-use FiveOrbs\Core\Exception\HttpBadRequest;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Quma\Database;
+use Duon\Cms\Config;
+use Duon\Cms\Middleware\Permission;
+use Duon\Cms\Util\Password;
+use Duon\Core\Exception\HttpBadRequest;
+use Duon\Core\Request;
+use Duon\Quma\Database;
 
 class User
 {

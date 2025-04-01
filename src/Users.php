@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Quma\Database;
+use Duon\Quma\Database;
 
 class Users
 {

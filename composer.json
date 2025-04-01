@@ -1,6 +1,6 @@
 {
-	"name": "fiveorbs/cms",
-	"description": "FiveOrbs Content Management Framework",
+	"name": "duon/cms",
+	"description": "Duon content management system and framework",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
@@ -13,12 +13,12 @@
 	"prefer-stable": true,
 	"require": {
 		"php": ">=8.3",
-		"fiveorbs/core": "dev-main",
-		"fiveorbs/error": "dev-main",
-		"fiveorbs/quma": "dev-main",
-		"fiveorbs/registry": "dev-main",
-		"fiveorbs/session": "dev-main",
-		"fiveorbs/sire": "dev-main",
+		"duon/core": "dev-main",
+		"duon/error": "dev-main",
+		"duon/quma": "dev-main",
+		"duon/registry": "dev-main",
+		"duon/session": "dev-main",
+		"duon/sire": "dev-main",
 		"gumlet/php-image-resize": "2.0.*",
 		"hidehalo/nanoid-php": "^2",
 		"laminas/laminas-httphandlerrunner": "^2.4",
@@ -26,13 +26,13 @@
 		"symfony/html-sanitizer": "^7.1"
 	},
 	"require-dev": {
-		"fiveorbs/dev": "^1.1",
+		"duon/dev": "^1.1",
 		"laminas/laminas-diactoros": "^3",
-		"phpunit/phpunit": "^11"
+		"phpunit/phpunit": "^12"
 	},
 	"autoload": {
 		"psr-4": {
-			"FiveOrbs\\Cms\\": "src"
+			"Duon\\Cms\\": "src"
 		},
 		"files": [
 			"src/Util/functions.php"
@@ -40,7 +40,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"FiveOrbs\\Cms\\Tests\\": "tests"
+			"Duon\\Cms\\Tests\\": "tests"
 		}
 	},
 	"config": {

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Collection;
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Locales;
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Cms\Section;
-use FiveOrbs\Core\Exception\HttpNotFound;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Registry\Registry;
-use FiveOrbs\Wire\Creator;
+use Duon\Cms\Collection;
+use Duon\Cms\Config;
+use Duon\Cms\Context;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Locales;
+use Duon\Cms\Middleware\Permission;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Section;
+use Duon\Core\Exception\HttpNotFound;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Core\Response;
+use Duon\Registry\Registry;
+use Duon\Wire\Creator;
 
 class Panel
 {

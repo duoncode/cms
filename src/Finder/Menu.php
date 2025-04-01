@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\RuntimeException;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\RuntimeException;
 use Iterator;
 
 class Menu implements Iterator

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Finder\OrderCompiler;
-use FiveOrbs\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Finder\OrderCompiler;
+use Duon\Cms\Tests\Setup\TestCase;
 
 const OB = "\n    ";
 

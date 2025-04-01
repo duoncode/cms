@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field\Attr;
+namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 

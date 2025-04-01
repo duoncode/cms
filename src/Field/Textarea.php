@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
 class Textarea extends Text
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Node;
+namespace Duon\Cms\Node;
 
 abstract class Block extends Node
 {

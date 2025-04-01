@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Tests\Setup\TestCase;
-use FiveOrbs\Cms\Util\Strings;
+use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Util\Strings;
 
 final class UtilStringTest extends TestCase
 {

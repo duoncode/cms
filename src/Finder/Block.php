@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Node\Block as BlockNode;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Cms\Renderer;
-use FiveOrbs\Core\Exception\HttpBadRequest;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Node\Block as BlockNode;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Renderer;
+use Duon\Core\Exception\HttpBadRequest;
 use Throwable;
 
 class Block

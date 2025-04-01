@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Assets\ResizeMode;
-use FiveOrbs\Cms\Assets\Size;
-use FiveOrbs\Cms\Field;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Cms\Util\Html as HtmlUtil;
+use Duon\Cms\Assets\ResizeMode;
+use Duon\Cms\Assets\Size;
+use Duon\Cms\Field;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Util\Html as HtmlUtil;
 use Generator;
 use Gumlet\ImageResize;
 

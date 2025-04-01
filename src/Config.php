@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Core\AddsConfigInterface;
-use FiveOrbs\Core\ConfigInterface;
-use FiveOrbs\Core\Exception\ValueError;
+use Duon\Core\AddsConfigInterface;
+use Duon\Core\ConfigInterface;
+use Duon\Core\Exception\ValueError;
 
 class Config implements ConfigInterface
 {

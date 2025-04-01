@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Util\Time;
+use Duon\Cms\Config;
+use Duon\Cms\Util\Time;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
 

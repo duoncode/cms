@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use function FiveOrbs\Cms\Util\escape;
+use function Duon\Cms\Util\escape;
 
 class Str extends Value
 {

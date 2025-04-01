@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Node\Node;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
 use NumberFormatter;
 
 class Decimal extends Value

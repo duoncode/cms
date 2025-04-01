@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Exception\ParserOutputException;
-use FiveOrbs\Cms\Finder\Input\Token;
-use FiveOrbs\Cms\Finder\Input\TokenGroup;
-use FiveOrbs\Cms\Finder\Input\TokenType;
-use FiveOrbs\Cms\Finder\Output\Comparison;
-use FiveOrbs\Cms\Finder\Output\Exists;
-use FiveOrbs\Cms\Finder\Output\Expression;
-use FiveOrbs\Cms\Finder\Output\LeftParen;
-use FiveOrbs\Cms\Finder\Output\NullComparison;
-use FiveOrbs\Cms\Finder\Output\Operator;
-use FiveOrbs\Cms\Finder\Output\RightParen;
-use FiveOrbs\Cms\Finder\Output\UrlPath;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Exception\ParserOutputException;
+use Duon\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\TokenGroup;
+use Duon\Cms\Finder\Input\TokenType;
+use Duon\Cms\Finder\Output\Comparison;
+use Duon\Cms\Finder\Output\Exists;
+use Duon\Cms\Finder\Output\Expression;
+use Duon\Cms\Finder\Output\LeftParen;
+use Duon\Cms\Finder\Output\NullComparison;
+use Duon\Cms\Finder\Output\Operator;
+use Duon\Cms\Finder\Output\RightParen;
+use Duon\Cms\Finder\Output\UrlPath;
 
 final class QueryParser
 {

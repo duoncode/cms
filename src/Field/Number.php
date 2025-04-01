@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Value\Number as NumberValue;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Value\Number as NumberValue;
 
 class Number extends Field
 {

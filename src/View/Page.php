@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Cms\Util\Path;
-use FiveOrbs\Core\Exception\HttpBadRequest;
-use FiveOrbs\Core\Exception\HttpNotFound;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Registry\Registry;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Middleware\Permission;
+use Duon\Cms\Util\Path;
+use Duon\Core\Exception\HttpBadRequest;
+use Duon\Core\Exception\HttpNotFound;
+use Duon\Core\Factory;
+use Duon\Core\Response;
+use Duon\Registry\Registry;
 
 class Page
 {

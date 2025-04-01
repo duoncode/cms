@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Util\Html as HtmlUtil;
+use Duon\Cms\Util\Html as HtmlUtil;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 class Html extends Text

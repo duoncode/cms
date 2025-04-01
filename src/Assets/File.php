@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Assets;
+namespace Duon\Cms\Assets;
 
-use FiveOrbs\Cms\Util\Path;
-use FiveOrbs\Core\Request;
+use Duon\Cms\Util\Path;
+use Duon\Core\Request;
 
 class File
 {

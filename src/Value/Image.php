@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Assets;
-use FiveOrbs\Cms\Exception\RuntimeException;
+use Duon\Cms\Assets;
+use Duon\Cms\Exception\RuntimeException;
 use Gumlet\ImageResize;
 
-use function FiveOrbs\Cms\Util\escape;
+use function Duon\Cms\Util\escape;
 
 class Image extends File
 {

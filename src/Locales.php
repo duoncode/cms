@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
 use Closure;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Middleware\AddLocale;
-use FiveOrbs\Core\App;
-use FiveOrbs\Core\Plugin;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Middleware\AddLocale;
+use Duon\Core\App;
+use Duon\Core\Plugin;
 use Iterator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

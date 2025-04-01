@@ -6,7 +6,7 @@
 	colors="true"
 	cacheDirectory=".phpunit.cache">
   <testsuites>
-    <testsuite name="FiveOrbs Cms Test Suite">
+    <testsuite name="Duon Cms Test Suite">
       <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Assets;
+namespace Duon\Cms\Assets;
 
 enum ResizeMode: string
 {

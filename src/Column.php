@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
 use Closure;
-use FiveOrbs\Cms\Node\Node;
+use Duon\Cms\Node\Node;
 
-use function FiveOrbs\Cms\Util\escape;
+use function Duon\Cms\Util\escape;
 
 final class Column
 {

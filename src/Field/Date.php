@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\Date as DateValue;
+use Duon\Cms\Value\Date as DateValue;
 
 class Date extends Field
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Assets;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Node\Node;
+use Duon\Cms\Assets;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
 
 class File extends Value
 {

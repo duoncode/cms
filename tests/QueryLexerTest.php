@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Finder\QueryLexer;
-use FiveOrbs\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Finder\QueryLexer;
+use Duon\Cms\Tests\Setup\TestCase;
 
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |' .
 	'(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | ' .

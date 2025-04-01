@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Finder\Input\Token;
-use FiveOrbs\Cms\Finder\Input\TokenGroup;
-use FiveOrbs\Cms\Finder\Input\TokenType;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\TokenGroup;
+use Duon\Cms\Finder\Input\TokenType;
 
 final class QueryLexer
 {

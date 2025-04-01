@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests\Setup;
+namespace Duon\Cms\Tests\Setup;
 
 class C
 {

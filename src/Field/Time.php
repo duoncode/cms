@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\Time as TimeValue;
+use Duon\Cms\Value\Time as TimeValue;
 
 class Time extends Field
 {

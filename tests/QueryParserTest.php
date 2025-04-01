@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Finder\Output\Comparison;
-use FiveOrbs\Cms\Finder\Output\Exists;
-use FiveOrbs\Cms\Finder\Output\LeftParen;
-use FiveOrbs\Cms\Finder\Output\Operator;
-use FiveOrbs\Cms\Finder\Output\RightParen;
-use FiveOrbs\Cms\Finder\Output\UrlPath;
-use FiveOrbs\Cms\Finder\QueryParser;
-use FiveOrbs\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Finder\Output\Comparison;
+use Duon\Cms\Finder\Output\Exists;
+use Duon\Cms\Finder\Output\LeftParen;
+use Duon\Cms\Finder\Output\Operator;
+use Duon\Cms\Finder\Output\RightParen;
+use Duon\Cms\Finder\Output\UrlPath;
+use Duon\Cms\Finder\QueryParser;
+use Duon\Cms\Tests\Setup\TestCase;
 
 final class QueryParserTest extends TestCase
 {

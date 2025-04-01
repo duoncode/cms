@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Router\After;
+use Duon\Core\Factory;
+use Duon\Core\Response;
+use Duon\Router\After;
 use Psr\Http\Message\ResponseInterface as PsrResponse;
 use Traversable;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Assets;
+namespace Duon\Cms\Assets;
 
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Util\Path;
-use FiveOrbs\Core\Request;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Util\Path;
+use Duon\Core\Request;
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
 
@@ -24,7 +24,7 @@ class Image
 	) {
 		try {
 			$this->file = Path::inside($assets->assetsDir, $file, checkIsFile: true);
-		} catch(RuntimeException) {
+		} catch (RuntimeException) {
 			$this->file = Path::inside($assets->assetsDir, 'not-found.jpg', checkIsFile: true);
 		}
 

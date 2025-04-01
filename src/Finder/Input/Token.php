@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder\Input;
+namespace Duon\Cms\Finder\Input;
 
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Quma\Database;
+use Duon\Cms\Exception\ParserException;
+use Duon\Quma\Database;
 
 readonly class Token
 {
@@ -40,7 +40,7 @@ readonly class Token
 		$result = [];
 		$type = null;
 
-		foreach($list as $item) {
+		foreach ($list as $item) {
 			if ($type === null) {
 				$type = $item->type;
 			} else {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder;
+namespace Duon\Cms\Finder;
 
-use FiveOrbs\Cms\Exception\ParserException;
+use Duon\Cms\Exception\ParserException;
 
 trait CompilesField
 {

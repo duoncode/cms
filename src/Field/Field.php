@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Field\Attr\FulltextWeight;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Cms\Value\Value;
-use FiveOrbs\Cms\Value\ValueContext;
+use Duon\Cms\Field\Attr\FulltextWeight;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Value\Value;
+use Duon\Cms\Value\ValueContext;
 
 abstract class Field
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder\Input;
+namespace Duon\Cms\Finder\Input;
 
 enum TokenType
 {

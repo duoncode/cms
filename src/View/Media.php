@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Assets\Assets;
-use FiveOrbs\Cms\Assets\ResizeMode;
-use FiveOrbs\Cms\Assets\Size;
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Core\Response;
+use Duon\Cms\Assets\Assets;
+use Duon\Cms\Assets\ResizeMode;
+use Duon\Cms\Assets\Size;
+use Duon\Cms\Config;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Middleware\Permission;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Core\Response;
 use Gumlet\ImageResize;
 
 class Media

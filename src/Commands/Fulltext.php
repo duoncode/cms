@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Commands;
+namespace Duon\Cms\Commands;
 
-use FiveOrbs\Quma\Commands\Command;
-use FiveOrbs\Quma\Database;
+use Duon\Quma\Commands\Command;
+use Duon\Quma\Database;
 
 class Fulltext extends Command
 {

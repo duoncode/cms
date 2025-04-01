@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Node;
+namespace Duon\Cms\Node;
 
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Locale;
-use FiveOrbs\Quma\Database;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Locale;
+use Duon\Quma\Database;
 
-use function FiveOrbs\Cms\Util\nanoid;
+use function Duon\Cms\Util\nanoid;
 
 abstract class Page extends Node
 {

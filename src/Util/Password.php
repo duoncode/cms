@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Util;
+namespace Duon\Cms\Util;
 
-use FiveOrbs\Cms\Config;
+use Duon\Cms\Config;
 
 class Password
 {

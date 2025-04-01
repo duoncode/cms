@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\DateTime as DateTimeValue;
+use Duon\Cms\Value\DateTime as DateTimeValue;
 
 class DateTime extends Field
 {

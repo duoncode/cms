@@ -1,4 +1,4 @@
-# FiveOrbs Content Management Framework
+# Duon Content Management Framework
 
 > :warning: **Note**: This library is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing. 
 
@@ -11,14 +11,14 @@ Settings
 
 Test database:
 
-    CREATE DATABASE fiveorbs_cms_test_db WITH TEMPLATE = template0 ENCODING = 'UTF8';
-	CREATE USER fiveorbs_cms_test_user PASSWORD 'fiveorbs_cms_test_password';
-	GRANT ALL PRIVILEGES ON DATABASE fiveorbs_cms_test_db TO fiveorbs_cms_test_user;
-	ALTER DATABASE fiveorbs_cms_test_db OWNER TO fiveorbs_cms_test_user;
+    CREATE DATABASE duon_cms_test_db WITH TEMPLATE = template0 ENCODING = 'UTF8';
+	CREATE USER duon_cms_test_user PASSWORD 'duon_cms_test_password';
+	GRANT ALL PRIVILEGES ON DATABASE duon_cms_test_db TO duon_cms_test_user;
+	ALTER DATABASE duon_cms_test_db OWNER TO duon_cms_test_user;
 
 to allow recreation via command RecreateDb:
 
-	ALTER USER fiveorbs_cms_test_user SUPERUSER;
+	ALTER USER duon_cms_test_user SUPERUSER;
 
 System Requirements:
 

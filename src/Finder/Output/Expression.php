@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder\Output;
+namespace Duon\Cms\Finder\Output;
 
-use FiveOrbs\Cms\Exception\ParserException;
-use FiveOrbs\Cms\Finder\CompilesField;
-use FiveOrbs\Cms\Finder\Input\Token;
-use FiveOrbs\Cms\Finder\Input\TokenType;
-use FiveOrbs\Quma\Database;
+use Duon\Cms\Exception\ParserException;
+use Duon\Cms\Finder\CompilesField;
+use Duon\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\TokenType;
+use Duon\Quma\Database;
 
 abstract readonly class Expression
 {

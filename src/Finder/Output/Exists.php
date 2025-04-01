@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder\Output;
+namespace Duon\Cms\Finder\Output;
 
-use FiveOrbs\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\Token;
 
 final readonly class Exists extends Expression implements Output
 {

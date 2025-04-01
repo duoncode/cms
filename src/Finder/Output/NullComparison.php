@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Finder\Output;
+namespace Duon\Cms\Finder\Output;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\ParserOutputException;
-use FiveOrbs\Cms\Finder\Input\Token;
-use FiveOrbs\Cms\Finder\Input\TokenType;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\ParserOutputException;
+use Duon\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\TokenType;
 
 final readonly class NullComparison extends Expression implements Output
 {

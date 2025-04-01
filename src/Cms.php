@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Exception\RuntimeException;
-use FiveOrbs\Cms\Node\Block;
-use FiveOrbs\Cms\Node\Document;
-use FiveOrbs\Cms\Node\Node;
-use FiveOrbs\Cms\Node\Page as PageNode;
-use FiveOrbs\Core\App;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Plugin;
-use FiveOrbs\Quma\Connection;
-use FiveOrbs\Quma\Database;
-use FiveOrbs\Registry\Entry;
-use FiveOrbs\Registry\Registry;
-use FiveOrbs\Router\Route;
+use Duon\Cms\Config;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Node\Block;
+use Duon\Cms\Node\Document;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Node\Page as PageNode;
+use Duon\Core\App;
+use Duon\Core\Factory;
+use Duon\Core\Plugin;
+use Duon\Quma\Connection;
+use Duon\Quma\Database;
+use Duon\Registry\Entry;
+use Duon\Registry\Registry;
+use Duon\Router\Route;
 use PDO;
 
 class Cms implements Plugin
@@ -148,7 +148,7 @@ class Cms implements Plugin
 			return $entry;
 		}
 
-		throw new RuntimeException('Renderers must imlement the `FiveOrbs\Cms\Renderer` interface');
+		throw new RuntimeException('Renderers must imlement the `Duon\Cms\Renderer` interface');
 	}
 
 	protected function synchronizeNodes(): void
@@ -163,7 +163,7 @@ class Cms implements Plugin
 			if (!in_array($handle, $types)) {
 				$this->db->nodes->addType([
 					'handle' => $handle,
-					'kind' => match(true) {
+					'kind' => match (true) {
 						is_a($class, Block::class, true) => 'block',
 						is_a($class, PageNode::class, true) => 'page',
 						is_a($class, Document::class, true) => 'document',

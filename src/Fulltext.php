@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Core\Exception\HttpNotFound;
-use FiveOrbs\Core\Response;
+use Duon\Core\Exception\HttpNotFound;
+use Duon\Core\Response;
 
 class Fulltext
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Commands;
+namespace Duon\Cms\Commands;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Quma\Commands\Command;
+use Duon\Cms\Config;
+use Duon\Quma\Commands\Command;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 

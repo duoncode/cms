@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Middleware\InitRequest;
-use FiveOrbs\Cms\Middleware\Session;
-use FiveOrbs\Cms\View\Auth;
-use FiveOrbs\Cms\View\Media;
-use FiveOrbs\Cms\View\Nodes;
-use FiveOrbs\Cms\View\Page;
-use FiveOrbs\Cms\View\Panel;
-use FiveOrbs\Cms\View\User;
-use FiveOrbs\Core\App;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Quma\Database;
-use FiveOrbs\Router\Group;
-use FiveOrbs\Router\Route;
+use Duon\Cms\Config;
+use Duon\Cms\Middleware\InitRequest;
+use Duon\Cms\Middleware\Session;
+use Duon\Cms\View\Auth;
+use Duon\Cms\View\Media;
+use Duon\Cms\View\Nodes;
+use Duon\Cms\View\Page;
+use Duon\Cms\View\Panel;
+use Duon\Cms\View\User;
+use Duon\Core\App;
+use Duon\Core\Factory;
+use Duon\Quma\Database;
+use Duon\Router\Group;
+use Duon\Router\Route;
 
 class Routes
 {

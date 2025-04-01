@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Exception;
+namespace Duon\Cms\Exception;
 
-use FiveOrbs\Cms\Finder\Input\Token;
+use Duon\Cms\Finder\Input\Token;
 use Throwable;
 
 class ParserOutputException extends ParserException implements CmsException

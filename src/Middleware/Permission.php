@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Middleware;
+namespace Duon\Cms\Middleware;
 
 use Attribute;
-use FiveOrbs\Cms\Auth;
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Users;
-use FiveOrbs\Core\Exception\HttpForbidden;
-use FiveOrbs\Core\Exception\HttpUnauthorized;
-use FiveOrbs\Wire\Call;
+use Duon\Cms\Auth;
+use Duon\Cms\Config;
+use Duon\Cms\Users;
+use Duon\Core\Exception\HttpForbidden;
+use Duon\Core\Exception\HttpUnauthorized;
+use Duon\Wire\Call;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;

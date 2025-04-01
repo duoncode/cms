@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\Boolean;
+use Duon\Cms\Value\Boolean;
 
 class Checkbox extends Field
 {

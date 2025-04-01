@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Schema;
+namespace Duon\Cms\Schema;
 
-use FiveOrbs\Sire\Schema;
+use Duon\Sire\Schema;
 
 class Login extends Schema
 {

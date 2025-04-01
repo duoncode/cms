@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Session\Session as BaseSession;
+use Duon\Session\Session as BaseSession;
 use SessionHandlerInterface;
 
 class Session extends BaseSession
@@ -18,7 +18,7 @@ class Session extends BaseSession
 	) {
 		parent::__construct($name, $options, $handler);
 
-		$this->authCookie = $name ? $name . '_auth' : 'fiveorbs_auth';
+		$this->authCookie = $name ? $name . '_auth' : 'duon_auth';
 	}
 
 	public function setUser(int $userId): void

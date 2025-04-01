@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Cms\Schema;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Core\Response;
+use Duon\Cms\Middleware\Permission;
+use Duon\Cms\Schema;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Core\Response;
 
 class Auth
 {
 	public function __construct(
 		protected readonly Factory $factory,
-		protected readonly \FiveOrbs\Cms\Auth $auth,
+		protected readonly \Duon\Cms\Auth $auth,
 	) {}
 
 	#[Permission('authenticated')]
@@ -118,7 +118,7 @@ class Auth
 
 	protected function unauthorized(Response $response, string $message, string $loginType)
 	{
-		$response->header('WWW-Authenticate', 'Bearer realm="FiveOrbs CMS"');
+		$response->header('WWW-Authenticate', 'Bearer realm="Duon CMS"');
 
 		return $response->json([
 			'error' => $message,

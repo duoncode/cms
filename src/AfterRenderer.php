@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Router\After;
+use Duon\Router\After;
 
 interface AfterRenderer extends After {}

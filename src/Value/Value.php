@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Assets\Assets;
-use FiveOrbs\Cms\Exception\NoSuchProperty;
-use FiveOrbs\Cms\Field\Field;
-use FiveOrbs\Cms\Locale;
-use FiveOrbs\Cms\Node\Node;
+use Duon\Cms\Assets\Assets;
+use Duon\Cms\Exception\NoSuchProperty;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Locale;
+use Duon\Cms\Node\Node;
 
 abstract class Value
 {

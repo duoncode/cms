@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Assets;
+namespace Duon\Cms\Assets;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Util\Path;
-use FiveOrbs\Core\Request;
+use Duon\Cms\Config;
+use Duon\Cms\Util\Path;
+use Duon\Core\Request;
 
 class Assets
 {

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\View;
+namespace Duon\Cms\View;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Finder\Finder;
-use FiveOrbs\Cms\Locales;
-use FiveOrbs\Cms\Middleware\Permission;
-use FiveOrbs\Core\Exception\HttpBadRequest;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Registry\Registry;
+use Duon\Cms\Config;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Locales;
+use Duon\Cms\Middleware\Permission;
+use Duon\Core\Exception\HttpBadRequest;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Core\Response;
+use Duon\Registry\Registry;
 
 class Nodes
 {
@@ -41,7 +41,7 @@ class Nodes
 		} elseif ($uid) {
 			$uids = array_map(fn(string $uid) => trim($uid), explode(',', $uid));
 
-			if(count($uids) > 1) {
+			if (count($uids) > 1) {
 				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
 				$query = "uid @ [{$quoted}]";
 			} else {

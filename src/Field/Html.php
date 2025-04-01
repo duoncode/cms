@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\Html as HtmlValue;
+use Duon\Cms\Value\Html as HtmlValue;
 
 class Html extends Field
 {

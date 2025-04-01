@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Assets;
+namespace Duon\Cms\Assets;
 
-use FiveOrbs\Cms\Exception\RuntimeException;
+use Duon\Cms\Exception\RuntimeException;
 
 class Size
 {

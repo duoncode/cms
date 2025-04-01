@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests\Setup;
+namespace Duon\Cms\Tests\Setup;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Locales;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Factory\Laminas;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Quma\Connection;
-use FiveOrbs\Quma\Database;
-use FiveOrbs\Registry\Registry;
+use Duon\Cms\Config;
+use Duon\Cms\Locales;
+use Duon\Core\Factory;
+use Duon\Core\Factory\Laminas;
+use Duon\Core\Request;
+use Duon\Quma\Connection;
+use Duon\Quma\Database;
+use Duon\Registry\Registry;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequest;
@@ -108,7 +108,7 @@ class TestCase extends BaseTestCase
 
 	public function config(array $settings = [], bool $debug = false): Config
 	{
-		$config = new Config('fiveorbs', debug: $debug, settings: $settings);
+		$config = new Config('duon', debug: $debug, settings: $settings);
 
 		return $config;
 	}
@@ -116,7 +116,7 @@ class TestCase extends BaseTestCase
 	public function conn(): Connection
 	{
 		return new Connection(
-			'pgsql:host=localhost;dbname=fiveorbs_cms_test_db;user=fiveorbs_cms_test_user;password=fiveorbs_cms_test_password',
+			'pgsql:host=localhost;dbname=duon_cms_test_db;user=duon_cms_test_user;password=duon_cms_test_password',
 			C::root() . '/db/sql',
 			C::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,

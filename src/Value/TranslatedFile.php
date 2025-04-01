@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Value;
+namespace Duon\Cms\Value;
 
-use FiveOrbs\Cms\Assets;
+use Duon\Cms\Assets;
 
 class TranslatedFile extends File
 {

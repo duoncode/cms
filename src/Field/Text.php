@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Field;
+namespace Duon\Cms\Field;
 
-use FiveOrbs\Cms\Value\Text as TextValue;
+use Duon\Cms\Value\Text as TextValue;
 
 class Text extends Field
 {

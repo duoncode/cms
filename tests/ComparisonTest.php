@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Tests;
+namespace Duon\Cms\Tests;
 
-use FiveOrbs\Cms\Context;
-use FiveOrbs\Cms\Exception\ParserOutputException;
-use FiveOrbs\Cms\Finder\QueryCompiler;
-use FiveOrbs\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Context;
+use Duon\Cms\Exception\ParserOutputException;
+use Duon\Cms\Finder\QueryCompiler;
+use Duon\Cms\Tests\Setup\TestCase;
 
 final class ComparisonTest extends TestCase
 {

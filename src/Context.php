@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms;
+namespace Duon\Cms;
 
-use FiveOrbs\Cms\Config;
-use FiveOrbs\Cms\Locale;
-use FiveOrbs\Cms\Locales;
-use FiveOrbs\Core\Factory;
-use FiveOrbs\Core\Request;
-use FiveOrbs\Quma\Database;
-use FiveOrbs\Registry\Registry;
+use Duon\Cms\Config;
+use Duon\Cms\Locale;
+use Duon\Cms\Locales;
+use Duon\Core\Factory;
+use Duon\Core\Request;
+use Duon\Quma\Database;
+use Duon\Registry\Registry;
 
 final class Context
 {

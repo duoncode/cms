@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Exception;
+namespace Duon\Cms\Exception;
 
 class NoSuchProperty extends RuntimeException implements CmsException {}

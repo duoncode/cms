@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Node;
+namespace Duon\Cms\Node;
 
-use FiveOrbs\Cms\Renderer;
-use FiveOrbs\Core\Response;
-use FiveOrbs\Registry\Exception\NotFoundException;
+use Duon\Cms\Renderer;
+use Duon\Core\Response;
+use Duon\Registry\Exception\NotFoundException;
 
 trait RendersTemplate
 {

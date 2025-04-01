@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Cms\Commands;
+namespace Duon\Cms\Commands;
 
-use FiveOrbs\Cli\Command;
-use FiveOrbs\Quma\Connection;
-use FiveOrbs\Quma\Database;
+use Duon\Cli\Command;
+use Duon\Quma\Connection;
+use Duon\Quma\Database;
 
 class Superuser extends Command
 {
