@@ -12,7 +12,7 @@
 	class:open={$navVisible}>
 	<NavLogo />
 
-	{#each $collections as item}
+	{#each $collections as item (item)}
 		{#if item.type === 'section'}
 			<h2>{item.name}</h2>
 		{:else}
