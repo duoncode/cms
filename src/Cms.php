@@ -103,8 +103,8 @@ class Cms implements Plugin
 
 	public function database(
 		string $dsn,
-		string|array $sql = null,
-		string|array $migrations = null,
+		string|array|null $sql = null,
+		string|array|null $migrations = null,
 		array $options = [],
 		bool $print = false,
 	): void {
