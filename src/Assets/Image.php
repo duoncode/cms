@@ -134,7 +134,7 @@ class Image
 
 			$image->save($this->cacheFile, quality: $quality);
 		} catch (ImageResizeException $e) {
-			throw new RuntimeException('Assets error: ' . $e->getMessage(), $e->getCode(), $e);
+			throw new RuntimeException('Assets error: ' . $e->getMessage(), $e->getCode(), previous: $e);
 		}
 	}
 
