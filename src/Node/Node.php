@@ -85,14 +85,13 @@ abstract class Node
 
 	final public function getValue(string $fieldName): ?Value
 	{
-		$field = $this->{$fieldName};
-
-		if ($field === null) {
+		if (!property_exists($this, $fieldName)) {
 			$type = $this::class;
 
 			throw new NoSuchField("The field '{$fieldName}' does not exist on node with type '{$type}'.");
 		}
 
+		$field = $this->{$fieldName};
 		$value = $field->value();
 
 		if ($value->isset()) {
@@ -255,7 +254,7 @@ abstract class Node
 		return $this->data['uid'];
 	}
 
-	public function order(): ?array
+	public function order(): array
 	{
 		return $this->fieldNames;
 	}
@@ -417,7 +416,11 @@ abstract class Node
 		} catch (Throwable $e) {
 			$db->rollback();
 
-			throw new RuntimeException(_('Fehler beim Speichern: ') . $e->getMessage(), (int) $e->getCode(), $e);
+			throw new RuntimeException(
+				_('Fehler beim Speichern: ') . $e->getMessage(),
+				(int) $e->getCode(),
+				previous: $e,
+			);
 		}
 
 		return [
