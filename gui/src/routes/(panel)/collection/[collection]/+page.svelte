@@ -7,6 +7,7 @@
 	let { data } = $props();
 
 	let searchTerm = $state('');
+	let regex: RegExp | null = null;
 
 	function fmtDate(d: string) {
 		const date = new Date(d);
@@ -22,15 +23,29 @@
 
 	function search(searchTerm: string) {
 		return (node: ListedNode) => {
-			if (searchTerm.length > 0) {
-				return node.columns[0].value
-					.toString()
-					.toLowerCase()
-					.includes(searchTerm.toLowerCase());
+			if (searchTerm.length > 1) {
+				regex = new RegExp(
+					`(${escapeRegExp(searchTerm)})`,
+					/\p{Lu}/u.test(searchTerm) ? 'g' : 'gi',
+				);
+				return node.columns.some(col => {
+					return regex?.test(col.value.toString() ?? '');
+				});
 			}
 
+			regex = null;
 			return true;
 		};
+	}
+
+	function highlightSearchterm(value: string) {
+		if (searchTerm.length < 2 || !regex) return value;
+
+		return value.replace(regex, `<span class="search-hl">$1</span>`);
+	}
+
+	function escapeRegExp(string: string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 	}
 
 	let nodes = $derived(data.nodes.filter(search(searchTerm)));
@@ -55,13 +70,13 @@
 									{#if data.showPublished}
 										<th class="published"></th>
 									{/if}
-									{#each data.header as column}
+									{#each data.header as column, i (i)}
 										<th scope="col">{column}</th>
 									{/each}
 								</tr>
 							</thead>
 							<tbody>
-								{#each nodes as node}
+								{#each nodes as node (node)}
 									<tr>
 										{#if data.showPublished}
 											<td class="published text-center align-middle">
@@ -70,7 +85,7 @@
 												</span>
 											</td>
 										{/if}
-										{#each node.columns as column}
+										{#each node.columns as column (column)}
 											<td
 												class:font-semibold={column.bold}
 												class:font-italic={column.italic}>
@@ -78,7 +93,7 @@
 													{#if column.date}
 														{fmtDate(column.value.toString())}
 													{:else}
-														{@html column.value}
+														{@html highlightSearchterm(column.value)}
 													{/if}
 												</Link>
 											</td>
@@ -112,6 +127,12 @@
 
 	.published {
 		padding-right: 0;
+	}
+
+	:global(.search-hl) {
+		background: #ffea50;
+		border: 1px solid #ffb100;
+		border-radius: 0.25rem;
 	}
 
 	tr:hover {
