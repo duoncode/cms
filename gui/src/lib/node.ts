@@ -21,6 +21,7 @@ export async function save(uid: string, node: Node) {
 		});
 
 		setPristine();
+
 		return response?.data as Result;
 	} else {
 		const data = response?.data;
@@ -40,13 +41,15 @@ export async function create(node: Node, type: string, documentPath: string) {
 	const response = await req.post(`node/${type}`, node);
 
 	if (response?.ok) {
-		await goto(`${base}${documentPath}/${node.uid}`, {
-			invalidateAll: true,
-		});
-
 		toast.add({
 			kind: 'success',
 			message: _('Dokument erfolgreich erstellt!'),
+		});
+
+		setPristine();
+
+		await goto(`${base}${documentPath}/${node.uid}`, {
+			invalidateAll: true,
 		});
 
 		return response.data as Result;
