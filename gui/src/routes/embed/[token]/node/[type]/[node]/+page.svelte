@@ -34,6 +34,7 @@
 <Modal>
 	<EmbeddedNode
 		bind:node
+		fields={data.fields}
 		{save} />
 	<Toasts />
 </Modal>

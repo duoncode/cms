@@ -19,9 +19,10 @@
 	type Props = {
 		node: Node;
 		save: (published: boolean) => Promise<void>;
+		fields: string[];
 	};
 
-	let { node = $bindable(), save }: Props = $props();
+	let { node = $bindable(), save, fields }: Props = $props();
 
 	let activeTab = $state('content');
 
@@ -93,6 +94,7 @@
 				{#if activeTab === 'content'}
 					<Content
 						bind:fields={node.fields}
+						visibleFields={fields}
 						bind:node />
 				{:else}
 					<Settings bind:node />

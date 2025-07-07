@@ -6,9 +6,10 @@
 	type Props = {
 		node: Node;
 		fields: Field[];
+		visibleFields?: string[];
 	};
 
-	let { node = $bindable(), fields = $bindable() }: Props = $props();
+	let { node = $bindable(), fields = $bindable(), visibleFields = [] }: Props = $props();
 
 	function fieldSpan(value: number | null, type: 'row' | 'col') {
 		if (value) {
@@ -24,7 +25,11 @@
 		return 'span 1 / span 1';
 	}
 
-	function shouldAddField(string fieldName): boolean {
+	function shouldAddField(fieldName: string): boolean {
+		if (visibleFields.length > 0) {
+			return visibleFields.indexOf(fieldName) > -1;
+		}
+
 		return true;
 	}
 </script>
@@ -37,11 +42,13 @@
 					grid-column: {fieldSpan(field.width, 'col')};
 					grid-row: {fieldSpan(field.rows, 'row')}">
 				{#if controls[field.type as keyof typeof controls] && node.content[field.name]}
-					{@const SvelteComponent = controls[field.type as keyof typeof controls]}
-					<SvelteComponent
-						{field}
-						node={node.uid}
-						bind:data={node.content[field.name]} />
+					{#if shouldAddField(field.name)}
+						{@const SvelteComponent = controls[field.type as keyof typeof controls]}
+						<SvelteComponent
+							{field}
+							node={node.uid}
+							bind:data={node.content[field.name]} />
+					{/if}
 				{:else}
 					{field.type}
 				{/if}
