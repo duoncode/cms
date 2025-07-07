@@ -23,17 +23,21 @@
 
 		return 'span 1 / span 1';
 	}
+
+	function shouldAddField(string fieldName): boolean {
+		return true;
+	}
 </script>
 
 <div class="field-grid hans">
-	{#each fields as field}
+	{#each fields as field (field.name)}
 		{#if !field.hidden}
 			<div
 				style="
 					grid-column: {fieldSpan(field.width, 'col')};
 					grid-row: {fieldSpan(field.rows, 'row')}">
-				{#if controls[field.type]}
-					{@const SvelteComponent = controls[field.type]}
+				{#if controls[field.type as keyof typeof controls] && node.content[field.name]}
+					{@const SvelteComponent = controls[field.type as keyof typeof controls]}
 					<SvelteComponent
 						{field}
 						node={node.uid}
