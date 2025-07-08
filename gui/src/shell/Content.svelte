@@ -34,7 +34,7 @@
 	}
 </script>
 
-<div class="field-grid hans">
+<div class="field-grid">
 	{#each fields as field (field.name)}
 		{#if !field.hidden}
 			<div

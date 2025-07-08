@@ -74,32 +74,40 @@
 			</div>
 		</div>
 		<Document>
-			<Tabs>
-				<button
-					onclick={changeTab('content')}
-					class:active={activeTab === 'content'}
-					class="tab">
-					{_('Inhalt')}
-				</button>
-				{#if node.type.kind !== 'document'}
-					<button
-						onclick={changeTab('settings')}
-						class:active={activeTab === 'settings'}
-						class="tab">
-						{_('Einstellungen')}
-					</button>
-				{/if}
-			</Tabs>
-			<Pane>
-				{#if activeTab === 'content'}
+			{#if fields.length > 0}
+				<Pane class="mt-6">
 					<Content
 						bind:fields={node.fields}
 						visibleFields={fields}
 						bind:node />
-				{:else}
-					<Settings bind:node />
-				{/if}
-			</Pane>
+				</Pane>
+			{:else}
+				<Tabs>
+					<button
+						onclick={changeTab('content')}
+						class:active={activeTab === 'content'}
+						class="tab">
+						{_('Inhalt')}
+					</button>
+					{#if node.type.kind !== 'document'}
+						<button
+							onclick={changeTab('settings')}
+							class:active={activeTab === 'settings'}
+							class="tab">
+							{_('Einstellungen')}
+						</button>
+					{/if}
+				</Tabs>
+				<Pane>
+					{#if activeTab === 'content'}
+						<Content
+							bind:fields={node.fields}
+							bind:node />
+					{:else}
+						<Settings bind:node />
+					{/if}
+				</Pane>
+			{/if}
 		</Document>
 	</div>
 </Modal>
