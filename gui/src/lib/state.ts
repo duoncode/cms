@@ -51,4 +51,27 @@ function error(message: string) {
 	});
 }
 
-export { pristine, dirty, setDirty, setPristine, success, error, currentNode, currentFields };
+function broadcastOk() {
+	if (window.top && inIframe()) {
+		window.top.postMessage('cms-ok', '*');
+	}
+}
+
+function broadcastCancel() {
+	if (window.top && inIframe()) {
+		window.top.postMessage('cms-ok', '*');
+	}
+}
+
+export {
+	pristine,
+	dirty,
+	setDirty,
+	setPristine,
+	success,
+	error,
+	currentNode,
+	currentFields,
+	broadcastOk,
+	broadcastCancel,
+};

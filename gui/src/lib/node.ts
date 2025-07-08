@@ -11,27 +11,48 @@ export interface Result {
 	uid: string;
 }
 
+function successToast() {
+	toast.add({
+		kind: 'success',
+		message: _('Dokument erfolgreich gespeichert!'),
+	});
+}
+
+function errorToast(data: any) {
+	toast.add({
+		kind: 'error',
+		message: data.description
+			? data.description
+			: _('Fehler beim Speichern des Dokuments aufgetreten!'),
+	});
+}
+
 export async function save(uid: string, node: Node) {
 	const response = await req.put(`node/${uid}`, node);
 
 	if (response?.ok) {
-		toast.add({
-			kind: 'success',
-			message: _('Dokument erfolgreich gespeichert!'),
-		});
-
+		successToast();
 		setPristine();
 
 		return response?.data as Result;
 	} else {
 		const data = response?.data;
+		errorToast(data);
 
-		toast.add({
-			kind: 'error',
-			message: data.description
-				? data.description
-				: _('Fehler beim Speichern des Dokuments aufgetreten!'),
-		});
+		return response?.data as Result;
+	}
+}
+
+export async function saveAndClose(uid: string, node: Node) {
+	const response = await req.put(`node/${uid}`, node);
+
+	if (response?.ok) {
+		setPristine();
+		successToast();
+		broadcastOk();
+	} else {
+		const data = response?.data;
+		errorToast(data);
 
 		return response?.data as Result;
 	}
