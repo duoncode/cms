@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 	import type { Node } from '$types/data';
 	import req from '$lib/req';
-	import { save as saveNode } from '$lib/node';
+	import { save as saveNode, saveAndClose as saveAndCloseNode } from '$lib/node';
 	import EmbeddedNode from '$shell/EmbeddedNode.svelte';
 	import Modal from '$shell/modal/Modal.svelte';
 	import Toasts from '$shell/Toasts.svelte';
@@ -29,11 +29,18 @@
 			}
 		}
 	}
+
+	async function saveAndClose() {
+		node.published = true;
+		await saveAndCloseNode(node.uid, node);
+	}
 </script>
 
 <Modal>
 	<EmbeddedNode
 		bind:node
-		{save} />
+		fields={data.fields}
+		{save}
+		{saveAndClose} />
 	<Toasts />
 </Modal>

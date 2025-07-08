@@ -3,10 +3,13 @@ import type { Node } from '$types/data';
 
 import { error } from '@sveltejs/kit';
 import req from '$lib/req';
+import qs from '$lib/qs';
 import { loginUserByToken } from '$lib/user';
 import { currentNode, currentFields } from '$lib/state';
 
-export const load: PageLoad = async ({ params, fetch }) => {
+export const load: PageLoad = async ({ params, fetch, url }) => {
+	const fields = qs.asArray(url, 'fields');
+
 	if (!(await loginUserByToken(params.token))) {
 		error(401, 'Unauthorized');
 	}
@@ -21,6 +24,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 		return {
 			node,
+			fields,
 		};
 	}
 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Node } from '$types/data';
 
-	import Modal from '$shell/modal/Modal.svelte';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
 	import { dirty } from '$lib/state';
@@ -10,6 +9,7 @@
 	import Pane from '$shell/Pane.svelte';
 	import Tabs from '$shell/Tabs.svelte';
 	import ButtonMenu from '$shell/ButtonMenu.svelte';
+	import Button from '$shell/Button.svelte';
 	import IcoSave from '$shell/icons/IcoSave.svelte';
 	import ButtonMenuEntry from '$shell/ButtonMenuEntry.svelte';
 	import Content from '$shell/Content.svelte';
@@ -19,9 +19,11 @@
 	type Props = {
 		node: Node;
 		save: (published: boolean) => Promise<void>;
+		saveAndClose: () => Promise<void>;
+		fields: string[];
 	};
 
-	let { node = $bindable(), save }: Props = $props();
+	let { node = $bindable(), save, fields }: Props = $props();
 
 	let activeTab = $state('content');
 
@@ -38,8 +40,8 @@
 	});
 </script>
 
-<Modal>
-	<div class="flex h-screen flex-col">
+<div class="flex h-screen flex-col">
+	{#if fields.length === 0}
 		<div class="embed-control-bar sticky border-b border-gray-300 bg-white py-4">
 			<div class="mx-auto flex w-full max-w-7xl flex-row px-8">
 				<div class="embed-status-bar flex flex-grow flex-row items-center justify-start">
@@ -72,7 +74,21 @@
 				</ButtonMenu>
 			</div>
 		</div>
-		<Document>
+	{/if}
+	<Document>
+		{#if fields.length > 0}
+			<Pane class="mt-6">
+				<Content
+					bind:fields={node.fields}
+					visibleFields={fields}
+					bind:node />
+			</Pane>
+			<div class="-mt-4 flex justify-end">
+				<Button onclick={() => saveAndClose()}>
+					{_('Speichern')}
+				</Button>
+			</div>
+		{:else}
 			<Tabs>
 				<button
 					onclick={changeTab('content')}
@@ -98,6 +114,6 @@
 					<Settings bind:node />
 				{/if}
 			</Pane>
-		</Document>
-	</div>
-</Modal>
+		{/if}
+	</Document>
+</div>
