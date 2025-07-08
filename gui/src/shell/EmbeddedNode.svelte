@@ -19,6 +19,7 @@
 	type Props = {
 		node: Node;
 		save: (published: boolean) => Promise<void>;
+		saveAndClose: () => Promise<void>;
 		fields: string[];
 	};
 
@@ -83,7 +84,7 @@
 					bind:node />
 			</Pane>
 			<div class="-mt-4 flex justify-end">
-				<Button onclick={() => save(true)}>
+				<Button onclick={() => saveAndClose()}>
 					{_('Speichern')}
 				</Button>
 			</div>

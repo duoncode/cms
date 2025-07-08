@@ -2,7 +2,7 @@ import type { Node } from '$types/data';
 import { base } from '$lib/req';
 import { goto } from '$app/navigation';
 import { _ } from '$lib/locale';
-import { setPristine } from '$lib/state';
+import { setPristine, broadcastOk } from '$lib/state';
 import req from '$lib/req';
 import toast from '$lib/toast';
 
@@ -44,17 +44,10 @@ export async function save(uid: string, node: Node) {
 }
 
 export async function saveAndClose(uid: string, node: Node) {
-	const response = await req.put(`node/${uid}`, node);
+	const result = await save(uid, node);
 
-	if (response?.ok) {
-		setPristine();
-		successToast();
+	if (result.success) {
 		broadcastOk();
-	} else {
-		const data = response?.data;
-		errorToast(data);
-
-		return response?.data as Result;
 	}
 }
 
