@@ -9,5 +9,8 @@ use Attribute;
 #[Attribute]
 class Route
 {
-	public function __construct(private array|string $routePattern) {}
+	/**
+	 * @param string|array<string,string> $value
+	 */
+	public function __construct(public readonly array|string $value) {}
 }
