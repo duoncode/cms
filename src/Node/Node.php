@@ -32,24 +32,22 @@ abstract class Node
 {
 	public readonly Request $request;
 	public readonly Config $config;
-	protected static string $name = ''; // The public name of the node type
-	protected static string $handle = ''; // Used also as slug to address the node type in the panel
-	protected static array $permissions = [
-		'read' => 'everyone',
-		'create' => 'authenticated',
-		'change' => 'authenticated',
-		'deeete' => 'authenticated',
-	];
 	protected readonly Database $db;
 	protected readonly Registry $registry;
 	protected readonly Factory $factory;
 	protected array $fieldNames = [];
+
+	/** @var array<class-string, true> */
+	protected static array $initialized = [];
+
+	protected static Meta $_meta;
 
 	final public function __construct(
 		public readonly Context $context,
 		protected readonly Finder $find,
 		protected ?array $data = null,
 	) {
+		$this->initClass();
 		$this->initFields();
 
 		$this->db = $context->db;
@@ -57,6 +55,16 @@ abstract class Node
 		$this->config = $context->config;
 		$this->registry = $context->registry;
 		$this->factory = $context->factory;
+	}
+
+	protected function initClass()
+	{
+		$className = static::class;
+
+		if (!isset(static::$initialized[$className])) {
+			static::$initialized[$className] = true;
+			static::$_meta = new Meta($this);
+		}
 	}
 
 	final public function __get(string $fieldName): ?Value
@@ -184,7 +192,7 @@ abstract class Node
 		}
 
 		return [
-			'title' => _('Neues Dokument:') . ' ' . $this->name(),
+			'title' => _('Neues Dokument:') . ' ' . static::$_meta->name,
 			'fields' => $this->fields(),
 			'uid' => $this->newUid(),
 			'published' => false,
@@ -193,7 +201,7 @@ abstract class Node
 			'deletable' => $this->deletable(),
 			'content' => $content,
 			'type' => [
-				'handle' => static::handle(),
+				'handle' => static::$_meta->handle,
 				'kind' => $kind,
 				'class' => static::class,
 			],
@@ -230,24 +238,6 @@ abstract class Node
 	 * Shown in the admin interface. But can also be used in the frontend.
 	 */
 	abstract public function title(): string;
-
-	public static function name(): string
-	{
-		return static::$name ?: static::className();
-	}
-
-	public static function handle(): string
-	{
-		return static::$handle ?:
-			ltrim(
-				strtolower(preg_replace(
-					'/[A-Z]([A-Z](?![a-z]))*/',
-					'-$0',
-					static::className(),
-				)),
-				'-',
-			);
-	}
 
 	public function uid(): string
 	{
@@ -441,7 +431,7 @@ abstract class Node
 			'hidden' => $data['hidden'],
 			'published' => $data['published'],
 			'locked' => $data['locked'],
-			'type' => $this->handle(),
+			'type' => static::$_meta->handle,
 			'content' => json_encode($data['content']),
 			'editor' => $editor,
 		])->one()['node'];
