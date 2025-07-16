@@ -7,15 +7,15 @@ namespace Duon\Cms\Node;
 use Duon\Cms\Node\Attr\Handle;
 use Duon\Cms\Node\Attr\Name;
 use Duon\Cms\Node\Attr\Permission;
+use Duon\Cms\Node\Attr\Render;
 use Duon\Cms\Node\Attr\Route;
-use Duon\Cms\Node\Attr\Template;
 use ReflectionClass;
 
 class Meta
 {
 	public readonly string $name; // The public name of the node type
 	public readonly string $handle; // Used also as slug to address the node type in the panel
-	public readonly string $template;
+	public readonly string $render;
 	public readonly string|array $route;
 	public readonly string|array $permission;
 
@@ -24,7 +24,7 @@ class Meta
 		$attributes = $this->initAttributes();
 		$this->name = $this->getName($attributes[Name::class] ?? null);
 		$this->handle = $this->getHandle($attributes[Handle::class] ?? null);
-		$this->template = $this->getTemplate($attributes[Template::class] ?? null, $attributes[Handle::class] ?? null);
+		$this->render = $this->getRenderer($attributes[Render::class] ?? null, $attributes[Handle::class] ?? null);
 		$this->route = $this->getRoute($attributes[Route::class] ?? null);
 		$this->permission = $this->getPermission($attributes[Permission::class] ?? null);
 	}
@@ -68,10 +68,10 @@ class Meta
 		);
 	}
 
-	private function getTemplate(?Template $template, ?Handle $handle): string
+	private function getRenderer(?Render $render, ?Handle $handle): string
 	{
-		if ($template) {
-			return $template->value;
+		if ($render) {
+			return $render->value;
 		}
 
 		return $this->getHandle($handle);

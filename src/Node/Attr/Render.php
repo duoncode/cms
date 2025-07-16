@@ -7,7 +7,7 @@ namespace Duon\Cms\Node\Attr;
 use Attribute;
 
 #[Attribute]
-class Template
+class Render
 {
 	public function __construct(public readonly string $value) {}
 }
