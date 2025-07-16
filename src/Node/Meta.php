@@ -13,8 +13,8 @@ use ReflectionClass;
 
 class Meta
 {
-	public readonly string $name;
-	public readonly string $handle;
+	public readonly string $name; // The public name of the node type
+	public readonly string $handle; // Used also as slug to address the node type in the panel
 	public readonly string $template;
 	public readonly string|array $route;
 	public readonly string|array $permission;
@@ -83,7 +83,7 @@ class Meta
 			return $route->value;
 		}
 
-		return $this->getClassName();
+		return '';
 	}
 
 	private function getPermission(?Permission $permission): array|string
