@@ -12,7 +12,7 @@ trait RendersTemplate
 {
 	public function renderer(): array
 	{
-		return static::$_meta->render;
+		return static::$nodeMeta->render;
 	}
 
 	public function render(array $context = []): Response

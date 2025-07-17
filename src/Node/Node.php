@@ -38,9 +38,9 @@ abstract class Node
 	protected array $fieldNames = [];
 
 	/** @var array<class-string, true> */
-	protected static array $initialized = [];
+	protected static array $nodeInitialized = [];
 
-	protected static Meta $_meta;
+	protected static Meta $nodeMeta;
 
 	final public function __construct(
 		public readonly Context $context,
@@ -61,9 +61,9 @@ abstract class Node
 	{
 		$className = static::class;
 
-		if (!isset(static::$initialized[$className])) {
-			static::$initialized[$className] = true;
-			static::$_meta = new Meta($this);
+		if (!isset(static::$nodeInitialized[$className])) {
+			static::$nodeInitialized[$className] = true;
+			static::$nodeMeta = new Meta($this);
 		}
 	}
 
@@ -192,7 +192,7 @@ abstract class Node
 		}
 
 		return [
-			'title' => _('Neues Dokument:') . ' ' . static::$_meta->name,
+			'title' => _('Neues Dokument:') . ' ' . static::$nodeMeta->name,
 			'fields' => $this->fields(),
 			'uid' => $this->newUid(),
 			'published' => false,
@@ -201,7 +201,7 @@ abstract class Node
 			'deletable' => $this->deletable(),
 			'content' => $content,
 			'type' => [
-				'handle' => static::$_meta->handle,
+				'handle' => static::$nodeMeta->handle,
 				'kind' => $kind,
 				'class' => static::class,
 			],
@@ -431,7 +431,7 @@ abstract class Node
 			'hidden' => $data['hidden'],
 			'published' => $data['published'],
 			'locked' => $data['locked'],
-			'type' => static::$_meta->handle,
+			'type' => static::$nodeMeta->handle,
 			'content' => json_encode($data['content']),
 			'editor' => $editor,
 		])->one()['node'];
