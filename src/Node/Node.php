@@ -47,7 +47,7 @@ abstract class Node
 		protected readonly Finder $find,
 		protected ?array $data = null,
 	) {
-		$this->initClass();
+		static::initClass();
 		$this->initFields();
 
 		$this->db = $context->db;
@@ -57,14 +57,21 @@ abstract class Node
 		$this->factory = $context->factory;
 	}
 
-	protected function initClass()
+	protected static function initClass()
 	{
 		$className = static::class;
 
 		if (!isset(static::$nodeInitialized[$className])) {
 			static::$nodeInitialized[$className] = true;
-			static::$nodeMeta = new Meta($this);
+			static::$nodeMeta = new Meta($className);
 		}
+	}
+
+	public static function handle(): string
+	{
+		static::initClass();
+
+		return static::$nodeMeta->handle;
 	}
 
 	final public function __get(string $fieldName): ?Value

@@ -19,7 +19,10 @@ class Meta
 	public readonly string|array $route;
 	public readonly string|array $permission;
 
-	public function __construct(private readonly Node $node)
+	/**
+	 * @param class-string $nodeclass
+	 */
+	public function __construct(private readonly string $nodeClass)
 	{
 		$attributes = $this->initAttributes();
 		$this->name = $this->getName($attributes[Name::class] ?? null);
@@ -31,7 +34,7 @@ class Meta
 
 	private function initAttributes(): array
 	{
-		$reflection = new ReflectionClass($this->node);
+		$reflection = new ReflectionClass($this->nodeClass);
 		$attributes = $reflection->getAttributes();
 		$map = [];
 
@@ -102,6 +105,6 @@ class Meta
 
 	private function getClassName(): string
 	{
-		return basename(str_replace('\\', '/', $this->node::class));
+		return basename(str_replace('\\', '/', $this->nodeClass));
 	}
 }
