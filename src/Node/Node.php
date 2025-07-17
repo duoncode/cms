@@ -45,7 +45,7 @@ abstract class Node
 		protected readonly Finder $find,
 		protected ?array $data = null,
 	) {
-		static::initClass();
+		static::initMeta();
 		$this->initFields();
 
 		$this->db = $context->db;
@@ -55,7 +55,7 @@ abstract class Node
 		$this->factory = $context->factory;
 	}
 
-	protected static function initClass()
+	protected static function initMeta()
 	{
 		if (!isset(self::$nodeMeta[static::class])) {
 			self::$nodeMeta[static::class] = new Meta(static::class);
@@ -64,28 +64,28 @@ abstract class Node
 
 	public static function name(): string
 	{
-		static::initClass();
+		static::initMeta();
 
 		return self::$nodeMeta[static::class]->name;
 	}
 
 	public static function handle(): string
 	{
-		static::initClass();
+		static::initMeta();
 
 		return self::$nodeMeta[static::class]->handle;
 	}
 
-	public static function permission(): string
+	public static function permission(): array
 	{
-		static::initClass();
+		static::initMeta();
 
 		return self::$nodeMeta[static::class]->permission;
 	}
 
 	public static function route(): string
 	{
-		static::initClass();
+		static::initMeta();
 
 		return self::$nodeMeta[static::class]->route;
 	}
