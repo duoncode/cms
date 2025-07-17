@@ -37,10 +37,8 @@ abstract class Node
 	protected readonly Factory $factory;
 	protected array $fieldNames = [];
 
-	/** @var array<class-string, true> */
-	protected static array $nodeInitialized = [];
-
-	protected static Meta $nodeMeta;
+	/** @var array<class-string, Meta> */
+	protected static array $nodeMeta = [];
 
 	final public function __construct(
 		public readonly Context $context,
@@ -59,19 +57,37 @@ abstract class Node
 
 	protected static function initClass()
 	{
-		$className = static::class;
-
-		if (!isset(static::$nodeInitialized[$className])) {
-			static::$nodeInitialized[$className] = true;
-			static::$nodeMeta = new Meta($className);
+		if (!isset(self::$nodeMeta[static::class])) {
+			self::$nodeMeta[static::class] = new Meta(static::class);
 		}
+	}
+
+	public static function name(): string
+	{
+		static::initClass();
+
+		return self::$nodeMeta[static::class]->name;
 	}
 
 	public static function handle(): string
 	{
 		static::initClass();
 
-		return static::$nodeMeta->handle;
+		return self::$nodeMeta[static::class]->handle;
+	}
+
+	public static function permission(): string
+	{
+		static::initClass();
+
+		return self::$nodeMeta[static::class]->permission;
+	}
+
+	public static function route(): string
+	{
+		static::initClass();
+
+		return self::$nodeMeta[static::class]->route;
 	}
 
 	final public function __get(string $fieldName): ?Value
