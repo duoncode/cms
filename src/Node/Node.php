@@ -215,7 +215,7 @@ abstract class Node
 		}
 
 		return [
-			'title' => _('Neues Dokument:') . ' ' . static::$nodeMeta->name,
+			'title' => _('Neues Dokument:') . ' ' . static::$nodeMeta[static::class]->name,
 			'fields' => $this->fields(),
 			'uid' => $this->newUid(),
 			'published' => false,
@@ -224,7 +224,7 @@ abstract class Node
 			'deletable' => $this->deletable(),
 			'content' => $content,
 			'type' => [
-				'handle' => static::$nodeMeta->handle,
+				'handle' => static::$nodeMeta[static::class]->handle,
 				'kind' => $kind,
 				'class' => static::class,
 			],
@@ -454,7 +454,7 @@ abstract class Node
 			'hidden' => $data['hidden'],
 			'published' => $data['published'],
 			'locked' => $data['locked'],
-			'type' => static::$nodeMeta->handle,
+			'type' => static::$nodeMeta[static::class]->handle,
 			'content' => json_encode($data['content']),
 			'editor' => $editor,
 		])->one()['node'];
