@@ -59,7 +59,7 @@ function broadcastOk() {
 
 function broadcastCancel() {
 	if (window.top && inIframe()) {
-		window.top.postMessage('cms-ok', '*');
+		window.top.postMessage('cms-cancel', '*');
 	}
 }
 

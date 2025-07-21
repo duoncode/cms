@@ -3,7 +3,7 @@
 
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
-	import { dirty } from '$lib/state';
+	import { broadcastCancel, dirty } from '$lib/state';
 	import { generatePaths } from '$lib/urlpaths';
 	import Document from '$shell/Document.svelte';
 	import Pane from '$shell/Pane.svelte';
@@ -23,7 +23,7 @@
 		fields: string[];
 	};
 
-	let { node = $bindable(), save, fields }: Props = $props();
+	let { node = $bindable(), save, saveAndClose, fields }: Props = $props();
 
 	let activeTab = $state('content');
 
@@ -31,6 +31,10 @@
 		return () => {
 			activeTab = tab;
 		};
+	}
+
+	function cancel() {
+		broadcastCancel();
 	}
 
 	$effect(() => {
@@ -83,8 +87,13 @@
 					visibleFields={fields}
 					bind:node />
 			</Pane>
-			<div class="-mt-4 flex justify-end">
-				<Button onclick={() => saveAndClose()}>
+			<div class="-mt-4 flex justify-end gap-2">
+				<Button
+					onclick={cancel}
+					class="danger">
+					{_('Abbrechen')}
+				</Button>
+				<Button onclick={saveAndClose}>
 					{_('Speichern')}
 				</Button>
 			</div>
