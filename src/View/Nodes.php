@@ -26,36 +26,33 @@ class Nodes
 	#[Permission('panel')]
 	public function get(Finder $find, Factory $factory): Response
 	{
-		$map = $this->tristateValue($this->request->param('map', 'false'));
-		$query = $this->request->param('query', null);
-		$published = $this->tristateValue($this->request->param('published', null));
-		$hidden = $this->tristateValue($this->request->param('hidden', 'false'));
-		$deleted = $this->tristateValue($this->request->param('deleted', 'false'));
-		$content = $this->tristateValue($this->request->param('content', 'false'));
-		$uid = $this->request->param('uid', null);
-		$order = $this->request->param('order', 'changed');
-		$fields = explode(',', $this->request->param('fields', ''));
+		$query = new GetQuery($this->request);
 
-		if ($query) {
-			$nodes = $find->nodes($query);
-		} elseif ($uid) {
-			$uids = array_map(fn(string $uid) => trim($uid), explode(',', $uid));
+		if ($query->query) {
+			$nodes = $find->nodes($query->query);
+		} elseif ($query->uid) {
+			$uids = $query->uids();
 
 			if (count($uids) > 1) {
 				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
-				$query = "uid @ [{$quoted}]";
+				$queryString = "uid @ [{$quoted}]";
 			} else {
-				$query = "uid = '{$uid}'";
+				$queryString = "uid = '{$query->uid}'";
 			}
 
-			$nodes = $find->nodes($query);
+			$nodes = $find->nodes($queryString);
 		} else {
 			throw new HttpBadRequest($this->request);
 		}
 
 		$result = [];
 
-		foreach ($nodes->published($published)->hidden($hidden)->order($order)->deleted($deleted) as $node) {
+		foreach (
+			$nodes->published($query->published)
+				->hidden($query->hidden)
+				->order($query->order)
+				->deleted($query->deleted) as $node
+		) {
 			$uid = $node->meta('uid');
 			$n = [
 				'uid' => $uid,
@@ -70,17 +67,17 @@ class Nodes
 				'paths' => $node->meta('paths'),
 			];
 
-			foreach ($fields as $field) {
+			foreach ($query->fields as $field) {
 				if ($field) {
 					$n[$field] = $node->getValue(trim($field))->unwrap();
 				}
 			}
 
-			if ($content) {
+			if ($query->content) {
 				$n['content'] = $node->content();
 			}
 
-			if ($map) {
+			if ($query->map) {
 				$result[$uid] = $n;
 			} else {
 				$result[] = $n;
@@ -88,18 +85,5 @@ class Nodes
 		}
 
 		return (new Response($factory->response()))->json($result);
-	}
-
-	private function tristateValue(string|null $value): bool|null
-	{
-		if ($value === 'true') {
-			return true;
-		}
-
-		if ($value === 'false') {
-			return false;
-		}
-
-		return null;
 	}
 }

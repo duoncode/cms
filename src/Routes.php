@@ -109,7 +109,8 @@ class Routes
 	{
 		$api->get('/collections', [Panel::class, 'collections'], 'collections');
 		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
-		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.get');
+		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.search.get');
+		$api->post('/nodes', [Nodes::class, 'get'], 'nodes.search.post');
 		$api->get('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.get');
 		$api->put('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.update');
 		$api->delete('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.delete');
