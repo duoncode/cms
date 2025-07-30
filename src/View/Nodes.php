@@ -26,18 +26,20 @@ class Nodes
 	#[Permission('panel')]
 	public function get(Finder $find, Factory $factory): Response
 	{
-		$query = new GetQuery($this->request);
+		if ($this->request->method() === 'GET') {
+			$query = new GetQuery($this->request);
+		} else {
+			$query = new PostQuery($this->request);
+		}
 
 		if ($query->query) {
 			$nodes = $find->nodes($query->query);
-		} elseif ($query->uid) {
-			$uids = $query->uids();
-
-			if (count($uids) > 1) {
-				$quoted = implode(', ', array_map(fn($uid) => "'{$uid}'", $uids));
+		} elseif (count($query->uids) > 0) {
+			if (count($query->uids) > 1) {
+				$quoted = implode(',', array_map(fn($uid) => "'{$uid}'", $query->uids));
 				$queryString = "uid @ [{$quoted}]";
 			} else {
-				$queryString = "uid = '{$query->uid}'";
+				$queryString = "uid = '{$query->uids[0]}'";
 			}
 
 			$nodes = $find->nodes($queryString);

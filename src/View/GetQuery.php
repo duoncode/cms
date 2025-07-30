@@ -14,7 +14,7 @@ class GetQuery implements Query
 	private bool|null $_hidden;
 	private bool|null $_deleted;
 	private bool|null $_content;
-	private string $_uid;
+	private array $_uids;
 	private string $_order;
 	private array $_fields;
 
@@ -26,7 +26,7 @@ class GetQuery implements Query
 		$this->_hidden = $this->tristateValue($request->param('hidden', 'false'));
 		$this->_deleted = $this->tristateValue($request->param('deleted', 'false'));
 		$this->_content = $this->tristateValue($request->param('content', 'false'));
-		$this->_uid = $request->param('uid', '');
+		$this->_uids = array_map(fn(string $uid) => trim($uid), explode(',', $request->param('uids', '')));
 		$this->_order = $request->param('order', 'changed');
 		$this->_fields = explode(',', $request->param('fields', ''));
 	}
@@ -37,14 +37,9 @@ class GetQuery implements Query
 	public bool|null $hidden { get => $this->_hidden; }
 	public bool|null $deleted { get => $this->_deleted; }
 	public bool|null $content { get => $this->_content; }
-	public string $uid { get => $this->_uid; }
+	public array $uids { get => $this->_uids; }
 	public string $order { get => $this->_order; }
 	public array $fields { get => $this->_fields; }
-
-	public function uids(): array
-	{
-		return array_map(fn(string $uid) => trim($uid), explode(',', $this->_uid));
-	}
 
 	private function tristateValue(string|null $value): bool|null
 	{

@@ -12,9 +12,7 @@ interface Query
 	public bool|null $hidden { get; }
 	public bool|null $deleted { get; }
 	public bool|null $content { get; }
-	public string $uid { get; }
+	public array $uids { get; }
 	public string $order { get; }
 	public array $fields { get; }
-
-	public function uids(): array;
 }
