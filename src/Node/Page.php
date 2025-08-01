@@ -14,9 +14,7 @@ abstract class Page extends Node
 {
 	use RendersTemplate;
 
-	protected static string|array $route = ''; // The route pattern of node instances
-
-	public function path(Locale $locale = null): string
+	public function path(?Locale $locale = null): string
 	{
 		$paths = $this->data['paths'];
 
@@ -38,7 +36,7 @@ abstract class Page extends Node
 	public function blueprint(array $values = []): array
 	{
 		$result = parent::blueprint($values);
-		$result['route'] = static::$route;
+		$result['route'] = static::$nodeMeta[static::class]->route;
 
 		return $result;
 	}

@@ -49,7 +49,7 @@ class Routes
 		$this->addApi($app, $session);
 
 		$postMediaRoute = $app->post(
-			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-]{1,64}}',
+			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-_.]{1,64}}',
 			[Media::class, 'upload'],
 			'cms.media.upload',
 		);
@@ -98,9 +98,9 @@ class Routes
 	protected function addUser(Group $api): void
 	{
 		$api->get('/users', [User::class, 'list'], 'users');
-		$api->get('/user/{uid:[A-Za-z0-9-]{1,64}}', [User::class, 'get'], 'user.get');
+		$api->get('/user/{uid:[A-Za-z0-9-_.]{1,64}}', [User::class, 'get'], 'user.get');
 		$api->post('/user', [User::class, 'create'], 'user.create');
-		$api->put('/user/{uid:[A-Za-z0-9-]{1,64}}', [User::class, 'save'], 'user.save');
+		$api->put('/user/{uid:[A-Za-z0-9-_.]{1,64}}', [User::class, 'save'], 'user.save');
 		$api->get('/profile', [User::class, 'profile'], 'profile.get');
 		$api->put('/profile', [User::class, 'saveProfile'], 'profile.save');
 	}
@@ -109,10 +109,11 @@ class Routes
 	{
 		$api->get('/collections', [Panel::class, 'collections'], 'collections');
 		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
-		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.get');
-		$api->get('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.get');
-		$api->put('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.update');
-		$api->delete('/node/{uid:[A-Za-z0-9-]{1,64}}', [Panel::class, 'node'], 'node.delete');
+		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.search.get');
+		$api->post('/nodes', [Nodes::class, 'get'], 'nodes.search.post');
+		$api->get('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.get');
+		$api->put('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.update');
+		$api->delete('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.delete');
 		$api->post('/node/{type}', [Panel::class, 'createNode'], 'node.create');
 		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'node.blueprint');
 	}

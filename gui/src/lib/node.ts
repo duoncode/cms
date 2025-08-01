@@ -77,6 +77,14 @@ export async function create(node: Node, type: string, documentPath: string) {
 	}
 }
 
+export async function createAndClose(node: Node, type: string, documentPath: string) {
+	const result = await create(node, type, documentPath);
+
+	if (result.success) {
+		broadcastOk();
+	}
+}
+
 export async function remove(uid: string, collectionPath: string) {
 	const response = await req.del(`node/${uid}`);
 

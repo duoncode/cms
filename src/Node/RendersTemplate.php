@@ -10,15 +10,11 @@ use Duon\Registry\Exception\NotFoundException;
 
 trait RendersTemplate
 {
-	protected const string renderer = '';
-
-	public function renderer(): array
+	public static function renderer(): array
 	{
-		if (!empty(static::renderer)) {
-			return ['template', static::renderer];
-		}
+		static::initMeta();
 
-		return ['template', static::handle()];
+		return ['template', self::$nodeMeta[static::class]->renderer];
 	}
 
 	public function render(array $context = []): Response

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import EmbeddedNode from '$shell/EmbeddedNode.svelte';
-	import { create } from '$lib/node';
+	import { create, createAndClose } from '$lib/node';
+	import Modal from '$shell/modal/Modal.svelte';
 	import Toasts from '$shell/Toasts.svelte';
 
 	type Props = {
@@ -18,10 +19,18 @@
 
 		create(node, node.type.handle, `embed/${data.token}/node/${data.type}`);
 	}
+
+	async function saveAndClose() {
+		node.published = true;
+		await createAndClose(node, node.type.handle, `embed/${data.token}/node/${data.type}`);
+	}
 </script>
 
-<EmbeddedNode
-	bind:node
-	fields={data.fields}
-	{save} />
-<Toasts />
+<Modal>
+	<EmbeddedNode
+		bind:node
+		fields={data.fields}
+		{save}
+		{saveAndClose} />
+	<Toasts />
+</Modal>

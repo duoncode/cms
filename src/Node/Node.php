@@ -32,24 +32,20 @@ abstract class Node
 {
 	public readonly Request $request;
 	public readonly Config $config;
-	protected static string $name = ''; // The public name of the node type
-	protected static string $handle = ''; // Used also as slug to address the node type in the panel
-	protected static array $permissions = [
-		'read' => 'everyone',
-		'create' => 'authenticated',
-		'change' => 'authenticated',
-		'deeete' => 'authenticated',
-	];
 	protected readonly Database $db;
 	protected readonly Registry $registry;
 	protected readonly Factory $factory;
 	protected array $fieldNames = [];
+
+	/** @var array<class-string, Meta> */
+	protected static array $nodeMeta = [];
 
 	final public function __construct(
 		public readonly Context $context,
 		protected readonly Finder $find,
 		protected ?array $data = null,
 	) {
+		static::initMeta();
 		$this->initFields();
 
 		$this->db = $context->db;
@@ -57,6 +53,41 @@ abstract class Node
 		$this->config = $context->config;
 		$this->registry = $context->registry;
 		$this->factory = $context->factory;
+	}
+
+	protected static function initMeta()
+	{
+		if (!isset(self::$nodeMeta[static::class])) {
+			self::$nodeMeta[static::class] = new Meta(static::class);
+		}
+	}
+
+	public static function name(): string
+	{
+		static::initMeta();
+
+		return self::$nodeMeta[static::class]->name;
+	}
+
+	public static function handle(): string
+	{
+		static::initMeta();
+
+		return self::$nodeMeta[static::class]->handle;
+	}
+
+	public static function permission(): array
+	{
+		static::initMeta();
+
+		return self::$nodeMeta[static::class]->permission;
+	}
+
+	public static function route(): string
+	{
+		static::initMeta();
+
+		return self::$nodeMeta[static::class]->route;
 	}
 
 	final public function __get(string $fieldName): ?Value
@@ -184,7 +215,7 @@ abstract class Node
 		}
 
 		return [
-			'title' => _('Neues Dokument:') . ' ' . $this->name(),
+			'title' => _('Neues Dokument:') . ' ' . static::$nodeMeta[static::class]->name,
 			'fields' => $this->fields(),
 			'uid' => $this->newUid(),
 			'published' => false,
@@ -193,7 +224,7 @@ abstract class Node
 			'deletable' => $this->deletable(),
 			'content' => $content,
 			'type' => [
-				'handle' => static::handle(),
+				'handle' => static::$nodeMeta[static::class]->handle,
 				'kind' => $kind,
 				'class' => static::class,
 			],
@@ -230,24 +261,6 @@ abstract class Node
 	 * Shown in the admin interface. But can also be used in the frontend.
 	 */
 	abstract public function title(): string;
-
-	public static function name(): string
-	{
-		return static::$name ?: static::className();
-	}
-
-	public static function handle(): string
-	{
-		return static::$handle ?:
-			ltrim(
-				strtolower(preg_replace(
-					'/[A-Z]([A-Z](?![a-z]))*/',
-					'-$0',
-					static::className(),
-				)),
-				'-',
-			);
-	}
 
 	public function uid(): string
 	{
@@ -441,7 +454,7 @@ abstract class Node
 			'hidden' => $data['hidden'],
 			'published' => $data['published'],
 			'locked' => $data['locked'],
-			'type' => $this->handle(),
+			'type' => static::$nodeMeta[static::class]->handle,
 			'content' => json_encode($data['content']),
 			'editor' => $editor,
 		])->one()['node'];
