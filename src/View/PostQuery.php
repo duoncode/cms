@@ -21,6 +21,6 @@ class PostQuery implements Query
 		$this->_content = $json['content'] ?? false;
 		$this->_uids = $json['uids'] ?? [];
 		$this->_order = $json['order'] ?? 'changed';
-		$this->_fields = $json['fields'] ?? [];
+		$this->_fields = explode(',', $request->param('fields', ''));
 	}
 }
