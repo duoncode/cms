@@ -13,6 +13,7 @@ use Duon\Core\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 use Duon\Registry\Registry;
+use stdClass;
 
 class Nodes
 {
@@ -84,6 +85,10 @@ class Nodes
 			} else {
 				$result[] = $n;
 			}
+		}
+
+		if (count($result) === 0 && $query->map) {
+			$result = new stdClass();
 		}
 
 		return (new Response($factory->response()))->json($result);
