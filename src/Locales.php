@@ -100,6 +100,13 @@ class Locales implements Iterator, Plugin
 	{
 		$uri = $request->getUri();
 
+		// From query paramter
+		$locale = $request->getQueryParams()['locale'] ?? null;
+
+		if ($locale && $this->exists($locale)) {
+			return $locales[$locale];
+		}
+
 		// By domain
 		$host = strtolower(explode(':', $uri->getHost())[0]);
 
