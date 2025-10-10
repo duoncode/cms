@@ -25,9 +25,9 @@ $connection = new Connection(
 //     domain: 'duon',
 //     sources: [
 //         new Source(__DIR__ . '/src', '*.php', 'PHP'),
-//         new Source(__DIR__ . '/gui', '*.svelte', 'Python'),
+//         new Source(__DIR__ . '/ui', '*.svelte', 'Python'),
 //     ],
-//     jsonDir: __DIR__ . '/gui/src/locale',
+//     jsonDir: __DIR__ . '/ui/src/locale',
 // );
 $commands = MigrationCommands::get($connection);
 $commands->add(new RecreateDb('duon_db', 'duon_user', 'duon_password'));

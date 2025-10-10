@@ -10,9 +10,9 @@ vite.config.ts.timestamp-*
 /build
 /coverage
 /data/
-/gui/.svelte-kit
-/gui/build/
-/gui/dist/
-/gui/package
-/gui/src/locale/
+/ui/.svelte-kit
+/ui/build/
+/ui/dist/
+/ui/package
+/ui/src/locale/
 /vendor/
