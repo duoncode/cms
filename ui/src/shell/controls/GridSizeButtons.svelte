@@ -118,13 +118,13 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	div button {
-		@apply relative h-4 w-4;
+		position: relative;
+		height: var(--spacing-4);
+		width: var(--spacing-4);
 
 		&[disabled] {
-			@apply text-gray-300;
+			color: var(--color-gray-300);
 		}
 	}
 

@@ -96,21 +96,20 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	div button {
-		@apply h-4 w-4;
+		height: var(--spacing-4);
+		width: var(--spacing-4);
 
 		&[disabled] {
-			@apply text-gray-300;
+			color: rgb(209 213 219);
 		}
 	}
 
 	.remove {
-		@apply text-orange-700;
+		color: var(--color-orange-700);
 	}
 
 	.add {
-		@apply text-sky-700;
+		color: var(--color-sky-700);
 	}
 </style>

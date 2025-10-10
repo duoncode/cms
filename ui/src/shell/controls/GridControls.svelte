@@ -87,10 +87,9 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	div button {
-		@apply h-4 w-4;
+		height: var(--spacing-4);
+		width: var(--spacing-4);
 	}
 
 	.grid-buttons {
