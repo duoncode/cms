@@ -110,21 +110,50 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	th,
 	td {
-		@apply px-3 py-4 sm:px-4 lg:px-6;
+		padding-left: var(--spacing-3);
+		padding-right: var(--spacing-3);
+		padding-top: var(--spacing-4);
+		padding-bottom: var(--spacing-4);
 	}
+
+	@media (min-width: var(--breakpoint-sm)) {
+		th,
+		td {
+			padding-left: var(--spacing-4);
+			padding-right: var(--spacing-4);
+		}
+	}
+
+	@media (min-width: var(--breakpoint-lg)) {
+		th,
+		td {
+			padding-left: var(--spacing-6);
+			padding-right: var(--spacing-6);
+		}
+	}
+
 	th {
-		@apply sticky top-0 z-10 border-b border-gray-300 bg-gray-100;
-		@apply bg-gray-100/75 text-left text-sm font-semibold;
-		@apply border-t border-black/10 text-gray-900 backdrop-blur backdrop-filter;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		border-top-width: 1px;
+		border-bottom-width: 1px;
+		border-color: var(--color-gray-300);
+		background-color: color-mix(in srgb, var(--color-gray-100) 75%, transparent);
+		text-align: left;
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--color-gray-900);
+		backdrop-filter: blur(var(--blur-sm));
 	}
 
 	td {
-		@apply whitespace-nowrap border-b border-gray-200;
-		@apply text-sm text-gray-900;
+		border-bottom: 1px solid var(--color-gray-200);
+		white-space: nowrap;
+		font-size: var(--font-size-sm);
+		color: var(--color-gray-900);
 	}
 
 	.published {
@@ -139,8 +168,8 @@
 
 	tr:hover {
 		td,
-		td a {
-			@apply bg-emerald-100;
+		:global(td a) {
+			background-color: var(--color-emerald-100);
 		}
 	}
 </style>
