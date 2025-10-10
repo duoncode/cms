@@ -8,10 +8,10 @@
 	let { lang = $bindable() }: Props = $props();
 </script>
 
-<span class="locale-tabs">
-	{#each $system.locales as locale}
+<span class="locale-tabs flex-shrink">
+	{#each $system.locales as locale (locale)}
 		<button
-			class="locale-tab"
+			class="locale-tab text-sm"
 			class:active={locale.id === lang}
 			onclick={() => (lang = locale.id)}>
 			{locale.id.toUpperCase()}
@@ -20,21 +20,16 @@
 </span>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
-	.locale-tabs {
-		@apply flex-shrink;
-	}
-
 	.locale-tab {
-		@apply text-sm;
 		display: inline-block;
 		box-shadow: 0;
 		padding: 0 0.5rem;
 		font-weight: normal;
 
 		&.active {
-			@apply rounded bg-gray-200 text-black;
+			border-radius: var(--radius);
+			background-color: var(--color-gray-200);
+			color: var(--color-black);
 		}
 	}
 </style>
