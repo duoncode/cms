@@ -70,7 +70,7 @@
 
 {#if multiple && type === 'image'}
 	<div
-		class="multiple-images"
+		class="multiple-images flex flex-row flex-wrap justify-start gap-4 py-4"
 		bind:this={sorterElement}>
 		{#each assets as asset, index (asset)}
 			<Image
@@ -121,11 +121,3 @@
 		remove={() => remove(null)}
 		edit={() => edit(0, false)} />
 {/if}
-
-<style lang="postcss">
-	@reference "tailwindcss";
-
-	.multiple-images {
-		@apply flex flex-row flex-wrap justify-start gap-4 py-4;
-	}
-</style>

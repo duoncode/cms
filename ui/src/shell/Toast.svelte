@@ -10,30 +10,9 @@
 
 <div class="text-left text-white">
 	{#if toast.title}
-		<h3>{toast.title}</h3>
+		<h3 class="mt-3 mb-1 font-semibold">{toast.title}</h3>
 	{/if}
 	{#if toast.message}
 		<p>{toast.message}</p>
 	{/if}
 </div>
-
-<style lang="postcss">
-	@reference "tailwindcss";
-
-	h3,
-	h4 {
-		@apply mb-1 mt-3 font-semibold;
-	}
-
-	h3:first-child {
-		@apply mt-0;
-	}
-
-	h4 {
-		@apply text-gray-200;
-	}
-
-	ul {
-		@apply ml-4 mt-2 list-disc;
-	}
-</style>
