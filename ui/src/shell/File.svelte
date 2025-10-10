@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { FileItem } from '$types/data';
+	import { resolve } from '$app/paths';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
 	import IcoDocument from '$shell/icons/IcoDocument.svelte';
@@ -37,7 +38,8 @@
 </script>
 
 {#if asset}
-	<div class="file pl-4">
+	<div
+		class="file relative flex w-full flex-row items-center rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 pl-4 text-center text-gray-600">
 		<IcoDocument />
 		<div class="flex-grow truncate pl-3 text-left">
 			<b class="font-semibold">{asset.file}</b>
@@ -48,7 +50,7 @@
 		{/if}
 		<IcoDownload />
 		<a
-			href="{path}/{asset.file}"
+			href={resolve(`${path}/${asset.file}`)}
 			target="_blank"
 			class="inline-block pl-2">
 			{_('Datei herunterladen')}
@@ -57,7 +59,7 @@
 		<button
 			onclick={edit}
 			class="text-sky-800">
-			<span class="ml-4 inline-block flex h-4 w-4 items-center">
+			<span class="ml-4 flex h-4 w-4 items-center">
 				<IcoPencil />
 			</span>
 		</button>
@@ -65,19 +67,9 @@
 		<button
 			onclick={remove}
 			class="text-rose-800">
-			<span class="ml-4 inline-block flex h-4 w-4 items-center">
+			<span class="ml-4 flex h-4 w-4 items-center">
 				<IcoTrash />
 			</span>
 		</button>
 	</div>
 {/if}
-
-<style lang="postcss">
-	@reference "tailwindcss";
-
-	.file {
-		@apply flex w-full flex-row items-center;
-		@apply rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 text-center;
-		@apply relative text-gray-600;
-	}
-</style>
