@@ -208,7 +208,7 @@
 	{/if}
 {:else}
 	<div
-		class="upload upload-{type}"
+		class="upload upload-{type} flex h-full w-full flex-col md:flex-row"
 		class:required
 		class:upload-multiple={multiple}
 		class:mt-6={inline}>
@@ -222,14 +222,14 @@
 			{translate} />
 		{#if !assets || assets.length === 0 || multiple}
 			<label
-				class="dragdrop"
+				class="dragdrop flex flex-1 flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-gray-100 px-2 py-4 text-center align-middle md:mt-0 md:h-auto"
 				class:dragging
 				class:image={type === 'image'}
 				for={name}
 				ondrop={preventDefault(onFile(getFilesFromDrop))}
 				ondragover={preventDefault(startDragging)}
 				ondragleave={preventDefault(stopDragging)}>
-				<div class="label">
+				<div class="label flex flex-row items-center justify-center gap-2 text-gray-600">
 					<span class="inline-block h-6 w-6"><IcoUpload /></span>
 					{_('Neue Dateien per Drag and Drop hier einfügen oder')}
 					<u>{_('auswählen')}</u>
@@ -248,18 +248,14 @@
 {/if}
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.upload {
-		@apply flex h-full w-full flex-col;
-		@apply md:flex-row;
-
 		&.upload-multiple {
-			@apply flex-col;
+			flex-direction: column;
 		}
 
 		&.required .dragdrop {
-			@apply border-l-4 border-l-rose-700;
+			border-left-width: var(--border-4);
+			border-left-color: var(--color-rose-700);
 			border-left-style: solid;
 		}
 	}
@@ -274,30 +270,26 @@
 		white-space: nowrap;
 	}
 
-	.dragdrop {
-		@apply flex flex-1 flex-col items-center justify-center;
-		@apply bg-gray-100 px-2 py-4;
-		@apply rounded-md border-2 border-dashed border-gray-300;
-		@apply text-center align-middle;
-		@apply md:mt-0 md:h-auto;
-	}
 	.dragdrop:hover {
 		cursor: pointer;
 	}
-	.dragdrop > div.label {
-		@apply flex flex-row items-center justify-center gap-2 text-gray-600;
-	}
+
 	:global(.dragdrop > div.label svg) {
-		@apply mb-2 inline;
+		display: inline;
+		margin-bottom: var(--spacing-2);
 	}
 	:global(.dragdrop > div.label u) {
-		@apply text-sky-700;
-	}
-	:global(.upload-image .preview) {
-		@apply md:w-2/5;
+		color: var(--color-sky-700);
 	}
 	.dragdrop > div.file-extensions {
-		@apply mt-1 text-gray-400;
 		font-weight: normal;
+		color: var(--color-gray-400);
+		margin-top: var(--spacing-1);
+	}
+
+	@media (min-width: var(--breakpoint-md)) {
+		:global(.upload-image .preview) {
+			width: var(--fraction-2-5);
+		}
 	}
 </style>

@@ -12,6 +12,7 @@
 <span
 	class:large
 	class:published
+	class="inline-block rounded-full bg-gray-300 text-sm"
 	title={published ? _('veröffentlicht') : _('unveröffentlicht')}>
 	{#if large}
 		{published ? _('veröffentlicht') : _('unveröffentlicht')}
@@ -19,22 +20,20 @@
 </span>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	span {
-		@apply inline-block rounded-full bg-gray-300 text-sm;
-
 		height: 0.4rem;
 		width: 0.4rem;
 
 		&.large {
-			@apply px-2;
+			padding-left: var(--spacing-2);
+			padding-right: var(--spacing-2);
 			height: auto;
 			width: auto;
 		}
 
 		&.published {
-			@apply bg-emerald-600 text-white;
+			background-color: var(--color-emerald-600);
+			color: var(--color-white);
 		}
 	}
 </style>

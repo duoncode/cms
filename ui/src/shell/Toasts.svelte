@@ -44,7 +44,7 @@
 	{#each $toasts as toast (toast)}
 		<button
 			onclick={remove(toast)}
-			class="toast relative mb-2 block px-4 pb-5 pt-4 last:mb-4"
+			class="toast relative mb-2 block px-4 pt-4 pb-5 last:mb-4"
 			class:mr-4={!center}
 			class:bg-emerald-600={toast.kind === 'success'}
 			class:bg-rose-700={toast.kind === 'error'}
@@ -54,7 +54,7 @@
 			out:send={{ key: toast }}>
 			<Toast {toast} />
 			{#if toast.kind === 'error'}
-				<span class="absolute right-1 top-1 h-4 w-4 cursor-pointer rounded-full text-white">
+				<span class="absolute top-1 right-1 h-4 w-4 cursor-pointer rounded-full text-white">
 					<IcoTimes />
 				</span>
 			{/if}
@@ -63,9 +63,9 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.pos-bottom {
-		@apply bottom-0 right-0 pr-8;
+		bottom: 0;
+		right: 0;
+		padding-right: var(--spacing-8);
 	}
 </style>

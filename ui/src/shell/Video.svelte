@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class="video {classes}"
+	class="video relative w-full border border-gray-300 bg-gray-100 p-1 text-center {classes}"
 	class:empty={!file}
 	class:upload>
 	{#if loading}
@@ -37,49 +37,24 @@
 				<button
 					class="text-rose-700"
 					onclick={remove}>
-					<span class="ico">
+					<span class="ico flex items-center justify-center">
 						<IcoTrash />
 					</span>
-					<span class="icobtn">{_('Löschen')}</span>
+					<span class="icobtn text-center text-xs text-white">{_('Löschen')}</span>
 				</button>
 			{/if}
 		</div>
 	{/if}
 	{#if ext}
 		<span
-			class="absolute bottom-1 right-1 mb-px mr-px rounded bg-rose-700 px-1 text-xs text-white">
+			class="absolute right-1 bottom-1 mr-px mb-px rounded bg-rose-700 px-1 text-xs text-white">
 			{ext.toUpperCase()}
 		</span>
 	{/if}
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
-	.video {
-		@apply relative w-full border border-gray-300 bg-gray-100 p-1 text-center;
-
-		video {
-		}
-	}
-
-	.overlay {
-		@apply flex flex-row items-center justify-center gap-2;
-		@apply invisible opacity-0;
-		@apply absolute bottom-1 left-1 right-1 top-1;
-		transition:
-			visibility 0.1s,
-			opacity 0.2s linear;
-		background: rgba(0, 0, 0, 0.3);
-	}
-
-	.overlay button {
-		@apply flex flex-col items-center justify-center;
-		cursor: pointer;
-	}
-
 	.ico {
-		@apply flex items-center justify-center;
 		background-color: rgba(255, 255, 255, 0.8);
 		border-radius: 100%;
 		height: 2.5rem;
@@ -92,7 +67,6 @@
 	}
 
 	.icobtn {
-		@apply text-center text-xs text-white;
 		text-shadow:
 			-1px 0 #000,
 			0 1px #000,
