@@ -14,23 +14,21 @@
 
 	{#each $collections as item (item)}
 		{#if item.type === 'section'}
-			<h2>{item.name}</h2>
+			<h2 class="mt-6 font-semibold">{item.name}</h2>
 		{:else}
-			<div class="ml-4 mt-1">
+			<div class="mt-1 ml-4">
 				<Link href="collection/{item.slug}">
 					{item.name}
 				</Link>
 			</div>
 		{/if}
 	{/each}
-	<h2>{_('Benutzer')}</h2>
-	<div class="ml-4 mt-1"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></div>
-	<div class="ml-4 mt-1"><button onclick={logoutUser}>{_('Abmelden')}</button></div>
+	<h2 class="mt-6 font-semibold">{_('Benutzer')}</h2>
+	<div class="mt-1 ml-4"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></div>
+	<div class="mt-1 ml-4"><button onclick={logoutUser}>{_('Abmelden')}</button></div>
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	#nav {
 		width: 16rem;
 		margin-left: -16rem;
@@ -46,9 +44,5 @@
 		&.open {
 			margin-left: 0;
 		}
-	}
-
-	h2 {
-		@apply mt-6 font-semibold;
 	}
 </style>
