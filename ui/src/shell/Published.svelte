@@ -25,8 +25,8 @@
 		width: 0.4rem;
 
 		&.large {
-			padding-left: var(--spacing-2);
-			padding-right: var(--spacing-2);
+			padding-left: var(--s-2);
+			padding-right: var(--s-2);
 			height: auto;
 			width: auto;
 		}

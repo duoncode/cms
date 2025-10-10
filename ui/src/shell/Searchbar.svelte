@@ -126,8 +126,8 @@
 			svg {
 				margin: 0;
 				box-shadow: none;
-				height: var(--spacing-6);
-				width: var(--spacing-6);
+				height: var(--s-6);
+				width: var(--s-6);
 			}
 		}
 	}

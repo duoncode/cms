@@ -104,7 +104,7 @@
 		display: table-row;
 
 		& > div {
-			padding: var(--spacing-2);
+			padding: var(--s-2);
 			display: table-cell;
 		}
 

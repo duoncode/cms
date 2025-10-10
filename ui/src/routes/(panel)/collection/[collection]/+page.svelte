@@ -112,25 +112,25 @@
 <style lang="postcss">
 	th,
 	td {
-		padding-left: var(--spacing-3);
-		padding-right: var(--spacing-3);
-		padding-top: var(--spacing-4);
-		padding-bottom: var(--spacing-4);
+		padding-left: var(--s-3);
+		padding-right: var(--s-3);
+		padding-top: var(--s-4);
+		padding-bottom: var(--s-4);
 	}
 
 	@media (min-width: var(--breakpoint-sm)) {
 		th,
 		td {
-			padding-left: var(--spacing-4);
-			padding-right: var(--spacing-4);
+			padding-left: var(--s-4);
+			padding-right: var(--s-4);
 		}
 	}
 
 	@media (min-width: var(--breakpoint-lg)) {
 		th,
 		td {
-			padding-left: var(--spacing-6);
-			padding-right: var(--spacing-6);
+			padding-left: var(--s-6);
+			padding-right: var(--s-6);
 		}
 	}
 

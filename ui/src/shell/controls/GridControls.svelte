@@ -88,8 +88,8 @@
 
 <style lang="postcss">
 	div button {
-		height: var(--spacing-4);
-		width: var(--spacing-4);
+		height: var(--s-4);
+		width: var(--s-4);
 	}
 
 	.grid-buttons {

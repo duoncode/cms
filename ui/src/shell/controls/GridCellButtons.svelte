@@ -97,8 +97,8 @@
 
 <style lang="postcss">
 	div button {
-		height: var(--spacing-4);
-		width: var(--spacing-4);
+		height: var(--s-4);
+		width: var(--s-4);
 
 		&[disabled] {
 			color: rgb(209 213 219);

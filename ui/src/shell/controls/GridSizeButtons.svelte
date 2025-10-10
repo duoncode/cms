@@ -120,8 +120,8 @@
 <style lang="postcss">
 	div button {
 		position: relative;
-		height: var(--spacing-4);
-		width: var(--spacing-4);
+		height: var(--s-4);
+		width: var(--s-4);
 
 		&[disabled] {
 			color: var(--color-gray-300);

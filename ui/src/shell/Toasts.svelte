@@ -66,6 +66,6 @@
 	.pos-bottom {
 		bottom: 0;
 		right: 0;
-		padding-right: var(--spacing-8);
+		padding-right: var(--s-8);
 	}
 </style>

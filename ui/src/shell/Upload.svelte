@@ -276,7 +276,7 @@
 
 	:global(.dragdrop > div.label svg) {
 		display: inline;
-		margin-bottom: var(--spacing-2);
+		margin-bottom: var(--s-2);
 	}
 	:global(.dragdrop > div.label u) {
 		color: var(--color-sky-700);
@@ -284,7 +284,7 @@
 	.dragdrop > div.file-extensions {
 		font-weight: normal;
 		color: var(--color-gray-400);
-		margin-top: var(--spacing-1);
+		margin-top: var(--s-1);
 	}
 
 	@media (min-width: var(--breakpoint-md)) {
