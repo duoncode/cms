@@ -18,6 +18,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	h3,
 	h4 {
 		@apply mb-1 mt-3 font-semibold;

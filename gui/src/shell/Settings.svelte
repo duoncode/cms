@@ -95,6 +95,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.paths {
 		display: table;
 		width: 100%;

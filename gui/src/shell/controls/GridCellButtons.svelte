@@ -96,6 +96,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	div button {
 		@apply h-4 w-4;
 

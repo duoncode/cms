@@ -24,10 +24,10 @@
 	}: Props & HTMLButtonAttributes = $props();
 </script>
 
-<div class="inline-flex rounded-md shadow-sm">
+<div class="inline-flex rounded-md shadow-xs">
 	<button
 		type="button"
-		class="{cls} inline-flex items-center justify-center gap-x-2 rounded-l-md px-3.5 py-2.5 text-sm font-semibold shadow-sm focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+		class="{cls} inline-flex items-center justify-center gap-x-2 rounded-l-md px-3.5 py-2.5 text-sm font-semibold shadow-xs focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
 		{...attributes}>
 		{#if icon}
 			{@const Icon = icon}
@@ -59,7 +59,7 @@
 		</button>
 		{#if openMenu}
 			<div
-				class="button-menu {cls} absolute right-0 z-10 -mr-1 mt-2 w-64 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+				class="button-menu {cls} absolute right-0 z-10 -mr-1 mt-2 w-64 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
 				role="menu"
 				aria-orientation="vertical"
 				aria-labelledby="option-menu-button"

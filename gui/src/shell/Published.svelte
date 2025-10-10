@@ -19,6 +19,8 @@
 </span>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	span {
 		@apply inline-block rounded-full bg-gray-300 text-sm;
 

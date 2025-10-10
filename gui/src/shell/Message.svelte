@@ -81,7 +81,9 @@
 	</div>
 {/if}
 
-<style type="postcss">
+<style lang="postcss">
+	@reference "tailwindcss";
+
 	:global(.message em) {
 		@apply whitespace-nowrap font-semibold italic;
 	}

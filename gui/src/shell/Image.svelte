@@ -129,6 +129,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	button.title {
 		@apply truncate;
 		max-width: 8rem;

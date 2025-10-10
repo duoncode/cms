@@ -17,13 +17,15 @@
 <div class="mt-2 pr-4">
 	<button
 		{onclick}
-		class="inline-flex w-full items-center gap-x-1.5 rounded-md border border-emerald-600 px-3 py-2 text-sm font-semibold text-emerald-600 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+		class="inline-flex w-full items-center gap-x-1.5 rounded-md border border-emerald-600 px-3 py-2 text-sm font-semibold text-emerald-600 shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
 		class:active={current && current.endsWith(`/${file}`)}>
 		{file}
 	</button>
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	button.active {
 		@apply bg-emerald-600 text-white;
 	}

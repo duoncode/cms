@@ -26,6 +26,8 @@
 </button>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.link-image {
 		@apply flex items-center justify-center rounded border border-gray-400;
 

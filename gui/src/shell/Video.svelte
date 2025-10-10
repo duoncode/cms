@@ -54,6 +54,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.video {
 		@apply relative w-full border border-gray-300 bg-gray-100 p-1 text-center;
 

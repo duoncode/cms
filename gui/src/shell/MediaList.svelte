@@ -123,6 +123,8 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.multiple-images {
 		@apply flex flex-row flex-wrap justify-start gap-4 py-4;
 	}

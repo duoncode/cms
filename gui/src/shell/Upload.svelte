@@ -248,6 +248,8 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.upload {
 		@apply flex h-full w-full flex-col;
 		@apply md:flex-row;

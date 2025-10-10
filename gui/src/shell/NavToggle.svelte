@@ -10,6 +10,8 @@
 </button>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	button.nav {
 		@apply h-9 w-9 bg-white p-2;
 		position: absolute;

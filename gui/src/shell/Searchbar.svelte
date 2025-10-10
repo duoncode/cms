@@ -72,6 +72,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.searchbar {
 		justify-content: center;
 	}
@@ -130,7 +132,7 @@
 		}
 	}
 
-	@media (--lg) {
+	@media (min-width: 1024px) {
 		.controls {
 			margin: 0 var(--s-16);
 		}

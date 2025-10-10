@@ -118,6 +118,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	div button {
 		@apply relative h-4 w-4;
 

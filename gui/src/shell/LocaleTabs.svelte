@@ -20,6 +20,8 @@
 </span>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.locale-tabs {
 		@apply flex-shrink;
 	}

@@ -73,6 +73,8 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.file {
 		@apply flex w-full flex-row items-center;
 		@apply rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 text-center;

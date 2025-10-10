@@ -63,6 +63,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.pos-bottom {
 		@apply bottom-0 right-0 pr-8;
 	}

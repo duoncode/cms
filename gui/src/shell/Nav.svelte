@@ -29,6 +29,8 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	#nav {
 		width: 16rem;
 		margin-left: -16rem;

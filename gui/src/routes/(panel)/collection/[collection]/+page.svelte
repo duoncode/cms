@@ -62,7 +62,7 @@
 	<div class="flex-1 overflow-y-auto border-gray-200 px-4 sm:px-6 lg:px-8">
 		<div class="flow-root">
 			<div class="mx-8 mb-8">
-				<div class="-mx-4 ring-1 ring-black ring-opacity-5 sm:-mx-6 lg:-mx-8">
+				<div class="-mx-4 ring-1 ring-black/5 sm:-mx-6 lg:-mx-8">
 					<div class="inline-block min-w-full align-middle shadow">
 						<table class="min-w-full border-separate border-spacing-0 bg-white">
 							<thead>
@@ -110,14 +110,16 @@
 </div>
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	th,
 	td {
 		@apply px-3 py-4 sm:px-4 lg:px-6;
 	}
 	th {
 		@apply sticky top-0 z-10 border-b border-gray-300 bg-gray-100;
-		@apply bg-opacity-75 text-left text-sm font-semibold;
-		@apply border-t border-black border-opacity-10 text-gray-900 backdrop-blur backdrop-filter;
+		@apply bg-gray-100/75 text-left text-sm font-semibold;
+		@apply border-t border-black/10 text-gray-900 backdrop-blur backdrop-filter;
 	}
 
 	td {

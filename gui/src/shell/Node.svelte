@@ -128,8 +128,10 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	.preview {
-		@apply bg-gray-800 bg-opacity-50;
+		@apply bg-gray-800/50;
 		z-index: 999;
 		backdrop-filter: blur(0.5rem);
 		position: fixed;

@@ -13,6 +13,8 @@
 {/if}
 
 <style lang="postcss">
+	@reference "tailwindcss";
+
 	span {
 		@apply flex items-center justify-center font-semibold;
 		font-size: 9px;
