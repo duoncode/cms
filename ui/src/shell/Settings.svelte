@@ -49,7 +49,7 @@
 <div class="p-4 sm:p-6 md:p-8">
 	{#if node.type.kind === 'page'}
 		<div class="paths mb-8">
-			{#each $system.locales as locale}
+			{#each $system.locales as locale (locale)}
 				<div class="path">
 					<div class="label">{locale.title}:</div>
 					<div class="value">
@@ -95,8 +95,6 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.paths {
 		display: table;
 		width: 100%;
@@ -106,7 +104,7 @@
 		display: table-row;
 
 		& > div {
-			@apply p-2;
+			padding: var(--spacing-2);
 			display: table-cell;
 		}
 
