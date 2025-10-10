@@ -29,20 +29,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: gui/package-lock.json
+          cache-dependency-path: ui/package-lock.json
 
       - name: Install deps
-        working-directory: gui
+        working-directory: ui
         run: npm ci
 
       - name: Build
-        working-directory: gui
+        working-directory: ui
         run: npm run build
 
       - name: Ensure build output exists
         run: |
-          if [ ! -d "gui/${OUTPUT_DIR}" ]; then
-            echo "Expected build output at gui/${OUTPUT_DIR} not found."
+          if [ ! -d "ui/${OUTPUT_DIR}" ]; then
+            echo "Expected build output at ui/${OUTPUT_DIR} not found."
             exit 1
           fi
 
@@ -55,7 +55,7 @@ jobs:
             FILE_NAME="panel-nightly.tar.gz"
           fi
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
-          tar -C "gui/${OUTPUT_DIR}" -czf "dist/${FILE_NAME}" .
+          tar -C "ui/${OUTPUT_DIR}" -czf "dist/${FILE_NAME}" .
 
       # Nightly prerelease (overwrite asset on every main push)
       - name: Upload to nightly prerelease
