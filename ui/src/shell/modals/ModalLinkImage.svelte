@@ -16,7 +16,7 @@
 </script>
 
 <button
-	class="link-image"
+	class="link-image flex items-center justify-center rounded border border-gray-400"
 	{onclick}
 	class:active={current && current.endsWith(`/${file}`)}>
 	<img
@@ -26,17 +26,14 @@
 </button>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.link-image {
-		@apply flex items-center justify-center rounded border border-gray-400;
-
 		width: 190px;
 		height: 190px;
 		padding: 5px;
 
 		&.active {
-			@apply border-emerald-600 bg-emerald-100;
+			border-color: var(--color-emerald-600);
+			background-color: var(--color-emerald-100);
 		}
 	}
 </style>

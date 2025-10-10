@@ -4,16 +4,13 @@
 </script>
 
 <button
-	class="nav"
+	class="nav h-9 w-9 bg-white p-2"
 	onclick={toggleNav}>
 	<IcoBarsCenterLeft />
 </button>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	button.nav {
-		@apply h-9 w-9 bg-white p-2;
 		position: absolute;
 		left: var(--s-2);
 		border: 0;

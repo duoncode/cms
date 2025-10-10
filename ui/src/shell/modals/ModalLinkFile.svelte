@@ -24,9 +24,8 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	button.active {
-		@apply bg-emerald-600 text-white;
+		background-color: var(--color-emerald-600);
+		color: var(--color-white);
 	}
 </style>

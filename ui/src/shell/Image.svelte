@@ -73,7 +73,7 @@
 </script>
 
 <div
-	class="image {classes}"
+	class="image relative border border-gray-300 bg-gray-100 p-1 text-center {classes}"
 	class:empty={!image}
 	class:upload
 	class:multiple
@@ -84,7 +84,8 @@
 		<img
 			src={thumb}
 			alt={_('Vorschau')} />
-		<div class="overlay">
+		<div
+			class="overlay invisible absolute top-1 right-1 bottom-1 left-1 flex flex-row items-center justify-center gap-2 opacity-0">
 			{#if remove}
 				<button
 					class="text-rose-700"
@@ -115,28 +116,25 @@
 	{/if}
 	{#if title}
 		<button
-			class="title absolute bottom-1 left-1 mb-px ml-px rounded bg-white px-1 text-xs text-gray-600"
+			class="title absolute bottom-1 left-1 mb-px ml-px truncate rounded bg-white px-1 text-xs text-gray-600"
 			onclick={edit}>
 			{title}
 		</button>
 	{/if}
 	{#if ext}
 		<span
-			class="absolute bottom-1 right-1 mb-px mr-px rounded bg-rose-700 px-1 text-xs text-white">
+			class="absolute right-1 bottom-1 mr-px mb-px rounded bg-rose-700 px-1 text-xs text-white">
 			{ext.toUpperCase()}
 		</span>
 	{/if}
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	button.title {
-		@apply truncate;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		max-width: 8rem;
-	}
-	.image {
-		@apply relative border border-gray-300 bg-gray-100 p-1 text-center;
 	}
 	.image:hover .overlay,
 	.image.hover .overlay {
@@ -144,7 +142,11 @@
 		opacity: 1;
 	}
 	.image.upload {
-		@apply flex w-full flex-shrink items-center justify-center;
+		display: flex;
+		width: 100%;
+		flex-shrink: 1;
+		align-items: center;
+		justify-content: center;
 		max-height: 13rem;
 		min-height: 6rem;
 	}
@@ -161,9 +163,6 @@
 	}
 
 	.overlay {
-		@apply flex flex-row items-center justify-center gap-2;
-		@apply invisible opacity-0;
-		@apply absolute bottom-1 left-1 right-1 top-1;
 		transition:
 			visibility 0.1s,
 			opacity 0.2s linear;
@@ -171,12 +170,17 @@
 	}
 
 	.overlay button {
-		@apply flex flex-col items-center justify-center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 		cursor: pointer;
 	}
 
 	.ico {
-		@apply flex items-center justify-center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		background-color: rgba(255, 255, 255, 0.8);
 		border-radius: 100%;
 		height: 2.5rem;
@@ -189,7 +193,9 @@
 	}
 
 	.icobtn {
-		@apply text-center text-xs text-white;
+		text-align: center;
+		font-size: var(--font-size-xs);
+		color: var(--color-white);
 		text-shadow:
 			-1px 0 #000,
 			0 1px #000,
