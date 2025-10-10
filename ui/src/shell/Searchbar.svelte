@@ -72,8 +72,6 @@
 </div>
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.searchbar {
 		justify-content: center;
 	}
@@ -122,12 +120,14 @@
 			margin-left: var(--s-2);
 
 			border-radius: var(--radius-full);
-			@apply border border-gray-400 text-gray-500;
+			border: 1px solid var(--color-gray-400);
+			color: var(--color-gray-500);
 
 			svg {
 				margin: 0;
 				box-shadow: none;
-				@apply h-6 w-6;
+				height: var(--spacing-6);
+				width: var(--spacing-6);
 			}
 		}
 	}

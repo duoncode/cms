@@ -118,8 +118,12 @@
 	</Document>
 </div>
 {#if showPreview}
-	<div class="preview">
-		<button onclick={() => (showPreview = null)}>schließen</button>
+	<div class="preview bg-gray-800/50">
+		<button
+			onclick={() => (showPreview = null)}
+			class="rounded bg-rose-600 px-4 py-1 text-white">
+			schließen
+		</button>
 		<iframe
 			src="/preview{showPreview}"
 			title="Preview">
@@ -128,10 +132,7 @@
 {/if}
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	.preview {
-		@apply bg-gray-800/50;
 		z-index: 999;
 		backdrop-filter: blur(0.5rem);
 		position: fixed;
@@ -141,7 +142,6 @@
 		height: 100%;
 
 		button {
-			@apply rounded bg-rose-600 px-4 py-1 text-white;
 			position: absolute;
 			top: 5px;
 			right: 5px;

@@ -82,9 +82,9 @@
 {/if}
 
 <style lang="postcss">
-	@reference "tailwindcss";
-
 	:global(.message em) {
-		@apply whitespace-nowrap font-semibold italic;
+		white-space: nowrap;
+		font-weight: 600;
+		font-style: italic;
 	}
 </style>
