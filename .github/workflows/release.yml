@@ -55,7 +55,7 @@ jobs:
             FILE_NAME="panel-nightly.tar.gz"
           fi
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
-          tar -C "ui/${OUTPUT_DIR}" -czf "dist/${FILE_NAME}" .
+          tar -C "ui/${OUTPUT_DIR}" -czf "dist/${FILE_NAME}" ./*
 
       # Nightly prerelease (overwrite asset on every main push)
       - name: Upload to nightly prerelease
