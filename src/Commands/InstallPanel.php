@@ -22,6 +22,8 @@ class InstallPanel extends Command
 	protected string $publicPath;
 	protected string $indexPath;
 
+	protected const string defaultPath = '/cms';
+
 	public function __construct(private Config $config)
 	{
 		$this->panelPath = $this->config->get('path.panel');
@@ -38,6 +40,12 @@ class InstallPanel extends Command
 		if ($panelArchive !== '') {
 			$this->removeDirectory($this->publicPath);
 			$this->extractArchive($panelArchive, $this->publicPath);
+
+			if ($this->panelPath !== self::defaultPath) {
+				$this->echoln("Changing panel path from `" . self::defaultPath . "` to `{$this->panelPath}`:");
+
+				return $this->updatePanelPath();
+			}
 		}
 
 		return 0;
@@ -154,5 +162,76 @@ class InstallPanel extends Command
 		$this->success("Downloaded panel to {$tempFile}");
 
 		return $tempFile;
+	}
+
+	private function updatePanelPath(): int
+	{
+		$files = $this->findFiles();
+
+		foreach ($files as $file) {
+			$result = $this->replace($file);
+
+			if ($result !== 0) {
+				return $result;
+			}
+		}
+
+		return 0;
+	}
+
+	private function findFiles()
+	{
+		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->publicPath));
+		$files = [];
+
+		foreach ($iterator as $file) {
+			if ($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html'])) {
+				$content = file_get_contents($file->getPathname());
+
+				if (strpos($content, self::defaultPath) !== false) {
+					$files[] = $file->getPathname();
+				}
+			}
+		}
+
+		return $files;
+	}
+
+	private function replace(string $file): int
+	{
+		if (!file_exists($file)) {
+			$this->echo('File does not exist: ', 'red');
+			$this->echoln($this->removeCwdFromPath($file));
+
+			return 1;
+		}
+
+		$content = file_get_contents($file);
+		$updatedContent = str_replace(self::defaultPath, $this->panelPath, $content);
+
+		if ($content === $updatedContent) {
+			$this->echo('No changes were made to the panel path: ', 'yellow');
+			$this->echoln($this->removeCwdFromPath($file));
+
+			return 0;
+		}
+
+		file_put_contents($file, $updatedContent);
+		$this->echo('Panel path updated successfully: ', 'green');
+		$this->echoln($this->removeCwdFromPath($file));
+
+		return 0;
+	}
+
+	private function removeCwdFromPath($path)
+	{
+		$cwd = realpath(getcwd());
+		$absolutePath = realpath($path);
+
+		if ($absolutePath && str_starts_with($absolutePath, $cwd)) {
+			return substr($absolutePath, strlen($cwd) + 1); // +1 to remove the slash
+		}
+
+		return $path;
 	}
 }
