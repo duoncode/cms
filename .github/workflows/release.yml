@@ -14,7 +14,6 @@ concurrency:
 
 env:
   NODE_VERSION: "24.x"
-  OUTPUT_DIR: "build"
 
 jobs:
   build-and-release:
@@ -41,8 +40,8 @@ jobs:
 
       - name: Ensure build output exists
         run: |
-          if [ ! -d "ui/${OUTPUT_DIR}" ]; then
-            echo "Expected build output at ui/${OUTPUT_DIR} not found."
+          if [ ! -d "ui/build" ]; then
+            echo "Expected build output at ui/build not found."
             exit 1
           fi
 
@@ -55,7 +54,7 @@ jobs:
             FILE_NAME="panel-nightly.tar.gz"
           fi
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
-          tar -C "ui/${OUTPUT_DIR}" -czf "dist/${FILE_NAME}" ./*
+          cd ui/build && tar -czf "../../dist/${FILE_NAME}" * && cd ../..
 
       # Nightly prerelease (overwrite asset on every main push)
       - name: Upload to nightly prerelease
