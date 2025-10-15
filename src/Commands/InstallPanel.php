@@ -85,9 +85,12 @@ class InstallPanel extends Command
 	{
 		$this->info("Extracting panel archive to {$destination}...");
 
+		$tarGzPath = null;
+
 		try {
 			// Rename the archive to have a .tar.gz extension (required by PharData)
 			$tarGzPath = $archivePath . '.tar.gz';
+
 			if (!rename($archivePath, $tarGzPath)) {
 				throw new RuntimeException("Failed to rename archive");
 			}
@@ -95,80 +98,22 @@ class InstallPanel extends Command
 			// Open the .tar.gz archive
 			$phar = new PharData($tarGzPath);
 
-			// Create a temporary extraction directory
-			$tempDir = sys_get_temp_dir() . '/cms_panel_extract_' . bin2hex(random_bytes(6));
-			if (!mkdir($tempDir, 0775, true)) {
-				throw new RuntimeException("Failed to create temporary extraction directory");
-			}
-
-			// Build list of files to extract, excluding the problematic "." entry
-			$filesToExtract = [];
-			foreach ($phar as $file) {
-				$filename = $file->getFilename();
-				if ($filename !== '.' && $filename !== '') {
-					$filesToExtract[] = $filename;
-				}
-			}
-
-			// Extract only the files we want
-			$phar->extractTo($tempDir, $filesToExtract, true);
-
 			// Ensure destination directory exists
 			if (!is_dir($destination) && !mkdir($destination, 0775, true)) {
 				throw new RuntimeException("Failed to create destination directory: {$destination}");
 			}
 
-			// Move files from temp to destination, stripping leading ./
-			foreach ($filesToExtract as $filename) {
-				$sourcePath = $tempDir . '/' . $filename;
-				$targetPath = $destination . '/' . $filename;
-
-				if (is_dir($sourcePath)) {
-					$this->copyDirectory($sourcePath, $targetPath);
-				} else {
-					$targetDir = dirname($targetPath);
-					if (!is_dir($targetDir)) {
-						mkdir($targetDir, 0775, true);
-					}
-					copy($sourcePath, $targetPath);
-				}
-			}
-
-			// Clean up
-			$this->removeDirectory($tempDir);
-			@unlink($tarGzPath);
+			// Extract all files to destination
+			$phar->extractTo($destination, null, true);
 
 			$this->success("Panel extracted successfully");
 		} catch (Throwable $e) {
 			$this->error("Failed to extract archive: {$e->getMessage()}");
+
 			// Clean up on error if archive was renamed
-			if (isset($tarGzPath)) {
-				@unlink($tarGzPath);
-			}
-		}
-	}
-
-	private function copyDirectory(string $source, string $destination): void
-	{
-		if (!is_dir($destination)) {
-			mkdir($destination, 0775, true);
-		}
-
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-			RecursiveIteratorIterator::SELF_FIRST
-		);
-
-		foreach ($iterator as $file) {
-			$relativePath = substr($file->getPathname(), strlen($source) + 1);
-			$targetPath = $destination . '/' . $relativePath;
-
-			if ($file->isDir()) {
-				if (!is_dir($targetPath)) {
-					mkdir($targetPath, 0775, true);
-				}
-			} else {
-				copy($file->getPathname(), $targetPath);
+		} finally {
+			if ($tarGzPath !== null) {
+				// @unlink($tarGzPath);
 			}
 		}
 	}
