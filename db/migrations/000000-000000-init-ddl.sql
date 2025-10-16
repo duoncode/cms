@@ -25,9 +25,9 @@ CREATE TABLE cms.userroles (
 
 CREATE TABLE cms.users (
 	usr integer GENERATED ALWAYS AS IDENTITY,
-	uid text NOT NULL CHECK (char_length(uid) <= 64),
-	username text CHECK (username IS NULL OR (char_length(username) > 0 AND char_length(username) < 65)),
-	email text CHECK (email IS NULL OR (email SIMILAR TO '%@%' AND char_length(email) > 5 AND char_length(email) < 256)),
+	uid text NOT NULL,
+	username text,
+	email text,
 	pwhash text NOT NULL,
 	userrole text NOT NULL,
 	active boolean NOT NULL,
@@ -44,12 +44,18 @@ CREATE TABLE cms.users (
 	CONSTRAINT fk_users_users_creator FOREIGN KEY (creator)
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_users_users_editor FOREIGN KEY (editor)
-		REFERENCES cms.users (usr)
+		REFERENCES cms.users (usr),
+	CONSTRAINT ck_users_uid CHECK (char_length(uid) <= 64)
+	CONSTRAINT ck_users_username CHECK
+		(username IS NULL OR (char_length(username) > 0 AND char_length(username) <= 64)),
+	CONSTRAINT ck_users_email CHECK
+		(email IS NULL OR (email SIMILAR TO '%@%' AND char_length(email) >= 5 AND char_length(email) <= 256)),
+	CONSTRAINT ck_users_username_or_email CHECK (username IS NOT NULL OR email IS NOT NULL)
 );
-CREATE UNIQUE INDEX uix_users_username ON cms.users
+CREATE UNIQUE INDEX ux_users_username ON cms.users
 	USING btree (lower(username)) WHERE (deleted IS NULL AND username IS NOT NULL);
-CREATE UNIQUE INDEX uix_users_email ON cms.users
-	USING btree (lower(email)) WHERE (deleted IS NULL);
+CREATE UNIQUE INDEX ux_users_email ON cms.users
+	USING btree (lower(email)) WHERE (deleted IS NULL AND email IS NOT NULL);
 CREATE FUNCTION cms.process_users_audit()
 	RETURNS TRIGGER AS $$
 BEGIN
@@ -75,7 +81,7 @@ CREATE TRIGGER users_trigger_02_audit AFTER UPDATE
 
 
 CREATE TABLE cms.authtokens (
-	token text NOT NULL CHECK (char_length(token) <= 512),
+	token text NOT NULL,
 	usr integer NOT NULL,
 	created timestamp with time zone NOT NULL DEFAULT now(),
 	changed timestamp with time zone NOT NULL DEFAULT now(),
@@ -88,19 +94,21 @@ CREATE TABLE cms.authtokens (
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_authtokens_users_editor FOREIGN KEY (editor)
 		REFERENCES cms.users (usr),
-	CONSTRAINT uc_authtokens_usr UNIQUE (usr)
+	CONSTRAINT uc_authtokens_usr UNIQUE (usr),
+	CONSTRAINT ck_authtokens_token CHECK (char_length(token) <= 512)
 );
 CREATE TRIGGER authtokens_trigger_01_change BEFORE UPDATE ON cms.users
 	FOR EACH ROW EXECUTE FUNCTION cms.update_changed_column();
 
 
 CREATE TABLE cms.onetimetokens (
-	token text NOT NULL CHECK (char_length(token) <= 512),
+	token text NOT NULL,
 	usr integer NOT NULL,
 	created timestamp with time zone NOT NULL DEFAULT now(),
 	CONSTRAINT pk_onetimetokens PRIMARY KEY (token),
 	CONSTRAINT fk_onetimetokens_users FOREIGN KEY (usr)
-		REFERENCES cms.users (usr)
+		REFERENCES cms.users (usr),
+	CONSTRAINT ck_ontimetokens_token CHECK (char_length(token) <= 512)
 );
 
 
@@ -117,16 +125,18 @@ CREATE TABLE cms.loginsessions (
 
 CREATE TABLE cms.types (
 	type integer GENERATED ALWAYS AS IDENTITY,
-	handle text NOT NULL CHECK (char_length(handle) <= 64),
+	handle text NOT NULL,
 	kind cms.contenttype NOT NULL,
 	CONSTRAINT pk_types PRIMARY KEY (type),
-	CONSTRAINT uc_types_handle UNIQUE (handle)
+	CONSTRAINT uc_types_handle UNIQUE (handle),
+	CONSTRAINT uc_types_fqcn UNIQUE (fqcn),
+	CONSTRAINT ck_types_handle CHECK (char_length(handle) <= 256)
 );
 
 
 CREATE TABLE cms.nodes (
 	node integer GENERATED ALWAYS AS IDENTITY,
-	uid text NOT NULL CHECK (char_length(uid) <= 64),
+	uid text NOT NULL,
 	parent integer,
 	published boolean DEFAULT false NOT NULL,
 	hidden boolean DEFAULT false NOT NULL,
@@ -147,7 +157,8 @@ CREATE TABLE cms.nodes (
 	CONSTRAINT fk_nodes_users_editor FOREIGN KEY (editor)
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_nodes_types FOREIGN KEY (type)
-		REFERENCES cms.types (type) ON UPDATE CASCADE ON DELETE NO ACTION
+		REFERENCES cms.types (type) ON UPDATE CASCADE ON DELETE NO ACTION,
+	CONSTRAINT ck_nodes_uid CHECK (char_length(uid) <= 64)
 );
 CREATE INDEX ix_nodes_content ON cms.nodes USING GIN (type, content);
 CREATE FUNCTION cms.process_nodes_audit()
@@ -198,19 +209,20 @@ CREATE TRIGGER nodes_trigger_03_audit AFTER UPDATE
 
 CREATE TABLE cms.fulltext (
 	node integer NOT NULL,
-	locale text NOT NULL CHECK (char_length(locale) = 32),
+	locale text NOT NULL,
 	document tsvector NOT NULL,
 	CONSTRAINT pk_fulltext PRIMARY KEY (node, locale),
 	CONSTRAINT fk_fulltext_nodes FOREIGN KEY (node)
-		REFERENCES cms.nodes (node)
+		REFERENCES cms.nodes (node),
+	CONSTRAINT ck_fulltext_locale CHECK (char_length(locale) <= 32)
 );
 CREATE INDEX ix_nodes_tsv ON cms.fulltext USING GIN(document);
 
 
 CREATE TABLE cms.urlpaths (
 	node integer NOT NULL,
-	path text NOT NULL CHECK (char_length(path) <= 512),
-	locale text NOT NULL CHECK (char_length(locale) <= 32),
+	path text NOT NULL,
+	locale text NOT NULL,
 	creator integer NOT NULL,
 	editor integer NOT NULL,
 	created timestamp with time zone NOT NULL DEFAULT now(),
@@ -221,11 +233,13 @@ CREATE TABLE cms.urlpaths (
 	CONSTRAINT fk_urlpaths_users_creator FOREIGN KEY (creator)
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_urlpaths_users_editor FOREIGN KEY (editor)
-		REFERENCES cms.users (usr)
+		REFERENCES cms.users (usr),
+	CONSTRAINT ck_urlpaths_path CHECK (char_length(path) <= 512),
+	CONSTRAINT ck_urlpaths_locale CHECK (char_length(locale) <= 32)
 );
-CREATE UNIQUE INDEX uix_urlpaths_path ON cms.urlpaths
+CREATE UNIQUE INDEX ux_urlpaths_path ON cms.urlpaths
 	USING btree (path);
-CREATE UNIQUE INDEX uix_urlpaths_locale ON cms.urlpaths
+CREATE UNIQUE INDEX ux_urlpaths_locale ON cms.urlpaths
 	USING btree (node, locale) WHERE (inactive IS NULL);
 
 
@@ -258,15 +272,17 @@ CREATE TRIGGER drafts_trigger_01_audit AFTER UPDATE
 
 
 CREATE TABLE cms.menus (
-	menu text NOT NULL CHECK (char_length(menu) <= 32),
-	description text NOT NULL CHECK (char_length(description) <= 128),
-	CONSTRAINT pk_menus PRIMARY KEY (menu)
+	menu text NOT NULL,
+	description text NOT NULL,
+	CONSTRAINT pk_menus PRIMARY KEY (menu),
+	CONSTRAINT ck_menus_menu CHECK (char_length(menu) <= 32),
+	CONSTRAINT ck_menus_description CHECK (char_length(description) <= 128)
 );
 
 
 CREATE TABLE cms.menuitems (
-	item text NOT NULL CHECK (char_length(item) <= 64),
-	parent text CHECK (char_length(parent) <= 64),
+	item text NOT NULL,
+	parent text,
 	menu text NOT NULL,
 	displayorder smallint NOT NULL,
 	data jsonb NOT NULL,
@@ -274,29 +290,34 @@ CREATE TABLE cms.menuitems (
 	CONSTRAINT fk_menuitems_menus FOREIGN KEY (menu)
 		REFERENCES cms.menus (menu) ON UPDATE CASCADE,
 	CONSTRAINT fk_menuitems_menuitems FOREIGN KEY (parent)
-		REFERENCES cms.menuitems (item)
+		REFERENCES cms.menuitems (item),
+	CONSTRAINT ck_menuitems_item CHECK (char_length(item) <= 64),
+	CONSTRAINT ck_menuitems_parent CHECK (char_length(parent) <= 64)
 );
 
 
 CREATE TABLE cms.topics (
 	topic integer GENERATED ALWAYS AS IDENTITY,
-	uid text NOT NULL CHECK (char_length(uid) <= 64),
+	uid text NOT NULL,
 	name jsonb NOT NULL,
-	color text NOT NULL CHECK (char_length(color) <= 128),
+	color text NOT NULL,
 	CONSTRAINT pk_topics PRIMARY KEY (topic),
-	CONSTRAINT uc_topics_uid UNIQUE (uid)
+	CONSTRAINT uc_topics_uid UNIQUE (uid),
+	CONSTRAINT ck_topics_uid CHECK (char_length(uid) <= 64),
+	CONSTRAINT ck_topics_color CHECK (char_length(color) <= 128)
 );
 
 
 CREATE TABLE cms.tags (
 	tag integer GENERATED ALWAYS AS IDENTITY,
-	uid text NOT NULL CHECK (char_length(uid) <= 64),
+	uid text NOT NULL,
 	name jsonb NOT NULL,
 	topic integer NOT NULL,
 	CONSTRAINT pk_tags PRIMARY KEY (tag),
 	CONSTRAINT uc_tags_uid UNIQUE (uid),
 	CONSTRAINT fk_tags_topics FOREIGN KEY (topic)
-		REFERENCES cms.topics (topic)
+		REFERENCES cms.topics (topic),
+	CONSTRAINT ck_tags_uid CHECK (char_length(uid) <= 64)
 );
 
 
