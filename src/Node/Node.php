@@ -449,15 +449,34 @@ abstract class Node
 
 	protected function persistNode(Database $db, array $data, int $editor): int
 	{
+		$handle = static::$nodeMeta[static::class]->handle;
+		$this->ensureTypeExists(static::class, $handle);
+
 		return (int) $db->nodes->save([
 			'uid' => $data['uid'],
 			'hidden' => $data['hidden'],
 			'published' => $data['published'],
 			'locked' => $data['locked'],
-			'type' => static::$nodeMeta[static::class]->handle,
+			'type' => $handle,
 			'content' => json_encode($data['content']),
 			'editor' => $editor,
 		])->one()['node'];
+	}
+
+	private function ensureTypeExists(string $class, string $handle): void
+	{
+		$type = $this->db->nodes->type(['handle' => $handle])->one();
+
+		if (!$type) {
+			$this->db->nodes->addType([
+				'handle' => $handle,
+				'kind' => match (true) {
+					is_a($class, Block::class, true) => 'block',
+					is_a($class, Page::class, true) => 'page',
+					is_a($class, Document::class, true) => 'document',
+				},
+			])->run();
+		}
 	}
 
 	protected function validate(array $data): array

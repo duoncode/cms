@@ -39,7 +39,6 @@ class Cms implements Plugin
 
 	public function load(App $app): void
 	{
-		$this->synchronizeNodes();
 		$this->factory = $app->factory();
 		$this->registry = $app->registry();
 		$this->collect();
