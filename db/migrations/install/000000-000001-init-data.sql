@@ -21,3 +21,6 @@ INSERT INTO cms.users (
 	1,
 	1
 );
+
+INSERT INTO public.migrations (migration, applied) VALUES
+	('000000-000002-named-checks.sql', now());

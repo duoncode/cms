@@ -24,7 +24,6 @@ class Config implements ConfigInterface
 			'path.cache' => '/cache',
 			'path.panel' => '/cms',
 			'path.api' => null,
-
 			'panel.theme' => null,
 			'panel.logo' => '/images/logo.png',
 			'session.options' => [

@@ -10,6 +10,7 @@ use Duon\Quma\Database;
 class Fulltext extends Command
 {
 	protected string $group = 'Database';
+	protected string $prefix = 'db';
 	protected string $name = 'fulltext';
 	protected string $description = 'Updates the fulltext index';
 

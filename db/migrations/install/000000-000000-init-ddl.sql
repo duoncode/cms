@@ -45,7 +45,7 @@ CREATE TABLE cms.users (
 		REFERENCES cms.users (usr),
 	CONSTRAINT fk_users_users_editor FOREIGN KEY (editor)
 		REFERENCES cms.users (usr),
-	CONSTRAINT ck_users_uid CHECK (char_length(uid) <= 64)
+	CONSTRAINT ck_users_uid CHECK (char_length(uid) <= 64),
 	CONSTRAINT ck_users_username CHECK
 		(username IS NULL OR (char_length(username) > 0 AND char_length(username) <= 64)),
 	CONSTRAINT ck_users_email CHECK
@@ -129,7 +129,6 @@ CREATE TABLE cms.types (
 	kind cms.contenttype NOT NULL,
 	CONSTRAINT pk_types PRIMARY KEY (type),
 	CONSTRAINT uc_types_handle UNIQUE (handle),
-	CONSTRAINT uc_types_fqcn UNIQUE (fqcn),
 	CONSTRAINT ck_types_handle CHECK (char_length(handle) <= 256)
 );
 

@@ -112,15 +112,17 @@ class Cms implements Plugin
 			[$root . '/db/sql'],
 			$sql ? (is_array($sql) ? $sql : [$sql]) : [],
 		);
-		$migrations = array_merge(
-			[$root . '/db/migrations'],
+		$namespacedMigrations = [];
+		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
+		$namespacedMigrations['default'] = array_merge(
+			[$root . '/db/migrations/update'],
 			$migrations ? (is_array($migrations) ? $migrations : [$migrations]) : [],
 		);
 
 		$this->connection = new Connection(
 			$dsn,
 			$sql,
-			$migrations,
+			$namespacedMigrations,
 			fetchMode: PDO::FETCH_ASSOC,
 			options: $options,
 			print: $print,
