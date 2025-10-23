@@ -41,7 +41,9 @@ class Cms implements Plugin
 	{
 		$this->factory = $app->factory();
 		$this->registry = $app->registry();
+		$this->config = $app->config();
 		$this->collect();
+		$this->database();
 
 		$this->registry->add($this->registry::class, $this->registry);
 		$this->registry->add(Connection::class, $this->connection);
@@ -100,32 +102,33 @@ class Cms implements Plugin
 		$this->nodes[$handle] = $class;
 	}
 
-	public function database(
-		string $dsn,
-		string|array|null $sql = null,
-		string|array|null $migrations = null,
-		array $options = [],
-		bool $print = false,
-	): void {
+	protected function database(): void
+	{
+		if (!$this->config) {
+			throw new RuntimeException('No config given');
+		}
+
 		$root = dirname(__DIR__);
+		$sqlConfig = $this->config->get('db.sql', []);
 		$sql = array_merge(
 			[$root . '/db/sql'],
-			$sql ? (is_array($sql) ? $sql : [$sql]) : [],
+			$sqlConfig ? (is_array($sqlConfig) ? $sqlConfig : [$sqlConfig]) : [],
 		);
+		$migrations = $this->config->get('db.migrations', []);
 		$namespacedMigrations = [];
 		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
 		$namespacedMigrations['default'] = array_merge(
-			[$root . '/db/migrations/update'],
 			$migrations ? (is_array($migrations) ? $migrations : [$migrations]) : [],
+			[$root . '/db/migrations/update'],
 		);
 
 		$this->connection = new Connection(
-			$dsn,
+			$this->config->get('db.dsn'),
 			$sql,
 			$namespacedMigrations,
 			fetchMode: PDO::FETCH_ASSOC,
-			options: $options,
-			print: $print,
+			options: $this->config->get('db.options'),
+			print: $this->config->get('db.print'),
 		);
 		$this->db = new Database($this->connection);
 	}

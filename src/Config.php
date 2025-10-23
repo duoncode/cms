@@ -26,11 +26,32 @@ class Config implements ConfigInterface
 			'path.api' => null,
 			'panel.theme' => null,
 			'panel.logo' => '/images/logo.png',
+			'db.dsn' => null,
+			'db.sql' => [],
+			'db.migrations' => [],
+			'db.print' => false,
+			'db.options' => [],
 			'session.options' => [
 				'cookie_httponly' => true,
 				'cookie_lifetime' => 0,
 				'gc_maxlifetime' => 3600,
 			],
+			'media.fileserver' => null,
+			'upload.mimetypes.file' => [
+				'application/pdf' => ['pdf'],
+			],
+			'upload.mimetypes.image' => [
+				'image/gif' => ['gif'],
+				'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
+				'image/png' => ['png'],
+				'image/webp' => ['webp'],
+				'image/svg+xml' => ['svg'],
+			],
+			'upload.mimetypes.video' => [
+				'video/mp4' => ['mp4'],
+				'video/ogg' => ['ogg'],
+			],
+			'upload.maxsize' => 10 * 1024 * 1024,
 			'slug.transliterate' => [
 				'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'Ae', 'Å' => 'Aa', 'Ā' => 'A', 'Ă' => 'A', 'Ą' => 'A',
 				'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'ae', 'å' => 'aa', 'ā' => 'a', 'ă' => 'a', 'ą' => 'a',
@@ -75,22 +96,6 @@ class Config implements ConfigInterface
 				'Þ' => 'Th', 'þ' => 'th',
 				'ß' => 'ss', 'ẞ' => 'SS',
 			],
-			'media.fileserver' => null,
-			'upload.mimetypes.file' => [
-				'application/pdf' => ['pdf'],
-			],
-			'upload.mimetypes.image' => [
-				'image/gif' => ['gif'],
-				'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
-				'image/png' => ['png'],
-				'image/webp' => ['webp'],
-				'image/svg+xml' => ['svg'],
-			],
-			'upload.mimetypes.video' => [
-				'video/mp4' => ['mp4'],
-				'video/ogg' => ['ogg'],
-			],
-			'upload.maxsize' => 10 * 1024 * 1024,
 		], $settings);
 		$this->validateApp($app);
 	}
