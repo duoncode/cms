@@ -12,6 +12,6 @@ class TranslateFile extends Capability
 {
 	public function capabilities(): int
 	{
-		return Field::CAPABILITY_TRANSLATEFILE;
+		return Field::CAPABILITY_TRANSLATE_FILE;
 	}
 }

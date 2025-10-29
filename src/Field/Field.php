@@ -37,7 +37,7 @@ abstract class Field
 	public const CAPABILITY_MULTIPLE = 1 << 11;
 	public const CAPABILITY_OPTIONS = 1 << 12;
 	public const CAPABILITY_TRANSLATE = 1 << 13;
-	public const CAPABILITY_TRANSLATEFILE = 1 << 14;
+	public const CAPABILITY_TRANSLATE_FILE = 1 << 14;
 	public const BASE_CAPABILITIES = (
 		self::CAPABILITY_COLUMNS |
 		self::CAPABILITY_DEFAULT_VALUE |

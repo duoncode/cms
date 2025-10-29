@@ -12,8 +12,8 @@ abstract class Capability
 
 	public function validate(Field $field): bool
 	{
-		$fieldCaps = $field->capabilities();
+		$myCaps = $this->capabilities();
 
-		return ($this->capabilities() & $fieldCaps) !== $fieldCaps;
+		return ($field->capabilities() & $myCaps) === $myCaps;
 	}
 }

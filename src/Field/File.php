@@ -11,7 +11,7 @@ class File extends Field
 	protected bool $multiple = false;
 	protected bool $translateFile = false;
 
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATEFILE;
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
 
 	public function value(): Value\File|Value\Files
 	{
