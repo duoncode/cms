@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Duon\Cms\Field\Attr;
 
 use Attribute;
+use Duon\Cms\Field\Field;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DefaultValue
+class DefaultValue extends Capability
 {
 	public function __construct(protected readonly mixed $default) {}
 
@@ -18,5 +19,10 @@ class DefaultValue
 		}
 
 		return $this->default;
+	}
+
+	public function capabilities(): int
+	{
+		return Field::CAPABILITY_DEFAULT_VALUE;
 	}
 }
