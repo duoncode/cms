@@ -7,7 +7,7 @@ namespace Duon\Cms\Field\Attr;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DefaultVal
+class DefaultValue
 {
 	public function __construct(protected readonly mixed $default) {}
 
