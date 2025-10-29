@@ -13,6 +13,8 @@ class Grid extends Field
 	protected int $columns = 12;
 	protected int $minCellWidth = 1;
 
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE | Field::CAPABILITY_COLUMNS;
+
 	public function __toString(): string
 	{
 		return 'Grid Field';

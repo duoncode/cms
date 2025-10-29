@@ -12,6 +12,8 @@ class Picture extends Field
 	protected bool $multiple = false;
 	protected bool $translateFile = false;
 
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATEFILE;
+
 	// TODO: translateFile and multiple
 	public function value(): Value\Picture
 	{
