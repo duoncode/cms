@@ -22,14 +22,7 @@ type Headers = {
 
 export function getBase() {
 	if (browser) {
-		if (dev) {
-			return '/cms/';
-		}
-
-		const wlp = window.location.pathname.substring(1);
-		const basePath = wlp.includes('/') ? wlp.substring(0, wlp.indexOf('/')) : wlp;
-
-		return `/${basePath}/`;
+		return window.CMS_BASE_PATH;
 	}
 
 	return '/cms/';
