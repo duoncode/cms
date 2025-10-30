@@ -8,7 +8,7 @@ use Duon\Cms\Value\Text as TextValue;
 
 class Text extends Field
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE;
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE | Field::CAPABILITY_HIDDEN;
 
 	public function value(): TextValue
 	{

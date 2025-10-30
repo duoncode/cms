@@ -9,6 +9,8 @@ use Duon\Cms\Value\Number as NumberValue;
 
 class Number extends Field
 {
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_HIDDEN;
+
 	public function value(): NumberValue
 	{
 		return new NumberValue($this->node, $this, $this->valueContext);
