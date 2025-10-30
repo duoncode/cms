@@ -44,7 +44,8 @@ class InstallPanel extends Command
 			$this->extractArchive($panelArchive, $this->publicPath);
 
 			if ($this->panelPath !== self::defaultPath) {
-				$this->echoln("Changing panel path from `" . self::defaultPath . "` to `{$this->panelPath}`:");
+				$this->echoln("Changing panel path from `" .
+					self::defaultPath . "` to `{$this->prefix}{$this->panelPath}`:");
 
 				return $this->updatePanelPath();
 			}
