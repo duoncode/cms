@@ -12,6 +12,8 @@ class Option extends Field
 	protected array $options = [];
 	protected bool $hasLabel = false;
 
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_OPTIONS;
+
 	public function value(): Value\Option
 	{
 		return new Value\Option($this->node, $this, $this->valueContext);

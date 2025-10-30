@@ -23,7 +23,36 @@ abstract class Field
 	protected mixed $default = null;
 	protected ?FulltextWeight $fulltextWeight = null;
 
-	public function __construct(
+	public const CAPABILITY_DEFAULT_VALUE = 1 << 0;
+	public const CAPABILITY_DESCRIPTION = 1 << 1;
+	public const CAPABILITY_FULLTEXT = 1 << 2;
+	public const CAPABILITY_HIDDEN = 1 << 3;
+	public const CAPABILITY_IMMUTABLE = 1 << 4;
+	public const CAPABILITY_LABEL = 1 << 5;
+	public const CAPABILITY_REQUIRED = 1 << 6;
+	public const CAPABILITY_ROWS = 1 << 7;
+	public const CAPABILITY_VALIDATE = 1 << 8;
+	public const CAPABILITY_WIDTH = 1 << 9;
+	public const CAPABILITY_COLUMNS = 1 << 10;
+	public const CAPABILITY_MULTIPLE = 1 << 11;
+	public const CAPABILITY_OPTIONS = 1 << 12;
+	public const CAPABILITY_TRANSLATE = 1 << 13;
+	public const CAPABILITY_TRANSLATE_FILE = 1 << 14;
+	public const BASE_CAPABILITIES = (
+		self::CAPABILITY_COLUMNS |
+		self::CAPABILITY_DEFAULT_VALUE |
+		self::CAPABILITY_DESCRIPTION |
+		self::CAPABILITY_IMMUTABLE |
+		self::CAPABILITY_LABEL |
+		self::CAPABILITY_REQUIRED |
+		self::CAPABILITY_ROWS  |
+		self::CAPABILITY_VALIDATE |
+		self::CAPABILITY_WIDTH
+	);
+	public const EXTRA_CAPABILITIES = 0;
+	public const OMIT_CAPABILITIES = 0;
+
+	final public function __construct(
 		public readonly string $name,
 		protected readonly Node $node,
 		protected readonly ValueContext $valueContext,
@@ -39,6 +68,11 @@ abstract class Field
 	abstract public function value(): Value;
 
 	abstract public function structure(mixed $value = null): array;
+
+	final public static function capabilities(): int
+	{
+		return (static::BASE_CAPABILITIES | static::EXTRA_CAPABILITIES) & ~static::OMIT_CAPABILITIES;
+	}
 
 	public function isset(): bool
 	{

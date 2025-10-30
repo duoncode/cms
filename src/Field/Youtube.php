@@ -9,6 +9,8 @@ use Duon\Cms\Value\Youtube as YoutubeValue;
 
 class Youtube extends Field
 {
+	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE;
+
 	public function value(): YoutubeValue
 	{
 		return new YoutubeValue($this->node, $this, $this->valueContext);
