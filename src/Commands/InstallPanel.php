@@ -18,6 +18,7 @@ class InstallPanel extends Command
 	protected string $group = 'Admin';
 	protected string $name = 'install-panel';
 	protected string $description = 'Installs or upgrades the admin panel frontend app';
+	protected string $prefix;
 	protected string $panelPath;
 	protected string $publicPath;
 	protected string $indexPath;
@@ -26,6 +27,7 @@ class InstallPanel extends Command
 
 	public function __construct(private Config $config)
 	{
+		$this->prefix = $this->config->get('path.prefix');
 		$this->panelPath = $this->config->get('path.panel');
 		$this->publicPath = $this->config->get('path.public') . $this->panelPath;
 		$this->indexPath = $this->publicPath . '/index.html';
@@ -207,7 +209,7 @@ class InstallPanel extends Command
 		}
 
 		$content = file_get_contents($file);
-		$updatedContent = str_replace(self::defaultPath, $this->panelPath, $content);
+		$updatedContent = str_replace(self::defaultPath, $this->prefix . $this->panelPath, $content);
 
 		if ($content === $updatedContent) {
 			$this->echo('No changes were made to the panel path: ', 'yellow');
