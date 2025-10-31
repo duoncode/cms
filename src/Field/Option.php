@@ -7,9 +7,10 @@ namespace Duon\Cms\Field;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value;
 
-class Option extends Field
+class Option extends Field implements Capability\Selectable
 {
-	protected array $options = [];
+	use Capability\IsSelectable;
+
 	protected bool $hasLabel = false;
 
 	public const EXTRA_CAPABILITIES = Field::CAPABILITY_OPTIONS;
@@ -17,20 +18,6 @@ class Option extends Field
 	public function value(): Value\Option
 	{
 		return new Value\Option($this->node, $this, $this->valueContext);
-	}
-
-	public function add(string|array $option): void
-	{
-		$this->options[] = $option;
-	}
-
-	public function options(array $options): void
-	{
-		if (is_array($options[0])) {
-			$this->hasLabel = true;
-		}
-
-		$this->options = $options;
 	}
 
 	public function properties(): array

@@ -9,14 +9,13 @@ use Duon\Cms\Node\Node;
 use Duon\Cms\Value\Value;
 use Duon\Cms\Value\ValueContext;
 
-abstract class Field
+abstract class Field implements Capability\Requirable, Capability\Labelable, Capability\Describable, Capability\Resizable
 {
+	use Capability\IsRequirable;
+	use Capability\IsLabelable;
+
 	public readonly string $type;
-	protected ?string $label = null;
 	protected ?string $description = null;
-	protected bool $translate = false;
-	protected bool $immutable = false;
-	protected bool $hidden = false;
 	protected ?int $width = null;
 	protected ?int $rows = null;
 	protected array $validators = [];
@@ -26,24 +25,17 @@ abstract class Field
 	public const CAPABILITY_DEFAULT_VALUE = 1 << 0;
 	public const CAPABILITY_DESCRIPTION = 1 << 1;
 	public const CAPABILITY_FULLTEXT = 1 << 2;
-	public const CAPABILITY_HIDDEN = 1 << 3;
-	public const CAPABILITY_IMMUTABLE = 1 << 4;
-	public const CAPABILITY_LABEL = 1 << 5;
 	public const CAPABILITY_REQUIRED = 1 << 6;
 	public const CAPABILITY_ROWS = 1 << 7;
 	public const CAPABILITY_VALIDATE = 1 << 8;
 	public const CAPABILITY_WIDTH = 1 << 9;
 	public const CAPABILITY_COLUMNS = 1 << 10;
 	public const CAPABILITY_MULTIPLE = 1 << 11;
-	public const CAPABILITY_OPTIONS = 1 << 12;
-	public const CAPABILITY_TRANSLATE = 1 << 13;
 	public const CAPABILITY_TRANSLATE_FILE = 1 << 14;
 	public const BASE_CAPABILITIES = (
 		self::CAPABILITY_COLUMNS |
 		self::CAPABILITY_DEFAULT_VALUE |
 		self::CAPABILITY_DESCRIPTION |
-		self::CAPABILITY_IMMUTABLE |
-		self::CAPABILITY_LABEL |
 		self::CAPABILITY_REQUIRED |
 		self::CAPABILITY_ROWS  |
 		self::CAPABILITY_VALIDATE |
@@ -79,47 +71,11 @@ abstract class Field
 		return $this->value()->isset();
 	}
 
-	public function label(string $label): static
-	{
-		$this->label = $label;
-
-		return $this;
-	}
-
 	public function default(mixed $default): static
 	{
 		$this->default = $default;
 
 		return $this;
-	}
-
-	public function getLabel(): ?string
-	{
-		return $this->label;
-	}
-
-	public function description(string $description): static
-	{
-		$this->description = $description;
-
-		return $this;
-	}
-
-	public function getDescription(): ?string
-	{
-		return $this->description;
-	}
-
-	public function required(): static
-	{
-		$this->validators[] = 'required';
-
-		return $this;
-	}
-
-	public function isRequired(): bool
-	{
-		return in_array('required', $this->validators);
 	}
 
 	public function validate(string ...$validators): static
@@ -132,44 +88,6 @@ abstract class Field
 	public function validators(): array
 	{
 		return array_values(array_unique($this->validators));
-	}
-
-	public function translate(bool $translate = true): static
-	{
-		$this->translate = $translate;
-
-		return $this;
-	}
-
-	public function immutable(bool $immutable = true): static
-	{
-		$this->immutable = $immutable;
-
-		return $this;
-	}
-
-	public function hidden(bool $hidden = true): static
-	{
-		$this->hidden = $hidden;
-
-		return $this;
-	}
-
-	public function isTranslatable(): bool
-	{
-		return $this->translate;
-	}
-
-	public function fulltext(FulltextWeight $fulltextWeight): static
-	{
-		$this->fulltextWeight = $fulltextWeight;
-
-		return $this;
-	}
-
-	public function getFulltextWeight(): ?FulltextWeight
-	{
-		return $this->fulltextWeight;
 	}
 
 	public function width(int $width): static
