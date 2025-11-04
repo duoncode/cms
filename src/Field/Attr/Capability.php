@@ -6,14 +6,7 @@ namespace Duon\Cms\Field\Attr;
 
 use Duon\Cms\Field\Field;
 
-abstract class Capability
+interface Capability
 {
-	abstract public function capabilities(): int;
-
-	public function validate(Field $field): bool
-	{
-		$myCaps = $this->capabilities();
-
-		return ($field->capabilities() & $myCaps) === $myCaps;
-	}
+	public function set(Field $field): void;
 }

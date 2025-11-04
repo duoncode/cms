@@ -6,14 +6,22 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Labelable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Label extends Capability
+class Label implements Capability
 {
 	public function __construct(public readonly string $label) {}
 
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_LABEL;
+		if ($field instanceof Labelable) {
+			$field->label($this->label);
+			return;
+		}
+
+		$cap = Labelable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

@@ -6,9 +6,11 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Defaultable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DefaultValue extends Capability
+class DefaultValue implements Capability
 {
 	public function __construct(protected readonly mixed $default) {}
 
@@ -21,8 +23,14 @@ class DefaultValue extends Capability
 		return $this->default;
 	}
 
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_DEFAULT_VALUE;
+		if ($field instanceof Defaultable) {
+			$field->default($this->get());
+			return;
+		}
+
+		$cap = Defaultable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

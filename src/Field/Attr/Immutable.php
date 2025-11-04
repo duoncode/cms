@@ -6,12 +6,20 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Immutable as ImmutableCapability;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Immutable extends Capability
+class Immutable implements Capability
 {
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_IMMUTABLE;
+		if ($field instanceof ImmutableCapability) {
+			$field->immutable(true);
+			return;
+		}
+
+		$cap = ImmutableCapability::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 } // We can't use Readonly as it is a keyword of PHP

@@ -6,12 +6,20 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Hidable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Hidden extends Capability
+class Hidden implements Capability
 {
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_HIDDEN;
+		if ($field instanceof Hidable) {
+			$field->hidden(true);
+			return;
+		}
+
+		$cap = Hidable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

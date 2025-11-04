@@ -6,12 +6,20 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\AllowsMultiple;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Multiple extends Capability
+class Multiple implements Capability
 {
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_MULTIPLE;
+		if ($field instanceof AllowsMultiple) {
+			$field->multiple(true);
+			return;
+		}
+
+		$cap = AllowsMultiple::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

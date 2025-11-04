@@ -6,17 +6,25 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\GridResizable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Columns extends Capability
+class Columns implements Capability
 {
 	public function __construct(
 		public readonly int $columns,
 		public readonly int $minCellWidth = 1,
 	) {}
 
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_COLUMNS;
+		if ($field instanceof GridResizable) {
+			$field->columns($this->columns, $this->minCellWidth);
+			return;
+		}
+
+		$cap = GridResizable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

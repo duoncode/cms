@@ -11,6 +11,12 @@
 	],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
+	"repositories": [
+		{
+			"type": "path",
+			"url": "../dev"
+		}
+	],
 	"require": {
 		"php": ">=8.3",
 		"duon/core": "dev-main",
@@ -26,7 +32,7 @@
 		"symfony/html-sanitizer": "^7.1"
 	},
 	"require-dev": {
-		"duon/dev": "^1.1",
+		"duon/dev": "dev-main",
 		"laminas/laminas-diactoros": "^3",
 		"phpunit/phpunit": "^12"
 	},

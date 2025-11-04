@@ -5,44 +5,28 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Attr\FulltextWeight;
+use Duon\Cms\Field\Capability\Defaultable;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Value\Value;
 use Duon\Cms\Value\ValueContext;
 
-abstract class Field implements Capability\Requirable, Capability\Labelable, Capability\Describable, Capability\Resizable
+abstract class Field implements
+	Capability\Defaultable,
+	Capability\Describable,
+	Capability\Labelable,
+	Capability\Requirable,
+	Capability\Resizable,
+	Capability\Validatable
 {
 	use Capability\IsRequirable;
 	use Capability\IsLabelable;
+	use Capability\IsDescribable;
+	use Capability\IsDefaultable;
+	use Capability\IsResizable;
+	use Capability\IsValidatable;
 
 	public readonly string $type;
-	protected ?string $description = null;
-	protected ?int $width = null;
-	protected ?int $rows = null;
 	protected array $validators = [];
-	protected mixed $default = null;
-	protected ?FulltextWeight $fulltextWeight = null;
-
-	public const CAPABILITY_DEFAULT_VALUE = 1 << 0;
-	public const CAPABILITY_DESCRIPTION = 1 << 1;
-	public const CAPABILITY_FULLTEXT = 1 << 2;
-	public const CAPABILITY_REQUIRED = 1 << 6;
-	public const CAPABILITY_ROWS = 1 << 7;
-	public const CAPABILITY_VALIDATE = 1 << 8;
-	public const CAPABILITY_WIDTH = 1 << 9;
-	public const CAPABILITY_COLUMNS = 1 << 10;
-	public const CAPABILITY_MULTIPLE = 1 << 11;
-	public const CAPABILITY_TRANSLATE_FILE = 1 << 14;
-	public const BASE_CAPABILITIES = (
-		self::CAPABILITY_COLUMNS |
-		self::CAPABILITY_DEFAULT_VALUE |
-		self::CAPABILITY_DESCRIPTION |
-		self::CAPABILITY_REQUIRED |
-		self::CAPABILITY_ROWS  |
-		self::CAPABILITY_VALIDATE |
-		self::CAPABILITY_WIDTH
-	);
-	public const EXTRA_CAPABILITIES = 0;
-	public const OMIT_CAPABILITIES = 0;
 
 	final public function __construct(
 		public readonly string $name,
@@ -61,57 +45,9 @@ abstract class Field implements Capability\Requirable, Capability\Labelable, Cap
 
 	abstract public function structure(mixed $value = null): array;
 
-	final public static function capabilities(): int
-	{
-		return (static::BASE_CAPABILITIES | static::EXTRA_CAPABILITIES) & ~static::OMIT_CAPABILITIES;
-	}
-
 	public function isset(): bool
 	{
 		return $this->value()->isset();
-	}
-
-	public function default(mixed $default): static
-	{
-		$this->default = $default;
-
-		return $this;
-	}
-
-	public function validate(string ...$validators): static
-	{
-		$this->validators = array_merge($this->validators, $validators);
-
-		return $this;
-	}
-
-	public function validators(): array
-	{
-		return array_values(array_unique($this->validators));
-	}
-
-	public function width(int $width): static
-	{
-		$this->width = $width;
-
-		return $this;
-	}
-
-	public function getWidth(): int
-	{
-		return $this->width;
-	}
-
-	public function rows(int $rows): static
-	{
-		$this->rows = $rows;
-
-		return $this;
-	}
-
-	public function getRows(): int
-	{
-		return $this->rows;
 	}
 
 	public function properties(): array

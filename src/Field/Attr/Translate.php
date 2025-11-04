@@ -6,12 +6,20 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Translatable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Translate extends Capability
+class Translate implements Capability
 {
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_TRANSLATE;
+		if ($field instanceof Translatable) {
+			$field->translate(true);
+			return;
+		}
+
+		$cap = Translatable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

@@ -7,10 +7,10 @@ namespace Duon\Cms\Field;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value;
 
-class Video extends Field
+class Video extends Field implements Capability\Translatable, Capability\FileTranslatable
 {
-	protected bool $multiple = false;
-	protected bool $translateFile = false;
+	use Capability\IsTranslatable;
+	use Capability\FileIsTranslatable;
 
 	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
 
@@ -21,19 +21,6 @@ class Video extends Field
 		}
 
 		return new Value\Video($this->node, $this, $this->valueContext);
-	}
-
-	public function translateFile(bool $translate = true): static
-	{
-		$this->translateFile = $translate;
-		$this->translate = $translate;
-
-		return $this;
-	}
-
-	public function isFileTranslatable(): bool
-	{
-		return $this->translateFile;
 	}
 
 	public function properties(): array

@@ -6,12 +6,20 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Requirable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Required extends Capability
+class Required implements Capability
 {
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_REQUIRED;
+		if ($field instanceof Requirable) {
+			$field->required(true);
+			return;
+		}
+
+		$cap = Requirable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }

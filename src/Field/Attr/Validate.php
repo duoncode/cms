@@ -6,9 +6,11 @@ namespace Duon\Cms\Field\Attr;
 
 use Attribute;
 use Duon\Cms\Field\Field;
+use Duon\Cms\Field\Capability\Validatable;
+use Duon\Cms\Exception\RuntimeException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Validate extends Capability
+class Validate implements Capability
 {
 	public readonly array $validators;
 
@@ -17,8 +19,14 @@ class Validate extends Capability
 		$this->validators = $validators;
 	}
 
-	public function capabilities(): int
+	public function set(Field $field): void
 	{
-		return Field::CAPABILITY_VALIDATE;
+		if ($field instanceof Validatable) {
+			$field->validate(...$this->validators);
+			return;
+		}
+
+		$cap = Validatable::class;
+		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
 	}
 }
