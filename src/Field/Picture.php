@@ -13,8 +13,6 @@ class Picture extends Field
 	use Capability\IsTranslatable;
 	use Capability\FileIsTranslatable;
 
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
-
 	// TODO: translateFile and multiple
 	public function value(): Value\Picture
 	{

@@ -6,9 +6,9 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Value\Html as HtmlValue;
 
-class Html extends Field
+class Html extends Field implements Capability\Translatable
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE;
+	use Capability\IsTranslatable;
 
 	public function value(): HtmlValue
 	{

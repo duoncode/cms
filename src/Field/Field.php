@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
-use Duon\Cms\Field\Attr\FulltextWeight;
-use Duon\Cms\Field\Capability\Defaultable;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Value\Value;
 use Duon\Cms\Value\ValueContext;
@@ -13,6 +11,7 @@ use Duon\Cms\Value\ValueContext;
 abstract class Field implements
 	Capability\Defaultable,
 	Capability\Describable,
+	Capability\Hidable,
 	Capability\Labelable,
 	Capability\Requirable,
 	Capability\Resizable,
@@ -21,6 +20,7 @@ abstract class Field implements
 	use Capability\IsRequirable;
 	use Capability\IsLabelable;
 	use Capability\IsDescribable;
+	use Capability\IsHideable;
 	use Capability\IsDefaultable;
 	use Capability\IsResizable;
 	use Capability\IsValidatable;

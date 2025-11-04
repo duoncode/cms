@@ -13,8 +13,6 @@ class Image extends Field implements Capability\Translatable, Capability\FileTra
 	use Capability\IsTranslatable;
 	use Capability\FileIsTranslatable;
 
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
-
 	public function value(): Value\Images|Value\Image
 	{
 		if ($this->multiple) {

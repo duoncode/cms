@@ -7,9 +7,10 @@ namespace Duon\Cms\Field;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value\Youtube as YoutubeValue;
 
-class Youtube extends Field
+class Youtube extends Field implements Capability\Translatable, Capability\AllowsMultiple
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE;
+	use Capability\IsTranslatable;
+	use Capability\DoesAllowMultiple;
 
 	public function value(): YoutubeValue
 	{

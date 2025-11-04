@@ -8,8 +8,6 @@ use Duon\Cms\Value\DateTime as DateTimeValue;
 
 class DateTime extends Field
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_HIDDEN;
-
 	public function value(): DateTimeValue
 	{
 		return new DateTimeValue($this->node, $this, $this->valueContext);

@@ -9,8 +9,6 @@ use Duon\Cms\Value\Decimal as DecimalValue;
 
 class Decimal extends Field
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_HIDDEN;
-
 	public function value(): DecimalValue
 	{
 		return new DecimalValue($this->node, $this, $this->valueContext);

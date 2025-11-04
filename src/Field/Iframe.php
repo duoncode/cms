@@ -7,9 +7,9 @@ namespace Duon\Cms\Field;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value\Youtube as YoutubeValue;
 
-class Iframe extends Field
+class Iframe extends Field implements Capability\Translatable
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE;
+	use Capability\IsTranslatable;
 
 	public function value(): YoutubeValue
 	{

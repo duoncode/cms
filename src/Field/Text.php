@@ -6,9 +6,9 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Value\Text as TextValue;
 
-class Text extends Field
+class Text extends Field implements Capability\Translatable
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE | Field::CAPABILITY_HIDDEN;
+	use Capability\IsTranslatable;
 
 	public function value(): TextValue
 	{

@@ -8,8 +8,6 @@ use Duon\Cms\Value\Time as TimeValue;
 
 class Time extends Field
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_HIDDEN;
-
 	public function value(): TimeValue
 	{
 		return new TimeValue($this->node, $this, $this->valueContext);

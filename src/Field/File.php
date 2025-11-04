@@ -12,8 +12,6 @@ class File extends Field implements Capability\Translatable, Capability\FileTran
 	use Capability\IsTranslatable;
 	use Capability\FileIsTranslatable;
 
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
-
 	public function value(): Value\File|Value\Files
 	{
 		if ($this->multiple) {

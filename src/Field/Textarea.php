@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
-class Textarea extends Text
+class Textarea extends Text implements Capability\Translatable
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE;
+	use Capability\IsTranslatable;
 
 	public function structure(mixed $value = null): array
 	{
