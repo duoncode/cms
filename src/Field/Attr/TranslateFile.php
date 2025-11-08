@@ -16,10 +16,10 @@ class TranslateFile implements Capability
 	{
 		if ($field instanceof FileTranslatable) {
 			$field->translateFile(true);
+
 			return;
 		}
 
-		$cap = FileTranslatable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . FileTranslatable::class);
 	}
 }

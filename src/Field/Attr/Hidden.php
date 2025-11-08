@@ -16,10 +16,10 @@ class Hidden implements Capability
 	{
 		if ($field instanceof Hidable) {
 			$field->hidden(true);
+
 			return;
 		}
 
-		$cap = Hidable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Hidable::class);
 	}
 }

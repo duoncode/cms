@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Duon\Cms\Field\Attr;
 
 use Attribute;
-use Duon\Cms\Field\Field;
-use Duon\Cms\Field\Capability\Labelable;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Capability\Labelable;
+use Duon\Cms\Field\Field;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Label implements Capability
@@ -18,10 +18,10 @@ class Label implements Capability
 	{
 		if ($field instanceof Labelable) {
 			$field->label($this->label);
+
 			return;
 		}
 
-		$cap = Labelable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Labelable::class);
 	}
 }

@@ -18,9 +18,10 @@ class Width implements Capability
 	{
 		if ($field instanceof Resizable) {
 			$field->width($this->width);
+
+			return;
 		}
 
-		$cap = Resizable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Resizable::class);
 	}
 }

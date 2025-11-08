@@ -23,10 +23,10 @@ class Validate implements Capability
 	{
 		if ($field instanceof Validatable) {
 			$field->validate(...$this->validators);
+
 			return;
 		}
 
-		$cap = Validatable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Validatable::class);
 	}
 }

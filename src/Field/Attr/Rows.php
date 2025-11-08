@@ -18,10 +18,10 @@ class Rows implements Capability
 	{
 		if ($field instanceof Resizable) {
 			$field->rows($this->rows);
+
 			return;
 		}
 
-		$cap = Resizable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Resizable::class);
 	}
 }

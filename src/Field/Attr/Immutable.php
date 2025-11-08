@@ -16,10 +16,10 @@ class Immutable implements Capability
 	{
 		if ($field instanceof ImmutableCapability) {
 			$field->immutable(true);
+
 			return;
 		}
 
-		$cap = ImmutableCapability::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . ImmutableCapability::class);
 	}
 } // We can't use Readonly as it is a keyword of PHP

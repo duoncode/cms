@@ -18,10 +18,10 @@ class Fulltext implements Capability
 	{
 		if ($field instanceof Searchable) {
 			$field->fulltext($this->fulltextWeight);
+
 			return;
 		}
 
-		$cap = Searchable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Searchable::class);
 	}
 }

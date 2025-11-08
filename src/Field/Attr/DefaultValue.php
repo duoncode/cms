@@ -27,10 +27,10 @@ class DefaultValue implements Capability
 	{
 		if ($field instanceof Defaultable) {
 			$field->default($this->get());
+
 			return;
 		}
 
-		$cap = Defaultable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Defaultable::class);
 	}
 }

@@ -21,10 +21,10 @@ class Columns implements Capability
 	{
 		if ($field instanceof GridResizable) {
 			$field->columns($this->columns, $this->minCellWidth);
+
 			return;
 		}
 
-		$cap = GridResizable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . GridResizable::class);
 	}
 }

@@ -18,10 +18,10 @@ class Options implements Capability
 	{
 		if ($field instanceof Selectable) {
 			$field->options($this->options);
+
 			return;
 		}
 
-		$cap = Selectable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Selectable::class);
 	}
 }

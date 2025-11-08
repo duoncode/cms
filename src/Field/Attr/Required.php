@@ -16,10 +16,10 @@ class Required implements Capability
 	{
 		if ($field instanceof Requirable) {
 			$field->required(true);
+
 			return;
 		}
 
-		$cap = Requirable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Requirable::class);
 	}
 }

@@ -18,10 +18,10 @@ class Description implements Capability
 	{
 		if ($field instanceof Describable) {
 			$field->description($this->description);
+
 			return;
 		}
 
-		$cap = Describable::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Describable::class);
 	}
 }

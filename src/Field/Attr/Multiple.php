@@ -16,10 +16,10 @@ class Multiple implements Capability
 	{
 		if ($field instanceof AllowsMultiple) {
 			$field->multiple(true);
+
 			return;
 		}
 
-		$cap = AllowsMultiple::class;
-		throw new RuntimeException("The field {$field::class} does not have the capability {$cap}");
+		throw new RuntimeException("The field " . $field::class . " does not have the capability " . AllowsMultiple::class);
 	}
 }
