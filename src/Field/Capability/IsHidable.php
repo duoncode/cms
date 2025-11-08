@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field\Capability;
 
-trait IsHideable
+trait IsHidable
 {
 	protected bool $hidden = false;
 

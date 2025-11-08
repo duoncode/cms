@@ -20,7 +20,7 @@ abstract class Field implements
 	use Capability\IsRequirable;
 	use Capability\IsLabelable;
 	use Capability\IsDescribable;
-	use Capability\IsHideable;
+	use Capability\IsHidable;
 	use Capability\IsDefaultable;
 	use Capability\IsResizable;
 	use Capability\IsValidatable;
