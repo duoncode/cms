@@ -24,4 +24,13 @@ class Options implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Selectable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Selectable) {
+			return ['options' => $field->getOptions()];
+		}
+
+		return [];
+	}
 }

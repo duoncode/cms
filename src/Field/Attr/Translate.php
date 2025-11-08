@@ -22,4 +22,13 @@ class Translate implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Translatable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Translatable) {
+			return ['translate' => $field->getTranslate()];
+		}
+
+		return [];
+	}
 }

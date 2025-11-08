@@ -24,4 +24,10 @@ class Fulltext implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Searchable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		// Fulltext is not serialized to frontend - it's used for search functionality only
+		return [];
+	}
 }

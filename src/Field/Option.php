@@ -21,7 +21,6 @@ class Option extends Field implements Capability\Selectable
 	public function properties(): array
 	{
 		$result = parent::properties();
-		$result['options'] = $this->options;
 		$result['hasLabel'] = $this->hasLabel;
 
 		return $result;

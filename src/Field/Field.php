@@ -12,6 +12,7 @@ abstract class Field implements
 	Capability\Defaultable,
 	Capability\Describable,
 	Capability\Hidable,
+	Capability\Immutable,
 	Capability\Labelable,
 	Capability\Requirable,
 	Capability\Resizable,
@@ -21,12 +22,16 @@ abstract class Field implements
 	use Capability\IsLabelable;
 	use Capability\IsDescribable;
 	use Capability\IsHidable;
+	use Capability\IsImmutable;
 	use Capability\IsDefaultable;
 	use Capability\IsResizable;
 	use Capability\IsValidatable;
 
 	public readonly string $type;
 	protected array $validators = [];
+
+	/** @var Attr\Capability[] */
+	protected array $capabilities = [];
 
 	final public function __construct(
 		public readonly string $name,
@@ -50,21 +55,27 @@ abstract class Field implements
 		return $this->value()->isset();
 	}
 
+	public function initCapabilities(\ReflectionProperty $property): void
+	{
+		foreach ($property->getAttributes() as $attr) {
+			$capability = $attr->newInstance();
+			$capability->set($this);
+			$this->capabilities[] = $capability;
+		}
+	}
+
 	public function properties(): array
 	{
-		return [
-			'rows' => $this->rows,
-			'width' => $this->width,
-			'translate' => $this->translate,
-			'required' => $this->isRequired(),
-			'immutable' => $this->immutable,
-			'hidden' => $this->hidden,
-			'description' => $this->description,
-			'label' => $this->label,
+		$properties = [
 			'name' => $this->name,
 			'type' => $this::class,
-			'validators' => $this->validators,
 		];
+
+		foreach ($this->capabilities as $capability) {
+			$properties = array_merge($properties, $capability->properties($this));
+		}
+
+		return $properties;
 	}
 
 	public function getFileStructure(string $type, mixed $value = null): array

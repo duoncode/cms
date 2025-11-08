@@ -33,4 +33,10 @@ class DefaultValue implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Defaultable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		// DefaultValue is not serialized to frontend - it's used in structure() instead
+		return [];
+	}
 }

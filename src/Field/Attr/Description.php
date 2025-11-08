@@ -24,4 +24,13 @@ class Description implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Describable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Describable) {
+			return ['description' => $field->getDescription()];
+		}
+
+		return [];
+	}
 }

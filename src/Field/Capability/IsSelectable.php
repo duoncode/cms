@@ -21,4 +21,9 @@ trait IsSelectable
 
 		$this->options = $options;
 	}
+
+	public function getOptions(): array
+	{
+		return $this->options;
+	}
 }

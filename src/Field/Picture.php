@@ -34,10 +34,7 @@ class Picture extends Field
 			$value->width(400)->url(false, $i);
 		}
 
-		return array_merge(parent::properties(), [
-			'multiple' => $this->multiple,
-			'translateFile' => $this->translateFile,
-		]);
+		return parent::properties();
 	}
 
 	public function structure(mixed $value = null): array

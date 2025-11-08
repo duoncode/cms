@@ -24,4 +24,13 @@ class Label implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Labelable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Labelable) {
+			return ['label' => $field->getLabel()];
+		}
+
+		return [];
+	}
 }

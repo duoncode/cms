@@ -21,6 +21,11 @@ trait FileIsTranslatable
 		return $this->translateFile;
 	}
 
+	public function getTranslateFile(): bool
+	{
+		return $this->translateFile;
+	}
+
 	protected function getTranslatableFileStructure(string $type, mixed $value = null): array
 	{
 		$value = $value ?: $this->default;

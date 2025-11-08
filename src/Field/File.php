@@ -37,12 +37,4 @@ class File extends Field implements Capability\Translatable, Capability\FileTran
 
 		return $this->getFileStructure('file', $value);
 	}
-
-	public function properties(): array
-	{
-		return array_merge(parent::properties(), [
-			'multiple' => $this->multiple,
-			'translateFile' => $this->translateFile,
-		]);
-	}
 }

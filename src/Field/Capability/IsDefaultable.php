@@ -14,4 +14,9 @@ trait IsDefaultable
 
 		return $this;
 	}
+
+	public function getDefault(): mixed
+	{
+		return $this->default;
+	}
 }

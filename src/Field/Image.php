@@ -38,12 +38,4 @@ class Image extends Field implements Capability\Translatable, Capability\FileTra
 
 		return $this->getFileStructure('image', $value);
 	}
-
-	public function properties(): array
-	{
-		return array_merge(parent::properties(), [
-			'multiple' => $this->multiple,
-			'translateFile' => $this->translateFile,
-		]);
-	}
 }

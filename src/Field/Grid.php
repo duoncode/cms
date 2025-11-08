@@ -23,14 +23,6 @@ class Grid extends Field implements Capability\Translatable, Capability\GridResi
 		return new GridValue($this->node, $this, $this->valueContext);
 	}
 
-	public function properties(): array
-	{
-		return array_merge(parent::properties(), [
-			'columns' => $this->columns,
-			'minCellWidth' => $this->minCellWidth,
-		]);
-	}
-
 	public function structure(mixed $value = null): array
 	{
 		$value = $value ?: $this->default;

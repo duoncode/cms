@@ -22,4 +22,13 @@ class Required implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Requirable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Requirable) {
+			return ['required' => $field->isRequired()];
+		}
+
+		return [];
+	}
 }

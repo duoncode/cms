@@ -14,4 +14,9 @@ trait IsImmutable
 
 		return $this;
 	}
+
+	public function getImmutable(): bool
+	{
+		return $this->immutable;
+	}
 }

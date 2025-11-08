@@ -20,6 +20,11 @@ trait IsTranslatable
 		return $this->translate;
 	}
 
+	public function getTranslate(): bool
+	{
+		return $this->translate;
+	}
+
 	protected function getTranslatableStructure(string $type, mixed $value = null): array
 	{
 		$value = $value ?: $this->default;

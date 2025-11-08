@@ -14,4 +14,9 @@ trait DoesAllowMultiple
 
 		return $this;
 	}
+
+	public function getMultiple(): bool
+	{
+		return $this->multiple;
+	}
 }

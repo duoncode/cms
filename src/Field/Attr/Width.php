@@ -24,4 +24,13 @@ class Width implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Resizable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Resizable) {
+			return ['width' => $field->getWidth()];
+		}
+
+		return [];
+	}
 }

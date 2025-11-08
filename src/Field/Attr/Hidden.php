@@ -22,4 +22,13 @@ class Hidden implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Hidable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Hidable) {
+			return ['hidden' => $field->getHidden()];
+		}
+
+		return [];
+	}
 }

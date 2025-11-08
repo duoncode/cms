@@ -22,4 +22,13 @@ class Immutable implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . ImmutableCapability::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof ImmutableCapability) {
+			return ['immutable' => $field->getImmutable()];
+		}
+
+		return [];
+	}
 } // We can't use Readonly as it is a keyword of PHP

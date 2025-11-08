@@ -29,4 +29,13 @@ class Validate implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Validatable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof Validatable) {
+			return ['validators' => $field->validators()];
+		}
+
+		return [];
+	}
 }

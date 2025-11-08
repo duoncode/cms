@@ -27,4 +27,16 @@ class Columns implements Capability
 
 		throw new RuntimeException("The field " . $field::class . " does not have the capability " . GridResizable::class);
 	}
+
+	public function properties(Field $field): array
+	{
+		if ($field instanceof GridResizable) {
+			return [
+				'columns' => $field->getColumns(),
+				'minCellWidth' => $field->getMinCellWidth(),
+			];
+		}
+
+		return [];
+	}
 }

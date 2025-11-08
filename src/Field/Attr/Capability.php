@@ -9,4 +9,6 @@ use Duon\Cms\Field\Field;
 interface Capability
 {
 	public function set(Field $field): void;
+
+	public function properties(Field $field): array;
 }

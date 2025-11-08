@@ -26,4 +26,14 @@ trait GridIsResizable
 
 		return $this;
 	}
+
+	public function getColumns(): int
+	{
+		return $this->columns;
+	}
+
+	public function getMinCellWidth(): int
+	{
+		return $this->minCellWidth;
+	}
 }

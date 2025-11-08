@@ -14,4 +14,9 @@ trait IsHidable
 
 		return $this;
 	}
+
+	public function getHidden(): bool
+	{
+		return $this->hidden;
+	}
 }

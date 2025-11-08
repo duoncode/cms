@@ -566,10 +566,7 @@ abstract class Node
 		$node = $this instanceof Node ? $this : $this->node;
 		$field = new $fieldType($fieldName, $node, new ValueContext($fieldName, $content));
 
-		foreach ($property->getAttributes() as $attr) {
-			$attribute = $attr->newInstance();
-			$attribute->set($field);
-		}
+		$field->initCapabilities($property);
 
 		return $field;
 	}

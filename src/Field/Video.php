@@ -12,8 +12,6 @@ class Video extends Field implements Capability\Translatable, Capability\FileTra
 	use Capability\IsTranslatable;
 	use Capability\FileIsTranslatable;
 
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
-
 	public function value(): Value\Video
 	{
 		if ($this->translateFile) {
@@ -21,13 +19,6 @@ class Video extends Field implements Capability\Translatable, Capability\FileTra
 		}
 
 		return new Value\Video($this->node, $this, $this->valueContext);
-	}
-
-	public function properties(): array
-	{
-		return array_merge(parent::properties(), [
-			'translateFile' => $this->translateFile,
-		]);
 	}
 
 	public function structure(mixed $value = null): array
