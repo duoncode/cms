@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
+use Duon\Cms\Schema\GridItemSchema;
 use Duon\Cms\Value\Grid as GridValue;
+use Duon\Sire\Schema;
 use ValueError;
 
 class Grid extends Field implements Capability\Translatable, Capability\GridResizable
@@ -40,5 +42,36 @@ class Grid extends Field implements Capability\Translatable, Capability\GridResi
 		}
 
 		return $result;
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:grid');
+		$schema->add('columns', 'int', 'required');
+
+		$itemSchema = new GridItemSchema(list: true, title: $this->label, keepUnknown: true);
+
+		if ($this->translate) {
+			$locales = $this->node->context()->locales();
+			$defaultLocale = $locales->getDefault()->id;
+			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
+
+			foreach ($locales as $locale) {
+				$innerValidators = [];
+
+				if ($this->isRequired() && $locale->id === $defaultLocale) {
+					$innerValidators[] = 'required';
+				}
+
+				$i18nSchema->add($locale->id, $itemSchema, ...$innerValidators);
+			}
+
+			$schema->add('value', $i18nSchema, ...$this->validators);
+		} else {
+			$schema->add('value', $itemSchema, ...$this->validators);
+		}
+
+		return $schema;
 	}
 }

@@ -6,6 +6,7 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value\Youtube as YoutubeValue;
+use Duon\Sire\Schema;
 
 class Iframe extends Field implements Capability\Translatable
 {
@@ -22,5 +23,33 @@ class Iframe extends Field implements Capability\Translatable
 			'iframeWidth' => '100%',
 			'iframeHeight' => '75%',
 		]);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:iframe');
+
+		if ($this->translate) {
+			$locales = $this->node->context()->locales();
+			$defaultLocale = $locales->getDefault()->id;
+			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
+
+			foreach ($locales as $locale) {
+				$localeValidators = [];
+
+				if ($this->isRequired() && $locale->id === $defaultLocale) {
+					$localeValidators[] = 'required';
+				}
+
+				$i18nSchema->add($locale->id, 'text', ...$localeValidators);
+			}
+
+			$schema->add('value', $i18nSchema, ...$this->validators);
+		} else {
+			$schema->add('value', 'text', ...$this->validators);
+		}
+
+		return $schema;
 	}
 }

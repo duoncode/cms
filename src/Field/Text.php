@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Value\Text as TextValue;
+use Duon\Sire\Schema;
 
 class Text extends Field implements Capability\Translatable
 {
@@ -18,5 +19,33 @@ class Text extends Field implements Capability\Translatable
 	public function structure(mixed $value = null): array
 	{
 		return $this->getTranslatableStructure('text', $value);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:text');
+
+		if ($this->translate) {
+			$locales = $this->node->context()->locales();
+			$defaultLocale = $locales->getDefault()->id;
+			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
+
+			foreach ($locales as $locale) {
+				$localeValidators = [];
+
+				if ($this->isRequired() && $locale->id === $defaultLocale) {
+					$localeValidators[] = 'required';
+				}
+
+				$i18nSchema->add($locale->id, 'text', ...$localeValidators);
+			}
+
+			$schema->add('value', $i18nSchema, ...$this->validators);
+		} else {
+			$schema->add('value', 'text', ...$this->validators);
+		}
+
+		return $schema;
 	}
 }

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Duon\Cms\Field\Attr;
 
 use Attribute;
-use Duon\Cms\Field\Field;
-use Duon\Cms\Field\Capability\Validatable;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Capability\Validatable;
+use Duon\Cms\Field\Field;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Validate implements Capability
 {
-	public readonly array $validators;
+	protected array $validators = [];
 
 	public function __construct(string ...$validators)
 	{

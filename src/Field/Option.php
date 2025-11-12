@@ -6,6 +6,7 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value;
+use Duon\Sire\Schema;
 
 class Option extends Field implements Capability\Selectable
 {
@@ -29,5 +30,14 @@ class Option extends Field implements Capability\Selectable
 	public function structure(mixed $value = null): array
 	{
 		return $this->getSimpleStructure('option', $value);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:option');
+		$schema->add('value', 'text', ...$this->validators);
+
+		return $schema;
 	}
 }

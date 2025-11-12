@@ -7,6 +7,8 @@ namespace Duon\Cms\Field;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Value\Value;
 use Duon\Cms\Value\ValueContext;
+use Duon\Sire\Schema;
+use ReflectionProperty;
 
 abstract class Field implements
 	Capability\Defaultable,
@@ -28,7 +30,6 @@ abstract class Field implements
 	use Capability\IsValidatable;
 
 	public readonly string $type;
-	protected array $validators = [];
 
 	/** @var Attr\Capability[] */
 	protected array $capabilities = [];
@@ -50,12 +51,14 @@ abstract class Field implements
 
 	abstract public function structure(mixed $value = null): array;
 
+	abstract public function schema(): Schema;
+
 	public function isset(): bool
 	{
 		return $this->value()->isset();
 	}
 
-	public function initCapabilities(\ReflectionProperty $property): void
+	public function initCapabilities(ReflectionProperty $property): void
 	{
 		foreach ($property->getAttributes() as $attr) {
 			$capability = $attr->newInstance();
