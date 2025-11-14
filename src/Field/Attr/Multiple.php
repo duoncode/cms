@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Duon\Cms\Field\Attr;
 
 use Attribute;
-use Duon\Cms\Field\Field;
-use Duon\Cms\Field\Capability\AllowsMultiple;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Capability\AllowsMultiple;
+use Duon\Cms\Field\Field;
+
+use function Duon\Cms\Field\Attr\capabilityErrorMessage;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Multiple implements Capability
@@ -20,7 +22,7 @@ class Multiple implements Capability
 			return;
 		}
 
-		throw new RuntimeException("The field " . $field::class . " does not have the capability " . AllowsMultiple::class);
+		throw new RuntimeException(capabilityErrorMessage($field, AllowsMultiple::class));
 	}
 
 	public function properties(Field $field): array

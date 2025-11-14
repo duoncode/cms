@@ -9,6 +9,8 @@ use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Field\Capability\Labelable;
 use Duon\Cms\Field\Field;
 
+use function Duon\Cms\Field\Attr\capabilityErrorMessage;
+
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Label implements Capability
 {
@@ -22,7 +24,7 @@ class Label implements Capability
 			return;
 		}
 
-		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Labelable::class);
+		throw new RuntimeException(capabilityErrorMessage($field, Labelable::class));
 	}
 
 	public function properties(Field $field): array

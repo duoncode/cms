@@ -9,6 +9,8 @@ use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Field\Capability\Validatable;
 use Duon\Cms\Field\Field;
 
+use function Duon\Cms\Field\Attr\capabilityErrorMessage;
+
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Validate implements Capability
 {
@@ -27,7 +29,7 @@ class Validate implements Capability
 			return;
 		}
 
-		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Validatable::class);
+		throw new RuntimeException(capabilityErrorMessage($field, Validatable::class));
 	}
 
 	public function properties(Field $field): array

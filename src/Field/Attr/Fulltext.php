@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Duon\Cms\Field\Attr;
 
 use Attribute;
-use Duon\Cms\Field\Field;
-use Duon\Cms\Field\Capability\Searchable;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Field\Capability\Searchable;
+use Duon\Cms\Field\Field;
+
+use function Duon\Cms\Field\Attr\capabilityErrorMessage;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Fulltext implements Capability
@@ -22,7 +24,7 @@ class Fulltext implements Capability
 			return;
 		}
 
-		throw new RuntimeException("The field " . $field::class . " does not have the capability " . Searchable::class);
+		throw new RuntimeException(capabilityErrorMessage($field, Searchable::class));
 	}
 
 	public function properties(Field $field): array

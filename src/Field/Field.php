@@ -36,7 +36,7 @@ abstract class Field implements
 
 	final public function __construct(
 		public readonly string $name,
-		protected readonly Node $node,
+		public readonly Node $node,
 		protected readonly ValueContext $valueContext,
 	) {
 		$this->type = $this::class;
