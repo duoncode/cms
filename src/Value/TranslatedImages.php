@@ -11,7 +11,7 @@ class TranslatedImages extends Images
 		return $this->get($this->pointer);
 	}
 
-	protected function get(int $index): TranslatedImage
+	public function get(int $index): TranslatedImage
 	{
 		return new TranslatedImage($this->node, $this->field, $this->context, $index);
 	}

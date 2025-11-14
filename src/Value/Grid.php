@@ -7,16 +7,20 @@ namespace Duon\Cms\Value;
 use Duon\Cms\Assets\ResizeMode;
 use Duon\Cms\Assets\Size;
 use Duon\Cms\Field;
+use Duon\Cms\Field\Capability\Translatable;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Util\Html as HtmlUtil;
 use Generator;
 use Gumlet\ImageResize;
 
+/**
+ * @property-read Field\Grid&Translatable $field
+ */
 class Grid extends Value
 {
 	protected readonly ?Generator $preparedData;
 
-	public function __construct(Node $node, Field\Grid $field, ValueContext $context)
+	public function __construct(Node $node, Field\Grid&Translatable $field, ValueContext $context)
 	{
 		parent::__construct($node, $field, $context);
 
@@ -64,7 +68,7 @@ class Grid extends Value
 
 	public function images(bool $all = false): Generator
 	{
-		if ($all && $this->translate) {
+		if ($all && $this->field->isTranslatable()) {
 			foreach ($this->data['value'] ?? [] as $data) {
 				foreach ($data as $value) {
 					$item = new GridItem($value['type'], $value);
@@ -185,7 +189,7 @@ class Grid extends Value
 			return false;
 		}
 
-		if ($this->translate) {
+		if ($this->field->isTranslatable()) {
 			return count($this->data['value'][$this->defaultLocale->id]) > 0;
 		}
 
@@ -248,7 +252,7 @@ class Grid extends Value
 		return "<img src=\"{$url}\" alt=\"{$title}\" data-path-original=\"{$path}\">";
 	}
 
-	protected function renderImages(array $data, array $args): string
+	protected function renderImages(array $data): string
 	{
 		$result = '';
 
@@ -277,7 +281,7 @@ class Grid extends Value
 
 	protected function prepareData(array $data): Generator
 	{
-		if ($this->translate) {
+		if ($this->field->isTranslatable()) {
 			$locale = $this->locale;
 
 			while ($locale) {

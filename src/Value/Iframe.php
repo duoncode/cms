@@ -4,11 +4,27 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Value;
 
+use Duon\Cms\Field\Capability\Translatable;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
+
 use function Duon\Cms\Util\escape;
 
+/**
+ * @property-read Field&Translatable $field
+ */
 class Iframe extends Value
 {
 	protected string $value;
+
+	public function __construct(
+		Node $node,
+		Field&Translatable $field,
+		ValueContext $context,
+		protected int $index = 0,
+	) {
+		parent::__construct($node, $field, $context);
+	}
 
 	public function __toString(): string
 	{
@@ -21,7 +37,7 @@ class Iframe extends Value
 			return $this->value;
 		}
 
-		if ($this->translate) {
+		if ($this->field->isTranslatable()) {
 			$locale = $this->locale;
 
 			while ($locale) {

@@ -24,7 +24,7 @@ class Image extends File
 		return $this->tag(true);
 	}
 
-	public function tag(bool $bust = true, string $class = null): string
+	public function tag(bool $bust = true, ?string $class = null): string
 	{
 		return sprintf(
 			'<img %ssrc="%s" alt="%s" data-path-original="%s">',

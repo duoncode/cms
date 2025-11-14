@@ -51,7 +51,7 @@ class File extends Field implements Capability\Translatable, Capability\FileTran
 			$subSchema->add('title', 'text');
 
 			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 
 			foreach ($locales as $locale) {
 				$i18nSchema->add($locale->id, $subSchema);
@@ -63,7 +63,7 @@ class File extends Field implements Capability\Translatable, Capability\FileTran
 			$fileSchema = new Schema(list: true, keepUnknown: true);
 			$fileSchema->add('file', 'text', 'required');
 
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 			$defaultLocale = $locales->getDefault()->id;
 			$titleSchema = new Schema(title: $this->label, keepUnknown: true);
 
