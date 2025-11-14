@@ -6,7 +6,7 @@ namespace Duon\Cms\Util;
 
 use Hidehalo\Nanoid\Client;
 
-function nanoid()
+function nanoid(): string
 {
 	$client = new Client();
 
@@ -16,7 +16,7 @@ function nanoid()
 	);
 }
 
-function escape(string $string)
+function escape(string $string): string
 {
 	return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 }

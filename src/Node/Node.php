@@ -8,7 +8,6 @@ use Duon\Cms\Config;
 use Duon\Cms\Context;
 use Duon\Cms\Exception\NoSuchField;
 use Duon\Cms\Exception\RuntimeException;
-use Duon\Cms\Field\Attr;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Finder\Finder;
 use Duon\Cms\Locale;
