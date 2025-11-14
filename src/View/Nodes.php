@@ -72,7 +72,8 @@ class Nodes
 
 			foreach ($query->fields as $field) {
 				if ($field) {
-					$n[$field] = $node->getValue(trim($field))->unwrap();
+					$value = $node->getValue(trim($field));
+					$n[$field] = is_object($value) ? $value->unwrap() : $value;
 				}
 			}
 
