@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Fixtures\Node;
 
-use Duon\Cms\Field\Attr\DefaultValue;
-use Duon\Cms\Field\Attr\Description;
-use Duon\Cms\Field\Attr\Hidden;
-use Duon\Cms\Field\Attr\Immutable;
-use Duon\Cms\Field\Attr\Label;
-use Duon\Cms\Field\Attr\Required;
-use Duon\Cms\Field\Attr\Rows;
-use Duon\Cms\Field\Attr\Translate;
-use Duon\Cms\Field\Attr\Validate;
-use Duon\Cms\Field\Attr\Width;
+use Duon\Cms\Field\Meta\DefaultValue;
+use Duon\Cms\Field\Meta\Description;
+use Duon\Cms\Field\Meta\Hidden;
+use Duon\Cms\Field\Meta\Immutable;
+use Duon\Cms\Field\Meta\Label;
+use Duon\Cms\Field\Meta\Required;
+use Duon\Cms\Field\Meta\Rows;
+use Duon\Cms\Field\Meta\Translate;
+use Duon\Cms\Field\Meta\Validate;
+use Duon\Cms\Field\Meta\Width;
 use Duon\Cms\Field\Text;
 use Duon\Cms\Field\Textarea;
 use Duon\Cms\Node\Attr\Name;

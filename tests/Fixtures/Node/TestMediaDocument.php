@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Fixtures\Node;
 
-use Duon\Cms\Field\Attr\Columns;
-use Duon\Cms\Field\Attr\Label;
-use Duon\Cms\Field\Attr\Multiple;
-use Duon\Cms\Field\Attr\Options;
-use Duon\Cms\Field\Attr\Translate;
-use Duon\Cms\Field\Attr\TranslateFile;
+use Duon\Cms\Field\Meta\Columns;
+use Duon\Cms\Field\Meta\Label;
+use Duon\Cms\Field\Meta\Multiple;
+use Duon\Cms\Field\Meta\Options;
+use Duon\Cms\Field\Meta\Translate;
+use Duon\Cms\Field\Meta\TranslateFile;
 use Duon\Cms\Field\Grid;
 use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Option;
