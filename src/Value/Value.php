@@ -17,7 +17,6 @@ abstract class Value
 	protected readonly Locale $defaultLocale;
 	protected readonly string $fieldName;
 	protected readonly array $data;
-	protected readonly bool $translate;
 
 	public function __construct(
 		protected readonly Node $node,
@@ -29,7 +28,6 @@ abstract class Value
 		$this->data = $context->data;
 		$this->fieldName = $context->fieldName;
 		$this->fieldType = $field->type;
-		$this->translate = $field->isTranslatable();
 	}
 
 	public function __get(string $name): mixed

@@ -8,7 +8,6 @@ use Duon\Cms\Config;
 use Duon\Cms\Context;
 use Duon\Cms\Exception\NoSuchField;
 use Duon\Cms\Exception\RuntimeException;
-use Duon\Cms\Field\Attr;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Finder\Finder;
 use Duon\Cms\Locale;
@@ -566,33 +565,7 @@ abstract class Node
 		$node = $this instanceof Node ? $this : $this->node;
 		$field = new $fieldType($fieldName, $node, new ValueContext($fieldName, $content));
 
-		foreach ($property->getAttributes() as $attr) {
-			$attribute = $attr->newInstance();
-
-			if (!$attribute->validate($field)) {
-				throw new RuntimeException(
-					'Cannot apply attribute ' . $attribute::class . ' to field ' . $fieldName . ' of type ' . $field::class,
-				);
-			}
-
-			match ($attr->getName()) {
-				Attr\Columns::class => $field->columns($attribute->columns, $attribute->minCellWidth),
-				Attr\DefaultValue::class => $field->default($attribute->get()),
-				Attr\Description::class => $field->description($attribute->description),
-				Attr\Fulltext::class => $field->fulltext($attribute->fulltextWeight),
-				Attr\Hidden::class => $field->hidden(true),
-				Attr\Immutable::class => $field->immutable(true),
-				Attr\Label::class => $field->label($attribute->label),
-				Attr\Multiple::class => $field->multiple(true),
-				Attr\Options::class => $field->options($attribute->options),
-				Attr\Required::class => $field->required(true),
-				Attr\Rows::class => $field->rows($attribute->rows),
-				Attr\Translate::class => $field->translate(true),
-				Attr\TranslateFile::class => $field->translateFile(true),
-				Attr\Validate::class => $field->validate(...$attribute->validators),
-				Attr\Width::class => $field->width($attribute->width),
-			};
-		}
+		$field->initCapabilities($property);
 
 		return $field;
 	}

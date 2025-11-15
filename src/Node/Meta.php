@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Node;
 
-use Duon\Cms\Node\Attr\Handle;
-use Duon\Cms\Node\Attr\Name;
-use Duon\Cms\Node\Attr\Permission;
-use Duon\Cms\Node\Attr\Render;
-use Duon\Cms\Node\Attr\Route;
+use Duon\Cms\Node\Meta\Handle;
+use Duon\Cms\Node\Meta\Name;
+use Duon\Cms\Node\Meta\Permission;
+use Duon\Cms\Node\Meta\Render;
+use Duon\Cms\Node\Meta\Route;
 use ReflectionClass;
 
 class Meta

@@ -5,22 +5,12 @@ declare(strict_types=1);
 namespace Duon\Cms\Value;
 
 use Duon\Cms\Exception\RuntimeException;
-use Duon\Cms\Field\Field;
-use Duon\Cms\Node\Node;
 
 use function Duon\Cms\Util\escape;
 
 class Picture extends Image
 {
-	public function __construct(Node $node, Field $field, ValueContext $context)
-	{
-		parent::__construct($node, $field, $context);
-
-		// Always uses the first image for meta information
-		// Equivalent to `$this->index = 0` in Image;
-	}
-
-	public function tag(bool $bust = true, string $class = null): string
+	public function tag(bool $bust = true, ?string $class = null): string
 	{
 		$class = $class ? sprintf(' class="%s" ', escape($class, ENT_QUOTES, 'UTF-8')) : '';
 		$sources = '';

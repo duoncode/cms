@@ -5,45 +5,19 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
+use Duon\Cms\Schema\GridItemSchema;
 use Duon\Cms\Value\Grid as GridValue;
+use Duon\Sire\Schema;
 use ValueError;
 
-class Grid extends Field
+class Grid extends Field implements Capability\Translatable, Capability\GridResizable
 {
-	protected int $columns = 12;
-	protected int $minCellWidth = 1;
-
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_TRANSLATE | Field::CAPABILITY_COLUMNS;
+	use Capability\IsTranslatable;
+	use Capability\GridIsResizable;
 
 	public function __toString(): string
 	{
 		return 'Grid Field';
-	}
-
-	public function columns(int $columns, int $minCellWidth = 1): static
-	{
-		if ($columns < 1 || $columns > 25) {
-			throw new ValueError('The value of $columns must be >= 1 and <= 25');
-		}
-
-		if ($minCellWidth < 1 || $minCellWidth > $columns) {
-			throw new ValueError('The value of $minCellWidth must be >= 1 and <= ' . (string) $columns);
-		}
-
-		$this->columns = $columns;
-		$this->minCellWidth = $minCellWidth;
-
-		return $this;
-	}
-
-	public function getColumns(): int
-	{
-		return $this->columns;
-	}
-
-	public function getMinCellWidth(): int
-	{
-		return $this->minCellWidth;
 	}
 
 	public function value(): GridValue
@@ -51,23 +25,15 @@ class Grid extends Field
 		return new GridValue($this->node, $this, $this->valueContext);
 	}
 
-	public function properties(): array
-	{
-		return array_merge(parent::properties(), [
-			'columns' => $this->columns,
-			'minCellWidth' => $this->minCellWidth,
-		]);
-	}
-
 	public function structure(mixed $value = null): array
 	{
 		$value = $value ?: $this->default;
 
 		if (is_array($value)) {
-			return ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => $value];
+			return ['type' => 'grid', 'columns' => $this->columns, 'minCellWidth' => $this->minCellWidth, 'value' => $value];
 		}
 
-		$result = ['type' => 'grid', 'columns' => 12, 'minCellWidth' => 1, 'value' => []];
+		$result = ['type' => 'grid', 'columns' => $this->columns, 'minCellWidth' => $this->minCellWidth, 'value' => []];
 
 		if ($this->translate) {
 			foreach ($this->node->context->locales() as $locale) {
@@ -76,5 +42,36 @@ class Grid extends Field
 		}
 
 		return $result;
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:grid');
+		$schema->add('columns', 'int', 'required');
+
+		$itemSchema = new GridItemSchema(list: true, title: $this->label, keepUnknown: true);
+
+		if ($this->translate) {
+			$locales = $this->node->context()->locales();
+			$defaultLocale = $locales->getDefault()->id;
+			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
+
+			foreach ($locales as $locale) {
+				$innerValidators = [];
+
+				if ($this->isRequired() && $locale->id === $defaultLocale) {
+					$innerValidators[] = 'required';
+				}
+
+				$i18nSchema->add($locale->id, $itemSchema, ...$innerValidators);
+			}
+
+			$schema->add('value', $i18nSchema, ...$this->validators);
+		} else {
+			$schema->add('value', $itemSchema, ...$this->validators);
+		}
+
+		return $schema;
 	}
 }

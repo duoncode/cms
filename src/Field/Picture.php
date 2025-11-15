@@ -6,13 +6,13 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value;
+use Duon\Sire\Schema;
 
-class Picture extends Field
+class Picture extends Field implements Capability\Translatable, Capability\FileTranslatable, Capability\AllowsMultiple
 {
-	protected bool $multiple = false;
-	protected bool $translateFile = false;
-
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_MULTIPLE | Field::CAPABILITY_TRANSLATE_FILE;
+	use Capability\DoesAllowMultiple;
+	use Capability\IsTranslatable;
+	use Capability\FileIsTranslatable;
 
 	// TODO: translateFile and multiple
 	public function value(): Value\Picture
@@ -22,26 +22,6 @@ class Picture extends Field
 		}
 
 		return new Value\Picture($this->node, $this, $this->valueContext);
-	}
-
-	public function multiple(bool $multiple = true): static
-	{
-		$this->multiple = $multiple;
-
-		return $this;
-	}
-
-	public function translateFile(bool $translate = true): static
-	{
-		$this->translateFile = $translate;
-		$this->translate = $translate;
-
-		return $this;
-	}
-
-	public function isFileTranslatable(): bool
-	{
-		return $this->translateFile;
 	}
 
 	public function properties(): array
@@ -55,14 +35,67 @@ class Picture extends Field
 			$value->width(400)->url(false, $i);
 		}
 
-		return array_merge(parent::properties(), [
-			'multiple' => $this->multiple,
-			'translateFile' => $this->translateFile,
-		]);
+		return parent::properties();
 	}
 
 	public function structure(mixed $value = null): array
 	{
 		return $this->getFileStructure('picture', $value);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:picture');
+
+		if ($this->translateFile) {
+			// File-translatable: separate file arrays per locale
+			$subSchema = new Schema(list: true, title: $this->label, keepUnknown: true);
+			$subSchema->add('file', 'text');
+			$subSchema->add('title', 'text');
+			$subSchema->add('alt', 'text');
+
+			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
+			$locales = $this->node->context->locales();
+
+			foreach ($locales as $locale) {
+				$i18nSchema->add($locale->id, $subSchema);
+			}
+
+			$schema->add('files', $i18nSchema, ...$this->validators);
+		} elseif ($this->translate) {
+			// Text-translatable: shared files but translatable titles and alt text
+			$fileSchema = new Schema(list: true, keepUnknown: true);
+			$fileSchema->add('file', 'text', 'required');
+
+			$locales = $this->node->context->locales();
+			$defaultLocale = $locales->getDefault()->id;
+			$titleSchema = new Schema(title: $this->label, keepUnknown: true);
+			$altSchema = new Schema(title: $this->label, keepUnknown: true);
+
+			foreach ($locales as $locale) {
+				$localeValidators = [];
+
+				if ($this->isRequired() && $locale->id === $defaultLocale) {
+					$localeValidators[] = 'required';
+				}
+
+				$titleSchema->add($locale->id, 'text', ...$localeValidators);
+				$altSchema->add($locale->id, 'text', ...$localeValidators);
+			}
+
+			$fileSchema->add('title', $titleSchema);
+			$fileSchema->add('alt', $altSchema);
+			$schema->add('files', $fileSchema, ...$this->validators);
+		} else {
+			// Non-translatable
+			$fileSchema = new Schema(list: true, keepUnknown: true);
+			$fileSchema->add('file', 'text', 'required');
+			$fileSchema->add('title', 'text');
+			$fileSchema->add('alt', 'text');
+			$schema->add('files', $fileSchema, ...$this->validators);
+		}
+
+		return $schema;
 	}
 }

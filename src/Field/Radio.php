@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Value\Str;
+use Duon\Sire\Schema;
 
 class Radio extends Field
 {
@@ -16,5 +17,14 @@ class Radio extends Field
 	public function structure(mixed $value = null): array
 	{
 		return $this->getSimpleStructure('radio', $value);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:radio');
+		$schema->add('value', 'text', ...$this->validators);
+
+		return $schema;
 	}
 }

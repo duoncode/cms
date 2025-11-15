@@ -4,11 +4,26 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Value;
 
+use Duon\Cms\Field\Capability\Translatable;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
+
 use function Duon\Cms\Util\escape;
 
+/**
+ * @property-read Field&Translatable $field
+ */
 class Text extends Value
 {
 	protected string $value;
+
+	public function __construct(
+		Node $node,
+		Field&Translatable $field,
+		ValueContext $context,
+	) {
+		parent::__construct($node, $field, $context);
+	}
 
 	public function __toString(): string
 	{
@@ -21,7 +36,7 @@ class Text extends Value
 			return $this->value;
 		}
 
-		if ($this->translate) {
+		if ($this->field->isTranslatable()) {
 			$locale = $this->locale;
 
 			while ($locale) {

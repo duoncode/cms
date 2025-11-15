@@ -6,11 +6,10 @@ namespace Duon\Cms\Field;
 
 use Duon\Cms\Field\Field;
 use Duon\Cms\Value\Number as NumberValue;
+use Duon\Sire\Schema;
 
 class Number extends Field
 {
-	public const EXTRA_CAPABILITIES = Field::CAPABILITY_HIDDEN;
-
 	public function value(): NumberValue
 	{
 		return new NumberValue($this->node, $this, $this->valueContext);
@@ -19,5 +18,14 @@ class Number extends Field
 	public function structure(mixed $value = null): array
 	{
 		return $this->getSimpleStructure('number', $value);
+	}
+
+	public function schema(): Schema
+	{
+		$schema = new Schema(title: $this->label, keepUnknown: true);
+		$schema->add('type', 'text', 'required', 'in:number');
+		$schema->add('value', 'float', ...$this->validators);
+
+		return $schema;
 	}
 }

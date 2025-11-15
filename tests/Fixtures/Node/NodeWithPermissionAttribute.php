@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Fixtures\Node;
 
-use Duon\Cms\Node\Attr\Permission;
+use Duon\Cms\Node\Meta\Permission;
 use Duon\Cms\Node\Page;
 
 #[Permission([

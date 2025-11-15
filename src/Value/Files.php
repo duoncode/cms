@@ -4,11 +4,25 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Value;
 
+use Duon\Cms\Field\Capability\AllowsMultiple;
+use Duon\Cms\Field\Capability\FileTranslatable;
+use Duon\Cms\Field\Capability\Translatable;
+use Duon\Cms\Field\Field;
+use Duon\Cms\Node\Node;
 use Iterator;
 
 class Files extends Value implements Iterator
 {
 	protected int $pointer = 0;
+
+	public function __construct(
+		Node $node,
+		Field&AllowsMultiple&FileTranslatable&Translatable $field,
+		ValueContext $context,
+		protected int $index = 0,
+	) {
+		parent::__construct($node, $field, $context);
+	}
 
 	public function __toString(): string
 	{

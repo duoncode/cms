@@ -35,7 +35,8 @@
 			"Duon\\Cms\\": "src"
 		},
 		"files": [
-			"src/Util/functions.php"
+			"src/Util/Functions.php",
+			"src/Field/Meta/Functions.php"
 		]
 	},
 	"autoload-dev": {
