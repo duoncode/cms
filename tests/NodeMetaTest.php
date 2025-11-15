@@ -11,7 +11,7 @@ use Duon\Cms\Tests\Fixtures\Node\NodeWithRenderAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithRouteAttribute;
 use Duon\Cms\Tests\Setup\TestCase;
 
-final class NodeAttrTest extends TestCase
+final class NodeMetaTest extends TestCase
 {
 	public function testNameAttributeSet(): void
 	{

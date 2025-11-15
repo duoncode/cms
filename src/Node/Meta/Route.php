@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Node\Attr;
+namespace Duon\Cms\Node\Meta;
 
 use Attribute;
 
 #[Attribute]
-class Permission
+class Route
 {
 	/**
 	 * @param string|array<string,string> $value
