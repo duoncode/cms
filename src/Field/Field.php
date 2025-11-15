@@ -31,7 +31,7 @@ abstract class Field implements
 
 	public readonly string $type;
 
-	/** @var Attr\Capability[] */
+	/** @var Meta\Capability[] */
 	protected array $capabilities = [];
 
 	final public function __construct(
