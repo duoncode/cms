@@ -8,17 +8,16 @@ use Duon\Cli\Runner;
 use Duon\Cms\Commands\RecreateDb;
 use Duon\I18n\I18n;
 use Duon\I18n\Source;
+use Duon\Quma\Commands as QumaCommands;
 use Duon\Quma\Connection;
-use Duon\Quma\MigrationCommands;
 
 $connection = new Connection(
-    'pgsql:host=localhost;dbname=duon_db;user=duon_user;password=duon_password',
-    __DIR__ . '/db/sql',
-    __DIR__ . '/db/migrations',
-    fetchMode: PDO::FETCH_ASSOC,
-    print: false,
+	'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
+	__DIR__ . '/db/sql',
+	__DIR__ . '/db/migrations/install',
+	fetchMode: PDO::FETCH_ASSOC,
+	print: false,
 );
-
 
 // $commands = I18n::commands(
 //     dir: __DIR__ . '/locale',
@@ -29,11 +28,12 @@ $connection = new Connection(
 //     ],
 //     jsonDir: __DIR__ . '/ui/src/locale',
 // );
-$commands = MigrationCommands::get($connection);
-$commands->add(new RecreateDb('duon_db', 'duon_user', 'duon_password'));
+$commands = QumaCommands::get($connection);
+$commands->add(new RecreateDb('duoncms', 'duoncms', 'duoncms'));
 
 $runner = new Runner($commands);
 
 exit($runner->run());
 
 // vim: ft=php
+
