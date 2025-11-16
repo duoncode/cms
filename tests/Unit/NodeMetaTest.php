@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
-use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithHandleAttribute;
-use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithNameAttribute;
-use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithPermissionAttribute;
-use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithRenderAttribute;
-use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithRouteAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithHandleAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithNameAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithPermissionAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithRenderAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithRouteAttribute;
 use Duon\Cms\Tests\TestCase;
 
 final class NodeMetaTest extends TestCase

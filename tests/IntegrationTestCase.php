@@ -135,27 +135,27 @@ class IntegrationTestCase extends TestCase
 
 		// Register test Node classes for fixture types
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-article', \Duon\Cms\Tests\Integration\Fixtures\Node\TestArticle::class);
+			->add('test-article', \Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-home', \Duon\Cms\Tests\Integration\Fixtures\Node\TestHome::class);
+			->add('test-home', \Duon\Cms\Tests\Fixtures\Node\TestHome::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-block', \Duon\Cms\Tests\Integration\Fixtures\Node\TestBlock::class);
+			->add('test-block', \Duon\Cms\Tests\Fixtures\Node\TestBlock::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-widget', \Duon\Cms\Tests\Integration\Fixtures\Node\TestWidget::class);
+			->add('test-widget', \Duon\Cms\Tests\Fixtures\Node\TestWidget::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestDocument::class);
+			->add('test-document', \Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-media-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestMediaDocument::class);
+			->add('test-media-document', \Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
 
 		// Register dynamically created test types (reuse TestPage for all page types)
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('ordered-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('ordered-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('limit-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('limit-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('hidden-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('hidden-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 
 		return $registry;
 	}
@@ -170,7 +170,7 @@ class IntegrationTestCase extends TestCase
 		$db = $this->db();
 
 		foreach ($fixtures as $fixture) {
-			$path = self::root() . "/tests/Integration/Fixtures/data/{$fixture}.sql";
+			$path = self::root() . "/tests/Fixtures/data/{$fixture}.sql";
 
 			if (!file_exists($path)) {
 				throw new RuntimeException("Fixture file not found: {$path}");
