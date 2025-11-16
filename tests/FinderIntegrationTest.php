@@ -27,11 +27,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Verify all returned nodes are of the correct type
 		foreach ($nodes as $node) {
-			$type = $this->db()->execute(
-				'SELECT handle FROM cms.types WHERE type = :type',
-				['type' => $node['type']],
-			)->one();
-			$this->assertEquals('test-article', $type['handle']);
+			$this->assertEquals('test-article', $node::handle());
 		}
 	}
 
@@ -39,9 +35,8 @@ final class FinderIntegrationTest extends IntegrationTestCase
 	{
 		// Act
 		$finder = $this->createFinder();
-		$publishedNodes = $finder->nodes->types('test-article')->published(true);
-
-		$allNodes = $finder->nodes->types('test-article');
+		$publishedNodes = iterator_to_array($finder->nodes->types('test-article')->published(true));
+		$allNodes = iterator_to_array($finder->nodes->types('test-article')->published(null));
 
 		// Assert
 		$this->assertNotEmpty($publishedNodes);
@@ -49,7 +44,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Verify all returned nodes are published
 		foreach ($publishedNodes as $node) {
-			$this->assertTrue($node['published']);
+			$this->assertTrue($node->data()['published']);
 		}
 	}
 
@@ -66,7 +61,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Verify all returned nodes are unpublished
 		foreach ($unpublishedNodes as $node) {
-			$this->assertFalse($node['published']);
+			$this->assertFalse($node->data()['published']);
 		}
 	}
 
@@ -84,11 +79,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$typeHandles = [];
 
 		foreach ($nodes as $node) {
-			$type = $this->db()->execute(
-				'SELECT handle FROM cms.types WHERE type = :type',
-				['type' => $node['type']],
-			)->one();
-			$typeHandles[] = $type['handle'];
+			$typeHandles[] = $node::handle();
 		}
 
 		// Verify we got both types
@@ -121,15 +112,15 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Act - order by UID ascending
 		$finder = $this->createFinder();
-		$nodes = $finder->nodes()
+		$nodes = iterator_to_array($finder->nodes()
 			->types('ordered-test-page')
-			->order('uid ASC');
+			->order('uid ASC'));
 
 		// Assert
 		$this->assertCount(3, $nodes);
-		$this->assertEquals('ordered-a', $nodes[0]['uid']);
-		$this->assertEquals('ordered-b', $nodes[1]['uid']);
-		$this->assertEquals('ordered-c', $nodes[2]['uid']);
+		$this->assertEquals('ordered-a', $nodes[0]->uid());
+		$this->assertEquals('ordered-b', $nodes[1]->uid());
+		$this->assertEquals('ordered-c', $nodes[2]->uid());
 	}
 
 	public function testFinderLimitsResults(): void
@@ -146,9 +137,9 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Act
 		$finder = $this->createFinder();
-		$nodes = $finder->nodes()
+		$nodes = iterator_to_array($finder->nodes()
 			->types('limit-test-page')
-			->limit(3);
+			->limit(3));
 
 		// Assert
 		$this->assertCount(3, $nodes);
@@ -173,21 +164,21 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Act
 		$finder = $this->createFinder();
-		$visibleNodes = $finder->nodes()
+		$visibleNodes = iterator_to_array($finder->nodes()
 			->types('hidden-test-page')
-			->hidden(false);
+			->hidden(false));
 
 		// Assert
 		$this->assertCount(1, $visibleNodes);
-		$this->assertEquals('visible-node', $visibleNodes[0]['uid']);
+		$this->assertEquals('visible-node', $visibleNodes[0]->uid());
 	}
 
 	public function testFinderReturnsEmptyArrayWhenNoResults(): void
 	{
 		// Act
 		$finder = $this->createFinder();
-		$nodes = $finder->nodes()
-			->types('non-existent-type');
+		$nodes = iterator_to_array($finder->nodes()
+			->types('non-existent-type'));
 
 		// Assert
 		$this->assertIsArray($nodes);
@@ -209,17 +200,17 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$homepageNode = null;
 
 		foreach ($homepage as $node) {
-			if ($node['uid'] === 'test-homepage') {
+			if ($node->uid() === 'test-homepage') {
 				$homepageNode = $node;
 				break;
 			}
 		}
 
 		$this->assertNotNull($homepageNode, 'test-homepage node should exist');
-		$this->assertTrue($homepageNode['published']);
+		$this->assertTrue($homepageNode->data()['published']);
 
 		// Verify content structure
-		$content = json_decode($homepageNode['content'], true);
+		$content = $homepageNode->data()['content'];
 		$this->assertArrayHasKey('title', $content);
 		$this->assertEquals('Testhomepage', $content['title']['value']['de']);
 		$this->assertEquals('Test Homepage', $content['title']['value']['en']);

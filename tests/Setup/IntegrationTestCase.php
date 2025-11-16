@@ -34,6 +34,6 @@ class IntegrationTestCase extends TestCase
 
 	protected function createFinder(string $localeId = 'en'): Finder
 	{
-		return new Finder($this->createContext($localeId));
+		return new Finder($this->createContext());
 	}
 }
