@@ -4,29 +4,16 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests;
 
-use Duon\Cms\Context;
-use Duon\Cms\Finder\Finder;
 use Duon\Cms\Tests\Fixtures\Node\TestDocument;
 use Duon\Cms\Tests\Fixtures\Node\TestMediaDocument;
-use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Tests\Setup\IntegrationTestCase;
 
-final class FieldPropertiesIntegrationTest extends TestCase
+final class FieldPropertiesIntegrationTest extends IntegrationTestCase
 {
-	private function createContext(): Context
-	{
-		return new Context(
-			$this->db(),
-			$this->request(),
-			$this->config(),
-			$this->registry(),
-			$this->factory(),
-		);
-	}
-
 	public function testFieldPropertiesIncludesNameAndType(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestDocument($context, $finder, ['content' => []]);
 
@@ -41,7 +28,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testFieldPropertiesCollectsFromMultipleCapabilities(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestDocument($context, $finder, ['content' => []]);
 
@@ -64,7 +51,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testFieldPropertiesHandlesHiddenAndImmutable(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestDocument($context, $finder, ['content' => []]);
 
@@ -80,7 +67,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testFieldPropertiesHandlesResizableProperties(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestDocument($context, $finder, ['content' => []]);
 
@@ -102,7 +89,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testGridFieldPropertiesIncludesColumns(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestMediaDocument($context, $finder, ['content' => []]);
 
@@ -121,7 +108,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testImageFieldPropertiesIncludesMultipleAndTranslateFile(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestMediaDocument($context, $finder, ['content' => []]);
 
@@ -137,7 +124,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testOptionFieldPropertiesIncludesOptions(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestMediaDocument($context, $finder, ['content' => []]);
 
@@ -150,7 +137,7 @@ final class FieldPropertiesIntegrationTest extends TestCase
 	public function testNodeFieldsMethodReturnsAllFieldProperties(): void
 	{
 		$context = $this->createContext();
-		$finder = $this->createMock(Finder::class);
+		$finder = $this->createFinder();
 
 		$node = new TestDocument($context, $finder, ['content' => []]);
 
