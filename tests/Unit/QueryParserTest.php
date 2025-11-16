@@ -13,7 +13,7 @@ use Duon\Cms\Finder\Output\Operator;
 use Duon\Cms\Finder\Output\RightParen;
 use Duon\Cms\Finder\Output\UrlPath;
 use Duon\Cms\Finder\QueryParser;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 
 final class QueryParserTest extends TestCase
 {

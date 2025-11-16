@@ -7,7 +7,7 @@ namespace Duon\Cms\Tests\Unit;
 use Duon\Cms\Context;
 use Duon\Cms\Exception\ParserOutputException;
 use Duon\Cms\Finder\QueryCompiler;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 
 final class ComparisonTest extends TestCase
 {

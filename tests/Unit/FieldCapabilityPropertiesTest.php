@@ -21,7 +21,7 @@ use Duon\Cms\Field\Grid;
 use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Option;
 use Duon\Cms\Field\Text;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 use Duon\Cms\Value\ValueContext;
 
 final class FieldCapabilityPropertiesTest extends TestCase

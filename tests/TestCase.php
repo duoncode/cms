@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Unit;
+namespace Duon\Cms\Tests;
 
 use Duon\Cms\Config;
 use Duon\Cms\Locales;
@@ -46,8 +46,8 @@ class TestCase extends BaseTestCase
 		// Create shared connection for migration check
 		self::$sharedConnection = new Connection(
 			'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
-			C::root() . '/db/sql',
-			C::root() . '/db/migrations',
+			self::root() . '/db/sql',
+			self::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,
 			print: false,
 		);
@@ -107,6 +107,11 @@ class TestCase extends BaseTestCase
 			$this->testDb = new Database($this->conn());
 			$this->testDb->begin();
 		}
+	}
+
+	protected static function root(): string
+	{
+		return dirname(__DIR__);
 	}
 
 	public function throws(string $exception, ?string $message = null): void
@@ -188,8 +193,8 @@ class TestCase extends BaseTestCase
 	{
 		return new Connection(
 			'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
-			C::root() . '/db/sql',
-			C::root() . '/db/migrations',
+			self::root() . '/db/sql',
+			self::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,
 			print: false,
 		);
@@ -335,7 +340,7 @@ class TestCase extends BaseTestCase
 		$db = $this->db();
 
 		foreach ($fixtures as $fixture) {
-			$path = C::root() . "/tests/Integration/Fixtures/data/{$fixture}.sql";
+			$path = self::root() . "/tests/Integration/Fixtures/data/{$fixture}.sql";
 
 			if (!file_exists($path)) {
 				throw new RuntimeException("Fixture file not found: {$path}");

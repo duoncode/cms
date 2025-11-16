@@ -6,7 +6,7 @@ namespace Duon\Cms\Tests\Integration;
 
 use Duon\Cms\Context;
 use Duon\Cms\Finder\Finder;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 
 /**
  * Base class for integration tests that interact with the database.

@@ -9,7 +9,7 @@ use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithNameAttribute;
 use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithPermissionAttribute;
 use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithRenderAttribute;
 use Duon\Cms\Tests\Integration\Fixtures\Node\NodeWithRouteAttribute;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 
 final class NodeMetaTest extends TestCase
 {

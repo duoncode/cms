@@ -6,7 +6,7 @@ namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Exception\ParserException;
 use Duon\Cms\Finder\OrderCompiler;
-use Duon\Cms\Tests\Unit\TestCase;
+use Duon\Cms\Tests\TestCase;
 
 const OB = "\n    ";
 
