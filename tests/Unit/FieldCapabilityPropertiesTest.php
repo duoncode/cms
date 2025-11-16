@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests;
+namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Field\Meta\Columns;
 use Duon\Cms\Field\Meta\Description;
@@ -21,7 +21,7 @@ use Duon\Cms\Field\Grid;
 use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Option;
 use Duon\Cms\Field\Text;
-use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Tests\Unit\TestCase;
 use Duon\Cms\Value\ValueContext;
 
 final class FieldCapabilityPropertiesTest extends TestCase

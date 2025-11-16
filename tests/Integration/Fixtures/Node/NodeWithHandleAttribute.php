@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Fixtures\Node;
+namespace Duon\Cms\Tests\Integration\Fixtures\Node;
 
 use Duon\Cms\Node\Meta\Handle;
 use Duon\Cms\Node\Page;

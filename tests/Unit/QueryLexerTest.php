@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests;
+namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Exception\ParserException;
 use Duon\Cms\Finder\QueryLexer;
-use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Tests\Unit\TestCase;
 
 const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |' .
 	'(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | ' .

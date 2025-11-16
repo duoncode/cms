@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests;
+namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Context;
 use Duon\Cms\Exception\ParserException;
 use Duon\Cms\Exception\ParserOutputException;
 use Duon\Cms\Finder\QueryCompiler;
-use Duon\Cms\Tests\Setup\TestCase;
+use Duon\Cms\Tests\Unit\TestCase;
 
 final class QueryCompilerTest extends TestCase
 {

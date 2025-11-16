@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Setup;
+namespace Duon\Cms\Tests\Integration;
 
 use Duon\Cms\Context;
 use Duon\Cms\Finder\Finder;
+use Duon\Cms\Tests\Unit\TestCase;
 
 /**
  * Base class for integration tests that interact with the database.
@@ -32,7 +33,7 @@ class IntegrationTestCase extends TestCase
 		);
 	}
 
-	protected function createFinder(string $localeId = 'en'): Finder
+	protected function createFinder(): Finder
 	{
 		return new Finder($this->createContext());
 	}
