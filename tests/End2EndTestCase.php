@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @coversNothing
  */
-class E2ETestCase extends IntegrationTestCase
+class End2EndTestCase extends IntegrationTestCase
 {
 	protected App $app;
 
@@ -34,7 +34,7 @@ class E2ETestCase extends IntegrationTestCase
 	}
 
 	/**
-	 * Create and configure the application for E2E testing.
+	 * Create and configure the application for End2End testing.
 	 */
 	protected function createApp(): App
 	{

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\End2End;
 
-use Duon\Cms\Tests\E2ETestCase;
+use Duon\Cms\Tests\End2EndTestCase;
 
 /**
  * End-to-end tests for Node CRUD operations through HTTP API.
@@ -13,7 +13,7 @@ use Duon\Cms\Tests\E2ETestCase;
  *
  * @coversNothing
  */
-final class NodeCrudTest extends E2ETestCase
+final class NodeCrudTest extends End2EndTestCase
 {
 	protected function setUp(): void
 	{
