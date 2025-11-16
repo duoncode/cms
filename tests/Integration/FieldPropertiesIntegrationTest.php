@@ -6,7 +6,7 @@ namespace Duon\Cms\Tests\Integration;
 
 use Duon\Cms\Tests\Integration\Fixtures\Node\TestDocument;
 use Duon\Cms\Tests\Integration\Fixtures\Node\TestMediaDocument;
-use Duon\Cms\Tests\Integration\IntegrationTestCase;
+use Duon\Cms\Tests\IntegrationTestCase;
 
 final class FieldPropertiesIntegrationTest extends IntegrationTestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Integration;
+namespace Duon\Cms\Tests;
 
 use Duon\Cms\Context;
 use Duon\Cms\Finder\Finder;

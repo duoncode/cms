@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Integration;
 
-use Duon\Cms\Tests\Integration\IntegrationTestCase;
+use Duon\Cms\Tests\IntegrationTestCase;
 
 final class FinderIntegrationTest extends IntegrationTestCase
 {
