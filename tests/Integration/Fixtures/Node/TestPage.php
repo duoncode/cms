@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Fixtures\Node;
+namespace Duon\Cms\Tests\Integration\Fixtures\Node;
 
 use Duon\Cms\Field\Meta\Label;
 use Duon\Cms\Field\Meta\Translate;
@@ -10,8 +10,8 @@ use Duon\Cms\Field\Text;
 use Duon\Cms\Node\Meta\Name;
 use Duon\Cms\Node\Page;
 
-#[Name('Test Home')]
-class TestHome extends Page
+#[Name('Test Page')]
+class TestPage extends Page
 {
 	#[Label('Title')]
 	#[Translate]
@@ -19,6 +19,6 @@ class TestHome extends Page
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Home';
+		return $this->title?->get() ?? 'Test Page';
 	}
 }

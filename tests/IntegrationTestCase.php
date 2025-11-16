@@ -2,33 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Setup;
+namespace Duon\Cms\Tests;
 
-use Duon\Cms\Config;
-use Duon\Cms\Locales;
-use Duon\Core\Factory;
-use Duon\Core\Factory\Laminas;
-use Duon\Core\Request;
+use Duon\Cms\Context;
+use Duon\Cms\Finder\Finder;
 use Duon\Quma\Connection;
 use Duon\Quma\Database;
 use Duon\Registry\Registry;
 use PDO;
-use PHPUnit\Framework\TestCase as BaseTestCase;
-use Psr\Http\Message\ServerRequestInterface as PsrServerRequest;
 use RuntimeException;
-use ValueError;
 
 /**
+ * Base class for integration tests that interact with the database.
+ *
+ * This class extends TestCase and enables transaction-based test isolation
+ * by default, ensuring each test has a clean database state.
+ *
  * @internal
  *
  * @coversNothing
  */
-class TestCase extends BaseTestCase
+class IntegrationTestCase extends TestCase
 {
 	protected static bool $dbInitialized = false;
 	protected static ?Connection $sharedConnection = null;
 	protected ?Database $testDb = null;
-	protected bool $useTransactions = false;
+	protected bool $useTransactions = true;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -45,8 +44,8 @@ class TestCase extends BaseTestCase
 		// Create shared connection for migration check
 		self::$sharedConnection = new Connection(
 			'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
-			C::root() . '/db/sql',
-			C::root() . '/db/migrations',
+			self::root() . '/db/sql',
+			self::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,
 			print: false,
 		);
@@ -91,29 +90,10 @@ class TestCase extends BaseTestCase
 	{
 		parent::setUp();
 
-		$_SERVER['HTTP_ACCEPT'] = 'text/html,application/xhtml+xml,text/plain';
-		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip, deflate, br';
-		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-US,de;q=0.7,en;q=0.3';
-		$_SERVER['HTTP_HOST'] = 'www.example.com';
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) ' .
-			'Gecko/20100101 Firefox/108.0';
-		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$_SERVER['REQUEST_URI'] = '/';
-		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-
 		// Begin transaction if this test uses them
 		if ($this->useTransactions) {
 			$this->testDb = new Database($this->conn());
 			$this->testDb->begin();
-		}
-	}
-
-	public function throws(string $exception, ?string $message = null): void
-	{
-		$this->expectException($exception);
-
-		if ($message) {
-			$this->expectExceptionMessage($message);
 		}
 	}
 
@@ -125,70 +105,15 @@ class TestCase extends BaseTestCase
 			$this->testDb = null;
 		}
 
-		unset(
-			$_SERVER['CONTENT_TYPE'],
-			$_SERVER['HTTPS'],
-			$_SERVER['HTTP_ACCEPT'],
-			$_SERVER['HTTP_ACCEPT_ENCODING'],
-			$_SERVER['HTTP_ACCEPT_LANGUAGE'],
-			$_SERVER['HTTP_HOST'],
-			$_SERVER['HTTP_USER_AGENT'],
-			$_SERVER['HTTP_X_FORWARDED_PROTO'],
-			$_SERVER['QUERY_STRING'],
-			$_SERVER['REQUEST_METHOD'],
-			$_SERVER['REQUEST_SCHEME'],
-			$_SERVER['REQUEST_URI'],
-			$_SERVER['SERVER_PROTOCOL'],
-			$_SERVER['argv'],
-		);
-
-		global $_GET;
-		$_GET = [];
-		global $_POST;
-		$_POST = [];
-		global $_FILES;
-		$_FILES = [];
-		global $_COOKIE;
-		$_COOKIE = [];
-	}
-
-	public function setMethod(string $method): void
-	{
-		$_SERVER['REQUEST_METHOD'] = strtoupper($method);
-	}
-
-	public function setContentType(string $contentType): void
-	{
-		$_SERVER['HTTP_CONTENT_TYPE'] = $contentType;
-	}
-
-	public function setRequestUri(string $url): void
-	{
-		if (substr($url, 0, 1) === '/') {
-			$_SERVER['REQUEST_URI'] = $url;
-		} else {
-			$_SERVER['REQUEST_URI'] = "/{$url}";
-		}
-	}
-
-	public function setQueryString(string $qs): void
-	{
-		$_SERVER['QUERY_STRING'] = $qs;
-	}
-
-	public function config(array $settings = [], bool $debug = false): Config
-	{
-		$config = new Config('duon', debug: $debug, settings: $settings);
-
-		return $config;
+		parent::tearDown();
 	}
 
 	public function conn(): Connection
 	{
 		return new Connection(
 			'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
-			C::root() . '/db/sql',
-			C::root() . '/db/migrations',
+			self::root() . '/db/sql',
+			self::root() . '/db/migrations',
 			fetchMode: PDO::FETCH_ASSOC,
 			print: false,
 		);
@@ -204,124 +129,35 @@ class TestCase extends BaseTestCase
 		return new Database($this->conn());
 	}
 
-	public function request(
-		?string $method = null,
-		?string $url = null,
-	): Request {
-		if ($method) {
-			$this->setMethod($method);
-		}
-
-		if ($url) {
-			$this->setRequestUri($url);
-		}
-
-		return new Request($this->psrRequest());
-	}
-
 	public function registry(): Registry
 	{
 		$registry = new Registry();
 
 		// Register test Node classes for fixture types
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+			->add('test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-article', \Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
+			->add('test-article', \Duon\Cms\Tests\Integration\Fixtures\Node\TestArticle::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-home', \Duon\Cms\Tests\Fixtures\Node\TestHome::class);
+			->add('test-home', \Duon\Cms\Tests\Integration\Fixtures\Node\TestHome::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-block', \Duon\Cms\Tests\Fixtures\Node\TestBlock::class);
+			->add('test-block', \Duon\Cms\Tests\Integration\Fixtures\Node\TestBlock::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-widget', \Duon\Cms\Tests\Fixtures\Node\TestWidget::class);
+			->add('test-widget', \Duon\Cms\Tests\Integration\Fixtures\Node\TestWidget::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-document', \Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
+			->add('test-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestDocument::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-media-document', \Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
+			->add('test-media-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestMediaDocument::class);
 
 		// Register dynamically created test types (reuse TestPage for all page types)
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('ordered-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+			->add('ordered-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('limit-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+			->add('limit-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('hidden-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+			->add('hidden-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
 
 		return $registry;
-	}
-
-	public function set(string $method, array $values): void
-	{
-		global $_GET;
-		global $_POST;
-		global $_COOKIE;
-
-		foreach ($values as $key => $value) {
-			if (strtoupper($method) === 'GET') {
-				$_GET[$key] = $value;
-
-				continue;
-			}
-
-			if (strtoupper($method) === 'POST') {
-				$_POST[$key] = $value;
-
-				continue;
-			}
-
-			if (strtoupper($method) === 'COOKIE') {
-				$_COOKIE[$key] = $value;
-			} else {
-				throw new ValueError("Invalid method '{$method}'");
-			}
-		}
-	}
-
-	public function psrRequest(string $localeId = 'en'): PsrServerRequest
-	{
-		$request = $this->factory()->serverRequest();
-		$locales = new Locales();
-		$locales->add(
-			'en',
-			title: 'English',
-			domains: ['www.example.com'],
-		);
-		$locales->add(
-			'de',
-			title: 'Deutsch',
-			domains: ['www.example.de'],
-			fallback: 'en',
-		);
-		$locales->add(
-			'it',
-			domains: ['www.example.it'],
-			title: 'Italiano',
-			fallback: 'en',
-		);
-
-		return $request
-			->withAttribute('locales', $locales)
-			->withAttribute('locale', $locales->get($localeId));
-	}
-
-	public function factory(): Factory
-	{
-		return new Laminas();
-	}
-
-	public function fullTrim(string $text): string
-	{
-		return trim(
-			preg_replace(
-				'/> </',
-				'><',
-				preg_replace(
-					'/\s+/',
-					' ',
-					preg_replace('/\n/', '', $text),
-				),
-			),
-		);
 	}
 
 	/**
@@ -334,7 +170,7 @@ class TestCase extends BaseTestCase
 		$db = $this->db();
 
 		foreach ($fixtures as $fixture) {
-			$path = C::root() . "/tests/Fixtures/data/{$fixture}.sql";
+			$path = self::root() . "/tests/Integration/Fixtures/data/{$fixture}.sql";
 
 			if (!file_exists($path)) {
 				throw new RuntimeException("Fixture file not found: {$path}");
@@ -420,5 +256,21 @@ class TestCase extends BaseTestCase
 				RETURNING \"user\"";
 
 		return $this->db()->execute($sql, $data)->one()['user'];
+	}
+
+	protected function createContext(): Context
+	{
+		return new Context(
+			$this->db(),
+			$this->request(),
+			$this->config(),
+			$this->registry(),
+			$this->factory(),
+		);
+	}
+
+	protected function createFinder(): Finder
+	{
+		return new Finder($this->createContext());
 	}
 }

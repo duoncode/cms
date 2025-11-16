@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests;
+namespace Duon\Cms\Tests\Integration;
 
-use Duon\Cms\Tests\Setup\IntegrationTestCase;
+use Duon\Cms\Tests\IntegrationTestCase;
 
 final class NodeIntegrationTest extends IntegrationTestCase
 {
