@@ -15,7 +15,7 @@ use Duon\Cms\Tests\E2ETestCase;
  *
  * @coversNothing
  */
-final class RoutingE2ETest extends E2ETestCase
+final class RoutingTest extends E2ETestCase
 {
 	protected function setUp(): void
 	{

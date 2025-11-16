@@ -6,7 +6,7 @@ namespace Duon\Cms\Tests\Integration;
 
 use Duon\Cms\Tests\IntegrationTestCase;
 
-final class NodeIntegrationTest extends IntegrationTestCase
+final class NodeTest extends IntegrationTestCase
 {
 	public function testCreateAndRetrieveNode(): void
 	{

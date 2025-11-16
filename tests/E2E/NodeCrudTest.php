@@ -13,7 +13,7 @@ use Duon\Cms\Tests\E2ETestCase;
  *
  * @coversNothing
  */
-final class NodeCrudE2ETest extends E2ETestCase
+final class NodeCrudTest extends E2ETestCase
 {
 	protected function setUp(): void
 	{

@@ -8,7 +8,7 @@ use Duon\Cms\Tests\Fixtures\Node\TestDocument;
 use Duon\Cms\Tests\Fixtures\Node\TestMediaDocument;
 use Duon\Cms\Tests\IntegrationTestCase;
 
-final class FieldPropertiesIntegrationTest extends IntegrationTestCase
+final class FieldPropertiesTest extends IntegrationTestCase
 {
 	public function testFieldPropertiesIncludesNameAndType(): void
 	{

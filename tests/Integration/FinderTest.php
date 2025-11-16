@@ -6,7 +6,7 @@ namespace Duon\Cms\Tests\Integration;
 
 use Duon\Cms\Tests\IntegrationTestCase;
 
-final class FinderIntegrationTest extends IntegrationTestCase
+final class FinderTest extends IntegrationTestCase
 {
 	protected function setUp(): void
 	{
