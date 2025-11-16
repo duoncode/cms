@@ -13,6 +13,7 @@ use Duon\Cms\Locales;
 use Duon\Cms\Node\Node;
 use Duon\Core\App;
 use Duon\Core\Factory\Laminas;
+use Duon\Core\Plugin;
 use Duon\Core\Request;
 use Duon\Registry\Registry;
 use Duon\Router\Router;
@@ -74,12 +75,27 @@ class End2EndTestCase extends IntegrationTestCase
 		$this->errorHandler = $this->createErrorHandler($factory);
 		$app->middleware($this->errorHandler);
 
+		// Load locales
+		$app->load($this->createLocales());
+
 		// Load CMS
 		$cms = $this->createCms();
 		$app->load($cms);
 		$app->addRoute($cms->catchallRoute());
 
 		return $app;
+	}
+
+	/**
+	 * Create and configure locales for testing.
+	 */
+	protected function createLocales(): Plugin
+	{
+		$locales = new Locales();
+		$locales->add('en', title: 'English', pgDict: 'english');
+		$locales->add('de', title: 'Deutsch', fallback: 'en', pgDict: 'german');
+
+		return $locales;
 	}
 
 	/**
@@ -97,6 +113,20 @@ class End2EndTestCase extends IntegrationTestCase
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestWidget::class);
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
+
+		// Register template renderer for test templates
+		$cms->renderer('template', \Duon\Cms\Boiler\Renderer::class)->args(
+			dirs: self::root() . '/tests/Fixtures/templates',
+			autoescape: true,
+			whitelist: [
+				Node::class,
+				\Duon\Cms\Finder\Finder::class,
+				\Duon\Cms\Locales::class,
+				\Duon\Cms\Locale::class,
+				\Duon\Cms\Config::class,
+				Request::class,
+			],
+		);
 
 		return $cms;
 	}
@@ -182,8 +212,11 @@ class End2EndTestCase extends IntegrationTestCase
 
 		// Capture output and return response without emitting
 		ob_start();
-		$response = $this->app->run($psrRequest);
-		ob_end_clean();
+		try {
+			$response = $this->app->run($psrRequest);
+		} finally {
+			ob_end_clean();
+		}
 
 		return $response;
 	}
