@@ -4,13 +4,21 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests;
 
+use Duon\Cms\Boiler\Error\Handler;
 use Duon\Cms\Cms;
+use Duon\Cms\Config;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Locale;
+use Duon\Cms\Locales;
+use Duon\Cms\Node\Node;
 use Duon\Core\App;
 use Duon\Core\Factory\Laminas;
+use Duon\Core\Request;
 use Duon\Registry\Registry;
 use Duon\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Base class for end-to-end tests that test the full HTTP request/response cycle.
@@ -26,11 +34,21 @@ use Psr\Http\Message\ServerRequestInterface;
 class End2EndTestCase extends IntegrationTestCase
 {
 	protected App $app;
+	protected ?\Duon\Error\Handler $errorHandler = null;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->app = $this->createApp();
+	}
+
+	protected function tearDown(): void
+	{
+		// Restore error handlers to prevent PHPUnit warnings
+		if ($this->errorHandler) {
+			$this->errorHandler->restoreHandlers();
+		}
+		parent::tearDown();
 	}
 
 	/**
@@ -51,6 +69,10 @@ class End2EndTestCase extends IntegrationTestCase
 		]);
 
 		$app = new App($factory, $router, $registry, $config);
+
+		// Configure error handler middleware
+		$this->errorHandler = $this->createErrorHandler($factory);
+		$app->middleware($this->errorHandler);
 
 		// Load CMS
 		$cms = $this->createCms();
@@ -77,6 +99,32 @@ class End2EndTestCase extends IntegrationTestCase
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
 
 		return $cms;
+	}
+
+	protected function createErrorHandler(Laminas $factory): \Duon\Error\Handler
+	{
+		$root = self::root();
+		$logger = new NullLogger();
+
+		// Set environment variables for error handler (it uses env() function)
+		$_ENV['CMS_DEBUG'] = false;
+		$_ENV['CMS_ENV'] = 'test';
+
+		// Create handler with test templates directory
+		$handler = new Handler($root, $logger, $factory);
+		$handler->views('tests/Fixtures/templates');
+
+		// Add CMS-specific classes to template context whitelist
+		$handler->whitelist([
+			Node::class,
+			Finder::class,
+			Locales::class,
+			Locale::class,
+			Config::class,
+			Request::class,
+		]);
+
+		return $handler->create();
 	}
 
 	/**
@@ -112,6 +160,7 @@ class End2EndTestCase extends IntegrationTestCase
 		// Add cookies
 		if (isset($options['cookies'])) {
 			$cookieHeader = [];
+
 			foreach ($options['cookies'] as $name => $value) {
 				$cookieHeader[] = "{$name}={$value}";
 			}
@@ -147,7 +196,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$this->assertEquals(
 			$expected,
 			$response->getStatusCode(),
-			$message ?: "Expected status code {$expected}, got {$response->getStatusCode()}"
+			$message ?: "Expected status code {$expected}, got {$response->getStatusCode()}",
 		);
 	}
 
@@ -191,7 +240,7 @@ class End2EndTestCase extends IntegrationTestCase
 	{
 		$this->assertTrue(
 			$response->hasHeader($header),
-			"Response does not have header: {$header}"
+			"Response does not have header: {$header}",
 		);
 	}
 
@@ -205,3 +254,4 @@ class End2EndTestCase extends IntegrationTestCase
 		$this->assertEquals($expected, $actual, "Header {$header} has unexpected value");
 	}
 }
+

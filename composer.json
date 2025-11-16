@@ -26,6 +26,7 @@
 		"symfony/html-sanitizer": "^7.1"
 	},
 	"require-dev": {
+		"duon/cms-boiler": "dev-main",
 		"duon/dev": "^1.1",
 		"laminas/laminas-diactoros": "^3",
 		"phpunit/phpunit": "^12"
