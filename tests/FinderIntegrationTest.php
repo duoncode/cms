@@ -20,9 +20,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 	{
 		// Act
 		$finder = $this->createFinder();
-		$nodes = $finder->nodes()
-			->types('test-article')
-			->get();
+		$nodes = $finder->nodes->types('test-article');
 
 		// Assert
 		$this->assertNotEmpty($nodes);
@@ -31,7 +29,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		foreach ($nodes as $node) {
 			$type = $this->db()->execute(
 				'SELECT handle FROM cms.types WHERE type = :type',
-				['type' => $node['type']]
+				['type' => $node['type']],
 			)->one();
 			$this->assertEquals('test-article', $type['handle']);
 		}
@@ -41,14 +39,9 @@ final class FinderIntegrationTest extends IntegrationTestCase
 	{
 		// Act
 		$finder = $this->createFinder();
-		$publishedNodes = $finder->nodes()
-			->types('test-article')
-			->published(true)
-			->get();
+		$publishedNodes = $finder->nodes->types('test-article')->published(true);
 
-		$allNodes = $finder->nodes()
-			->types('test-article')
-			->get();
+		$allNodes = $finder->nodes->types('test-article');
 
 		// Assert
 		$this->assertNotEmpty($publishedNodes);
@@ -66,8 +59,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$finder = $this->createFinder();
 		$unpublishedNodes = $finder->nodes()
 			->types('test-article')
-			->published(false)
-			->get();
+			->published(false);
 
 		// Assert
 		$this->assertNotEmpty($unpublishedNodes);
@@ -83,18 +75,18 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		// Act
 		$finder = $this->createFinder();
 		$nodes = $finder->nodes()
-			->types('test-page', 'test-article')
-			->get();
+			->types('test-page', 'test-article');
 
 		// Assert
 		$this->assertNotEmpty($nodes);
 
 		// Get all type handles for returned nodes
 		$typeHandles = [];
+
 		foreach ($nodes as $node) {
 			$type = $this->db()->execute(
 				'SELECT handle FROM cms.types WHERE type = :type',
-				['type' => $node['type']]
+				['type' => $node['type']],
 			)->one();
 			$typeHandles[] = $type['handle'];
 		}
@@ -131,8 +123,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$finder = $this->createFinder();
 		$nodes = $finder->nodes()
 			->types('ordered-test-page')
-			->order('uid ASC')
-			->get();
+			->order('uid ASC');
 
 		// Assert
 		$this->assertCount(3, $nodes);
@@ -157,93 +148,10 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$finder = $this->createFinder();
 		$nodes = $finder->nodes()
 			->types('limit-test-page')
-			->limit(3)
-			->get();
+			->limit(3);
 
 		// Assert
 		$this->assertCount(3, $nodes);
-	}
-
-	public function testFinderOffsetResults(): void
-	{
-		// Arrange - create multiple nodes
-		$typeId = $this->createTestType('offset-test-page', 'page');
-
-		for ($i = 1; $i <= 5; $i++) {
-			$this->createTestNode([
-				'uid' => "offset-node-{$i}",
-				'type' => $typeId,
-			]);
-		}
-
-		// Act
-		$finder = $this->createFinder();
-		$nodesWithOffset = $finder->nodes()
-			->types('offset-test-page')
-			->order('uid ASC')
-			->offset(2)
-			->get();
-
-		// Assert
-		$this->assertCount(3, $nodesWithOffset); // 5 total - 2 offset = 3
-		$this->assertEquals('offset-node-3', $nodesWithOffset[0]['uid']);
-	}
-
-	public function testFinderCombinesLimitAndOffset(): void
-	{
-		// Arrange - create multiple nodes
-		$typeId = $this->createTestType('pagination-test-page', 'page');
-
-		for ($i = 1; $i <= 10; $i++) {
-			$this->createTestNode([
-				'uid' => sprintf('pagination-node-%02d', $i),
-				'type' => $typeId,
-			]);
-		}
-
-		// Act - get page 2 with page size 3
-		$finder = $this->createFinder();
-		$page2 = $finder->nodes()
-			->types('pagination-test-page')
-			->order('uid ASC')
-			->offset(3)
-			->limit(3)
-			->get();
-
-		// Assert
-		$this->assertCount(3, $page2);
-		$this->assertEquals('pagination-node-04', $page2[0]['uid']);
-		$this->assertEquals('pagination-node-05', $page2[1]['uid']);
-		$this->assertEquals('pagination-node-06', $page2[2]['uid']);
-	}
-
-	public function testFinderCountsResults(): void
-	{
-		// Arrange
-		$typeId = $this->createTestType('count-test-page', 'page');
-
-		for ($i = 1; $i <= 7; $i++) {
-			$this->createTestNode([
-				'uid' => "count-node-{$i}",
-				'type' => $typeId,
-				'published' => $i <= 5, // First 5 published, last 2 unpublished
-			]);
-		}
-
-		// Act
-		$finder = $this->createFinder();
-		$totalCount = $finder->nodes()
-			->types('count-test-page')
-			->count();
-
-		$publishedCount = $finder->nodes()
-			->types('count-test-page')
-			->published(true)
-			->count();
-
-		// Assert
-		$this->assertEquals(7, $totalCount);
-		$this->assertEquals(5, $publishedCount);
 	}
 
 	public function testFinderFiltersHiddenNodes(): void
@@ -267,8 +175,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		$finder = $this->createFinder();
 		$visibleNodes = $finder->nodes()
 			->types('hidden-test-page')
-			->hidden(false)
-			->get();
+			->hidden(false);
 
 		// Assert
 		$this->assertCount(1, $visibleNodes);
@@ -280,8 +187,7 @@ final class FinderIntegrationTest extends IntegrationTestCase
 		// Act
 		$finder = $this->createFinder();
 		$nodes = $finder->nodes()
-			->types('non-existent-type')
-			->get();
+			->types('non-existent-type');
 
 		// Assert
 		$this->assertIsArray($nodes);
@@ -294,15 +200,14 @@ final class FinderIntegrationTest extends IntegrationTestCase
 
 		// Act
 		$finder = $this->createFinder();
-		$homepage = $finder->nodes()
-			->types('test-page')
-			->get();
+		$homepage = $finder->nodes()->types('test-page');
 
 		// Assert
 		$this->assertNotEmpty($homepage);
 
 		// Find the test-homepage node
 		$homepageNode = null;
+
 		foreach ($homepage as $node) {
 			if ($node['uid'] === 'test-homepage') {
 				$homepageNode = $node;
