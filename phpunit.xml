@@ -6,14 +6,14 @@
 	colors="true"
 	cacheDirectory=".phpunit.cache">
   <testsuites>
-    <testsuite name="Unit">
+    <testsuite name="unit">
       <directory suffix="Test.php">tests/Unit</directory>
     </testsuite>
-    <testsuite name="Integration">
+    <testsuite name="integration">
       <directory suffix="Test.php">tests/Integration</directory>
     </testsuite>
-    <testsuite name="E2E">
-      <directory suffix="Test.php">tests/E2E</directory>
+    <testsuite name="end2end">
+      <directory suffix="Test.php">tests/End2End</directory>
     </testsuite>
   </testsuites>
   <coverage pathCoverage="true">
