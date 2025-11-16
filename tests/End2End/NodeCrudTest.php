@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\E2E;
+namespace Duon\Cms\Tests\End2End;
 
 use Duon\Cms\Tests\E2ETestCase;
 
