@@ -29,7 +29,7 @@ class Youtube extends Field implements Capability\Translatable, Capability\Allow
 		$schema->add('type', 'text', 'required', 'in:youtube');
 
 		if ($this->translate) {
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 			$defaultLocale = $locales->getDefault()->id;
 			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
 

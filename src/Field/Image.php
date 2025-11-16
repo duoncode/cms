@@ -53,7 +53,7 @@ class Image extends Field implements Capability\Translatable, Capability\FileTra
 			$subSchema->add('alt', 'text');
 
 			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 
 			foreach ($locales as $locale) {
 				$i18nSchema->add($locale->id, $subSchema);
@@ -65,7 +65,7 @@ class Image extends Field implements Capability\Translatable, Capability\FileTra
 			$fileSchema = new Schema(list: true, keepUnknown: true);
 			$fileSchema->add('file', 'text', 'required');
 
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 			$defaultLocale = $locales->getDefault()->id;
 			$titleSchema = new Schema(title: $this->label, keepUnknown: true);
 			$altSchema = new Schema(title: $this->label, keepUnknown: true);

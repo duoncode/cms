@@ -53,7 +53,7 @@ class Grid extends Field implements Capability\Translatable, Capability\GridResi
 		$itemSchema = new GridItemSchema(list: true, title: $this->label, keepUnknown: true);
 
 		if ($this->translate) {
-			$locales = $this->node->context()->locales();
+			$locales = $this->node->context->locales();
 			$defaultLocale = $locales->getDefault()->id;
 			$i18nSchema = new Schema(title: $this->label, keepUnknown: true);
 
