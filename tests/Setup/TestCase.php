@@ -15,6 +15,7 @@ use Duon\Registry\Registry;
 use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequest;
+use RuntimeException;
 use ValueError;
 
 /**
@@ -58,14 +59,14 @@ class TestCase extends BaseTestCase
 				SELECT FROM information_schema.tables
 				WHERE table_schema = 'public'
 				AND table_name = 'migrations'
-			) as exists"
+			) as exists",
 		)->one()['exists'] ?? false;
 
 		if (!$tableExists) {
 			echo "\n⚠ Test database not initialized. Run: ./run recreate-db && ./run migrate --apply\n\n";
 
-			throw new \RuntimeException(
-				'Test database not initialized. Run: ./run recreate-db && ./run migrate --apply'
+			throw new RuntimeException(
+				'Test database not initialized. Run: ./run recreate-db && ./run migrate --apply',
 			);
 		}
 
@@ -74,14 +75,14 @@ class TestCase extends BaseTestCase
 			"SELECT EXISTS (
 				SELECT FROM information_schema.schemata
 				WHERE schema_name = 'cms'
-			) as exists"
+			) as exists",
 		)->one()['exists'] ?? false;
 
 		if (!$schemaExists) {
 			echo "\n⚠ Migrations not applied. Run: ./run migrate --apply\n\n";
 
-			throw new \RuntimeException(
-				'Migrations not applied to test database. Run: ./run migrate --apply'
+			throw new RuntimeException(
+				'Migrations not applied to test database. Run: ./run migrate --apply',
 			);
 		}
 	}
@@ -107,7 +108,7 @@ class TestCase extends BaseTestCase
 		}
 	}
 
-	public function throws(string $exception, string $message = null): void
+	public function throws(string $exception, ?string $message = null): void
 	{
 		$this->expectException($exception);
 
@@ -310,7 +311,7 @@ class TestCase extends BaseTestCase
 			$path = C::root() . "/tests/Fixtures/data/{$fixture}.sql";
 
 			if (!file_exists($path)) {
-				throw new \RuntimeException("Fixture file not found: {$path}");
+				throw new RuntimeException("Fixture file not found: {$path}");
 			}
 
 			$sql = file_get_contents($path);

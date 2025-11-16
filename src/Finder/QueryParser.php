@@ -44,6 +44,8 @@ final class QueryParser
 	 */
 	public function parse(string $query): array
 	{
+		$result = [];
+
 		$this->query = $query;
 		$this->tokens = $this->materializeLists(
 			(new QueryLexer(array_keys($this->builtins)))->tokens($query),

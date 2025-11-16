@@ -21,12 +21,7 @@ class IntegrationTestCase extends TestCase
 {
 	protected bool $useTransactions = true;
 
-	/**
-	 * Create a Context instance for testing.
-	 *
-	 * @param string $localeId Locale ID (default: 'en')
-	 */
-	protected function createContext(string $localeId = 'en'): Context
+	protected function createContext(): Context
 	{
 		return new Context(
 			$this->db(),
@@ -37,11 +32,6 @@ class IntegrationTestCase extends TestCase
 		);
 	}
 
-	/**
-	 * Create a Finder instance for testing queries.
-	 *
-	 * @param string $localeId Locale ID (default: 'en')
-	 */
 	protected function createFinder(string $localeId = 'en'): Finder
 	{
 		return new Finder($this->createContext($localeId));
