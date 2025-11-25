@@ -17,6 +17,6 @@ class TestWidget extends Block
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Widget';
+		return $this->title?->value()->unwrap() ?? 'Test Widget';
 	}
 }

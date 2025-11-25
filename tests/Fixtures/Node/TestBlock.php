@@ -19,6 +19,6 @@ class TestBlock extends Block
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Block';
+		return $this->title?->value()->unwrap() ?? 'Test Block';
 	}
 }

@@ -19,6 +19,6 @@ class TestPage extends Page
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Page';
+		return $this->title?->value()->unwrap() ?? 'Test Page';
 	}
 }

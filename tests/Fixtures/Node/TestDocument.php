@@ -41,6 +41,6 @@ class TestDocument extends Document
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Document';
+		return $this->title?->value()->unwrap() ?? 'Test Document';
 	}
 }
