@@ -71,8 +71,8 @@ class End2EndTestCase extends IntegrationTestCase
 	{
 		$db = $this->db();
 
-		// Delete created paths and nodes
-		foreach ($this->createdNodeIds as $nodeId) {
+		// Delete created paths and nodes in reverse order (children before parents)
+		foreach (array_reverse($this->createdNodeIds) as $nodeId) {
 			$db->execute('DELETE FROM cms.urlpaths WHERE node = :node', ['node' => $nodeId])->run();
 			$db->execute('DELETE FROM cms.nodes WHERE node = :node', ['node' => $nodeId])->run();
 		}
