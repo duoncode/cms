@@ -44,6 +44,9 @@ class End2EndTestCase extends IntegrationTestCase
 	// Track created test data for cleanup
 	protected array $createdNodeIds = [];
 	protected array $createdTypeHandles = [];
+	protected array $createdUserIds = [];
+	protected array $createdAuthTokens = [];
+	protected ?string $defaultAuthToken = null;
 
 	protected function setUp(): void
 	{
@@ -71,9 +74,24 @@ class End2EndTestCase extends IntegrationTestCase
 	{
 		$db = $this->db();
 
+		// Delete created auth tokens
+		foreach ($this->createdAuthTokens as $tokenHash) {
+			$db->execute('DELETE FROM cms.authtokens WHERE token = :token', ['token' => $tokenHash])->run();
+		}
+
+		// Delete created users
+		foreach ($this->createdUserIds as $userId) {
+			$db->execute('DELETE FROM cms.users WHERE usr = :usr', ['usr' => $userId])->run();
+		}
+
 		// Delete created paths and nodes in reverse order (children before parents)
+		// Also delete related records that reference the nodes via FKs
 		foreach (array_reverse($this->createdNodeIds) as $nodeId) {
 			$db->execute('DELETE FROM cms.urlpaths WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.fulltext WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.nodetags WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.drafts WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM audit.nodes WHERE node = :node', ['node' => $nodeId])->run();
 			$db->execute('DELETE FROM cms.nodes WHERE node = :node', ['node' => $nodeId])->run();
 		}
 
@@ -84,6 +102,9 @@ class End2EndTestCase extends IntegrationTestCase
 
 		$this->createdNodeIds = [];
 		$this->createdTypeHandles = [];
+		$this->createdUserIds = [];
+		$this->createdAuthTokens = [];
+		$this->defaultAuthToken = null;
 	}
 
 	/**
@@ -108,6 +129,55 @@ class End2EndTestCase extends IntegrationTestCase
 		return $nodeId;
 	}
 
+	/**
+	 * Create an authenticated test user with an auth token.
+	 *
+	 * @param string $role The user role ('superuser', 'admin', 'editor')
+	 * @return string The auth token to use in requests
+	 */
+	protected function createAuthenticatedUser(string $role = 'editor'): string
+	{
+		$db = $this->db();
+		$uid = 'test-auth-' . uniqid();
+		$token = bin2hex(random_bytes(32));
+		$tokenHash = hash('sha256', $token);
+
+		// Create user with correct schema (userrole instead of role)
+		$sql = "INSERT INTO cms.users (uid, email, pwhash, userrole, active, data, creator, editor)
+				VALUES (:uid, :email, :pwhash, :userrole, true, '{}'::jsonb, 1, 1)
+				RETURNING usr";
+
+		$userId = $db->execute($sql, [
+			'uid' => $uid,
+			'email' => $uid . '@example.com',
+			'pwhash' => password_hash('password', PASSWORD_ARGON2ID),
+			'userrole' => $role,
+		])->one()['usr'];
+
+		$this->createdUserIds[] = $userId;
+
+		// Create auth token
+		$sql = "INSERT INTO cms.authtokens (token, usr, creator, editor)
+				VALUES (:token, :usr, 1, 1)";
+
+		$db->execute($sql, [
+			'token' => $tokenHash,
+			'usr' => $userId,
+		])->run();
+
+		$this->createdAuthTokens[] = $tokenHash;
+
+		return $token;
+	}
+
+	/**
+	 * Set the default auth token for all subsequent requests.
+	 */
+	protected function authenticateAs(string $role = 'editor'): void
+	{
+		$this->defaultAuthToken = $this->createAuthenticatedUser($role);
+	}
+
 	protected function createApp(): App
 	{
 		$factory = new Laminas();
@@ -118,6 +188,8 @@ class End2EndTestCase extends IntegrationTestCase
 			'path.root' => self::root(),
 			'path.public' => self::root() . '/public',
 			'path.uploads' => self::root() . '/public/uploads',
+			'path.api' => '/api',
+			'path.panel' => '/panel',
 			'upload.maxSize' => 10 * 1024 * 1024, // 10MB
 			'upload.allowedExtensions' => ['jpg', 'jpeg', 'png', 'gif', 'pdf'],
 		]);
@@ -210,11 +282,19 @@ class End2EndTestCase extends IntegrationTestCase
 	 *   - 'body' => string|array - Request body (array will be JSON encoded)
 	 *   - 'query' => array - Query parameters
 	 *   - 'cookies' => array - Cookie values
+	 *   - 'authToken' => string - Auth token for authentication
 	 * @return ResponseInterface PSR-7 response
 	 */
 	protected function makeRequest(string $method, string $uri, array $options = []): ResponseInterface
 	{
 		$psrRequest = $this->factory()->serverRequestFactory()->createServerRequest($method, $uri);
+
+		// Add auth token (from options or default)
+		$authToken = $options['authToken'] ?? $this->defaultAuthToken;
+
+		if ($authToken) {
+			$psrRequest = $psrRequest->withHeader('Authentication', 'Bearer ' . $authToken);
+		}
 
 		// Add query parameters
 		if (isset($options['query'])) {

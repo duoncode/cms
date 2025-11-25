@@ -162,6 +162,14 @@ class IntegrationTestCase extends TestCase
 			->add('nested-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
 			->add('unpublished-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('create-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('crud-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('update-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('delete-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 
 		return $registry;
 	}
