@@ -9,7 +9,7 @@
     <h1><?= htmlspecialchars($page->title()); ?></h1>
     <?php if (isset($page->content)): ?>
         <div class="content">
-            <?= $page->content->get(); ?>
+            <?= $page->content ?>
         </div>
     <?php endif; ?>
 </body>

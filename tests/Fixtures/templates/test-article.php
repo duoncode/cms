@@ -10,7 +10,7 @@
         <h1><?= htmlspecialchars($page->title()); ?></h1>
         <?php if (isset($page->content)): ?>
             <div class="content">
-                <?= nl2br(htmlspecialchars($page->content->get())); ?>
+                <?= nl2br((string) $page->content); ?>
             </div>
         <?php endif; ?>
     </article>
