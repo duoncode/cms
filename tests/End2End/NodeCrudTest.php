@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\Tests\End2End;
 
 use Duon\Cms\Tests\End2EndTestCase;
+use PHPUnit\Framework\Attributes\Group as G;
 
 /**
  * End-to-end tests for Node CRUD operations through HTTP API.
@@ -25,21 +26,17 @@ final class NodeCrudTest extends End2EndTestCase
 
 	public function testGetNodeList(): void
 	{
-		// Act: Request list of nodes
-		$response = $this->makeRequest('GET', '/api/nodes', [
+		$this->authenticateAs('editor');
+
+		$response = $this->makeRequest('GET', '/panel/api/nodes', [
 			'query' => ['type' => 'test-article'],
 		]);
 
-		// Assert: Response is successful
 		$this->assertResponseOk($response);
-
-		// Note: This test will fail until API routes are implemented
-		// For now, we're testing the infrastructure works
 	}
 
 	public function testGetSingleNode(): void
 	{
-		// Arrange: Create a test node
 		$typeId = $this->createTestType('crud-test-page', 'page');
 		$nodeId = $this->createTestNode([
 			'uid' => 'crud-test-node',
@@ -49,81 +46,90 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		]);
 
-		// Act: Request the node via API
 		$response = $this->makeRequest('GET', "/api/nodes/{$nodeId}");
 
-		// Assert: Response contains node data
 		// Note: This test will fail until API routes are implemented
 		$this->assertResponseStatus(404, $response); // Expecting 404 until routes exist
 	}
 
 	public function testCreateNode(): void
 	{
-		// Arrange: Prepare node data
-		$typeId = $this->createTestType('create-test-page', 'page');
+		$this->authenticateAs('editor');
+
+		// Use unique uid/path per test run to avoid conflicts
+		$uid = 'new-test-node-' . uniqid();
+		$this->createTestType('create-test-page', 'page');
 		$nodeData = [
-			'uid' => 'new-test-node',
-			'type' => $typeId,
+			'uid' => $uid,
 			'published' => true,
+			'paths' => [
+				'en' => '/test/' . $uid,
+			],
 			'content' => [
 				'title' => ['type' => 'text', 'value' => ['en' => 'New Node']],
 			],
 		];
 
-		// Act: POST request to create node
-		$response = $this->makeRequest('POST', '/api/nodes', [
+		$response = $this->makeRequest('POST', '/panel/api/node/create-test-page', [
 			'body' => $nodeData,
-			'headers' => ['Content-Type' => 'application/json'],
 		]);
 
-		// Assert: Node was created
-		// Note: This test will fail until API routes are implemented
-		$this->assertResponseStatus(404, $response); // Expecting 404 until routes exist
+		$this->assertResponseOk($response);
 	}
 
 	public function testUpdateNode(): void
 	{
-		// Arrange: Create a test node
+		$this->authenticateAs('editor');
+
 		$typeId = $this->createTestType('update-test-page', 'page');
-		$nodeId = $this->createTestNode([
-			'uid' => 'update-test-node',
+		$uid = 'update-test-node-' . uniqid();
+		$this->createTestNode([
+			'uid' => $uid,
 			'type' => $typeId,
 			'content' => [
 				'title' => ['type' => 'text', 'value' => ['en' => 'Original Title']],
 			],
 		]);
+		$this->createTestPath($this->createdNodeIds[count($this->createdNodeIds) - 1], '/test/' . $uid);
 
+		// Schema requires uid, published, locked, hidden, paths
 		$updateData = [
+			'uid' => $uid,
+			'published' => true,
+			'locked' => false,
+			'hidden' => false,
+			'paths' => [
+				'en' => '/test/' . $uid,
+			],
 			'content' => [
 				'title' => ['type' => 'text', 'value' => ['en' => 'Updated Title']],
 			],
 		];
 
-		// Act: PUT request to update node
-		$response = $this->makeRequest('PUT', "/api/nodes/{$nodeId}", [
+		// Panel API uses uid, not numeric id
+		$response = $this->makeRequest('PUT', "/panel/api/node/{$uid}", [
 			'body' => $updateData,
-			'headers' => ['Content-Type' => 'application/json'],
 		]);
 
-		// Assert: Node was updated
-		// Note: This test will fail until API routes are implemented
-		$this->assertResponseStatus(404, $response); // Expecting 404 until routes exist
+		$this->assertResponseOk($response);
 	}
 
 	public function testDeleteNode(): void
 	{
-		// Arrange: Create a test node
+		$this->authenticateAs('editor');
+
 		$typeId = $this->createTestType('delete-test-page', 'page');
-		$nodeId = $this->createTestNode([
-			'uid' => 'delete-test-node',
+		$uid = 'delete-test-node-' . uniqid();
+		$this->createTestNode([
+			'uid' => $uid,
 			'type' => $typeId,
 		]);
 
-		// Act: DELETE request to remove node
-		$response = $this->makeRequest('DELETE', "/api/nodes/{$nodeId}");
+		// Panel API uses uid, delete requires Accept: application/json header
+		$response = $this->makeRequest('DELETE', "/panel/api/node/{$uid}", [
+			'headers' => ['Accept' => 'application/json'],
+		]);
 
-		// Assert: Node was deleted
-		// Note: This test will fail until API routes are implemented
-		$this->assertResponseStatus(404, $response); // Expecting 404 until routes exist
+		$this->assertResponseOk($response);
 	}
 }
