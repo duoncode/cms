@@ -118,7 +118,8 @@ class Auth
 			}
 		}
 
-		return null;
+		// Fall back to token auth if session auth failed
+		return $this->userFromToken();
 	}
 
 	protected function userFromToken(): ?User
