@@ -37,6 +37,14 @@ class End2EndTestCase extends IntegrationTestCase
 	protected App $app;
 	protected ?\Duon\Error\Handler $errorHandler = null;
 
+	// Disable transactions because the CMS creates its own database connection
+	// which cannot see uncommitted transaction data from the test connection.
+	protected bool $useTransactions = false;
+
+	// Track created test data for cleanup
+	protected array $createdNodeIds = [];
+	protected array $createdTypeHandles = [];
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -45,12 +53,59 @@ class End2EndTestCase extends IntegrationTestCase
 
 	protected function tearDown(): void
 	{
+		// Clean up test data created during the test
+		$this->cleanupTestData();
+
 		// Restore error handlers to prevent PHPUnit warnings
 		if ($this->errorHandler) {
 			$this->errorHandler->restoreHandlers();
 		}
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Clean up dynamically created test data.
+	 */
+	protected function cleanupTestData(): void
+	{
+		$db = $this->db();
+
+		// Delete created paths and nodes
+		foreach ($this->createdNodeIds as $nodeId) {
+			$db->execute('DELETE FROM cms.urlpaths WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.nodes WHERE node = :node', ['node' => $nodeId])->run();
+		}
+
+		// Delete created types
+		foreach ($this->createdTypeHandles as $handle) {
+			$db->execute('DELETE FROM cms.types WHERE handle = :handle', ['handle' => $handle])->run();
+		}
+
+		$this->createdNodeIds = [];
+		$this->createdTypeHandles = [];
+	}
+
+	/**
+	 * @override Track created types for cleanup
+	 */
+	protected function createTestType(string $handle, string $kind = 'page'): int
+	{
+		$typeId = parent::createTestType($handle, $kind);
+		$this->createdTypeHandles[] = $handle;
+
+		return $typeId;
+	}
+
+	/**
+	 * @override Track created nodes for cleanup
+	 */
+	protected function createTestNode(array $data): int
+	{
+		$nodeId = parent::createTestNode($data);
+		$this->createdNodeIds[] = $nodeId;
+
+		return $nodeId;
 	}
 
 	protected function createApp(): App

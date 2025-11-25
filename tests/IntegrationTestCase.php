@@ -156,6 +156,12 @@ class IntegrationTestCase extends TestCase
 			->add('limit-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
 			->add('hidden-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('routing-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('nested-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('unpublished-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 
 		return $registry;
 	}
@@ -256,6 +262,25 @@ class IntegrationTestCase extends TestCase
 				RETURNING \"user\"";
 
 		return $this->db()->execute($sql, $data)->one()['user'];
+	}
+
+	/**
+	 * Create a URL path for a node.
+	 *
+	 * @param int $nodeId The node ID
+	 * @param string $path The URL path (e.g., '/about/team')
+	 * @param string $locale The locale (default: 'en')
+	 */
+	protected function createTestPath(int $nodeId, string $path, string $locale = 'en'): void
+	{
+		$sql = "INSERT INTO cms.urlpaths (node, path, locale, creator, editor)
+				VALUES (:node, :path, :locale, 1, 1)";
+
+		$this->db()->execute($sql, [
+			'node' => $nodeId,
+			'path' => $path,
+			'locale' => $locale,
+		])->run();
 	}
 
 	protected function createContext(): Context
