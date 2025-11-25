@@ -49,12 +49,10 @@ class End2EndTestCase extends IntegrationTestCase
 		if ($this->errorHandler) {
 			$this->errorHandler->restoreHandlers();
 		}
+
 		parent::tearDown();
 	}
 
-	/**
-	 * Create and configure the application for End2End testing.
-	 */
 	protected function createApp(): App
 	{
 		$factory = new Laminas();
@@ -86,9 +84,6 @@ class End2EndTestCase extends IntegrationTestCase
 		return $app;
 	}
 
-	/**
-	 * Create and configure locales for testing.
-	 */
 	protected function createLocales(): Plugin
 	{
 		$locales = new Locales();
@@ -98,14 +93,10 @@ class End2EndTestCase extends IntegrationTestCase
 		return $locales;
 	}
 
-	/**
-	 * Create and configure the CMS instance for testing.
-	 */
 	protected function createCms(): Cms
 	{
 		$cms = new Cms(sessionEnabled: false);
 
-		// Register test nodes from fixtures
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestHome::class);
@@ -114,7 +105,6 @@ class End2EndTestCase extends IntegrationTestCase
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
 		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
 
-		// Register template renderer for test templates
 		$cms->renderer('template', \Duon\Cms\Boiler\Renderer::class)->args(
 			dirs: self::root() . '/tests/Fixtures/templates',
 			autoescape: true,
@@ -137,14 +127,12 @@ class End2EndTestCase extends IntegrationTestCase
 		$logger = new NullLogger();
 
 		// Set environment variables for error handler (it uses env() function)
-		$_ENV['CMS_DEBUG'] = false;
+		$_ENV['CMS_DEBUG'] = false;  // Disable debug mode (Whoops not available in tests)
 		$_ENV['CMS_ENV'] = 'test';
 
-		// Create handler with test templates directory
 		$handler = new Handler($root, $logger, $factory);
 		$handler->views('tests/Fixtures/templates');
 
-		// Add CMS-specific classes to template context whitelist
 		$handler->whitelist([
 			Node::class,
 			Finder::class,
@@ -171,7 +159,7 @@ class End2EndTestCase extends IntegrationTestCase
 	 */
 	protected function makeRequest(string $method, string $uri, array $options = []): ResponseInterface
 	{
-		$psrRequest = $this->factory()->serverRequest($method, $uri);
+		$psrRequest = $this->factory()->serverRequestFactory()->createServerRequest($method, $uri);
 
 		// Add query parameters
 		if (isset($options['query'])) {
@@ -212,6 +200,7 @@ class End2EndTestCase extends IntegrationTestCase
 
 		// Capture output and return response without emitting
 		ob_start();
+
 		try {
 			$response = $this->app->run($psrRequest);
 		} finally {
@@ -287,4 +276,3 @@ class End2EndTestCase extends IntegrationTestCase
 		$this->assertEquals($expected, $actual, "Header {$header} has unexpected value");
 	}
 }
-
