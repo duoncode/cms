@@ -25,6 +25,7 @@ class Routes
 	protected string $panelApiPath;
 	protected string|null $apiPath;
 	protected InitRequest $initRequestMiddlware;
+	protected Session $session;
 
 	public function __construct(
 		protected Config $config,
@@ -36,16 +37,15 @@ class Routes
 		$this->panelApiPath = $this->panelPath . '/api';
 		$this->apiPath = $config->apiPath();
 		$this->initRequestMiddlware = new InitRequest($config);
+		$this->session = new Session($this->config, $this->db);
 	}
 
 	public function add(App $app): void
 	{
-		$session = new Session($this->config, $this->db);
+		$indexRouteGet = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
+		$indexRoutePost = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
-		$indexRoute = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
-		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
-
-		$this->addPanelApi($app, $session);
+		$this->addPanelApi($app, $this->session);
 		$this->addApi($app);
 
 		$postMediaRoute = $app->post(
@@ -67,22 +67,29 @@ class Routes
 		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel');
 		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash');
 
-		$catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
+		$previewCatchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
 
 		if ($this->sessionEnabled) {
-			$indexRoute->middleware($session);
-			$postMediaRoute->middleware($session);
-			$catchallRoute->middleware($session);
+			$indexRouteGet->middleware($this->session);
+			$indexRoutePost->middleware($this->session);
+			$postMediaRoute->middleware($this->session);
+			$previewCatchallRoute->middleware($this->session);
 		}
 	}
 
 	public function catchallRoute(): Route
 	{
-		return Route::any(
+		$catchallRoute = Route::any(
 			'/...slug',
 			[Page::class, 'catchall'],
 			'cms.catchall',
 		)->method('GET', 'POST')->middleware($this->initRequestMiddlware);
+
+		if ($this->sessionEnabled) {
+			$catchallRoute->middleware($this->session);
+		}
+
+		return $catchallRoute;
 	}
 
 	protected function addAuth(Group $api): void
