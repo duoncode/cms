@@ -4,10 +4,12 @@
 -- Get the type IDs (these should exist after loading basic-types.sql)
 DO $$
 DECLARE
+    test_home_type INT;
     test_page_type INT;
     test_article_type INT;
     test_block_type INT;
 BEGIN
+    SELECT type INTO test_home_type FROM cms.types WHERE handle = 'test-home' LIMIT 1;
     SELECT type INTO test_page_type FROM cms.types WHERE handle = 'test-page' LIMIT 1;
     SELECT type INTO test_article_type FROM cms.types WHERE handle = 'test-article' LIMIT 1;
     SELECT type INTO test_block_type FROM cms.types WHERE handle = 'test-block' LIMIT 1;
@@ -20,7 +22,7 @@ BEGIN
         true,
         false,
         false,
-        test_page_type,
+        test_home_type,
         1,  -- System user
         1,
         jsonb_build_object(
@@ -41,6 +43,17 @@ BEGIN
         )
     )
     ON CONFLICT (uid) DO NOTHING;
+
+    -- Add URL path for homepage
+    INSERT INTO cms.urlpaths (node, path, locale, creator, editor)
+    SELECT
+        (SELECT node FROM cms.nodes WHERE uid = 'test-homepage'),
+        '/',
+        'en',
+        1,
+        1
+    WHERE EXISTS (SELECT 1 FROM cms.nodes WHERE uid = 'test-homepage')
+    ON CONFLICT DO NOTHING;
 
     -- Test article 1 (published)
     INSERT INTO cms.nodes (uid, parent, published, hidden, locked, type, creator, editor, content)

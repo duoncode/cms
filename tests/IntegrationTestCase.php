@@ -135,27 +135,41 @@ class IntegrationTestCase extends TestCase
 
 		// Register test Node classes for fixture types
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-article', \Duon\Cms\Tests\Integration\Fixtures\Node\TestArticle::class);
+			->add('test-article', \Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-home', \Duon\Cms\Tests\Integration\Fixtures\Node\TestHome::class);
+			->add('test-home', \Duon\Cms\Tests\Fixtures\Node\TestHome::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-block', \Duon\Cms\Tests\Integration\Fixtures\Node\TestBlock::class);
+			->add('test-block', \Duon\Cms\Tests\Fixtures\Node\TestBlock::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-widget', \Duon\Cms\Tests\Integration\Fixtures\Node\TestWidget::class);
+			->add('test-widget', \Duon\Cms\Tests\Fixtures\Node\TestWidget::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestDocument::class);
+			->add('test-document', \Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('test-media-document', \Duon\Cms\Tests\Integration\Fixtures\Node\TestMediaDocument::class);
+			->add('test-media-document', \Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
 
 		// Register dynamically created test types (reuse TestPage for all page types)
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('ordered-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('ordered-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('limit-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('limit-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$registry->tag(\Duon\Cms\Node\Node::class)
-			->add('hidden-test-page', \Duon\Cms\Tests\Integration\Fixtures\Node\TestPage::class);
+			->add('hidden-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('routing-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('nested-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('unpublished-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('create-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('crud-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('update-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$registry->tag(\Duon\Cms\Node\Node::class)
+			->add('delete-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 
 		return $registry;
 	}
@@ -170,7 +184,7 @@ class IntegrationTestCase extends TestCase
 		$db = $this->db();
 
 		foreach ($fixtures as $fixture) {
-			$path = self::root() . "/tests/Integration/Fixtures/data/{$fixture}.sql";
+			$path = self::root() . "/tests/Fixtures/data/{$fixture}.sql";
 
 			if (!file_exists($path)) {
 				throw new RuntimeException("Fixture file not found: {$path}");
@@ -256,6 +270,25 @@ class IntegrationTestCase extends TestCase
 				RETURNING \"user\"";
 
 		return $this->db()->execute($sql, $data)->one()['user'];
+	}
+
+	/**
+	 * Create a URL path for a node.
+	 *
+	 * @param int $nodeId The node ID
+	 * @param string $path The URL path (e.g., '/about/team')
+	 * @param string $locale The locale (default: 'en')
+	 */
+	protected function createTestPath(int $nodeId, string $path, string $locale = 'en'): void
+	{
+		$sql = "INSERT INTO cms.urlpaths (node, path, locale, creator, editor)
+				VALUES (:node, :path, :locale, 1, 1)";
+
+		$this->db()->execute($sql, [
+			'node' => $nodeId,
+			'path' => $path,
+			'locale' => $locale,
+		])->run();
 	}
 
 	protected function createContext(): Context

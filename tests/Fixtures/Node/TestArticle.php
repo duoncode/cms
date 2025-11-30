@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Integration\Fixtures\Node;
+namespace Duon\Cms\Tests\Fixtures\Node;
 
 use Duon\Cms\Field\Meta\Label;
 use Duon\Cms\Field\Meta\Translate;
@@ -24,6 +24,6 @@ class TestArticle extends Page
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Article';
+		return $this->title?->value()->unwrap() ?? 'Test Article';
 	}
 }

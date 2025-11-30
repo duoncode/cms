@@ -1,0 +1,413 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Duon\Cms\Tests;
+
+use Duon\Cms\Boiler\Error\Handler;
+use Duon\Cms\Cms;
+use Duon\Cms\Config;
+use Duon\Cms\Finder\Finder;
+use Duon\Cms\Locale;
+use Duon\Cms\Locales;
+use Duon\Cms\Node\Node;
+use Duon\Core\App;
+use Duon\Core\Factory\Laminas;
+use Duon\Core\Plugin;
+use Duon\Core\Request;
+use Duon\Registry\Registry;
+use Duon\Router\Router;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
+
+/**
+ * Base class for end-to-end tests that test the full HTTP request/response cycle.
+ *
+ * This class extends IntegrationTestCase and adds application setup with routing,
+ * middleware, and CMS integration. Tests run through the full stack using in-process
+ * HTTP requests (no external server needed).
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
+class End2EndTestCase extends IntegrationTestCase
+{
+	protected App $app;
+	protected ?\Duon\Error\Handler $errorHandler = null;
+
+	// Disable transactions because the CMS creates its own database connection
+	// which cannot see uncommitted transaction data from the test connection.
+	protected bool $useTransactions = false;
+
+	// Track created test data for cleanup
+	protected array $createdNodeIds = [];
+	protected array $createdTypeHandles = [];
+	protected array $createdUserIds = [];
+	protected array $createdAuthTokens = [];
+	protected ?string $defaultAuthToken = null;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->app = $this->createApp();
+	}
+
+	protected function tearDown(): void
+	{
+		// Clean up test data created during the test
+		$this->cleanupTestData();
+
+		// Restore error handlers to prevent PHPUnit warnings
+		if ($this->errorHandler) {
+			$this->errorHandler->restoreHandlers();
+		}
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Clean up dynamically created test data.
+	 */
+	protected function cleanupTestData(): void
+	{
+		$db = $this->db();
+
+		// Delete created auth tokens
+		foreach ($this->createdAuthTokens as $tokenHash) {
+			$db->execute('DELETE FROM cms.authtokens WHERE token = :token', ['token' => $tokenHash])->run();
+		}
+
+		// Delete created users
+		foreach ($this->createdUserIds as $userId) {
+			$db->execute('DELETE FROM cms.users WHERE usr = :usr', ['usr' => $userId])->run();
+		}
+
+		// Delete created paths and nodes in reverse order (children before parents)
+		// Also delete related records that reference the nodes via FKs
+		foreach (array_reverse($this->createdNodeIds) as $nodeId) {
+			$db->execute('DELETE FROM cms.urlpaths WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.fulltext WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.nodetags WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.drafts WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM audit.nodes WHERE node = :node', ['node' => $nodeId])->run();
+			$db->execute('DELETE FROM cms.nodes WHERE node = :node', ['node' => $nodeId])->run();
+		}
+
+		// Delete created types
+		foreach ($this->createdTypeHandles as $handle) {
+			$db->execute('DELETE FROM cms.types WHERE handle = :handle', ['handle' => $handle])->run();
+		}
+
+		$this->createdNodeIds = [];
+		$this->createdTypeHandles = [];
+		$this->createdUserIds = [];
+		$this->createdAuthTokens = [];
+		$this->defaultAuthToken = null;
+	}
+
+	/**
+	 * @override Track created types for cleanup
+	 */
+	protected function createTestType(string $handle, string $kind = 'page'): int
+	{
+		$typeId = parent::createTestType($handle, $kind);
+		$this->createdTypeHandles[] = $handle;
+
+		return $typeId;
+	}
+
+	/**
+	 * @override Track created nodes for cleanup
+	 */
+	protected function createTestNode(array $data): int
+	{
+		$nodeId = parent::createTestNode($data);
+		$this->createdNodeIds[] = $nodeId;
+
+		return $nodeId;
+	}
+
+	/**
+	 * Create an authenticated test user with an auth token.
+	 *
+	 * @param string $role The user role ('superuser', 'admin', 'editor')
+	 * @return string The auth token to use in requests
+	 */
+	protected function createAuthenticatedUser(string $role = 'editor'): string
+	{
+		$db = $this->db();
+		$uid = 'test-auth-' . uniqid();
+		$token = bin2hex(random_bytes(32));
+		$tokenHash = hash('sha256', $token);
+
+		// Create user with correct schema (userrole instead of role)
+		$sql = "INSERT INTO cms.users (uid, email, pwhash, userrole, active, data, creator, editor)
+				VALUES (:uid, :email, :pwhash, :userrole, true, '{}'::jsonb, 1, 1)
+				RETURNING usr";
+
+		$userId = $db->execute($sql, [
+			'uid' => $uid,
+			'email' => $uid . '@example.com',
+			'pwhash' => password_hash('password', PASSWORD_ARGON2ID),
+			'userrole' => $role,
+		])->one()['usr'];
+
+		$this->createdUserIds[] = $userId;
+
+		// Create auth token
+		$sql = "INSERT INTO cms.authtokens (token, usr, creator, editor)
+				VALUES (:token, :usr, 1, 1)";
+
+		$db->execute($sql, [
+			'token' => $tokenHash,
+			'usr' => $userId,
+		])->run();
+
+		$this->createdAuthTokens[] = $tokenHash;
+
+		return $token;
+	}
+
+	/**
+	 * Set the default auth token for all subsequent requests.
+	 */
+	protected function authenticateAs(string $role = 'editor'): void
+	{
+		$this->defaultAuthToken = $this->createAuthenticatedUser($role);
+	}
+
+	protected function createApp(): App
+	{
+		$factory = new Laminas();
+		$router = new Router();
+		$registry = $this->registry();
+		$config = $this->config([
+			'db.dsn' => 'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
+			'path.root' => self::root(),
+			'path.public' => self::root() . '/public',
+			'path.uploads' => self::root() . '/public/uploads',
+			'path.api' => '/api',
+			'path.panel' => '/panel',
+			'upload.maxSize' => 10 * 1024 * 1024, // 10MB
+			'upload.allowedExtensions' => ['jpg', 'jpeg', 'png', 'gif', 'pdf'],
+		]);
+
+		$app = new App($factory, $router, $registry, $config);
+
+		// Configure error handler middleware
+		$this->errorHandler = $this->createErrorHandler($factory);
+		$app->middleware($this->errorHandler);
+
+		// Load locales
+		$app->load($this->createLocales());
+
+		// Load CMS
+		$cms = $this->createCms();
+		$app->load($cms);
+		$app->addRoute($cms->catchallRoute());
+
+		return $app;
+	}
+
+	protected function createLocales(): Plugin
+	{
+		$locales = new Locales();
+		$locales->add('en', title: 'English', pgDict: 'english');
+		$locales->add('de', title: 'Deutsch', fallback: 'en', pgDict: 'german');
+
+		return $locales;
+	}
+
+	protected function createCms(): Cms
+	{
+		$cms = new Cms(sessionEnabled: false);
+
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestHome::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestBlock::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestWidget::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
+		$cms->node(\Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
+
+		$cms->renderer('template', \Duon\Cms\Boiler\Renderer::class)->args(
+			dirs: self::root() . '/tests/Fixtures/templates',
+			autoescape: true,
+			whitelist: [
+				Node::class,
+				\Duon\Cms\Finder\Finder::class,
+				\Duon\Cms\Locales::class,
+				\Duon\Cms\Locale::class,
+				\Duon\Cms\Config::class,
+				Request::class,
+			],
+		);
+
+		return $cms;
+	}
+
+	protected function createErrorHandler(Laminas $factory): \Duon\Error\Handler
+	{
+		$root = self::root();
+		$logger = new NullLogger();
+
+		// Set environment variables for error handler (it uses env() function)
+		$_ENV['CMS_DEBUG'] = false;  // Disable debug mode (Whoops not available in tests)
+		$_ENV['CMS_ENV'] = 'test';
+
+		$handler = new Handler($root, $logger, $factory);
+		$handler->views('tests/Fixtures/templates');
+
+		$handler->whitelist([
+			Node::class,
+			Finder::class,
+			Locales::class,
+			Locale::class,
+			Config::class,
+			Request::class,
+		]);
+
+		return $handler->create();
+	}
+
+	/**
+	 * Make an HTTP request through the application.
+	 *
+	 * @param string $method HTTP method (GET, POST, PUT, DELETE, etc.)
+	 * @param string $uri Request URI
+	 * @param array $options Request options:
+	 *   - 'headers' => array - HTTP headers
+	 *   - 'body' => string|array - Request body (array will be JSON encoded)
+	 *   - 'query' => array - Query parameters
+	 *   - 'cookies' => array - Cookie values
+	 *   - 'authToken' => string - Auth token for authentication
+	 * @return ResponseInterface PSR-7 response
+	 */
+	protected function makeRequest(string $method, string $uri, array $options = []): ResponseInterface
+	{
+		$psrRequest = $this->factory()->serverRequestFactory()->createServerRequest($method, $uri);
+
+		// Add auth token (from options or default)
+		$authToken = $options['authToken'] ?? $this->defaultAuthToken;
+
+		if ($authToken) {
+			$psrRequest = $psrRequest->withHeader('Authentication', 'Bearer ' . $authToken);
+		}
+
+		// Add query parameters
+		if (isset($options['query'])) {
+			$queryString = http_build_query($options['query']);
+			$uriObj = $psrRequest->getUri()->withQuery($queryString);
+			$psrRequest = $psrRequest->withUri($uriObj);
+		}
+
+		// Add headers
+		if (isset($options['headers'])) {
+			foreach ($options['headers'] as $name => $value) {
+				$psrRequest = $psrRequest->withHeader($name, $value);
+			}
+		}
+
+		// Add cookies
+		if (isset($options['cookies'])) {
+			$cookieHeader = [];
+
+			foreach ($options['cookies'] as $name => $value) {
+				$cookieHeader[] = "{$name}={$value}";
+			}
+			$psrRequest = $psrRequest->withHeader('Cookie', implode('; ', $cookieHeader));
+		}
+
+		// Add body
+		if (isset($options['body'])) {
+			$body = $options['body'];
+
+			if (is_array($body)) {
+				$body = json_encode($body);
+				$psrRequest = $psrRequest->withHeader('Content-Type', 'application/json');
+			}
+
+			$stream = $this->factory()->streamFactory()->createStream($body);
+			$psrRequest = $psrRequest->withBody($stream);
+		}
+
+		// Capture output and return response without emitting
+		ob_start();
+
+		try {
+			$response = $this->app->run($psrRequest);
+		} finally {
+			ob_end_clean();
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Assert that the response has the expected status code.
+	 */
+	protected function assertResponseStatus(int $expected, ResponseInterface $response, string $message = ''): void
+	{
+		$this->assertEquals(
+			$expected,
+			$response->getStatusCode(),
+			$message ?: "Expected status code {$expected}, got {$response->getStatusCode()}",
+		);
+	}
+
+	/**
+	 * Assert that the response has a successful status code (2xx).
+	 */
+	protected function assertResponseOk(ResponseInterface $response): void
+	{
+		$statusCode = $response->getStatusCode();
+		$this->assertGreaterThanOrEqual(200, $statusCode, 'Expected successful response');
+		$this->assertLessThan(300, $statusCode, 'Expected successful response');
+	}
+
+	/**
+	 * Get the response body as a decoded JSON array.
+	 *
+	 * @return array
+	 */
+	protected function getJsonResponse(ResponseInterface $response): array
+	{
+		$body = (string) $response->getBody();
+		$decoded = json_decode($body, true);
+
+		$this->assertIsArray($decoded, 'Response body is not valid JSON');
+
+		return $decoded;
+	}
+
+	/**
+	 * Get the response body as HTML string.
+	 */
+	protected function getHtmlResponse(ResponseInterface $response): string
+	{
+		return (string) $response->getBody();
+	}
+
+	/**
+	 * Assert that response contains specific header.
+	 */
+	protected function assertResponseHasHeader(string $header, ResponseInterface $response): void
+	{
+		$this->assertTrue(
+			$response->hasHeader($header),
+			"Response does not have header: {$header}",
+		);
+	}
+
+	/**
+	 * Assert that response header has expected value.
+	 */
+	protected function assertResponseHeaderEquals(string $header, string $expected, ResponseInterface $response): void
+	{
+		$this->assertResponseHasHeader($header, $response);
+		$actual = $response->getHeaderLine($header);
+		$this->assertEquals($expected, $actual, "Header {$header} has unexpected value");
+	}
+}

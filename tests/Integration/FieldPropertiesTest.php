@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Integration;
 
-use Duon\Cms\Tests\Integration\Fixtures\Node\TestDocument;
-use Duon\Cms\Tests\Integration\Fixtures\Node\TestMediaDocument;
+use Duon\Cms\Tests\Fixtures\Node\TestDocument;
+use Duon\Cms\Tests\Fixtures\Node\TestMediaDocument;
 use Duon\Cms\Tests\IntegrationTestCase;
 
-final class FieldPropertiesIntegrationTest extends IntegrationTestCase
+final class FieldPropertiesTest extends IntegrationTestCase
 {
 	public function testFieldPropertiesIncludesNameAndType(): void
 	{

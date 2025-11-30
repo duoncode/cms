@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\Tests\Integration\Fixtures\Node;
+namespace Duon\Cms\Tests\Fixtures\Node;
 
 use Duon\Cms\Field\Meta\DefaultValue;
 use Duon\Cms\Field\Meta\Description;
@@ -41,6 +41,6 @@ class TestDocument extends Document
 
 	public function title(): string
 	{
-		return $this->title?->get() ?? 'Test Document';
+		return $this->title?->value()->unwrap() ?? 'Test Document';
 	}
 }

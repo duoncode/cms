@@ -4,17 +4,19 @@ This guide explains how to set up and run tests for the Duon CMS project.
 
 ## Test Architecture
 
-The test suite combines **unit tests** for business logic and **integration tests** for database interactions:
+The test suite combines three types of tests:
 
 - **Unit Tests**: Fast tests for isolated components (lexer, parser, utilities, field capabilities)
-- **Integration Tests**: Tests that interact with a real PostgreSQL database
+- **Integration Tests**: Tests that interact with a real PostgreSQL database directly
+- **End-to-End (E2E) Tests**: Tests that exercise the full HTTP request/response cycle through the application
 
 ### Key Principles
 
 1. **No Mocks in Integration Tests**: Integration tests use real database connections and actual data
-2. **Transaction Isolation**: Each integration test runs in a transaction that's rolled back after completion
-3. **Fixture-Based**: Tests use SQL fixtures and helper methods for consistent test data
-4. **Hybrid Setup**: Database schema is initialized once per test run, then transactions provide isolation
+2. **Transaction Isolation for Integration Tests**: Each integration test runs in a transaction that's rolled back after completion
+3. **No Transactions for E2E Tests**: E2E tests disable transactions because the CMS creates separate database connections that cannot see uncommitted transaction data
+4. **Fixture-Based**: Tests use SQL fixtures and helper methods for consistent test data
+5. **Hybrid Setup**: Database schema is initialized once per test run, then transactions provide isolation for integration tests
 
 ## Prerequisites
 
@@ -84,13 +86,20 @@ vendor/bin/phpunit --filter testCreateAndRetrieveNode tests/NodeIntegrationTest.
 vendor/bin/phpunit --exclude-group integration
 ```
 
-### Run Only Integration Tests
+### Run Only End-to-End Tests
 
 ```bash
+vendor/bin/phpunit --testsuite end2end
+```
+
+### Run Tests by Group (if tagged)
+
+```bash
+# Run tests marked with @group integration
 vendor/bin/phpunit --group integration
 ```
 
-*Note: Currently tests are not tagged with groups. This is a future enhancement.*
+*Note: E2E tests are in the `end2end` test suite by configuration in phpunit.xml*
 
 ### Generate Coverage Report
 
@@ -106,19 +115,25 @@ Open `coverage/index.html` in your browser to view the report.
 
 ```
 tests/
-├── Setup/
-│   ├── TestCase.php              # Base class for all tests
-│   └── IntegrationTestCase.php   # Base class for integration tests
+├── TestCase.php                  # Base class for all tests
+├── IntegrationTestCase.php       # Base class for integration tests
+├── End2EndTestCase.php           # Base class for end-to-end tests
 ├── Fixtures/
 │   ├── data/                     # SQL fixture files
 │   │   ├── basic-types.sql       # Common content types
 │   │   ├── test-users.sql        # Test user accounts
 │   │   └── sample-nodes.sql      # Sample content nodes
-│   └── Node/                     # Test node classes
-│       ├── TestDocument.php
-│       └── TestMediaDocument.php
-├── *Test.php                     # Unit test files
-└── *IntegrationTest.php          # Integration test files
+│   ├── Node/                     # Test node classes
+│   │   ├── TestDocument.php
+│   │   ├── TestMediaDocument.php
+│   │   └── TestPage.php
+│   └── templates/                # Template files for E2E tests
+├── Integration/                  # Integration tests
+│   ├── *Test.php                 # Direct database tests
+├── End2End/                      # End-to-end tests
+│   ├── NodeCrudTest.php          # Node CRUD API tests
+│   └── RoutingTest.php           # Routing and rendering tests
+└── *Test.php                     # Unit test files
 ```
 
 ### Base Test Classes
@@ -136,9 +151,24 @@ Base class for all tests, provides:
 #### `IntegrationTestCase`
 
 Extends `TestCase` for integration tests, provides:
-- **Automatic transaction isolation**: Sets `$useTransactions = true`
+- **Automatic transaction isolation**: Sets `$useTransactions = true` (each test runs in a transaction that rolls back)
 - **Context creation**: `createContext($localeId = 'en')`
 - **Finder creation**: `createFinder($localeId = 'en')`
+
+#### `End2EndTestCase`
+
+Extends `IntegrationTestCase` for end-to-end HTTP tests, provides:
+- **Application setup**: `createApp()` initializes the full CMS application
+- **Authentication helpers**:
+  - `createAuthenticatedUser(role)` - Creates a user with auth token
+  - `authenticateAs(role)` - Sets default auth token for subsequent requests
+- **HTTP request helpers**: `makeRequest(method, uri, options)` - Simulates HTTP requests through the app
+- **Response assertions**:
+  - `assertResponseOk(response)` - Assert status code is 2xx
+  - `assertResponseStatus(expected, response)` - Assert specific status code
+  - `getJsonResponse(response)` - Decode response body as JSON
+- **Disabled transactions**: Sets `$useTransactions = false` because the CMS creates separate DB connections
+- **Automatic cleanup**: Cleans up created test data including FK-referenced records
 
 ## Writing Tests
 
@@ -176,16 +206,13 @@ final class MyIntegrationTest extends IntegrationTestCase
 {
     public function testNodeCreation(): void
     {
-        // Arrange
         $typeId = $this->createTestType('my-test-type', 'page');
 
-        // Act
         $nodeId = $this->createTestNode([
             'type' => $typeId,
             'content' => ['title' => ['type' => 'text', 'value' => ['en' => 'Test']]],
         ]);
 
-        // Assert
         $node = $this->db()->execute(
             'SELECT * FROM cms.nodes WHERE node = :id',
             ['id' => $nodeId]
@@ -193,6 +220,59 @@ final class MyIntegrationTest extends IntegrationTestCase
 
         $this->assertNotNull($node);
         $this->assertEquals($typeId, $node['type']);
+    }
+}
+```
+
+### End-to-End Test Example
+
+```php
+<?php
+
+namespace Duon\Cms\Tests\End2End;
+
+use Duon\Cms\Tests\End2EndTestCase;
+
+final class NodeCrudTest extends End2EndTestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Load test data fixtures
+        $this->loadFixtures('basic-types', 'sample-nodes');
+    }
+
+    public function testCreateNode(): void
+    {
+        // Authenticate before making API requests
+        $this->authenticateAs('editor');
+
+        // Create a node type
+        $this->createTestType('create-test-page', 'page');
+
+        // Prepare node data with required fields
+        $nodeData = [
+            'uid' => 'my-new-node',
+            'published' => true,
+            'locked' => false,
+            'hidden' => false,
+            'paths' => [
+                'en' => '/my-new-node',  // Required for page nodes
+            ],
+            'content' => [
+                'title' => ['type' => 'text', 'value' => ['en' => 'My Node']],
+            ],
+        ];
+
+        // Make HTTP request through the app
+        $response = $this->makeRequest('POST', '/panel/api/node/create-test-page', [
+            'body' => $nodeData,
+        ]);
+
+        // Assert response
+        $this->assertResponseOk($response);
+        $data = $this->getJsonResponse($response);
+        $this->assertTrue($data['success']);
     }
 }
 ```
@@ -215,7 +295,7 @@ public function testWithFixtures(): void
 
 ## Test Database Workflow
 
-### How Transaction Isolation Works
+### Integration Tests - Transaction Isolation
 
 1. **First test class runs** → Database schema is checked (one-time)
 2. **Test begins** → Transaction starts (`BEGIN`)
@@ -228,6 +308,22 @@ This ensures:
 - ✅ No test data persists between tests
 - ✅ Tests can run in any order
 - ✅ Fast execution (no database recreation)
+
+### End-to-End Tests - No Transactions
+
+E2E tests **disable transactions** because the CMS creates separate database connections:
+
+1. **Test begins** → NO transaction (disabled in `End2EndTestCase`)
+2. **Application runs** → Creates its own DB connection, inserts data
+3. **Test completes** → Explicit cleanup: deletes created test data
+4. **Next test begins** → Clean database state
+
+The cleanup process handles foreign key constraints by deleting in proper order:
+1. Delete FK-referenced records (audit records, fulltext index, etc.)
+2. Delete the main records
+3. Delete created types
+
+This prevents FK constraint violations during cleanup.
 
 ### When to Recreate the Database
 
@@ -368,19 +464,26 @@ jobs:
 ### DO
 
 - ✅ Extend `IntegrationTestCase` for database tests
+- ✅ Extend `End2EndTestCase` for HTTP tests
 - ✅ Use `createTestType()`, `createTestNode()` helpers for test data
 - ✅ Load fixtures in `setUp()` when needed across all test methods
-- ✅ Use descriptive test names (`testFinderReturnsNodesOfSpecificType`)
+- ✅ Use descriptive test names (`testFinderReturnsNodesOfSpecificType`, `testCreateNodeReturns201`)
 - ✅ Follow Arrange-Act-Assert pattern
-- ✅ Clean up the database is automatic (via transactions)
+- ✅ Clean up is automatic (via transactions for integration, via explicit cleanup for E2E)
+- ✅ For E2E tests: Call `$this->authenticateAs('editor')` before making API requests
+- ✅ For page nodes: Include `paths` data with URL paths for required locales
+- ✅ For page nodes: Include all required schema fields (`uid`, `published`, `locked`, `hidden`)
+- ✅ Make test data unique (use `uniqid()` for node UIDs and paths to avoid conflicts between test runs)
 
 ### DON'T
 
 - ❌ Use mocks for database interactions in integration tests
 - ❌ Rely on test execution order
-- ❌ Share state between tests (use transactions instead)
-- ❌ Commit transactions in tests (they should auto-rollback)
-- ❌ Create permanent test data outside of transactions
+- ❌ Share state between tests
+- ❌ Create permanent test data outside of transactions (integration tests) or without tracking (E2E tests)
+- ❌ Use the same type handle for multiple tests in the same class without unique suffixes
+- ❌ Skip `paths` for page nodes (they're required for database validation)
+- ❌ Forget to authenticate before making API requests to protected endpoints
 
 ## Performance
 
@@ -396,9 +499,12 @@ To optimize:
 
 ## Future Enhancements
 
+- [x] Add end-to-end tests (HTTP request/response cycle)
+- [x] Add authentication integration tests (via E2E tests)
+- [x] Add URL path resolution tests (via E2E routing tests)
 - [ ] Tag tests with `@group integration` for filtering
-- [ ] Add authentication integration tests
 - [ ] Add full-text search integration tests
-- [ ] Add URL path resolution tests
 - [ ] Database seeder for realistic test data
 - [ ] Parallel test execution
+- [ ] API documentation generation from E2E tests
+- [ ] Load testing for performance benchmarks

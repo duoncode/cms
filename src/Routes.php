@@ -46,7 +46,7 @@ class Routes
 		$indexRoute = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
 
 		$this->addPanelApi($app, $session);
-		$this->addApi($app, $session);
+		$this->addApi($app);
 
 		$postMediaRoute = $app->post(
 			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-_.]{1,64}}',
@@ -69,7 +69,7 @@ class Routes
 
 		$catchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
 
-		if (!$this->sessionEnabled) {
+		if ($this->sessionEnabled) {
 			$indexRoute->middleware($session);
 			$postMediaRoute->middleware($session);
 			$catchallRoute->middleware($session);
@@ -124,10 +124,7 @@ class Routes
 			$this->panelApiPath,
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
-
-				if (!$this->sessionEnabled) {
-					$api->middleware($session);
-				}
+				$api->middleware($session);
 
 				$this->addAuth($api);
 				$this->addUser($api);

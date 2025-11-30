@@ -34,7 +34,7 @@ trait RendersTemplate
 			[$type, $id] = $this->renderer();
 			$renderer = $this->registry->tag(Renderer::class)->get($type);
 
-			return (new Response($this->factory->response()))->body(
+			return (new Response($this->factory->response()->withHeader('Content-Type', 'text/html; charset=utf-8')))->body(
 				$renderer->render($id, $context),
 			);
 		} catch (NotFoundException) {
