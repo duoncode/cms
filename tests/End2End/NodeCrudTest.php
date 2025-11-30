@@ -20,7 +20,6 @@ final class NodeCrudTest extends End2EndTestCase
 	{
 		parent::setUp();
 
-		// Load test data fixtures
 		$this->loadFixtures('basic-types', 'sample-nodes');
 	}
 
@@ -48,15 +47,13 @@ final class NodeCrudTest extends End2EndTestCase
 
 		$response = $this->makeRequest('GET', "/api/nodes/{$nodeId}");
 
-		// Note: This test will fail until API routes are implemented
-		$this->assertResponseStatus(404, $response); // Expecting 404 until routes exist
+		$this->assertResponseStatus(404, $response); // TODO: Expecting 404 until routes exist
 	}
 
 	public function testCreateNode(): void
 	{
 		$this->authenticateAs('editor');
 
-		// Use unique uid/path per test run to avoid conflicts
 		$uid = 'new-test-node-' . uniqid();
 		$this->createTestType('create-test-page', 'page');
 		$nodeData = [
@@ -92,7 +89,6 @@ final class NodeCrudTest extends End2EndTestCase
 		]);
 		$this->createTestPath($this->createdNodeIds[count($this->createdNodeIds) - 1], '/test/' . $uid);
 
-		// Schema requires uid, published, locked, hidden, paths
 		$updateData = [
 			'uid' => $uid,
 			'published' => true,
@@ -106,7 +102,6 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		];
 
-		// Panel API uses uid, not numeric id
 		$response = $this->makeRequest('PUT', "/panel/api/node/{$uid}", [
 			'body' => $updateData,
 		]);
@@ -125,7 +120,6 @@ final class NodeCrudTest extends End2EndTestCase
 			'type' => $typeId,
 		]);
 
-		// Panel API uses uid, delete requires Accept: application/json header
 		$response = $this->makeRequest('DELETE', "/panel/api/node/{$uid}", [
 			'headers' => ['Accept' => 'application/json'],
 		]);

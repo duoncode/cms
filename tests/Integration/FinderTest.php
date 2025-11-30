@@ -36,7 +36,6 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertNotEmpty($publishedNodes);
 		$this->assertGreaterThan(count($publishedNodes), count($allNodes));
 
-		// Verify all returned nodes are published
 		foreach ($publishedNodes as $node) {
 			$this->assertTrue($node->data()['published']);
 		}
@@ -51,7 +50,6 @@ final class FinderTest extends IntegrationTestCase
 
 		$this->assertNotEmpty($unpublishedNodes);
 
-		// Verify all returned nodes are unpublished
 		foreach ($unpublishedNodes as $node) {
 			$this->assertFalse($node->data()['published']);
 		}
@@ -65,14 +63,12 @@ final class FinderTest extends IntegrationTestCase
 
 		$this->assertNotEmpty($nodes);
 
-		// Get all type handles for returned nodes
 		$typeHandles = [];
 
 		foreach ($nodes as $node) {
 			$typeHandles[] = $node::handle();
 		}
 
-		// Verify we got both types
 		$uniqueTypes = array_unique($typeHandles);
 		$this->assertContains('test-home', $uniqueTypes);
 		$this->assertContains('test-article', $uniqueTypes);
@@ -166,14 +162,11 @@ final class FinderTest extends IntegrationTestCase
 
 	public function testFinderWithFixtureData(): void
 	{
-		// This test verifies that the sample-nodes fixture was loaded correctly
-
 		$finder = $this->createFinder();
 		$homepage = $finder->nodes()->types('test-home');
 
 		$this->assertNotEmpty($homepage);
 
-		// Find the test-homepage node
 		$homepageNode = null;
 
 		foreach ($homepage as $node) {
@@ -186,7 +179,6 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertNotNull($homepageNode, 'test-homepage node should exist');
 		$this->assertTrue($homepageNode->data()['published']);
 
-		// Verify content structure
 		$content = $homepageNode->data()['content'];
 		$this->assertArrayHasKey('title', $content);
 		$this->assertEquals('Testhomepage', $content['title']['value']['de']);

@@ -39,7 +39,6 @@ final class NodeTest extends IntegrationTestCase
 		$this->assertTrue($node['published']);
 		$this->assertFalse($node['hidden']);
 
-		// Verify content structure
 		$contentData = json_decode($node['content'], true);
 		$this->assertEquals('Testseite', $contentData['title']['value']['de']);
 		$this->assertEquals('Test Page', $contentData['title']['value']['en']);
@@ -103,7 +102,6 @@ final class NodeTest extends IntegrationTestCase
 	{
 		$typeId = $this->createTestType('query-test-page', 'page');
 
-		// Create multiple nodes of the same type
 		$this->createTestNode(['uid' => 'query-node-1', 'type' => $typeId, 'published' => true]);
 		$this->createTestNode(['uid' => 'query-node-2', 'type' => $typeId, 'published' => true]);
 		$this->createTestNode(['uid' => 'query-node-3', 'type' => $typeId, 'published' => false]);
@@ -122,13 +120,11 @@ final class NodeTest extends IntegrationTestCase
 	{
 		$typeId = $this->createTestType('hierarchy-test-page', 'page');
 
-		// Create parent node
 		$parentId = $this->createTestNode([
 			'uid' => 'hierarchy-parent',
 			'type' => $typeId,
 		]);
 
-		// Create child node
 		$childId = $this->createTestNode([
 			'uid' => 'hierarchy-child',
 			'type' => $typeId,
@@ -153,7 +149,6 @@ final class NodeTest extends IntegrationTestCase
 			'type' => $typeId,
 		]);
 
-		// Verify node exists
 		$exists = $this->db()->execute(
 			'SELECT EXISTS(SELECT 1 FROM cms.nodes WHERE node = :id) as exists',
 			['id' => $nodeId],
