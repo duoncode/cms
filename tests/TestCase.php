@@ -10,6 +10,7 @@ use Duon\Core\Factory;
 use Duon\Core\Factory\Laminas;
 use Duon\Core\Request;
 use Duon\Registry\Registry;
+use PDO;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequest;
 use ValueError;
@@ -144,9 +145,9 @@ class TestCase extends BaseTestCase
 				'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
 				self::root() . '/db/sql',
 				self::root() . '/db/migrations',
-				fetchMode: \PDO::FETCH_ASSOC,
+				fetchMode: PDO::FETCH_ASSOC,
 				print: false,
-			)
+			),
 		);
 	}
 
