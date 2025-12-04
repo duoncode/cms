@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { FileItem } from '$types/data';
-	import { resolve } from '$app/paths';
 	import { _ } from '$lib/locale';
 	import { system } from '$lib/sys';
 	import IcoDocument from '$shell/icons/IcoDocument.svelte';
@@ -50,7 +49,7 @@
 		{/if}
 		<IcoDownload />
 		<a
-			href={resolve(`${path}/${asset.file}`)}
+			href={`${path}/${asset.file}`}
 			target="_blank"
 			class="inline-block pl-2">
 			{_('Datei herunterladen')}
