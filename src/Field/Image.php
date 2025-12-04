@@ -66,19 +66,12 @@ class Image extends Field implements Capability\Translatable, Capability\FileTra
 			$fileSchema->add('file', 'text', 'required');
 
 			$locales = $this->node->context->locales();
-			$defaultLocale = $locales->getDefault()->id;
 			$titleSchema = new Schema(title: $this->label, keepUnknown: true);
 			$altSchema = new Schema(title: $this->label, keepUnknown: true);
 
 			foreach ($locales as $locale) {
-				$localeValidators = [];
-
-				if ($this->isRequired() && $locale->id === $defaultLocale) {
-					$localeValidators[] = 'required';
-				}
-
-				$titleSchema->add($locale->id, 'text', ...$localeValidators);
-				$altSchema->add($locale->id, 'text', ...$localeValidators);
+				$titleSchema->add($locale->id, 'text');
+				$altSchema->add($locale->id, 'text');
 			}
 
 			$fileSchema->add('title', $titleSchema);
