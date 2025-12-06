@@ -16,8 +16,8 @@ use Duon\Cms\Field\Meta\Validate;
 use Duon\Cms\Field\Meta\Width;
 use Duon\Cms\Field\Text;
 use Duon\Cms\Field\Textarea;
-use Duon\Cms\Node\Meta\Name;
 use Duon\Cms\Node\Document;
+use Duon\Cms\Node\Meta\Name;
 
 #[Name('Test Document')]
 class TestDocument extends Document
