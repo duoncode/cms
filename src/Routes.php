@@ -42,38 +42,37 @@ class Routes
 
 	public function add(App $app): void
 	{
-		$indexRouteGet = $app->get('/', [Page::class, 'catchall'], 'cms.index.get');
-		$indexRoutePost = $app->post('/', [Page::class, 'catchall'], 'cms.index.post');
+		$sessionIfEnabled = [
+			$app->get('/', [Page::class, 'catchall'], 'cms.index.get'),
+			$app->post('/', [Page::class, 'catchall'], 'cms.index.post'),
+			$app->get('/media/image/...slug', [Media::class, 'image'], 'cms.media.image'),
+			$app->get('/media/file/...slug', [Media::class, 'file'], 'cms.media.file'),
+			$app->get('/media/video/...slug', [Media::class, 'file'], 'cms.media.video'),
+			$app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall'),
+		];
 
-		$this->addPanelApi($app, $this->session);
-		$this->addApi($app);
-
-		$postMediaRoute = $app->post(
+		$app->post(
 			'/media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid:[A-Za-z0-9-_.]{1,64}}',
 			[Media::class, 'upload'],
 			'cms.media.upload',
-		);
+		)->middleware($this->session);
 
-		$app->get('/media/image/...slug', [Media::class, 'image'], 'cms.media.image');
-		$app->get('/media/file/...slug', [Media::class, 'file'], 'cms.media.file');
-		$app->get('/media/video/...slug', [Media::class, 'file'], 'cms.media.video');
+		$this->addPanelApi($app, $this->session);
+		$this->addApi($app);
 
 		$app->get(
 			$this->panelPath . '/boot',
 			[Panel::class, 'boot'],
 			'cms.panel.boot',
 		)->after(new JsonRenderer($this->factory));
-		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall');
-		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel');
-		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash');
-
-		$previewCatchallRoute = $app->get('/preview/...slug', [Page::class, 'preview'], 'cms.preview.catchall');
+		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall')->middleware($this->session);
+		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel')->middleware($this->session);
+		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash')->middleware($this->session);
 
 		if ($this->sessionEnabled) {
-			$indexRouteGet->middleware($this->session);
-			$indexRoutePost->middleware($this->session);
-			$postMediaRoute->middleware($this->session);
-			$previewCatchallRoute->middleware($this->session);
+			foreach ($sessionIfEnabled as $route) {
+				$route->middleware($this->session);
+			}
 		}
 	}
 
