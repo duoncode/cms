@@ -8,10 +8,11 @@ use Duon\Cms\Field\Field;
 use Duon\Cms\Value;
 use Duon\Sire\Schema;
 
-class Video extends Field implements Capability\Translatable, Capability\FileTranslatable
+class Video extends Field implements Capability\Translatable, Capability\FileTranslatable, Capability\AllowsMultiple
 {
 	use Capability\IsTranslatable;
 	use Capability\FileIsTranslatable;
+	use Capability\DoesAllowMultiple;
 
 	public function value(): Value\Video
 	{
