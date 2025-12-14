@@ -25,4 +25,8 @@ export interface GridField extends SimpleField {
 	minCellWidth: number;
 }
 
-export type Field = ImageField | FileField | SimpleField;
+export interface MatrixField extends SimpleField {
+	subfields: Field[];
+}
+
+export type Field = ImageField | FileField | GridField | MatrixField | SimpleField;

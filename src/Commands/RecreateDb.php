@@ -19,8 +19,7 @@ class RecreateDb extends Command
 		private string $username,
 		private string $password,
 		private string $host = 'localhost',
-	) {
-	}
+	) {}
 
 	public function run(): int|string
 	{

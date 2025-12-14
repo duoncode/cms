@@ -5,6 +5,7 @@ import Grid from '$shell/controls/Grid.svelte';
 import Hidden from '$shell/controls/Hidden.svelte';
 import Html from '$shell/controls/Html.svelte';
 import Image from '$shell/controls/Image.svelte';
+import Matrix from '$shell/controls/Matrix.svelte';
 import Number from '$shell/controls/Number.svelte';
 import Option from '$shell/controls/Option.svelte';
 import Picture from '$shell/controls/Picture.svelte';
@@ -20,6 +21,7 @@ export default {
 	'Duon\\Cms\\Field\\Hidden': Hidden,
 	'Duon\\Cms\\Field\\Html': Html,
 	'Duon\\Cms\\Field\\Image': Image,
+	'Duon\\Cms\\Field\\Matrix': Matrix,
 	'Duon\\Cms\\Field\\Number': Number,
 	'Duon\\Cms\\Field\\Option': Option,
 	'Duon\\Cms\\Field\\Picture': Picture,

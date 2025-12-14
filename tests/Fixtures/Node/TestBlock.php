@@ -7,8 +7,8 @@ namespace Duon\Cms\Tests\Fixtures\Node;
 use Duon\Cms\Field\Meta\Label;
 use Duon\Cms\Field\Meta\Translate;
 use Duon\Cms\Field\Text;
-use Duon\Cms\Node\Meta\Name;
 use Duon\Cms\Node\Block;
+use Duon\Cms\Node\Meta\Name;
 
 #[Name('Test Block')]
 class TestBlock extends Block
