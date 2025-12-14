@@ -36,6 +36,13 @@ export interface BooleanData {
 	value?: boolean;
 }
 
+export interface GenericFieldData {
+	type: string;
+	value?: unknown;
+	files?: FileItem[] | Record<string, TranslatedFile[]>;
+	columns?: number;
+}
+
 export interface FileData {
 	type: 'picture' | 'image' | 'video';
 	files: FileItem[] | Record<string, TranslatedFile[]>;
@@ -103,7 +110,17 @@ export interface GridData {
 	value: GridItem[] | LocalizedGridValue;
 }
 
-export type Data = TextData | FileData | GridData | NumberData;
+// Matrix field types
+export interface MatrixItemData {
+	[subfieldName: string]: Data | GenericFieldData;
+}
+
+export interface MatrixData {
+	type: 'matrix';
+	value: MatrixItemData[];
+}
+
+export type Data = TextData | FileData | GridData | NumberData | MatrixData;
 export type Content = Record<string, Data>;
 export type Route = string | Record<string, string>;
 

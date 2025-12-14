@@ -17,6 +17,7 @@ class Matrix extends Field implements Capability\AllowsMultiple
 	use Capability\DoesAllowMultiple;
 
 	protected array $subfields = [];
+	protected bool $subfieldsInitialized = false;
 
 	public function value(): MatrixValue
 	{
@@ -74,11 +75,34 @@ class Matrix extends Field implements Capability\AllowsMultiple
 
 	public function getSubfields(): array
 	{
+		$this->initSubfields();
+
 		return $this->subfields;
+	}
+
+	public function properties(): array
+	{
+		$this->initSubfields();
+
+		$result = parent::properties();
+		// Override type with base Matrix class so the UI can find the right component
+		$result['type'] = Matrix::class;
+		$result['subfields'] = [];
+
+		foreach ($this->subfields as $subfield) {
+			$result['subfields'][] = $subfield->properties();
+		}
+
+		return $result;
 	}
 
 	protected function initSubfields(): void
 	{
+		if ($this->subfieldsInitialized) {
+			return;
+		}
+
+		$this->subfieldsInitialized = true;
 		$matrixClass = $this::class;
 		$reflection = new ReflectionClass($matrixClass);
 
