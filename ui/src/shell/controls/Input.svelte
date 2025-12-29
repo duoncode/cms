@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { system } from '$lib/sys';
+	import { system, systemLocale } from '$lib/sys';
 	import { setDirty } from '$lib/state';
 	import Label from '$shell/Label.svelte';
 
@@ -21,7 +21,7 @@
 		description = '',
 	}: Props = $props();
 
-	let lang = $state($system.locale);
+	let lang = $state(systemLocale($system));
 
 	function oninput() {
 		setDirty();

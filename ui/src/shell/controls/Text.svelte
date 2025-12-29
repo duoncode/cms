@@ -2,7 +2,7 @@
 	import type { TextData } from '$types/data';
 	import type { SimpleField } from '$types/fields';
 
-	import { system } from '$lib/sys';
+	import { system, systemLocale } from '$lib/sys';
 	import { setDirty } from '$lib/state';
 	import Field from '$shell/Field.svelte';
 	import Label from '$shell/Label.svelte';
@@ -14,7 +14,7 @@
 
 	let { field, data = $bindable() }: Props = $props();
 
-	let lang = $state($system.locale);
+	let lang = $state(systemLocale($system));
 
 	function oninput() {
 		setDirty();

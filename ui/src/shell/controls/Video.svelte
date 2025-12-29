@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { system } from '$lib/sys';
+	import { system, systemLocale } from '$lib/sys';
 	import Field from '$shell/Field.svelte';
 	import Upload from '$shell/Upload.svelte';
 	import LabelDiv from '$shell/LabelDiv.svelte';
@@ -14,7 +14,7 @@
 
 	let { field, data = $bindable(), node }: Props = $props();
 
-	let lang = $state($system.locale);
+	let lang = $state(systemLocale($system));
 </script>
 
 <Field

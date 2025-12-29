@@ -1,15 +1,26 @@
 <script lang="ts">
-	import { system } from '$lib/sys';
+	import type { Locale } from '$lib/sys';
+	import { system, localesMap } from '$lib/sys';
 
 	type Props = {
 		lang: string;
 	};
 
 	let { lang = $bindable() }: Props = $props();
+	const locales = $derived(
+		$system.customLocales.length > 0
+			? customLocales($system.customLocales, $system.locales)
+			: $system.locales,
+	);
+
+	function customLocales(custLocales: string[], locales: Locale[]) {
+		const localesObj = localesMap(locales);
+		return custLocales.map((lang: string) => localesObj[lang]);
+	}
 </script>
 
 <span class="locale-tabs flex-shrink">
-	{#each $system.locales as locale (locale)}
+	{#each locales as locale (locale)}
 		<button
 			class="locale-tab text-sm"
 			class:active={locale.id === lang}

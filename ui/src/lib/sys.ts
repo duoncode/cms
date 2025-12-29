@@ -1,5 +1,6 @@
 import { get } from 'svelte/store';
 import req from '$lib/req';
+import qs from '$lib/qs';
 import { writable, type Writable } from 'svelte/store';
 
 export interface Type {
@@ -20,6 +21,7 @@ export interface System {
 	locale: string;
 	defaultLocale: string;
 	locales: Locale[];
+	customLocales: string[];
 	logo?: string;
 	assets: string;
 	cache: string;
@@ -40,6 +42,7 @@ export const system: Writable<System> = writable({
 	csrfToken: '',
 	locale: 'en',
 	defaultLocale: 'en',
+	customLocales: [],
 	assets: '',
 	cache: '',
 	prefix: '',
@@ -53,14 +56,20 @@ export const system: Writable<System> = writable({
 });
 
 export function localesMap(locales: Locale[]) {
-	const map: Record<string, Locale> = {};
-
-	locales.map(locale => (map[locale.id] = locale));
-
-	return map;
+	return locales.reduce((map: Record<string, Locale>, current: Locale) => {
+		map[current.id] = current;
+		return map;
+	}, {});
 }
 
-export const setup = async (fetchFn: typeof window.fetch) => {
+export function systemLocale(system: System): string {
+	const customLocales = system.customLocales;
+
+	return customLocales.length > 0 ? customLocales[0] : system.locale;
+}
+
+export const setup = async (fetchFn: typeof window.fetch, url: URL) => {
+	const customLocales = qs.asArray(url, 'lang');
 	const sys = get(system);
 
 	if (!sys.initialized) {
@@ -79,6 +88,7 @@ export const setup = async (fetchFn: typeof window.fetch) => {
 			locale: data.locale as string,
 			defaultLocale: data.defaultLocale as string,
 			locales: data.locales as Locale[],
+			customLocales: customLocales as string[],
 			logo: data.logo as string,
 			assets: data.assets as string,
 			cache: data.cache as string,

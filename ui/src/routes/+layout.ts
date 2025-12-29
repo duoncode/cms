@@ -5,8 +5,8 @@ import { setup } from '$lib/sys';
 
 export const ssr = false;
 
-export const load: LayoutLoad = async ({ fetch }) => {
-	const system = await setup(fetch);
+export const load: LayoutLoad = async ({ fetch, url }) => {
+	const system = await setup(fetch, url);
 
 	return { system };
 };
