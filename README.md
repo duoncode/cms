@@ -22,8 +22,12 @@ to allow recreation via command RecreateDb:
 
 System Requirements:
 
-    apt install php8.2 php8.2-pgsql php8.2-gd php8.2-xml php8.2-intl php8.2-curl
+    apt install php8.3 php8.3-pgsql php8.3-gd php8.3-xml php8.3-intl php8.3-curl
 
 For development
 
-    apt install php8.2 php8.2-xdebug
+    apt install php8.3 php8.3-xdebug
+
+macOS/homebrew:
+
+	brew install php php-intl
