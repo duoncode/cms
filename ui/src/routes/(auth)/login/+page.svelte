@@ -73,7 +73,7 @@
 				<div>
 					<label
 						for="login"
-						class="block text-sm font-semibold leading-6 text-gray-900">
+						class="block text-sm leading-6 font-semibold text-gray-900">
 						{_('Benutzername oder E-Mail-Adresse')}
 					</label>
 					<div class="mt-2">
@@ -83,14 +83,14 @@
 							type="text"
 							autocomplete="username"
 							required
-							class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
+							class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-gray-600 focus:ring-inset sm:text-sm sm:leading-6" />
 					</div>
 				</div>
 
 				<div>
 					<label
 						for="password"
-						class="block text-sm font-semibold leading-6 text-gray-900">
+						class="block text-sm leading-6 font-semibold text-gray-900">
 						{_('Passwort')}
 					</label>
 					<div class="mt-2">
@@ -100,7 +100,7 @@
 							type="password"
 							autocomplete="current-password"
 							required
-							class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
+							class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-gray-600 focus:ring-inset sm:text-sm sm:leading-6" />
 					</div>
 				</div>
 

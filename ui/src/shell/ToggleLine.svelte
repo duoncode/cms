@@ -13,7 +13,7 @@
 <div class="flex items-center justify-between">
 	<span class="flex flex-grow flex-col">
 		<span
-			class="text-sm font-semibold leading-6 text-gray-900"
+			class="text-sm leading-6 font-semibold text-gray-900"
 			id="availability-label">
 			{title}
 		</span>

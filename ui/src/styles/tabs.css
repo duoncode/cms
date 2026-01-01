@@ -8,7 +8,7 @@
 
 .tab {
 	@apply border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700;
-	@apply whitespace-nowrap border-b-2 px-1 py-4 text-sm font-semibold;
+	@apply border-b-2 px-1 py-4 text-sm font-semibold whitespace-nowrap;
 	@apply inline-flex items-center;
 
 	&.active {

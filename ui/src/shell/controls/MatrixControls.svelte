@@ -19,13 +19,7 @@
 		toggleCollapse: () => void;
 	};
 
-	let {
-		data = $bindable(),
-		item,
-		index,
-		collapsed,
-		toggleCollapse,
-	}: Props = $props();
+	let { data = $bindable(), item, index, collapsed, toggleCollapse }: Props = $props();
 
 	let { open, close } = getContext<ModalFunctions>('modal');
 	let first = $derived(data?.indexOf(item) === 0);

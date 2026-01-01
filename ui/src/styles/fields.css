@@ -1,6 +1,6 @@
 label,
 .label {
-	@apply block font-semibold leading-6 text-gray-900;
+	@apply block leading-6 font-semibold text-gray-900;
 	@apply flex flex-row items-center;
 
 	div {
@@ -17,7 +17,7 @@ textarea,
 select {
 	@apply block w-full rounded-md border py-1.5 text-gray-900 shadow-xs;
 	@apply border-gray-300 placeholder:text-gray-300;
-	@apply focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6;
+	@apply focus:ring-2 focus:ring-sky-600 focus:ring-inset sm:text-sm sm:leading-6;
 
 	&[disabled] {
 		@apply bg-gray-100 text-gray-600;
@@ -53,7 +53,7 @@ textarea[required] {
 }
 
 .field-description {
-	@apply pl-px pt-1 text-sm text-gray-400;
+	@apply pt-1 pl-px text-sm text-gray-400;
 }
 
 .setting {
@@ -61,7 +61,8 @@ textarea[required] {
 }
 
 textarea.iframe {
-	font-family: 'JetBrains Mono', 'Menlo', 'DejaVu Sans Mono', 'Liberation Mono', 'Consolas',
-		'Ubuntu Mono', 'Courier New', 'andale mono', 'lucida console', monospace;
+	font-family:
+		'JetBrains Mono', 'Menlo', 'DejaVu Sans Mono', 'Liberation Mono', 'Consolas', 'Ubuntu Mono',
+		'Courier New', 'andale mono', 'lucida console', monospace;
 	@apply bg-gray-700 text-gray-100;
 }

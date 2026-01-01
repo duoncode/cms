@@ -37,7 +37,10 @@
 					for (const locale of Object.keys(record)) {
 						const localeValue = record[locale];
 						if (typeof localeValue === 'string' && localeValue.trim()) {
-							return localeValue.substring(0, 50) + (localeValue.length > 50 ? '...' : '');
+							return (
+								localeValue.substring(0, 50) +
+								(localeValue.length > 50 ? '...' : '')
+							);
 						}
 					}
 				}
@@ -71,7 +74,9 @@
 		<div class="matrix-item-body">
 			{#each field.subfields as subfield (subfield.name)}
 				{#if !subfield.hidden && item[subfield.name]}
-					{@const SvelteComponent = controls[subfield.type as keyof typeof controls] as AnyComponent | undefined}
+					{@const SvelteComponent = controls[subfield.type as keyof typeof controls] as
+						| AnyComponent
+						| undefined}
 					{#if SvelteComponent}
 						<div class="matrix-subfield">
 							<SvelteComponent

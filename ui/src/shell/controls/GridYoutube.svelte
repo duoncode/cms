@@ -81,7 +81,7 @@
 				class="relative"
 				style="padding-top: {percent}%">
 				<iframe
-					class="youtube absolute left-0 top-0 h-full w-full"
+					class="youtube absolute top-0 left-0 h-full w-full"
 					title="Youtube Video"
 					src="https://www.youtube.com/embed/{item.value}"
 					allowfullscreen>
