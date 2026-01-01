@@ -11,7 +11,7 @@
 	let { slug, name }: Props = $props();
 </script>
 
-<div class="breadcrumbs mb-4 mt-8 flex flex-row items-center gap-3">
+<div class="breadcrumbs mt-8 mb-4 flex flex-row items-center gap-3">
 	<IcoDocumentTree />
 	<IcoChevronRight />
 	<span>

@@ -8,7 +8,8 @@
 @custom-media --2xl (min-width: 1536px);
 
 :root {
-	--font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+	--font:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
 		'Helvetica Neue', sans-serif;
 
 	/* Sizes */

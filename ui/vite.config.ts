@@ -19,7 +19,7 @@ export default defineConfig({
 		port: devport,
 		host: devhost,
 		strictPort: true,
-		// allowedHosts: true, // TODO: Check if this is necessary. Currently active to allow working with OrbStack domains
+		allowedHosts: true, // TODO: Check if this is necessary. Currently active to allow working with OrbStack domains
 		proxy: {
 			[`/${panelPath}/api`]: target,
 			[`/${panelPath}/boot`]: target,

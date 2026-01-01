@@ -27,7 +27,7 @@
 
 {#if Content}
 	<div
-		class="modal fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/20">
+		class="modal fixed top-0 right-0 bottom-0 left-0 z-50 flex items-center justify-center bg-black/20">
 		<div
 			class="modal-container relative w-full max-w-3xl rounded-md"
 			style={css}>
@@ -36,7 +36,7 @@
 					onclick={close}
 					aria-label="close">
 					<span
-						class="absolute -right-2 -top-2 h-6 w-6 cursor-pointer rounded-full bg-red-600 text-white">
+						class="absolute -top-2 -right-2 h-6 w-6 cursor-pointer rounded-full bg-red-600 text-white">
 						<IcoTimes />
 					</span>
 				</button>

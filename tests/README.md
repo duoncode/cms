@@ -38,10 +38,7 @@ Create a PostgreSQL user for testing:
 
 ```bash
 # Create user with CREATEDB privilege
-sudo -u postgres createuser -d duoncms
-
-# Set password
-sudo -u postgres psql -c "ALTER USER duoncms WITH PASSWORD 'duoncms';"
+sudo -u postgres createuser -d -P duoncms 
 ```
 
 ### 3. Initialize Test Database

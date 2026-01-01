@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
+use Duon\Cms\Field\Grid;
+use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Meta\Columns;
 use Duon\Cms\Field\Meta\Description;
 use Duon\Cms\Field\Meta\Hidden;
@@ -17,8 +19,6 @@ use Duon\Cms\Field\Meta\Translate;
 use Duon\Cms\Field\Meta\TranslateFile;
 use Duon\Cms\Field\Meta\Validate;
 use Duon\Cms\Field\Meta\Width;
-use Duon\Cms\Field\Grid;
-use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Option;
 use Duon\Cms\Field\Text;
 use Duon\Cms\Tests\TestCase;
@@ -42,7 +42,7 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$context = $this->createContext();
 		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
 
-		$nodeClass = new class($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+		$nodeClass = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
 			public function title(): string
 			{
 				return 'Test';
@@ -57,7 +57,7 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$context = $this->createContext();
 		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
 
-		$nodeClass = new class($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+		$nodeClass = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
 			public function title(): string
 			{
 				return 'Test';
@@ -72,7 +72,7 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$context = $this->createContext();
 		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
 
-		$nodeClass = new class($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+		$nodeClass = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
 			public function title(): string
 			{
 				return 'Test';
@@ -87,7 +87,7 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$context = $this->createContext();
 		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
 
-		$nodeClass = new class($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+		$nodeClass = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
 			public function title(): string
 			{
 				return 'Test';

@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex-1 {classes}">
-	<div class="mx-auto mb-12 max-w-7xl border border-gray-200 bg-white pb-4 pt-2 shadow">
+	<div class="mx-auto mb-12 max-w-7xl border border-gray-200 bg-white pt-2 pb-4 shadow">
 		{@render children()}
 	</div>
 </div>
