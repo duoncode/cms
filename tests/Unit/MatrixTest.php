@@ -91,4 +91,69 @@ class MatrixTest extends TestCase
 
 		$this->assertInstanceOf(\Duon\Sire\Schema::class, $schema);
 	}
+
+	public function testMatrixSubfieldsHaveTranslateCapability(): void
+	{
+		$context = $this->createContext();
+		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
+
+		$node = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+			public function title(): string
+			{
+				return 'Test';
+			}
+		};
+
+		$matrix = new TestMatrix('test_matrix', $node, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$subfields = $matrix->getSubfields();
+
+		// Check that title subfield has translate capability set
+		$titleField = $subfields['title'];
+		$this->assertTrue($titleField->isTranslatable(), 'Title subfield should be translatable');
+
+		// Check that the structure for an empty item has locale keys
+		$structure = $matrix->structure([
+			['title' => ['type' => 'text', 'value' => ''], 'content' => ['type' => 'grid', 'value' => []]],
+		]);
+
+		$titleValue = $structure['value'][0]['title']['value'];
+		$this->assertIsArray($titleValue, 'Title value should be array with locale keys');
+		$this->assertArrayHasKey('en', $titleValue);
+		$this->assertArrayHasKey('de', $titleValue);
+	}
+
+	public function testMatrixStructureFromValueContext(): void
+	{
+		$context = $this->createContext();
+		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
+
+		$node = new class ($context, $finder, ['content' => []]) extends \Duon\Cms\Node\Document {
+			public function title(): string
+			{
+				return 'Test';
+			}
+		};
+
+		// Simulate data as it comes from the database (stored format)
+		$storedData = [
+			'type' => 'matrix',
+			'value' => [
+				[
+					'title' => ['type' => 'text', 'value' => ''],
+					'content' => ['type' => 'grid', 'value' => []],
+				],
+			],
+		];
+
+		$matrix = new TestMatrix('test_matrix', $node, new \Duon\Cms\Value\ValueContext('test_matrix', $storedData));
+
+		// Call structure() without arguments - this is how Node::content() calls it
+		$structure = $matrix->structure();
+
+		// The output should have locale keys even though input had empty string
+		$titleValue = $structure['value'][0]['title']['value'];
+		$this->assertIsArray($titleValue, 'Title value should be array with locale keys, got: ' . var_export($titleValue, true));
+		$this->assertArrayHasKey('en', $titleValue);
+		$this->assertArrayHasKey('de', $titleValue);
+	}
 }

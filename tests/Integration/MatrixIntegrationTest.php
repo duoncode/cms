@@ -100,4 +100,36 @@ class MatrixIntegrationTest extends TestCase
 		$this->assertInstanceOf(\Duon\Cms\Field\Text::class, $subfields['title']);
 		$this->assertInstanceOf(\Duon\Cms\Field\Grid::class, $subfields['content']);
 	}
+
+	public function testMatrixSubfieldTranslateStructure(): void
+	{
+		$context = $this->createContext();
+		$finder = $this->createMock(\Duon\Cms\Finder\Finder::class);
+
+		// Create matrix with one empty item
+		$matrix = new TestMatrix(
+			'test_matrix',
+			new TestNodeWithMatrix($context, $finder, ['content' => []]),
+			new \Duon\Cms\Value\ValueContext('test_matrix', [
+				'type' => 'matrix',
+				'value' => [
+					[
+						'title' => ['type' => 'text', 'value' => ''],
+						'content' => ['type' => 'grid', 'columns' => 12, 'value' => []],
+					],
+				],
+			])
+		);
+
+		$structure = $matrix->structure();
+
+		// Subfields with #[Translate] should have locale keys in their value
+		$this->assertCount(1, $structure['value']);
+		$titleValue = $structure['value'][0]['title']['value'];
+		
+		// Should have locale structure, not empty string
+		$this->assertIsArray($titleValue, 'Translatable subfield should have array value with locale keys');
+		$this->assertArrayHasKey('en', $titleValue);
+		$this->assertArrayHasKey('de', $titleValue);
+	}
 }

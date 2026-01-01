@@ -22,12 +22,14 @@ class Matrix extends Field implements Capability\AllowsMultiple
 	public function value(): MatrixValue
 	{
 		$this->initSubfields();
+
 		return new MatrixValue($this->node, $this, $this->valueContext);
 	}
 
 	public function structure(mixed $value = null): array
 	{
-		$value = $value ?? $this->default ?? [];
+		$this->initSubfields();
+		$value = $value ?? $this->valueContext->data['value'] ?? $this->default ?? [];
 
 		if (!is_array($value)) {
 			$value = [];
@@ -39,7 +41,7 @@ class Matrix extends Field implements Capability\AllowsMultiple
 			$itemStructure = [];
 
 			foreach ($this->subfields as $name => $subfield) {
-				$subfieldData = $itemData[$name] ?? null;
+				$subfieldData = $itemData[$name]['value'] ?? null;
 				$itemStructure[$name] = $subfield->structure($subfieldData);
 			}
 

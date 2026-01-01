@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { GenericFieldData, MatrixData, MatrixItemData } from '$types/data';
-	import type { MatrixField } from '$types/fields';
+	import type { Field as FieldType, MatrixField } from '$types/fields';
 
 	import { _ } from '$lib/locale';
 	import { setDirty } from '$lib/state';
+	import { system } from '$lib/sys';
+	import { get } from 'svelte/store';
 	import { flip } from 'svelte/animate';
 	import Field from '$shell/Field.svelte';
 	import LabelDiv from '$shell/LabelDiv.svelte';
@@ -30,12 +32,34 @@
 		return item;
 	}
 
-	function createDefaultValue(subfield: { type: string; name: string }): GenericFieldData {
+	function createTranslatableValue(): Record<string, null> {
+		const sys = get(system);
+		const value: Record<string, null> = {};
+
+		for (const locale of sys.locales) {
+			value[locale.id] = null;
+		}
+
+		return value;
+	}
+
+	function createDefaultValue(subfield: FieldType): GenericFieldData {
+		const isTranslatable = subfield.translate === true;
+
 		// Return appropriate default structure based on field type
 		const typeMap: Record<string, () => GenericFieldData> = {
-			'Duon\\Cms\\Field\\Text': () => ({ type: 'text', value: '' }),
-			'Duon\\Cms\\Field\\Textarea': () => ({ type: 'text', value: '' }),
-			'Duon\\Cms\\Field\\Html': () => ({ type: 'html', value: '' }),
+			'Duon\\Cms\\Field\\Text': () => ({
+				type: 'text',
+				value: isTranslatable ? createTranslatableValue() : '',
+			}),
+			'Duon\\Cms\\Field\\Textarea': () => ({
+				type: 'text',
+				value: isTranslatable ? createTranslatableValue() : '',
+			}),
+			'Duon\\Cms\\Field\\Html': () => ({
+				type: 'html',
+				value: isTranslatable ? createTranslatableValue() : '',
+			}),
 			'Duon\\Cms\\Field\\Checkbox': () => ({ type: 'checkbox', value: false }),
 			'Duon\\Cms\\Field\\Number': () => ({ type: 'number', value: 0 }),
 			'Duon\\Cms\\Field\\Date': () => ({ type: 'date', value: '' }),
@@ -44,7 +68,11 @@
 			'Duon\\Cms\\Field\\Picture': () => ({ type: 'picture', files: [] }),
 			'Duon\\Cms\\Field\\File': () => ({ type: 'file', files: [] }),
 			'Duon\\Cms\\Field\\Video': () => ({ type: 'video', files: [] }),
-			'Duon\\Cms\\Field\\Grid': () => ({ type: 'grid', columns: 12, value: [] }),
+			'Duon\\Cms\\Field\\Grid': () => ({
+				type: 'grid',
+				columns: 12,
+				value: isTranslatable ? createTranslatableValue() : [],
+			}),
 			'Duon\\Cms\\Field\\Option': () => ({ type: 'option', value: '' }),
 			'Duon\\Cms\\Field\\Iframe': () => ({ type: 'iframe', value: '' }),
 			'Duon\\Cms\\Field\\Hidden': () => ({ type: 'hidden', value: '' }),
@@ -56,7 +84,7 @@
 		}
 
 		// Default fallback for unknown types
-		return { type: 'text', value: '' };
+		return { type: 'text', value: isTranslatable ? createTranslatableValue() : '' };
 	}
 
 	function addItem() {
