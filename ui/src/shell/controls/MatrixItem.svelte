@@ -77,15 +77,22 @@
 					{@const SvelteComponent = controls[subfield.type as keyof typeof controls] as
 						| AnyComponent
 						| undefined}
+					{@const widthStyle = subfield.width
+						? `width: calc(${subfield.width}% - 0.5rem)`
+						: 'width: 100%'}
 					{#if SvelteComponent}
-						<div class="matrix-subfield">
+						<div
+							class="matrix-subfield"
+							style={widthStyle}>
 							<SvelteComponent
 								field={subfield}
 								{node}
 								bind:data={item[subfield.name]} />
 						</div>
 					{:else}
-						<div class="matrix-subfield text-gray-500">
+						<div
+							class="matrix-subfield text-gray-500"
+							style={widthStyle}>
 							Unknown field type: {subfield.type}
 						</div>
 					{/if}
@@ -140,11 +147,12 @@
 	.matrix-item-body {
 		padding: 1rem;
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		gap: 1rem;
 	}
 
 	.matrix-subfield {
-		/* Subfields stack vertically */
+		flex-shrink: 0;
+		min-width: 0;
 	}
 </style>
