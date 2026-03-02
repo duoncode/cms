@@ -26,6 +26,7 @@
 	let expanded = $state<Record<string, boolean>>({});
 	let loadingChildren = $state<Record<string, boolean>>({});
 	let childrenByParent = $state<Record<string, Collection['nodes']>>({});
+	let openChildMenuUid = $state<string | null>(null);
 	let hierarchyStateKey = $derived(
 		`${data.slug}:${data.q}:${data.sort}:${data.dir}:${data.offset}:${data.limit}`,
 	);
@@ -44,6 +45,7 @@
 		expanded = {};
 		loadingChildren = {};
 		childrenByParent = {};
+		openChildMenuUid = null;
 	});
 
 	function fmtDate(d: string) {
@@ -116,6 +118,13 @@
 		return `collection/${data.slug}/${uid}?${qs}`;
 	}
 
+	function childCreatePath(parentUid: string, type: string) {
+		const searchParams = new URLSearchParams(query({}));
+		searchParams.set('parent', parentUid);
+
+		return `${base}collection/${data.slug}/create/${type}?${searchParams.toString()}`;
+	}
+
 	async function search() {
 		await goto(collectionPath({ q: searchTerm, offset: 0 }), {
 			invalidateAll: true,
@@ -174,6 +183,7 @@
 	async function toggleChildren(event: MouseEvent, uid: string) {
 		event.preventDefault();
 		event.stopPropagation();
+		openChildMenuUid = null;
 
 		if (isExpanded(uid)) {
 			expanded = { ...expanded, [uid]: false };
@@ -186,6 +196,21 @@
 		}
 
 		expanded = { ...expanded, [uid]: true };
+	}
+
+	function toggleChildMenu(event: MouseEvent, uid: string) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		openChildMenuUid = openChildMenuUid === uid ? null : uid;
+	}
+
+	async function createChild(event: MouseEvent, parentUid: string, type: string) {
+		event.preventDefault();
+		event.stopPropagation();
+		openChildMenuUid = null;
+
+		await goto(childCreatePath(parentUid, type));
 	}
 
 	let first = $derived(data.total === 0 ? 0 : data.offset + 1);
@@ -264,6 +289,39 @@
 														</button>
 													{:else}
 														<span class="cms-tree-spacer"></span>
+													{/if}
+													{#if node.childBlueprints.length > 0}
+														<div class="cms-child-create-wrap">
+															<button
+																type="button"
+																class="cms-child-create-toggle"
+																aria-expanded={openChildMenuUid ===
+																	node.uid}
+																onclick={event =>
+																	toggleChildMenu(
+																		event,
+																		node.uid,
+																	)}>
+																+
+															</button>
+															{#if openChildMenuUid === node.uid}
+																<div class="cms-child-create-menu">
+																	{#each node.childBlueprints as blueprint}
+																		<button
+																			type="button"
+																			class="cms-child-create-option"
+																			onclick={event =>
+																				createChild(
+																					event,
+																					node.uid,
+																					blueprint.slug,
+																				)}>
+																			{blueprint.name}
+																		</button>
+																	{/each}
+																</div>
+															{/if}
+														</div>
 													{/if}
 												</div>
 											</td>
@@ -450,8 +508,10 @@
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
+		gap: var(--cms-space-1);
 		padding-left: calc(var(--cms-tree-depth, 0) * var(--cms-space-5));
 		min-width: var(--cms-space-8);
+		position: relative;
 	}
 
 	.cms-tree-toggle,
@@ -475,6 +535,56 @@
 	.cms-tree-toggle:disabled {
 		cursor: wait;
 		opacity: 0.8;
+	}
+
+	.cms-child-create-wrap {
+		position: relative;
+	}
+
+	.cms-child-create-toggle {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		width: var(--cms-space-6);
+		height: var(--cms-space-6);
+		border: 1px solid var(--cms-color-neutral-300);
+		border-radius: var(--cms-radius-sm);
+		background-color: var(--cms-color-white);
+		color: var(--cms-color-neutral-700);
+		cursor: pointer;
+		padding: 0;
+		font-size: var(--cms-font-size-sm);
+		line-height: 1;
+	}
+
+	.cms-child-create-menu {
+		position: absolute;
+		top: calc(100% + var(--cms-space-1));
+		right: 0;
+		display: flex;
+		flex-direction: column;
+		min-width: 11rem;
+		padding: var(--cms-space-1);
+		border: 1px solid var(--cms-color-neutral-300);
+		border-radius: var(--cms-radius-sm);
+		background-color: var(--cms-color-white);
+		box-shadow: var(--cms-shadow);
+		z-index: 20;
+	}
+
+	.cms-child-create-option {
+		border: none;
+		background: transparent;
+		text-align: left;
+		padding: var(--cms-space-2) var(--cms-space-3);
+		border-radius: var(--cms-radius-sm);
+		cursor: pointer;
+		color: var(--cms-color-neutral-900);
+		font-size: var(--cms-font-size-sm);
+	}
+
+	.cms-child-create-option:hover {
+		background-color: var(--cms-color-neutral-100);
 	}
 
 	.cms-published-value {
