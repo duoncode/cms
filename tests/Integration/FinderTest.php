@@ -174,6 +174,31 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertCount(3, $nodes);
 	}
 
+	public function testCmsNodeShortcutReturnsFilteredNodes(): void
+	{
+		$typeId = $this->createTestType('ordered-test-page');
+
+		$this->createTestNode([
+			'uid' => 'cms-node-shortcut-b',
+			'type' => $typeId,
+		]);
+		$this->createTestNode([
+			'uid' => 'cms-node-shortcut-a',
+			'type' => $typeId,
+		]);
+
+		$cms = $this->createCms();
+		$nodes = $cms->node(
+			"uid ~~ 'cms-node-shortcut-%'",
+			types: ['ordered-test-page'],
+			limit: 1,
+			order: 'uid ASC',
+		);
+
+		$this->assertCount(1, $nodes);
+		$this->assertSame('cms-node-shortcut-a', Factory::meta($nodes[0], 'uid'));
+	}
+
 	public function testFinderAppliesOffset(): void
 	{
 		$typeId = $this->createTestType('limit-test-page');

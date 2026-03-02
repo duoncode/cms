@@ -49,7 +49,21 @@ class Cms
 		int $limit = 0,
 		string $order = '',
 	): array {
-		return (new Node($this->context, $this, $this->nodeFactory, $this->types))->find($query, $types, $limit, $order);
+		$finder = (new Nodes($this->context, $this, $this->nodeFactory, $this->types))->filter($query);
+
+		if ($types !== []) {
+			$finder->types(...$types);
+		}
+
+		if ($order !== '') {
+			$finder->order($order);
+		}
+
+		if ($limit > 0) {
+			$finder->limit($limit);
+		}
+
+		return iterator_to_array($finder);
 	}
 
 	public function menu(string $menu): Menu
