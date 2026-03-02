@@ -387,6 +387,87 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertSame(['children-a', 'children-b'], $filteredUids);
 	}
 
+	public function testNodeChildrenReturnsDirectChildren(): void
+	{
+		$typeId = $this->createTestType('nested-test-page');
+
+		$parentId = $this->createTestNode([
+			'uid' => 'node-children-parent',
+			'type' => $typeId,
+		]);
+		$childA = $this->createTestNode([
+			'uid' => 'node-children-a',
+			'type' => $typeId,
+			'parent' => $parentId,
+		]);
+		$this->createTestNode([
+			'uid' => 'node-children-b',
+			'type' => $typeId,
+			'parent' => $parentId,
+			'published' => false,
+		]);
+		$this->createTestNode([
+			'uid' => 'node-children-c',
+			'type' => $typeId,
+			'parent' => $childA,
+		]);
+
+		$cms = $this->createCms();
+		$parent = $cms->node->byUid('node-children-parent', published: null);
+
+		$this->assertNotNull($parent);
+
+		$children = iterator_to_array($parent->children()->order('uid ASC'));
+
+		$uids = [];
+
+		foreach ($children as $child) {
+			$uids[] = (string) Factory::meta($child, 'uid');
+		}
+
+		$this->assertSame(['node-children-a', 'node-children-b'], $uids);
+	}
+
+	public function testNodeChildrenAppliesDslQuery(): void
+	{
+		$typeId = $this->createTestType('nested-test-page');
+
+		$parentId = $this->createTestNode([
+			'uid' => 'node-dsl-parent',
+			'type' => $typeId,
+		]);
+		$this->createTestNode([
+			'uid' => 'node-dsl-alpha',
+			'type' => $typeId,
+			'parent' => $parentId,
+			'published' => true,
+		]);
+		$this->createTestNode([
+			'uid' => 'node-dsl-beta',
+			'type' => $typeId,
+			'parent' => $parentId,
+			'published' => false,
+		]);
+		$this->createTestNode([
+			'uid' => 'node-other-gamma',
+			'type' => $typeId,
+			'parent' => $parentId,
+			'published' => true,
+		]);
+
+		$cms = $this->createCms();
+		$parent = $cms->node->byUid('node-dsl-parent', published: null);
+
+		$this->assertNotNull($parent);
+
+		$children = iterator_to_array($parent
+			->children("published = true & uid ~~ 'node-dsl-%'")
+			->order('uid ASC'));
+
+		$this->assertCount(1, $children);
+		$this->assertSame('node-dsl-alpha', Factory::meta($children[0], 'uid'));
+	}
+
 	public function testFinderReturnsEmptyArrayWhenNoResults(): void
 	{
 		$finder = $this->createCms();
