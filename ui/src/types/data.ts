@@ -145,6 +145,9 @@ export interface ListedNode {
 	published: boolean;
 	hidden: boolean;
 	locked: boolean;
+	parent: string | null;
+	hasChildren: boolean;
+	childBlueprints: Blueprint[];
 	columns: Column[];
 }
 
@@ -159,6 +162,7 @@ export interface Collection {
 	showPublished: boolean;
 	showHidden: boolean;
 	showLocked: boolean;
+	showChildren: boolean;
 	header: string[];
 	total: number;
 	offset: number;
