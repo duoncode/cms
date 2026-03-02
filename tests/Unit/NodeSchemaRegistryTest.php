@@ -177,7 +177,7 @@ final class NodeSchemaRegistryTest extends TestCase
 			'read' => 'everyone',
 			'create' => 'authenticated',
 			'change' => 'authenticated',
-			'deeete' => 'authenticated',
+			'delete' => 'authenticated',
 		], $schema->permission);
 		// No #[Title] => null
 		$this->assertNull($schema->titleField);

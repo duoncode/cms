@@ -98,7 +98,7 @@ class Registry
 			'read' => 'everyone',
 			'create' => 'authenticated',
 			'change' => 'authenticated',
-			'deeete' => 'authenticated',
+			'delete' => 'authenticated',
 		]);
 		$this->default('titleField', static fn(string $nodeClass, array $properties): ?string => null);
 		$this->default('fieldOrder', static fn(string $nodeClass, array $properties): ?array => null);

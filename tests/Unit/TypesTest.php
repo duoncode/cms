@@ -68,7 +68,7 @@ final class TypesTest extends TestCase
 			'read' => 'everyone',
 			'create' => 'authenticated',
 			'change' => 'authenticated',
-			'deeete' => 'authenticated',
+			'delete' => 'authenticated',
 		], $this->types->schemaOf(NodeWithNameAttribute::class)->permission);
 		$this->assertEquals([
 			'read' => 'me',
