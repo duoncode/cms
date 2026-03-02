@@ -197,6 +197,7 @@ export interface Node {
 	published: boolean;
 	hidden: boolean;
 	locked: boolean;
+	parent?: string | null;
 	deletable: boolean;
 	created: string;
 	changed: string;
