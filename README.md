@@ -10,16 +10,15 @@ Content types (nodes) are plain PHP classes annotated with attributes. There is 
 use Duon\Cms\Field\Text;
 use Duon\Cms\Field\Grid;
 use Duon\Cms\Field\Image;
-use Duon\Cms\Field\Meta\Label;
-use Duon\Cms\Field\Meta\Required;
-use Duon\Cms\Field\Meta\Translate;
 use Duon\Cms\Cms;
-use Duon\Cms\Schema\Name;
+use Duon\Cms\Schema\Label;
+use Duon\Cms\Schema\Required;
 use Duon\Cms\Schema\Route;
+use Duon\Cms\Schema\Translate;
 use Duon\Cms\Node\Contract\Title;
 use Duon\Core\Request;
 
-#[Name('Department'), Route('/{title}')]
+#[Label('Department'), Route('/{title}')]
 final class Department implements Title
 {
     public function __construct(
@@ -55,7 +54,7 @@ final class Department implements Title
 
 | Attribute | Purpose |
 | --------- | ------- |
-| `#[Name('...')]` | Human-readable display name |
+| `#[Label('...')]` | Human-readable display name |
 | `#[Handle('...')]` | URL-safe identifier (auto-derived if omitted) |
 | `#[Route('...')]` | URL pattern for routable nodes |
 | `#[Render('...')]` | Template name override |
