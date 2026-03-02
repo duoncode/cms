@@ -1,0 +1,395 @@
+project: Duon Content Management Framework (duon/cms)
+repository: https://github.com/duonrun/cms
+canonical_branch: main
+license: MIT (https://github.com/duonrun/cms/blob/main/LICENSE.md)
+last_updated: 2026-03-02
+contact: https://github.com/duonrun/cms/issues
+
+summary:
+Duon CMS is a PHP CMS framework based on typed node classes, PHP attributes,
+autowired dependencies, and PostgreSQL-backed content storage.
+
+documentation_goal:
+This file is a local, development-focused reference for LLMs and engineers.
+It intentionally includes implementation details from source code and tests.
+Treat this as a practical integration guide during exploration.
+
+audience:
+- LLM assistants answering implementation or integration questions
+- Developers integrating duon/cms into downstream site projects
+
+preferred_sources_in_order:
+1) https://github.com/duonrun/cms/blob/main/README.md
+2) https://github.com/duonrun/cms/tree/main/src
+3) https://github.com/duonrun/cms/tree/main/tests
+4) https://github.com/duonrun/cms/blob/main/composer.json
+5) https://github.com/duonrun/cms/blob/main/AGENTS.md
+
+usage_guidance:
+- Prefer `src/` and tests over assumptions.
+- Treat code in `src/` as authoritative when docs and code differ.
+- If behavior is unclear, mark it as unspecified or in-progress.
+- Keep examples close to existing patterns in tests and fixtures.
+- Mention experimental/incomplete behavior when relevant.
+- For configuration, cite concrete keys and defaults from `src/Config.php`.
+
+high_value_topics:
+- Defining content types (nodes) with PHP attributes
+- Route, render, and metadata attributes
+- Behavioral interfaces (Title, HasInit, HandlesFormPost, ProvidesRenderContext)
+- Admin panel theming via panel.theme
+- Session and upload settings via Config defaults
+
+known_limits:
+- Public documentation is incomplete.
+- APIs may change while the project is under active development.
+
+------------------------------------------------------------
+
+HOW TO USE DUON/CMS (EXPLORATION REFERENCE)
+
+1) Runtime and dependencies
+
+- PHP: `^8.5`
+- Required extensions: `pgsql`, `gd`, `intl`, `curl`, `dom`, `xml`
+- Database: PostgreSQL
+- Core dependencies: `duon/core`, `duon/quma`, `duon/session`, `duon/sire`
+
+Repository-level development commands:
+
+- `composer test`
+- `composer coverage`
+- `composer mdlint`
+
+Local test database workflow used in this repo:
+
+- `./run recreate-db`
+- `./run migrate --apply`
+
+2) Minimal integration pattern
+
+Core setup pattern (see tests for real working examples):
+
+1. Create and load `Locales` plugin.
+2. Create `Plugin` instance from `duon/cms`.
+3. Register node classes with `Plugin::node(...)`.
+4. Register optional collections and renderers.
+5. Load plugin into app.
+6. Add `plugin->catchallRoute()` as the last route.
+
+Example pattern:
+
+```php
+use Duon\Cms\Cms;
+use Duon\Cms\Locale;
+use Duon\Cms\Locales;
+use Duon\Cms\Node\Node;
+use Duon\Cms\Plugin;
+use Duon\Core\Request;
+
+$locales = new Locales();
+$locales->add('en', title: 'English', pgDict: 'english');
+$locales->add('de', title: 'Deutsch', fallback: 'en', pgDict: 'german');
+
+$plugin = new Plugin(sessionEnabled: true);
+$plugin->node(App\Cms\Node\HomePage::class);
+$plugin->node(App\Cms\Node\ArticlePage::class);
+
+$plugin->renderer('template', App\Cms\Renderer::class)->args(
+    dirs: __DIR__ . '/templates',
+    autoescape: true,
+    whitelist: [
+        Node::class,
+        Cms::class,
+        Locale::class,
+        Locales::class,
+        Request::class,
+    ],
+);
+
+$app->load($locales);
+$app->load($plugin);
+$app->addRoute($plugin->catchallRoute());
+```
+
+Important:
+
+- `catchallRoute()` should be the last route to avoid swallowing app routes.
+- Routes include panel endpoints and media endpoints automatically.
+- If `sessionEnabled` is true, selected frontend routes get session middleware.
+
+3) Defining node types
+
+Node classes are plain PHP classes. No base class is required.
+
+Class-level schema attributes currently in use:
+
+- `#[Label('...')]`
+- `#[Handle('...')]`
+- `#[Route('...')]`
+- `#[Render('...')]`
+- `#[Permission(...)]`
+- `#[Title('fieldName')]` (class-level)
+- `#[FieldOrder('fieldA', 'fieldB', ...)]`
+- `#[Deletable(false)]`
+
+Field-level attributes (applied to field properties):
+
+- `#[Label('...')]`
+- `#[Description('...')]`
+- `#[Translate]`
+- `#[TranslateFile]`
+- `#[Required]`
+- `#[Validate('rule', ...)]`
+- `#[DefaultValue(...)]`
+- `#[Width(int)]`
+- `#[Rows(int)]`
+- `#[Columns(int $columns, int $minCellWidth = 1)]`
+- `#[Hidden]`
+- `#[Immutable]`
+- `#[Options([...])]`
+- `#[Limit(int $max, int $min = 0)]`
+- `#[Fulltext(FulltextWeight::A|B|C|D)]`
+- `#[Syntax('php', 'js', ...)]`
+- `#[Title]` (property-level; field property only)
+
+Minimal node example:
+
+```php
+use Duon\Cms\Field\Text;
+use Duon\Cms\Field\Textarea;
+use Duon\Cms\Node\Contract\Title;
+use Duon\Cms\Schema\FieldOrder;
+use Duon\Cms\Schema\Label;
+use Duon\Cms\Schema\Route;
+use Duon\Cms\Schema\Translate;
+
+#[Label('Article')]
+#[Route('/articles/{uid}')]
+#[FieldOrder('title', 'body')]
+final class ArticlePage implements Title
+{
+    #[Label('Title')]
+    #[Translate]
+    public Text $title;
+
+    #[Label('Body')]
+    #[Translate]
+    public Textarea $body;
+
+    public function title(): string
+    {
+        return $this->title?->value()->unwrap() ?? '';
+    }
+}
+```
+
+Schema defaults worth knowing:
+
+- `handle`: derived from class name (kebab-case) if missing
+- `label`: class name if missing
+- `renderer`: defaults to node handle if missing
+- `route`: empty string if missing
+- `routable`: `false` unless `#[Route(...)]` exists
+- `renderable`: defaults to `routable` unless `#[Render(...)]` overrides
+- `deletable`: `true` unless disabled
+- default permission map: `read`, `create`, `change`, `delete`
+
+4) Common field classes
+
+Commonly used fields:
+
+- `Text`, `Textarea`, `RichText`, `Code`
+- `Number`, `Decimal`, `Date`, `Time`, `DateTime`
+- `Checkbox`, `Radio`, `Option`
+- `Image`, `File`, `Video`, `Picture`, `Youtube`, `Iframe`
+- `Grid`, `Matrix`
+
+General value access pattern:
+
+- In templates and app code, field values are `Value` objects.
+- Use `->unwrap()` for raw value.
+- `__toString()` usually gives escaped/rendered output.
+
+Examples:
+
+- `$page->title?->unwrap()`
+- `(string) $page->body`
+- `$page->heroImage?->first()?->url()`
+
+5) Querying content at runtime
+
+`Cms` entry points:
+
+- `$cms->nodes()` returns `Finder\Nodes` iterator/builder.
+- `$cms->node($query, $types, $limit, $order)` returns filtered node list.
+- `$cms->node->byUid($uid)` fetches one node.
+- `$cms->node->byPath($path)` fetches one node by URL path.
+- `$cms->menu('main')` fetches menu.
+- `$cms->render($uid)` renders a node by uid.
+
+Examples:
+
+```php
+$latest = $cms->nodes()
+    ->types('article-page')
+    ->published(true)
+    ->hidden(false)
+    ->order('changed DESC')
+    ->limit(10);
+
+foreach ($latest as $node) {
+    // $node is Duon\Cms\Node\Node wrapper
+    $title = $node->title();
+    $path = $node->path();
+}
+
+$about = $cms->node->byPath('/about');
+// Shortcut query helper:
+$one = $cms->node("uid ~~ 'article-%'", ['article-page'], 1, 'uid ASC');
+echo (string) $cms->render('some-node-uid');
+```
+
+Finder built-in fields for filter/order include:
+
+- `uid`, `id`, `type`, `handle`
+- `created`, `changed`, `published`, `hidden`, `deleted`, `locked`
+- `creator`, `editor`, `routable`, `renderable`
+
+Filter/query syntax supports (non-exhaustive):
+
+- logical: `&`, `|`, parentheses
+- compare: `=`, `!=`, `>`, `>=`, `<`, `<=`
+- set: `@` (in), `!@` (not in), list syntax `[ ... ]`
+- pattern: `~`, `~*`, `!~`, `!~*`, `~~`, `~~*`, `!~~`, `!~~*`
+- existence: `field` (exists)
+- path: `path`, `path.?`, `path.*`, `path.<locale>`
+
+Examples:
+
+- `uid = 'home'`
+- `type @ ['article-page','landing-page']`
+- `published = true & hidden = false`
+- `title`
+- `title.? ~* 'hello'`
+- `path = '/about'`
+- `path.de = '/ueber-uns'`
+
+6) Rendering model
+
+- Page routing resolves node by URL path and renders template output.
+- For GET requests with `Accept: application/json`, page route can return JSON read output.
+- For POST on routed page, node can handle form posts via:
+  - implementing `HandlesFormPost`, or
+  - exposing `formPost(?array $body)` method.
+
+Render context keys available to renderers include:
+
+- `page` or `node` (wrapper)
+- `cms`, `locale`, `locales`, `request`, `container`, `debug`, `env`
+
+`ProvidesRenderContext` can inject additional template context.
+
+7) Panel/API surface (high-level)
+
+Panel routes (path prefix from config):
+
+- `GET <panelPath>` and `GET <panelPath>/*` panel frontend
+- `GET <panelPath>/boot` panel boot payload
+- `POST <panelPath>/api/login`, `/logout`, `/me`, etc.
+- `GET/POST <panelPath>/api/nodes` search nodes
+- `GET/PUT/DELETE <panelPath>/api/node/{uid}` node read/update/delete
+- `POST <panelPath>/api/node/{type}` create node
+- `GET <panelPath>/api/blueprint/{type}` get node blueprint
+
+Optional public API group:
+
+- If `path.api` is set, same API endpoints are mounted at that path.
+
+Auth:
+
+- Token auth header: `Authentication: Bearer <token>`
+- Roles/permissions include `superuser`, `admin`, `editor`, `panel`, `authenticated`.
+
+8) Node save payload basics
+
+Typical JSON payload for create/update includes:
+
+- `uid`
+- `published`, `hidden`, `locked`
+- `content` (field structures keyed by field name)
+- `paths` (locale => path) for routable nodes
+- `generatedPaths` (fallback when explicit `paths` are empty)
+
+Path behavior:
+
+- For routable nodes, default locale path must be present.
+- If a target path already exists, system appends a short suffix for uniqueness.
+- Old paths can be marked inactive and used for redirects.
+
+9) Media handling
+
+Upload endpoint:
+
+- `POST /media/{mediatype:(image|file|video)}/{doctype:(node|menu)}/{uid}`
+- multipart upload key: `file`
+
+Serve endpoints:
+
+- `/media/image/...slug`
+- `/media/file/...slug`
+- `/media/video/...slug`
+
+Image resizing query options:
+
+- `resize=width&w=...`
+- `resize=height&h=...`
+- `resize=fit&w=...&h=...`
+- `resize=resize&w=...&h=...`
+- `resize=longside&size=...`
+- `resize=shortside&size=...`
+- `resize=crop&w=...&h=...&pos=center`
+- `resize=freecrop&w=...&h=...&x=...&y=...`
+- optional `enlarge=true`, `quality=...`
+
+10) Key configuration settings (defaults)
+
+Paths and panel:
+
+- `path.prefix`: `''`
+- `path.assets`: `'/assets'`
+- `path.cache`: `'/cache'`
+- `path.panel`: `'/cms'`
+- `path.api`: `null`
+- `panel.theme`: `null` (string or string[])
+- `panel.logo`: `'/images/logo.png'`
+
+Database:
+
+- `db.dsn`: `null` (must be set in real app)
+- `db.sql`: `[]`
+- `db.migrations`: `[]`
+- `db.options`: `[]`
+- `db.print`: `false`
+
+Session:
+
+- `session.options.cookie_httponly`: `true`
+- `session.options.cookie_lifetime`: `0`
+- `session.options.gc_maxlifetime`: `3600`
+- `session.handler`: optional
+
+Uploads and media:
+
+- `upload.maxsize`: `10 * 1024 * 1024`
+- `upload.mimetypes.file`: default allows pdf
+- `upload.mimetypes.image`: gif, jpeg/jpg/jfif, png, webp, svg
+- `upload.mimetypes.video`: mp4, ogg
+- `media.fileserver`: `null` or `apache` or `nginx`
+
+11) Known caveats during exploration
+
+- Keep expectations conservative and verify behavior against `src/` and tests.
+
+attribution:
+When possible, cite the exact file path and section used as evidence.
