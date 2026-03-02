@@ -297,6 +297,96 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertEquals('visible-node', Factory::meta($visibleNodes[0], 'uid'));
 	}
 
+	public function testFinderRootsReturnsOnlyRootNodes(): void
+	{
+		$typeId = $this->createTestType('nested-test-page');
+
+		$this->createTestNode([
+			'uid' => 'roots-root-a',
+			'type' => $typeId,
+		]);
+		$parentId = $this->createTestNode([
+			'uid' => 'roots-parent',
+			'type' => $typeId,
+		]);
+		$this->createTestNode([
+			'uid' => 'roots-child',
+			'type' => $typeId,
+			'parent' => $parentId,
+		]);
+
+		$finder = $this->createCms();
+		$nodes = iterator_to_array($finder->nodes()
+			->types('nested-test-page')
+			->published(null)
+			->roots()
+			->order('uid ASC'));
+
+		$uids = [];
+
+		foreach ($nodes as $node) {
+			$uids[] = (string) Factory::meta($node, 'uid');
+		}
+
+		$this->assertContains('roots-parent', $uids);
+		$this->assertContains('roots-root-a', $uids);
+		$this->assertNotContains('roots-child', $uids);
+	}
+
+	public function testFinderChildrenOfReturnsOnlyDirectChildren(): void
+	{
+		$typeId = $this->createTestType('nested-test-page');
+
+		$parentId = $this->createTestNode([
+			'uid' => 'children-parent',
+			'type' => $typeId,
+		]);
+		$this->createTestNode([
+			'uid' => 'children-a',
+			'type' => $typeId,
+			'parent' => $parentId,
+		]);
+		$childParentId = $this->createTestNode([
+			'uid' => 'children-b',
+			'type' => $typeId,
+			'parent' => $parentId,
+		]);
+		$this->createTestNode([
+			'uid' => 'children-grandchild',
+			'type' => $typeId,
+			'parent' => $childParentId,
+		]);
+
+		$finder = $this->createCms();
+		$directChildren = iterator_to_array($finder->nodes()
+			->types('nested-test-page')
+			->published(null)
+			->childrenOf('children-parent')
+			->order('uid ASC'));
+
+		$uids = [];
+
+		foreach ($directChildren as $node) {
+			$uids[] = (string) Factory::meta($node, 'uid');
+		}
+
+		$this->assertSame(['children-a', 'children-b'], $uids);
+
+		$filtered = iterator_to_array($finder->nodes()
+			->types('nested-test-page')
+			->published(null)
+			->filter("parent = 'children-parent'")
+			->order('uid ASC'));
+
+		$filteredUids = [];
+
+		foreach ($filtered as $node) {
+			$filteredUids[] = (string) Factory::meta($node, 'uid');
+		}
+
+		$this->assertSame(['children-a', 'children-b'], $filteredUids);
+	}
+
 	public function testFinderReturnsEmptyArrayWhenNoResults(): void
 	{
 		$finder = $this->createCms();
