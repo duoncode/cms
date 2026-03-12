@@ -8,6 +8,8 @@ contact: https://github.com/duonrun/cms/issues
 summary:
 Duon CMS is a PHP CMS framework based on typed node classes, PHP attributes,
 autowired dependencies, and PostgreSQL-backed content storage.
+It supports explicit parent/child hierarchies via `#[Children(...)]`, lazy
+collection tree loading, and child creation with parent uid persistence.
 
 documentation_goal:
 This file is a local, development-focused reference for LLMs and engineers.
@@ -36,6 +38,7 @@ usage_guidance:
 high_value_topics:
 - Defining content types (nodes) with PHP attributes
 - Route, render, and metadata attributes
+- Parent/child hierarchy metadata with `#[Children(...)]`
 - Behavioral interfaces (Title, HasInit, HandlesFormPost, ProvidesRenderContext)
 - Admin panel theming via panel.theme
 - Session and upload settings via Config defaults
@@ -132,6 +135,14 @@ Class-level schema attributes currently in use:
 - `#[Title('fieldName')]` (class-level)
 - `#[FieldOrder('fieldA', 'fieldB', ...)]`
 - `#[Deletable(false)]`
+- `#[Children(Foo::class, Bar::class, ...)]`
+
+Hierarchy metadata behavior:
+
+- `#[Children(...)]` is the source of truth for allowed direct child node types.
+- If `#[Children]` is missing, node schema `children` defaults to `[]`.
+- Panel child-create options in hierarchy lists map exactly to
+  `#[Children(...)]` declarations.
 
 Field-level attributes (applied to field properties):
 
@@ -193,6 +204,7 @@ Schema defaults worth knowing:
 - `routable`: `false` unless `#[Route(...)]` exists
 - `renderable`: defaults to `routable` unless `#[Render(...)]` overrides
 - `deletable`: `true` unless disabled
+- `children`: `[]` unless declared with `#[Children(...)]`
 - default permission map: `read`, `create`, `change`, `delete`
 
 4) Common field classes
@@ -228,6 +240,11 @@ Examples:
 - `$cms->menu('main')` fetches menu.
 - `$cms->render($uid)` renders a node by uid.
 
+Node wrapper hierarchy helper:
+
+- `$node->children($query = '')` returns direct children of that node.
+- If `$query` is passed, query DSL filtering is applied to the child set.
+
 Examples:
 
 ```php
@@ -254,7 +271,12 @@ Finder built-in fields for filter/order include:
 
 - `uid`, `id`, `type`, `handle`
 - `created`, `changed`, `published`, `hidden`, `deleted`, `locked`
-- `creator`, `editor`, `routable`, `renderable`
+- `creator`, `editor`, `routable`, `renderable`, `parent`
+
+Finder hierarchy helpers:
+
+- `roots()` limits to `parent IS NULL`
+- `childrenOf('<parent-uid>')` limits to direct children of that uid
 
 Filter/query syntax supports (non-exhaustive):
 
@@ -270,6 +292,7 @@ Examples:
 - `uid = 'home'`
 - `type @ ['article-page','landing-page']`
 - `published = true & hidden = false`
+- `parent = 'services'`
 - `title`
 - `title.? ~* 'hello'`
 - `path = '/about'`
@@ -298,6 +321,10 @@ Panel routes (path prefix from config):
 - `GET <panelPath>/boot` panel boot payload
 - `POST <panelPath>/api/login`, `/logout`, `/me`, etc.
 - `GET/POST <panelPath>/api/nodes` search nodes
+- `GET <panelPath>/api/collection/{collection}` list collection rows
+  - hierarchy-enabled collections return roots by default
+  - `?parent=<uid>` returns direct children of the given parent uid
+  - rows include `hasChildren`, `childBlueprints`, and `parent`
 - `GET/PUT/DELETE <panelPath>/api/node/{uid}` node read/update/delete
 - `POST <panelPath>/api/node/{type}` create node
 - `GET <panelPath>/api/blueprint/{type}` get node blueprint
@@ -317,9 +344,14 @@ Typical JSON payload for create/update includes:
 
 - `uid`
 - `published`, `hidden`, `locked`
+- `parent` (optional parent uid; resolved to internal node id on save)
 - `content` (field structures keyed by field name)
 - `paths` (locale => path) for routable nodes
 - `generatedPaths` (fallback when explicit `paths` are empty)
+
+Hierarchy save behavior:
+
+- Invalid `parent` uid is rejected with `400` validation error.
 
 Path behavior:
 
