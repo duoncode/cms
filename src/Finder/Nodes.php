@@ -26,6 +26,7 @@ final class Nodes implements Iterator
 	private ?bool $deleted = false; // defaults to false, if all nodes are needed set $deleted to null
 	private ?bool $published = true; // ditto
 	private ?bool $hidden = false; // ditto
+	private array $whereParams = [];
 	private readonly array $builtins;
 	private Generator $result;
 
@@ -136,9 +137,12 @@ final class Nodes implements Iterator
 			throw new RuntimeException('Parent uid is required');
 		}
 
+		$param = 'parent_uid_' . count($this->whereParams);
+
 		$this->addWhere(
-			'n.parent = (SELECT p.node FROM cms.nodes p WHERE p.uid = ' . $this->context->db->quote($uid) . ')',
+			'n.parent = (SELECT p.node FROM cms.nodes p WHERE p.uid = :' . $param . ')',
 		);
+		$this->whereParams[$param] = $uid;
 
 		return $this;
 	}
@@ -268,6 +272,10 @@ final class Nodes implements Iterator
 		$params = [
 			'condition' => $conditions,
 		];
+
+		if ($this->whereParams !== []) {
+			$params = array_merge($params, $this->whereParams);
+		}
 
 		if (is_bool($this->deleted)) {
 			$params['deleted'] = $this->deleted;
