@@ -148,6 +148,36 @@ final class Nodes implements Iterator
 		return $this;
 	}
 
+	/** @param list<string> $uids */
+	public function childrenOfAny(array $uids): self
+	{
+		$uids = array_values(array_filter(array_map(
+			static fn(string $uid): string => trim($uid),
+			$uids,
+		), static fn(string $uid): bool => $uid !== ''));
+
+		if ($uids === []) {
+			return $this;
+		}
+
+		$params = [];
+		$placeholders = [];
+		$offset = count($this->state->condition()->params);
+
+		foreach ($uids as $index => $uid) {
+			$key = 'parent_uid_' . ($offset + $index);
+			$params[$key] = $uid;
+			$placeholders[] = ':' . $key;
+		}
+
+		$this->addWhere(new SqlFragment(
+			'(SELECT p.uid FROM cms.nodes p WHERE p.node = n.parent) IN (' . implode(', ', $placeholders) . ')',
+			$params,
+		));
+
+		return $this;
+	}
+
 	public function order(string ...$order): self
 	{
 		$compiler = new OrderCompiler($this->builtins, $this->dialect);

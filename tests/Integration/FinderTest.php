@@ -471,6 +471,49 @@ final class FinderTest extends IntegrationTestCase
 		$this->assertSame(['children-a', 'children-b'], $filteredUids);
 	}
 
+	public function testFinderChildrenOfAnyReturnsChildrenForMultipleParents(): void
+	{
+		$typeId = $this->createTestType('nested-test-page');
+
+		$parentA = $this->createTestNode([
+			'uid' => 'children-any-parent-a',
+			'type' => $typeId,
+		]);
+		$parentB = $this->createTestNode([
+			'uid' => 'children-any-parent-b',
+			'type' => $typeId,
+		]);
+
+		$this->createTestNode([
+			'uid' => 'children-any-a1',
+			'type' => $typeId,
+			'parent' => $parentA,
+		]);
+		$this->createTestNode([
+			'uid' => 'children-any-b1',
+			'type' => $typeId,
+			'parent' => $parentB,
+		]);
+		$this->createTestNode([
+			'uid' => 'children-any-unrelated',
+			'type' => $typeId,
+		]);
+
+		$nodes = iterator_to_array($this->createCms()->nodes()
+			->types('nested-test-page')
+			->published(null)
+			->childrenOfAny(['children-any-parent-a', 'children-any-parent-b'])
+			->order('uid ASC'));
+
+		$this->assertSame(
+			['children-any-a1', 'children-any-b1'],
+			array_map(
+				static fn(object $node): string => (string) Factory::meta($node, 'uid'),
+				$nodes,
+			),
+		);
+	}
+
 	public function testNodeChildrenReturnsDirectChildren(): void
 	{
 		$typeId = $this->createTestType('nested-test-page');
