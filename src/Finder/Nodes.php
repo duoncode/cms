@@ -28,6 +28,7 @@ final class Nodes implements Iterator
 	private ?bool $hidden = false; // ditto
 	private array $whereParams = [];
 	private readonly array $builtins;
+	private readonly NodeRecordMapper $records;
 	private Generator $result;
 
 	public function __construct(
@@ -36,6 +37,7 @@ final class Nodes implements Iterator
 		private readonly Factory $nodeFactory,
 		private readonly Types $types,
 	) {
+		$this->records = new NodeRecordMapper($this->context, $this->cms, $this->nodeFactory);
 		$this->builtins = [
 			'changed' => 'n.changed',
 			'created' => 'n.created',
@@ -211,21 +213,7 @@ final class Nodes implements Iterator
 			$this->fetchResult();
 		}
 
-		$page = $this->result->current();
-
-		$page['content'] = json_decode($page['content'], true);
-		$page['editor_data'] = json_decode($page['editor_data'], true);
-		$page['creator_data'] = json_decode($page['creator_data'], true);
-		$page['paths'] = json_decode($page['paths'], true);
-		$class = $this->context
-			->container
-			->tag(Plugin::NODE_TAG)
-			->entry($page['handle'])
-			->definition();
-
-		$node = $this->nodeFactory->create($class, $this->context, $this->cms, $page);
-
-		return $this->nodeFactory->proxy($node, $this->context->request, $this->context, $this->cms);
+		return $this->records->proxy($this->result->current());
 	}
 
 	public function key(): int
