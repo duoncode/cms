@@ -14,7 +14,7 @@ use Duon\Cms\Finder\Condition\TokenPart;
 use Duon\Cms\Finder\Input\Token;
 use Duon\Cms\Finder\Input\TokenType;
 
-final class PostgresDialect implements Dialect
+final class SqliteDialect implements Dialect
 {
 	public function table(string $name): string
 	{
@@ -31,17 +31,11 @@ final class PostgresDialect implements Dialect
 			}
 		}
 
-		$count = count($parts);
-		$arrow = $asJson ? '->' : '->>';
+		$path = count($parts) === 1
+			? '$.' . $parts[0] . '.value'
+			: '$.' . implode('.', $parts);
 
-		if ($count === 1) {
-			return "{$tableField}->'{$parts[0]}'{$arrow}'value'";
-		}
-
-		$middle = implode("'->'", array_slice($parts, 0, $count - 1));
-		$end = array_slice($parts, -1)[0];
-
-		return "{$tableField}->'{$middle}'{$arrow}'{$end}'";
+		return "json_extract({$tableField}, '{$path}')";
 	}
 
 	public function compileConditionPart(Part $part, Context $context, array $builtins): string
@@ -56,13 +50,13 @@ final class PostgresDialect implements Dialect
 
 	public function compileSearchMatch(string $expression, string $needle): string
 	{
-		return "COALESCE(({$expression})::text, '') ILIKE {$needle}";
+		return "LOWER(COALESCE(CAST({$expression} AS TEXT), '')) LIKE LOWER({$needle})";
 	}
 
 	public function keyword(string $keyword): string
 	{
 		return match ($keyword) {
-			'now' => 'NOW()',
+			'now' => "datetime('now')",
 			default => throw new ParserException('Unknown keyword: ' . $keyword),
 		};
 	}
@@ -75,11 +69,11 @@ final class PostgresDialect implements Dialect
 			TokenType::GreaterEqual => '>=',
 			TokenType::Less => '<',
 			TokenType::LessEqual => '<=',
-			TokenType::Like => 'LIKE',
-			TokenType::ILike => 'ILIKE',
+			TokenType::Like,
+			TokenType::ILike => 'LIKE',
 			TokenType::Unequal => '!=',
-			TokenType::Unlike => 'NOT LIKE',
-			TokenType::IUnlike => 'NOT ILIKE',
+			TokenType::Unlike,
+			TokenType::IUnlike => 'NOT LIKE',
 			TokenType::In => 'IN',
 			TokenType::NotIn => 'NOT IN',
 			default => throw new ParserException('Invalid expression operator: ' . $type->name),
@@ -88,39 +82,28 @@ final class PostgresDialect implements Dialect
 
 	private function compileComparison(Comparison $part, Context $context, array $builtins): string
 	{
-		if ($part->right->type === TokenType::Null) {
-			return $this->compileNullComparison($part, $context, $builtins);
+		if (in_array($part->operator->type, [
+			TokenType::Regex,
+			TokenType::IRegex,
+			TokenType::NotRegex,
+			TokenType::INotRegex,
+		], true)) {
+			throw new ParserOutputException($part->operator, 'Regex operators are not supported for SQLite queries.');
 		}
 
 		if ($part->left->type === TokenType::Path || $part->right->type === TokenType::Path) {
 			return $this->compilePathComparison($part, $context);
 		}
 
-		switch ($part->operator->type) {
-			case TokenType::Like:
-			case TokenType::Unlike:
-			case TokenType::ILike:
-			case TokenType::IUnlike:
-			case TokenType::In:
-			case TokenType::NotIn:
-				return $this->compileSqlComparison($part, $context, $builtins);
+		if ($part->right->type === TokenType::Null) {
+			return $this->compileNullComparison($part, $context, $builtins);
 		}
 
-		if ($part->left->type === TokenType::Field) {
-			if ($part->right->type === TokenType::Builtin || $part->right->type === TokenType::Field) {
-				return $this->compileSqlComparison($part, $context, $builtins);
-			}
-
-			return $this->compileJsonPathComparison($part, $context);
-		}
-
-		if ($part->left->type === TokenType::Builtin) {
-			return $this->compileSqlComparison($part, $context, $builtins);
-		}
-
-		throw new ParserOutputException(
-			$part->left,
-			'Only fields or `path` are allowed on the left side of an expression.',
+		return sprintf(
+			'%s %s %s',
+			$this->operand($part->left, $context, $builtins),
+			$this->sqlOperator($part->operator->type),
+			$this->operand($part->right, $context, $builtins),
 		);
 	}
 
@@ -130,10 +113,10 @@ final class PostgresDialect implements Dialect
 			throw new ParserOutputException($part->field, 'Invalid field name in exists condition.');
 		}
 
-		return 'n.content @? '
-			. $context->db->quote(
-				'$.' . $this->fieldPath($part->field->lexeme, $part->field, $context),
-			);
+		return sprintf(
+			"json_type(n.content, '%s') IS NOT NULL",
+			'$.' . $this->fieldPath($part->field->lexeme, $part->field, $context),
+		);
 	}
 
 	private function compileNullComparison(Comparison $part, Context $context, array $builtins): string
@@ -156,53 +139,6 @@ final class PostgresDialect implements Dialect
 		};
 	}
 
-	private function compileJsonPathComparison(Comparison $part, Context $context): string
-	{
-		[$operator, $jsonOperator, $right, $negate] = match ($part->operator->type) {
-			TokenType::Equal => ['@@', '==', $this->jsonLiteral($part->right, $context), false],
-			TokenType::Regex => ['@?', '?', $this->regexLiteral($part->right, $context, false), false],
-			TokenType::IRegex => ['@?', '?', $this->regexLiteral($part->right, $context, true), false],
-			TokenType::NotRegex => ['@?', '?', $this->regexLiteral($part->right, $context, false), true],
-			TokenType::INotRegex => ['@?', '?', $this->regexLiteral($part->right, $context, true), true],
-			TokenType::In => ['@@', 'in', $this->jsonLiteral($part->right, $context), false],
-			TokenType::NotIn => ['@@', 'nin', $this->jsonLiteral($part->right, $context), false],
-			default => ['@@', $part->operator->lexeme, $this->jsonLiteral($part->right, $context), false],
-		};
-
-		return sprintf(
-			"%sn.content %s '$.%s %s %s'",
-			$negate ? 'NOT ' : '',
-			$operator,
-			$this->jsonField($part->left, $context),
-			$jsonOperator,
-			$right,
-		);
-	}
-
-	private function compileSqlComparison(Comparison $part, Context $context, array $builtins): string
-	{
-		return sprintf(
-			'%s %s %s',
-			$this->operand($part->left, $context, $builtins),
-			$this->sqlOperator($part->operator->type),
-			$this->operand($part->right, $context, $builtins),
-		);
-	}
-
-	private function compilePathComparison(Comparison $part, Context $context): string
-	{
-		[$pathToken, $valueToken, $operator] = $this->normalizePathComparison($part);
-		[$localeClause, $isNegated, $condition] = $this->pathCondition($pathToken, $valueToken, $operator, $context);
-
-		return sprintf(
-			'%sEXISTS (SELECT 1 FROM %s p WHERE p.node = n.node AND p.inactive IS NULL%s AND %s)',
-			$isNegated ? 'NOT ' : '',
-			$this->table('urlpaths'),
-			$localeClause,
-			$condition,
-		);
-	}
-
 	private function operand(Token $token, Context $context, array $builtins): string
 	{
 		return match ($token->type) {
@@ -216,82 +152,6 @@ final class PostgresDialect implements Dialect
 			TokenType::List => $token->lexeme,
 			default => throw new ParserOutputException($token, 'Unsupported operand type.'),
 		};
-	}
-
-	private function jsonField(Token $token, Context $context): string
-	{
-		$parts = explode('.', $token->lexeme);
-
-		return match (count($parts)) {
-			2 => $this->compileJsonField($parts, $context),
-			1 => $parts[0] . '.value',
-			default => $this->compileJsonAccessor($parts, $token),
-		};
-	}
-
-	private function compileJsonField(array $segments, Context $context): string
-	{
-		return match ($segments[1]) {
-			'*' => $segments[0] . '.value.*',
-			'?' => $segments[0] . '.value.' . $context->localeId(),
-			default => implode('.', $segments),
-		};
-	}
-
-	private function compileJsonAccessor(array $segments, Token $token): string
-	{
-		$accessor = implode('.', $segments);
-
-		if (strpos($accessor, '?') !== false) {
-			throw new ParserOutputException(
-				$token,
-				'The questionmark is allowed after the first dot only.',
-			);
-		}
-
-		return $accessor;
-	}
-
-	private function jsonLiteral(Token $token, Context $context): string
-	{
-		return match ($token->type) {
-			TokenType::String => $this->quoteJsonString($token->lexeme, $context),
-			TokenType::Number,
-			TokenType::Boolean,
-			TokenType::List,
-			TokenType::Null => $token->lexeme,
-			default => throw new ParserOutputException(
-				$token,
-				'The right hand side in a field expression must be a literal',
-			),
-		};
-	}
-
-	private function quoteJsonString(string $string, Context $context): string
-	{
-		return sprintf(
-			'"%s"',
-			preg_replace(
-				'/(?<!\\\\)(")/',
-				'\\"',
-				trim($context->db->quote($string), "'"),
-			),
-		);
-	}
-
-	private function regexLiteral(Token $token, Context $context, bool $ignoreCase): string
-	{
-		if ($token->type !== TokenType::String) {
-			throw new ParserOutputException(
-				$token,
-				'Only strings are allowed on the right side of a regex expressions.',
-			);
-		}
-
-		$case = $ignoreCase ? ' flag "i"' : '';
-		$pattern = '"' . trim($context->db->quote($token->lexeme), "'") . '"';
-
-		return sprintf('(@ like_regex %s%s)', $pattern, $case);
 	}
 
 	private function fieldPath(string $field, Token $token, Context $context): string
@@ -317,10 +177,24 @@ final class PostgresDialect implements Dialect
 		}
 
 		if (count($parts) === 2 && $parts[1] === '*') {
-			return $parts[0] . '.value.*';
+			return $parts[0] . '.value';
 		}
 
 		return implode('.', $parts);
+	}
+
+	private function compilePathComparison(Comparison $part, Context $context): string
+	{
+		[$pathToken, $valueToken, $operator] = $this->normalizePathComparison($part);
+		[$localeClause, $isNegated, $condition] = $this->pathCondition($pathToken, $valueToken, $operator, $context);
+
+		return sprintf(
+			'%sEXISTS (SELECT 1 FROM %s p WHERE p.node = n.node AND p.inactive IS NULL%s AND %s)',
+			$isNegated ? 'NOT ' : '',
+			$this->table('urlpaths'),
+			$localeClause,
+			$condition,
+		);
 	}
 
 	/** @return array{0: Token, 1: Token, 2: TokenType} */
@@ -356,21 +230,17 @@ final class PostgresDialect implements Dialect
 		return match ($operator) {
 			TokenType::Equal => [$localeClause, false, $this->pathIsComparison($valueToken, true, $context)],
 			TokenType::Unequal => [$localeClause, true, $this->pathIsComparison($valueToken, true, $context)],
-			TokenType::Like => [$localeClause, false, $this->pathScalarComparison($valueToken, 'LIKE', $context)],
-			TokenType::Unlike => [$localeClause, true, $this->pathScalarComparison($valueToken, 'LIKE', $context)],
-			TokenType::ILike => [$localeClause, false, $this->pathScalarComparison($valueToken, 'ILIKE', $context)],
-			TokenType::IUnlike => [$localeClause, true, $this->pathScalarComparison($valueToken, 'ILIKE', $context)],
-			TokenType::Regex => [$localeClause, false, $this->pathScalarComparison($valueToken, '~', $context)],
-			TokenType::NotRegex => [$localeClause, true, $this->pathScalarComparison($valueToken, '~', $context)],
-			TokenType::IRegex => [$localeClause, false, $this->pathScalarComparison($valueToken, '~*', $context)],
-			TokenType::INotRegex => [$localeClause, true, $this->pathScalarComparison($valueToken, '~*', $context)],
+			TokenType::Like,
+			TokenType::ILike => [$localeClause, false, $this->pathScalarComparison($valueToken, 'LIKE', $context)],
+			TokenType::Unlike,
+			TokenType::IUnlike => [$localeClause, true, $this->pathScalarComparison($valueToken, 'LIKE', $context)],
 			TokenType::In => [$localeClause, false, $this->pathScalarComparison($valueToken, 'IN', $context)],
 			TokenType::NotIn => [$localeClause, true, $this->pathScalarComparison($valueToken, 'IN', $context)],
 			TokenType::Greater => [$localeClause, false, $this->pathScalarComparison($valueToken, '>', $context)],
 			TokenType::GreaterEqual => [$localeClause, false, $this->pathScalarComparison($valueToken, '>=', $context)],
 			TokenType::Less => [$localeClause, false, $this->pathScalarComparison($valueToken, '<', $context)],
 			TokenType::LessEqual => [$localeClause, false, $this->pathScalarComparison($valueToken, '<=', $context)],
-			default => throw new ParserOutputException($valueToken, 'Operator not supported for path expressions.'),
+			default => throw new ParserOutputException($valueToken, 'Operator not supported for SQLite path expressions.'),
 		};
 	}
 

@@ -45,7 +45,7 @@ final class Nodes implements Iterator
 			'locked' => 'n.locked',
 			'published' => 'n.published',
 			'hidden' => 'n.hidden',
-			'parent' => '(SELECT p.uid FROM cms.nodes p WHERE p.node = n.parent)',
+			'parent' => '(SELECT p.uid FROM ' . $this->dialect->table('nodes') . ' p WHERE p.node = n.parent)',
 			'routable' => $this->typeFlagExpression(
 				fn(string $class): bool => (bool) $this->types->get($class, 'routable', false),
 			),
@@ -141,7 +141,7 @@ final class Nodes implements Iterator
 		$param = 'parent_uid_' . count($this->state->condition()->params);
 
 		$this->addWhere(new SqlFragment(
-			'n.parent = (SELECT p.node FROM cms.nodes p WHERE p.uid = :' . $param . ')',
+			'n.parent = (SELECT p.node FROM ' . $this->dialect->table('nodes') . ' p WHERE p.uid = :' . $param . ')',
 			[$param => $uid],
 		));
 
@@ -171,7 +171,7 @@ final class Nodes implements Iterator
 		}
 
 		$this->addWhere(new SqlFragment(
-			'(SELECT p.uid FROM cms.nodes p WHERE p.node = n.parent) IN (' . implode(', ', $placeholders) . ')',
+			'(SELECT p.uid FROM ' . $this->dialect->table('nodes') . ' p WHERE p.node = n.parent) IN (' . implode(', ', $placeholders) . ')',
 			$params,
 		));
 

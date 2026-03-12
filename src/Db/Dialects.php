@@ -13,6 +13,7 @@ final class Dialects
 	{
 		return match ($db->getPdoDriver()) {
 			'pgsql' => new PostgresDialect(),
+			'sqlite' => new SqliteDialect(),
 			default => throw new RuntimeException('Database driver not supported: ' . $db->getPdoDriver()),
 		};
 	}

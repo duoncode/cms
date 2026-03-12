@@ -10,6 +10,8 @@ use Duon\Cms\Finder\Input\TokenType;
 
 interface Dialect
 {
+	public function table(string $name): string;
+
 	public function compileField(string $fieldName, string $tableField, bool $asJson = false): string;
 
 	public function compileConditionPart(Part $part, Context $context, array $builtins): string;

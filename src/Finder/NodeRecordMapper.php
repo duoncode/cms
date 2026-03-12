@@ -45,11 +45,29 @@ final class NodeRecordMapper
 	{
 		return [
 			...$record,
+			'published' => $this->boolean($record, 'published'),
+			'hidden' => $this->boolean($record, 'hidden'),
+			'locked' => $this->boolean($record, 'locked'),
 			'content' => $this->decode($record, 'content'),
 			'editor_data' => $this->decode($record, 'editor_data'),
 			'creator_data' => $this->decode($record, 'creator_data'),
 			'paths' => $this->decode($record, 'paths'),
 		];
+	}
+
+	private function boolean(array $record, string $key): ?bool
+	{
+		$value = $record[$key] ?? null;
+
+		if ($value === null || is_bool($value)) {
+			return $value;
+		}
+
+		return match ($value) {
+			0, '0' => false,
+			1, '1' => true,
+			default => (bool) $value,
+		};
 	}
 
 	private function decode(array $record, string $key): mixed
