@@ -8,6 +8,7 @@ use Duon\Cms\Cms;
 use Duon\Cms\Context;
 use Duon\Cms\Node\Types;
 use Duon\Cms\Plugin;
+use Duon\Cms\Renderer;
 use Duon\Container\Container;
 use Duon\Quma\Connection;
 use Duon\Quma\Database;
@@ -174,6 +175,8 @@ class IntegrationTestCase extends TestCase
 			->add('delete-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$container->tag(Plugin::NODE_TAG)
 			->add('renderable-test-page', \Duon\Cms\Tests\Fixtures\Node\TestPage::class);
+		$container->tag(Renderer::class)
+			->add('template', \Duon\Cms\Tests\Fixtures\TestRenderer::class);
 
 		return $container;
 	}
