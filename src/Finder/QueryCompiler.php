@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Duon\Cms\Finder;
 
 use Duon\Cms\Context;
-use Duon\Cms\Finder\Condition\ExpressionCompiler;
+use Duon\Cms\Db\Dialect;
+use Duon\Cms\Db\Dialects;
 
 final class QueryCompiler
 {
+	private readonly Dialect $dialect;
+
 	public function __construct(
 		private readonly Context $context,
 		private readonly array $builtins,
-	) {}
+	) {
+		$this->dialect = Dialects::for($this->context->db);
+	}
 
 	public function compile(string $query): string
 	{
@@ -32,11 +37,10 @@ final class QueryCompiler
 			return SqlFragment::empty();
 		}
 
-		$compiler = new ExpressionCompiler($this->context, $this->builtins);
 		$clause = '';
 
 		foreach ($parserOutput as $output) {
-			$clause .= $compiler->compile($output);
+			$clause .= $this->dialect->compileConditionPart($output, $this->context, $this->builtins);
 		}
 
 		return new SqlFragment($clause);

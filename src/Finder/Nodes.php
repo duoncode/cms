@@ -6,6 +6,8 @@ namespace Duon\Cms\Finder;
 
 use Duon\Cms\Cms;
 use Duon\Cms\Context;
+use Duon\Cms\Db\Dialect;
+use Duon\Cms\Db\Dialects;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Node\Factory;
 use Duon\Cms\Node\Node;
@@ -19,6 +21,7 @@ final class Nodes implements Iterator
 	use CompilesField;
 
 	private QueryState $state;
+	private readonly Dialect $dialect;
 	private readonly array $builtins;
 	private readonly NodeRecordMapper $records;
 	private Generator $result;
@@ -30,6 +33,7 @@ final class Nodes implements Iterator
 		private readonly Types $types,
 	) {
 		$this->state = QueryState::defaults();
+		$this->dialect = Dialects::for($this->context->db);
 		$this->records = new NodeRecordMapper($this->context, $this->cms, $this->nodeFactory);
 		$this->builtins = [
 			'changed' => 'n.changed',
@@ -93,7 +97,7 @@ final class Nodes implements Iterator
 		foreach ($terms as $term) {
 			$needle = $this->context->db->quote('%' . $term . '%');
 			$fieldClauses = array_map(
-				fn(string $expression): string => "COALESCE(({$expression})::text, '') ILIKE {$needle}",
+				fn(string $expression): string => $this->dialect->compileSearchMatch($expression, $needle),
 				$expressions,
 			);
 
@@ -146,7 +150,7 @@ final class Nodes implements Iterator
 
 	public function order(string ...$order): self
 	{
-		$compiler = new OrderCompiler($this->builtins);
+		$compiler = new OrderCompiler($this->builtins, $this->dialect);
 		$this->state = $this->state->withOrder($compiler->compile(implode(',', $order)));
 
 		return $this;
@@ -298,5 +302,10 @@ final class Nodes implements Iterator
 		}
 
 		return 't.handle IN (' . implode(', ', $handles) . ')';
+	}
+
+	protected function dialect(): Dialect
+	{
+		return $this->dialect;
 	}
 }
