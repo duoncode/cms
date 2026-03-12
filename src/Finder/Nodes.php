@@ -18,15 +18,7 @@ final class Nodes implements Iterator
 {
 	use CompilesField;
 
-	private string $whereFields = '';
-	private string $whereTypes = '';
-	private string $order = '';
-	private ?int $limit = null;
-	private ?int $offset = null;
-	private ?bool $deleted = false; // defaults to false, if all nodes are needed set $deleted to null
-	private ?bool $published = true; // ditto
-	private ?bool $hidden = false; // ditto
-	private array $whereParams = [];
+	private QueryState $state;
 	private readonly array $builtins;
 	private readonly NodeRecordMapper $records;
 	private Generator $result;
@@ -37,6 +29,7 @@ final class Nodes implements Iterator
 		private readonly Factory $nodeFactory,
 		private readonly Types $types,
 	) {
+		$this->state = QueryState::defaults();
 		$this->records = new NodeRecordMapper($this->context, $this->cms, $this->nodeFactory);
 		$this->builtins = [
 			'changed' => 'n.changed',
@@ -64,7 +57,9 @@ final class Nodes implements Iterator
 	public function filter(string $query): self
 	{
 		$compiler = new QueryCompiler($this->context, $this->builtins);
-		$this->addWhere($compiler->compile($query));
+		$this->state = $this->state->withFilters(
+			$this->state->filters->and($compiler->compileFragment($query)),
+		);
 
 		return $this;
 	}
@@ -105,28 +100,28 @@ final class Nodes implements Iterator
 			$termClauses[] = '(' . implode(' OR ', $fieldClauses) . ')';
 		}
 
-		$this->addWhere(implode(' AND ', $termClauses));
+		$this->addWhere(new SqlFragment(implode(' AND ', $termClauses)));
 
 		return $this;
 	}
 
 	public function types(string ...$types): self
 	{
-		$this->whereTypes = $this->typesCondition($types);
+		$this->state = $this->state->withTypes($this->typesCondition($types));
 
 		return $this;
 	}
 
 	public function type(string $type): self
 	{
-		$this->whereTypes = $this->typesCondition([$type]);
+		$this->state = $this->state->withTypes($this->typesCondition([$type]));
 
 		return $this;
 	}
 
 	public function roots(): self
 	{
-		$this->addWhere('n.parent IS NULL');
+		$this->addWhere(new SqlFragment('n.parent IS NULL'));
 
 		return $this;
 	}
@@ -139,12 +134,12 @@ final class Nodes implements Iterator
 			throw new RuntimeException('Parent uid is required');
 		}
 
-		$param = 'parent_uid_' . count($this->whereParams);
+		$param = 'parent_uid_' . count($this->state->condition()->params);
 
-		$this->addWhere(
+		$this->addWhere(new SqlFragment(
 			'n.parent = (SELECT p.node FROM cms.nodes p WHERE p.uid = :' . $param . ')',
-		);
-		$this->whereParams[$param] = $uid;
+			[$param => $uid],
+		));
 
 		return $this;
 	}
@@ -152,49 +147,49 @@ final class Nodes implements Iterator
 	public function order(string ...$order): self
 	{
 		$compiler = new OrderCompiler($this->builtins);
-		$this->order = $compiler->compile(implode(',', $order));
+		$this->state = $this->state->withOrder($compiler->compile(implode(',', $order)));
 
 		return $this;
 	}
 
 	public function limit(int $limit): self
 	{
-		$this->limit = $limit;
+		$this->state = $this->state->withLimit($limit);
 
 		return $this;
 	}
 
 	public function offset(int $offset): self
 	{
-		$this->offset = $offset;
+		$this->state = $this->state->withOffset($offset);
 
 		return $this;
 	}
 
 	public function count(): int
 	{
-		$record = $this->context->db->nodes->count($this->baseParams())->one();
+		$record = $this->context->db->nodes->count($this->state->baseParams())->one();
 
 		return (int) ($record['count'] ?? 0);
 	}
 
 	public function published(?bool $published): self
 	{
-		$this->published = $published;
+		$this->state = $this->state->withPublished($published);
 
 		return $this;
 	}
 
 	public function hidden(?bool $hidden): self
 	{
-		$this->hidden = $hidden;
+		$this->state = $this->state->withHidden($hidden);
 
 		return $this;
 	}
 
 	public function deleted(?bool $deleted): self
 	{
-		$this->deleted = $deleted;
+		$this->state = $this->state->withDeleted($deleted);
 
 		return $this;
 	}
@@ -233,68 +228,16 @@ final class Nodes implements Iterator
 
 	private function fetchResult(): void
 	{
-		$params = $this->baseParams();
-
-		if ($this->order) {
-			$params['order'] = $this->order;
-		}
-
-		if ($this->limit !== null) {
-			$params['limit'] = $this->limit;
-		}
-
-		if ($this->offset !== null) {
-			$params['offset'] = $this->offset;
-		}
-
-		$this->result = $this->context->db->nodes->find($params)->lazy();
+		$this->result = $this->context->db->nodes->find($this->state->findParams())->lazy();
 	}
 
-	private function baseParams(): array
+	private function addWhere(SqlFragment $fragment): void
 	{
-		$conditions = implode(' AND ', array_filter([
-			trim($this->whereFields),
-			trim($this->whereTypes),
-		], fn($clause) => !empty($clause)));
-
-		$params = [
-			'condition' => $conditions,
-		];
-
-		if ($this->whereParams !== []) {
-			$params = array_merge($params, $this->whereParams);
-		}
-
-		if (is_bool($this->deleted)) {
-			$params['deleted'] = $this->deleted;
-		}
-
-		if (is_bool($this->published)) {
-			$params['published'] = $this->published;
-		}
-
-		if (is_bool($this->hidden)) {
-			$params['hidden'] = $this->hidden;
-		}
-
-		return $params;
-	}
-
-	private function addWhere(string $clause): void
-	{
-		$clause = trim($clause);
-
-		if ($clause === '') {
+		if ($fragment->isEmpty()) {
 			return;
 		}
 
-		if ($this->whereFields === '') {
-			$this->whereFields = $clause;
-
-			return;
-		}
-
-		$this->whereFields = "({$this->whereFields}) AND ({$clause})";
+		$this->state = $this->state->withFilters($this->state->filters->and($fragment));
 	}
 
 	private function fieldExpression(string $field): string
@@ -312,7 +255,7 @@ final class Nodes implements Iterator
 		return $this->compileField($field, 'n.content');
 	}
 
-	private function typesCondition(array $types): string
+	private function typesCondition(array $types): SqlFragment
 	{
 		$result = [];
 
@@ -324,13 +267,13 @@ final class Nodes implements Iterator
 			$result[] = 't.handle = ' . $this->context->db->quote($type);
 		}
 
-		return match (count($result)) {
+		return new SqlFragment(match (count($result)) {
 			0 => '',
 			1 => '    ' . $result[0],
 			default => "    (\n        "
 				. implode("\n        OR ", $result)
 				. "\n    )",
-		};
+		});
 	}
 
 	private function typeFlagExpression(callable $flag): string

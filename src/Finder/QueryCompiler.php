@@ -17,15 +17,20 @@ final class QueryCompiler
 
 	public function compile(string $query): string
 	{
+		return $this->compileFragment($query)->sql;
+	}
+
+	public function compileFragment(string $query): SqlFragment
+	{
 		$parser = new QueryParser($this->context, $this->builtins);
 
 		return $this->build($parser->parse($query));
 	}
 
-	private function build(array $parserOutput): string
+	private function build(array $parserOutput): SqlFragment
 	{
 		if (count($parserOutput) === 0) {
-			return '';
+			return SqlFragment::empty();
 		}
 
 		$clause = '';
@@ -34,7 +39,7 @@ final class QueryCompiler
 			$clause .= $output->get();
 		}
 
-		return $clause;
+		return new SqlFragment($clause);
 	}
 
 	private function translateKeyword(string $keyword): string
