@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Duon\Cms\Finder;
 
 use Duon\Cms\Context;
+use Duon\Cms\Finder\Condition\ExpressionCompiler;
 
 final class QueryCompiler
 {
-	use CompilesField;
-
 	public function __construct(
 		private readonly Context $context,
 		private readonly array $builtins,
@@ -33,20 +32,13 @@ final class QueryCompiler
 			return SqlFragment::empty();
 		}
 
+		$compiler = new ExpressionCompiler($this->context, $this->builtins);
 		$clause = '';
 
 		foreach ($parserOutput as $output) {
-			$clause .= $output->get();
+			$clause .= $compiler->compile($output);
 		}
 
 		return new SqlFragment($clause);
-	}
-
-	private function translateKeyword(string $keyword): string
-	{
-		return match ($keyword) {
-			'now' => 'NOW()',
-			'fulltext' => 'tsv websearch_to_tsquery',
-		};
 	}
 }
