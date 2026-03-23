@@ -12,7 +12,9 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 class AddLocale implements Middleware
 {
-	public function __construct(protected Locales $locales) {}
+	public function __construct(
+		protected Locales $locales,
+	) {}
 
 	public function process(Request $request, Handler $handler): Response
 	{

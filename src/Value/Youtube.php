@@ -10,15 +10,22 @@ class Youtube extends Value
 	{
 		$x = (float) $this->data['aspectRatioX'];
 		$y = (float) $this->data['aspectRatioY'];
-		$percent = number_format($y / $x * 100, 2, '.', '');
+		$percent = number_format(($y / $x) * 100, 2, '.', '');
 		$iframeStyle = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%';
 
-		return '<div class="youtube-container">'
-			. '<div style="position: relative; padding-top: ' . $percent . '%">'
-			. '<iframe class="youtube" style="' . $iframeStyle . '" '
-			. 'src="https://www.youtube.com/embed/' . $this->data['value']
+		return (
+			'<div class="youtube-container">'
+			. '<div style="position: relative; padding-top: '
+			. $percent
+			. '%">'
+			. '<iframe class="youtube" style="'
+			. $iframeStyle
+			. '" '
+			. 'src="https://www.youtube.com/embed/'
+			. $this->data['value']
 			. '" allowfullscreen></iframe>'
-		. '</div></div>';
+			. '</div></div>'
+		);
 	}
 
 	public function unwrap(): mixed

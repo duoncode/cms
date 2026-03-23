@@ -171,7 +171,13 @@ class Plugin implements CorePlugin
 			return;
 		}
 
-		$types = array_map(fn($record) => $record['handle'], $this->db->nodes->types()->all());
+		$types = array_map(
+			fn($record) => $record['handle'],
+			$this->db
+				->nodes
+				->types()
+				->all(),
+		);
 
 		foreach ($this->nodes as $handle => $class) {
 			if (!in_array($handle, $types)) {

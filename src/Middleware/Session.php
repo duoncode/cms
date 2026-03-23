@@ -14,7 +14,10 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 class Session implements Middleware
 {
-	public function __construct(protected Config $config, protected Database $db) {}
+	public function __construct(
+		protected Config $config,
+		protected Database $db,
+	) {}
 
 	public function process(Request $request, Handler $handler): Response
 	{
@@ -28,7 +31,7 @@ class Session implements Middleware
 		$expires = $this->config->get('session.options')['gc_maxlifetime'];
 		$lastActivity = $session->lastActivity();
 
-		if ($lastActivity && (time() - $lastActivity > $expires)) {
+		if ($lastActivity && (time() - $lastActivity) > $expires) {
 			$session->forget();
 			$session->start();
 		}
@@ -37,7 +40,7 @@ class Session implements Middleware
 		$userId = $session->authenticatedUserId();
 
 		if ($userId) {
-			$user = (new Users($this->db))->byId($userId);
+			$user = new Users($this->db)->byId($userId);
 			$request = $request->withAttribute('user', $user);
 		}
 

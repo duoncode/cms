@@ -10,7 +10,9 @@ final class OrderCompiler
 {
 	use CompilesField;
 
-	public function __construct(private readonly array $builtins = []) {}
+	public function __construct(
+		private readonly array $builtins = [],
+	) {}
 
 	public function compile(string $statement): string
 	{

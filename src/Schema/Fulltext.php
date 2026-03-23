@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 readonly class Fulltext
 {
-	public function __construct(public FulltextWeight $fulltextWeight) {}
+	public function __construct(
+		public FulltextWeight $fulltextWeight,
+	) {}
 }

@@ -90,12 +90,26 @@ class Registry
 
 	private function registerDefaultProperties(): void
 	{
-		$this->default('handle', static fn(string $nodeClass, array $properties): string => self::deriveHandle(self::className($nodeClass)));
-		$this->default('label', static fn(string $nodeClass, array $properties): string => self::className($nodeClass));
-		$this->default('renderer', static fn(string $nodeClass, array $properties): string => (string) ($properties['handle'] ?? ''));
+		$this->default('handle', static fn(
+			string $nodeClass,
+			array $properties,
+		): string => self::deriveHandle(self::className($nodeClass)));
+		$this->default('label', static fn(
+			string $nodeClass,
+			array $properties,
+		): string => self::className($nodeClass));
+		$this->default(
+			'renderer',
+			static fn(string $nodeClass, array $properties): string => (string) (
+				$properties['handle'] ?? ''
+			),
+		);
 		$this->default('route', static fn(string $nodeClass, array $properties): string => '');
 		$this->default('routable', static fn(string $nodeClass, array $properties): bool => false);
-		$this->default('renderable', static fn(string $nodeClass, array $properties): bool => ($properties['routable'] ?? false));
+		$this->default(
+			'renderable',
+			static fn(string $nodeClass, array $properties): bool => $properties['routable'] ?? false,
+		);
 		$this->default('permission', static fn(string $nodeClass, array $properties): array => [
 			'read' => 'everyone',
 			'create' => 'authenticated',

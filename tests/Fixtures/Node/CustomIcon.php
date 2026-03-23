@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 readonly class CustomIcon
 {
-	public function __construct(public string $value) {}
+	public function __construct(
+		public string $value,
+	) {}
 }

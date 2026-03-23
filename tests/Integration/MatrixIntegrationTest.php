@@ -45,16 +45,19 @@ class MatrixIntegrationTest extends TestCase
 
 		$node = $nodeFactory->create(TestNodeWithMatrix::class, $context, $cms, ['content' => [
 			'title' => ['type' => 'text', 'value' => ['en' => 'Test Node']],
-			'matrix' => ['type' => 'matrix', 'value' => [
-				[
-					'title' => ['type' => 'text', 'value' => ['en' => 'First Item']],
-					'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+			'matrix' => [
+				'type' => 'matrix',
+				'value' => [
+					[
+						'title' => ['type' => 'text', 'value' => ['en' => 'First Item']],
+						'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+					],
+					[
+						'title' => ['type' => 'text', 'value' => ['en' => 'Second Item']],
+						'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+					],
 				],
-				[
-					'title' => ['type' => 'text', 'value' => ['en' => 'Second Item']],
-					'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
-				],
-			]],
+			],
 		]]);
 
 		// Test that matrix field exists and is accessible
@@ -90,7 +93,11 @@ class MatrixIntegrationTest extends TestCase
 		$context = $this->createContext();
 		$owner = new FieldOwner($context, 'test-node');
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', []),
+		);
 
 		// Call value() to initialize subfields
 		$matrixValue = $matrix->value();
@@ -133,7 +140,10 @@ class MatrixIntegrationTest extends TestCase
 		$titleValue = $structure['value'][0]['title']['value'];
 
 		// Should have locale structure, not empty string
-		$this->assertIsArray($titleValue, 'Translatable subfield should have array value with locale keys');
+		$this->assertIsArray(
+			$titleValue,
+			'Translatable subfield should have array value with locale keys',
+		);
 		$this->assertArrayHasKey('en', $titleValue);
 		$this->assertArrayHasKey('de', $titleValue);
 	}

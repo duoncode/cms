@@ -65,9 +65,11 @@ final class PermissionMiddlewareTest extends TestCase
 			'expires' => null,
 		]);
 
-		$users = new class ($this->db(), $user) extends Users {
-			public function __construct(Database $db, private User $user)
-			{
+		$users = new class($this->db(), $user) extends Users {
+			public function __construct(
+				Database $db,
+				private User $user,
+			) {
 				parent::__construct($db);
 			}
 
@@ -92,8 +94,10 @@ final class PermissionMiddlewareTest extends TestCase
 
 	private function handler(): RequestHandlerInterface
 	{
-		return new class ($this->factory()) implements RequestHandlerInterface {
-			public function __construct(private Factory $factory) {}
+		return new class($this->factory()) implements RequestHandlerInterface {
+			public function __construct(
+				private Factory $factory,
+			) {}
 
 			public function handle(ServerRequestInterface $request): ResponseInterface
 			{

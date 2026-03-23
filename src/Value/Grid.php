@@ -54,11 +54,13 @@ class Grid extends Value
 				$i++;
 
 				if ($i === $index) {
-					return (new Field\Image(
+					return new Field\Image(
 						$this->context->fieldName,
 						$this->owner,
 						new ValueContext($this->context->fieldName, $value->data),
-					))->limit(1)->value();
+					)
+						->limit(1)
+						->value();
 				}
 			}
 		}
@@ -74,17 +76,19 @@ class Grid extends Value
 					$item = new GridItem($value['type'], $value);
 
 					if ($item->type === 'image') {
-						yield (new Field\Image(
+						yield new Field\Image(
 							$this->context->fieldName,
 							$this->owner,
 							new ValueContext($this->context->fieldName, $item->data),
-						))->limit(1)->value();
+						)
+							->limit(1)
+							->value();
 					} elseif ($item->type === 'images') {
-						foreach ((new Field\Image(
+						foreach (new Field\Image(
 							$this->context->fieldName,
 							$this->owner,
 							new ValueContext($this->context->fieldName, $item->data),
-						))->value() as $image) {
+						)->value() as $image) {
 							yield $image;
 						}
 					}
@@ -93,17 +97,19 @@ class Grid extends Value
 		} else {
 			foreach ($this->preparedData as $item) {
 				if ($item->type === 'image') {
-					yield (new Field\Image(
+					yield new Field\Image(
 						$this->context->fieldName,
 						$this->owner,
 						new ValueContext($this->context->fieldName, $item->data),
-					))->limit(1)->value();
+					)
+						->limit(1)
+						->value();
 				} elseif ($item->type === 'images') {
-					foreach ((new Field\Image(
+					foreach (new Field\Image(
 						$this->context->fieldName,
 						$this->owner,
 						new ValueContext($this->context->fieldName, $item->data),
-					))->value() as $image) {
+					)->value() as $image) {
 						yield $image;
 					}
 				}
@@ -163,12 +169,21 @@ class Grid extends Value
 	{
 		$args['tag'] = $tag = $args['tag'] ?? 'div';
 		$args['prefix'] = $prefix = $args['prefix'] ?? 'cms';
-		$args['class'] = $class = ($args['class'] ?? '' ? ' ' . $args['class'] : '');
+		$args['class'] = $class = $args['class'] ?? '' ? ' ' . $args['class'] : '';
 
 		$columns = $this->columns();
 
-		$out = '<' . $tag . ' class="' . $prefix . '-grid ' . $prefix
-			. '-grid-columns-' . $columns . $class . '">';
+		$out =
+			'<'
+			. $tag
+			. ' class="'
+			. $prefix
+			. '-grid '
+			. $prefix
+			. '-grid-columns-'
+			. $columns
+			. $class
+			. '">';
 
 		foreach ($this->preparedData as $value) {
 			$out .= $this->renderValue($prefix, $value, $args);
@@ -203,8 +218,8 @@ class Grid extends Value
 		$styleClass = $value->styleClass();
 		$class = $styleClass ? ' ' . $styleClass : '';
 
-		$out = '<div class="' . $prefix . '-' . $value->type
-			. ' ' . $colspan . ' ' . $rowspan . $class . '">';
+		$out =
+			'<div class="' . $prefix . '-' . $value->type . ' ' . $colspan . ' ' . $rowspan . $class . '">';
 		$out .= match ($value->type) {
 			'richtext' => $value->data['value'],
 			'text' => $value->data['value'],
@@ -218,7 +233,7 @@ class Grid extends Value
 			'image' => $this->renderImage($value->data, $args),
 			'images' => $this->renderImages($value->data, $args),
 			'youtube' => $this->getValueObject(Field\Youtube::class, $value)->__toString(),
-			'video' =>  $this->getValueObject(Field\Video::class, $value)->__toString(),
+			'video' => $this->getValueObject(Field\Video::class, $value)->__toString(),
 		};
 		$out .= '</div>';
 
@@ -227,11 +242,11 @@ class Grid extends Value
 
 	protected function getValueObject(string $class, GridItem $item): Value
 	{
-		return (new $class(
+		return new $class(
 			$this->context->fieldName,
 			$this->owner,
 			new ValueContext($this->context->fieldName, $item->data),
-		))->value();
+		)->value();
 	}
 
 	protected function renderImage(array $data, array $args): string

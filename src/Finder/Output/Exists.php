@@ -22,9 +22,9 @@ final readonly class Exists extends Expression implements Output
 		}
 
 		return 'n.content @? '
-			. $this->context->db->quote(
-				'$.' . $this->fieldPath($this->token->lexeme),
-			);
+		. $this->context->db->quote(
+			'$.' . $this->fieldPath($this->token->lexeme),
+		);
 	}
 
 	private function fieldPath(string $field): string
@@ -46,7 +46,10 @@ final readonly class Exists extends Expression implements Output
 		}
 
 		if (count($parts) > 2 && in_array('?', $parts, true)) {
-			throw new ParserOutputException($this->token, 'The questionmark is allowed after the first dot only.');
+			throw new ParserOutputException(
+				$this->token,
+				'The questionmark is allowed after the first dot only.',
+			);
 		}
 
 		if (count($parts) === 2 && $parts[1] === '*') {

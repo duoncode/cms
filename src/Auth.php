@@ -211,7 +211,7 @@ class Auth
 		$token = $this->session->getAuthToken();
 
 		if ($token) {
-			return (new Token($this->config->get('app.secret'), $token))->hash();
+			return new Token($this->config->get('app.secret'), $token)->hash();
 		}
 
 		return null;

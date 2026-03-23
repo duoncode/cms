@@ -82,7 +82,10 @@ final readonly class UrlPath extends Expression implements Output
 			TokenType::GreaterEqual => [$localeClause, false, $this->scalarComparison($valueToken, '>=')],
 			TokenType::Less => [$localeClause, false, $this->scalarComparison($valueToken, '<')],
 			TokenType::LessEqual => [$localeClause, false, $this->scalarComparison($valueToken, '<=')],
-			default => throw new ParserOutputException($this->operator, 'Operator not supported for path expressions.'),
+			default => throw new ParserOutputException(
+				$this->operator,
+				'Operator not supported for path expressions.',
+			),
 		};
 	}
 
@@ -102,7 +105,10 @@ final readonly class UrlPath extends Expression implements Output
 	private function scalarComparison(Token $valueToken, string $operator): string
 	{
 		if ($valueToken->type === TokenType::Null) {
-			throw new ParserOutputException($valueToken, 'NULL is only supported with = or != for path expressions.');
+			throw new ParserOutputException(
+				$valueToken,
+				'NULL is only supported with = or != for path expressions.',
+			);
 		}
 
 		return 'p.path ' . $operator . ' ' . $this->literal($valueToken);
@@ -112,10 +118,12 @@ final readonly class UrlPath extends Expression implements Output
 	{
 		return match ($token->type) {
 			TokenType::String => $this->context->db->quote($token->lexeme),
-			TokenType::Number,
-			TokenType::Boolean => $this->context->db->quote($token->lexeme),
+			TokenType::Number, TokenType::Boolean => $this->context->db->quote($token->lexeme),
 			TokenType::List => $token->lexeme,
-			default => throw new ParserOutputException($token, 'Path comparisons only support literal values.'),
+			default => throw new ParserOutputException(
+				$token,
+				'Path comparisons only support literal values.',
+			),
 		};
 	}
 
@@ -124,12 +132,15 @@ final readonly class UrlPath extends Expression implements Output
 		$path = $this->left->type === TokenType::Path ? $this->left->lexeme : $this->right->lexeme;
 		$parts = explode('.', $path);
 
-		if (count($parts) === 1 || (count($parts) === 2 && $parts[1] === '*')) {
+		if (count($parts) === 1 || count($parts) === 2 && $parts[1] === '*') {
 			return '';
 		}
 
 		if (count($parts) !== 2) {
-			throw new ParserOutputException($this->left, 'Invalid path selector. Use path, path.?, path.*, or path.<locale>.');
+			throw new ParserOutputException(
+				$this->left,
+				'Invalid path selector. Use path, path.?, path.*, or path.<locale>.',
+			);
 		}
 
 		$selector = $parts[1] === '?' ? $this->context->localeId() : $parts[1];

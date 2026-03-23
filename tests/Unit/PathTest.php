@@ -48,13 +48,19 @@ final class PathTest extends TestCase
 
 	public function testInsideThrowsOnNonexistentChild(): void
 	{
-		$this->throws(RuntimeException::class, 'File or directory does not exist or is not in the expected location.');
+		$this->throws(
+			RuntimeException::class,
+			'File or directory does not exist or is not in the expected location.',
+		);
 		Path::inside(__DIR__, 'nonexistent-file.txt');
 	}
 
 	public function testInsideThrowsOnPathOutsideParent(): void
 	{
-		$this->throws(RuntimeException::class, 'File or directory does not exist or is not in the expected location.');
+		$this->throws(
+			RuntimeException::class,
+			'File or directory does not exist or is not in the expected location.',
+		);
 		// Try to access a file outside the parent directory using ../
 		Path::inside(__DIR__, '../nonexistent');
 	}

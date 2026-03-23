@@ -56,7 +56,9 @@ class PathManager
 		$defaultPath = trim($data['paths'][$defaultLocale->id] ?? '');
 
 		if (!$defaultPath) {
-			throw new RuntimeException(_('Der URL-Pfad für die Hauptsprache {$defaultLocale->title} muss gesetzt sein'));
+			throw new RuntimeException(_(
+				'Der URL-Pfad für die Hauptsprache {$defaultLocale->title} muss gesetzt sein',
+			));
 		}
 
 		$currentPaths = array_column($db->nodes->getPaths(['node' => $nodeId])->all(), 'path', 'locale');

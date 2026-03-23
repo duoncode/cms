@@ -136,7 +136,10 @@ class Panel
 	{
 		$creator = new Creator($this->container);
 		$obj = $creator->create(
-			$this->container->tag(Collection::class)->entry($collection)->definition(),
+			$this->container
+				->tag(Collection::class)
+				->entry($collection)
+				->definition(),
 			predefinedTypes: [Request::class => $this->request],
 		);
 		$blueprints = [];
@@ -205,7 +208,10 @@ class Panel
 		}
 
 		$factory = $cms->nodeFactory();
-		$class = $this->container->tag(Plugin::NODE_TAG)->entry($type)->definition();
+		$class = $this->container
+			->tag(Plugin::NODE_TAG)
+			->entry($type)
+			->definition();
 		$obj = $factory->blueprint($class, $context, $cms);
 
 		$serializer = new Serializer(
@@ -233,18 +239,21 @@ class Panel
 		}
 
 		$data = $this->request->json();
-		$class = $this->container->tag(Plugin::NODE_TAG)->entry($type)->definition();
+		$class = $this->container
+			->tag(Plugin::NODE_TAG)
+			->entry($type)
+			->definition();
 		$obj = $cms->nodeFactory()->create($class, $context, $cms, $data);
 
 		$store = new Store($context->db, new PathManager(), $this->types);
 		$result = $store->save($obj, $data, $this->request, $context->locales());
 
-		return (new Response(
+		return new Response(
 			$factory
 				->response()
 				->withStatus(201)
 				->withHeader('Content-Type', 'application/json'),
-		))->body(json_encode($result));
+		)->body(json_encode($result));
 	}
 
 	#[Permission('panel')]
@@ -263,7 +272,11 @@ class Panel
 		$method = $this->request->method();
 
 		$result = match ($method) {
-			'GET' => $serializer->read($node, NodeFactory::dataFor($node), NodeFactory::fieldNamesFor($node)),
+			'GET' => $serializer->read(
+				$node,
+				NodeFactory::dataFor($node),
+				NodeFactory::fieldNamesFor($node),
+			),
 			'PUT' => $this->saveNode($node, $store, $context),
 			'DELETE' => $store->delete($node, $this->request),
 			default => throw new HttpBadRequest($this->request),
@@ -271,12 +284,12 @@ class Panel
 
 		$content = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
-		return (new Response(
+		return new Response(
 			$factory
 				->response()
 				->withStatus($method === 'POST' ? 201 : 200)
 				->withHeader('Content-Type', 'application/json'),
-		))->body($content);
+		)->body($content);
 	}
 
 	private function saveNode(object $node, Store $store, Context $context): array

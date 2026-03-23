@@ -16,7 +16,10 @@ class Fulltext extends Command
 
 	public function run(): int
 	{
-		$this->env->db->fulltext->clean();
+		$this->env
+			->db
+			->fulltext
+			->clean();
 		$this->update($this->env->db);
 
 		return 0;

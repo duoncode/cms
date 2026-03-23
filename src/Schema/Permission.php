@@ -12,5 +12,7 @@ class Permission
 	/**
 	 * @param string|array<string,string> $value
 	 */
-	public function __construct(public readonly array|string $value) {}
+	public function __construct(
+		public readonly array|string $value,
+	) {}
 }

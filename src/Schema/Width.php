@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 readonly class Width
 {
-	public function __construct(public int $width) {}
+	public function __construct(
+		public int $width,
+	) {}
 }

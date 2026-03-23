@@ -160,7 +160,9 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		$this->assertEquals($userId, $user->id);
 
 		// Cleanup
-		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', ['token' => $tokenHash])->run();
+		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', [
+			'token' => $tokenHash,
+		])->run();
 	}
 
 	public function testUserFromTokenReturnsNullWithInvalidToken(): void
@@ -212,7 +214,9 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		// Editor role has specific permissions defined in the database
 
 		// Cleanup
-		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', ['token' => $tokenHash])->run();
+		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', [
+			'token' => $tokenHash,
+		])->run();
 	}
 
 	public function testAuthenticateByOneTimeTokenWithValidToken(): void
@@ -240,7 +244,9 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		$this->assertEquals($userId, $user->id);
 
 		// Cleanup
-		$this->db()->execute('DELETE FROM cms.onetimetokens WHERE token = :token', ['token' => $tokenHash])->run();
+		$this->db()->execute('DELETE FROM cms.onetimetokens WHERE token = :token', [
+			'token' => $tokenHash,
+		])->run();
 	}
 
 	public function testAuthenticateByOneTimeTokenWithInvalidToken(): void
@@ -280,7 +286,9 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		$this->assertGreaterThan(0, strlen($oneTimeToken));
 
 		// Cleanup
-		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', ['token' => $authTokenHash])->run();
+		$this->db()->execute('DELETE FROM cms.authtokens WHERE token = :token', [
+			'token' => $authTokenHash,
+		])->run();
 		$this->db()->execute('DELETE FROM cms.onetimetokens WHERE usr = :usr', ['usr' => $userId])->run();
 	}
 

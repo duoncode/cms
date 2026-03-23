@@ -73,13 +73,21 @@ class GridItemValidator extends Shape
 				$aspectRatioX = $value['aspectRatioX'] ?? null;
 
 				if (!$aspectRatioX || !is_numeric($aspectRatioX)) {
-					$this->addError('aspectRatioX', _('Youtube Seitenverhältnis Breite'), _('Bitte gültige Zahl eingeben.'));
+					$this->addError(
+						'aspectRatioX',
+						_('Youtube Seitenverhältnis Breite'),
+						_('Bitte gültige Zahl eingeben.'),
+					);
 				}
 
 				$aspectRatioY = $value['aspectRatioY'] ?? null;
 
 				if (!$aspectRatioY || !is_numeric($aspectRatioY)) {
-					$this->addError('aspectRatioY', _('Youtube Seitenverhältnis Höhe'), _('Bitte gültige Zahl eingeben.'));
+					$this->addError(
+						'aspectRatioY',
+						_('Youtube Seitenverhältnis Höhe'),
+						_('Bitte gültige Zahl eingeben.'),
+					);
 				}
 			} elseif ($type === 'richtext' || $type === 'text') {
 				if (!($value['value'] ?? null)) {

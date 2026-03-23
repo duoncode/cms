@@ -21,7 +21,9 @@ final class QueryLexer
 	private readonly array $source;
 	private readonly int $length;
 
-	public function __construct(private readonly array $builtins = []) {}
+	public function __construct(
+		private readonly array $builtins = [],
+	) {}
 
 	public function tokens(string $query): array
 	{
@@ -174,12 +176,13 @@ final class QueryLexer
 			$isDot = $char === '.';
 			$isSpecial = $char === '*' || $char === '?';
 
-			$valid = ctype_alpha($char)
+			$valid =
+				ctype_alpha($char)
 				|| ctype_digit($char)
 				|| $char === '_'
 				|| $char === '-'
 				|| $isDot
-				|| ($wasDot && $isSpecial);
+				|| $wasDot && $isSpecial;
 
 			if ($valid && $wasSpecial && !$isDot) {
 				$this->error('Invalid use of special character (like ? or *) in identifier.');
@@ -283,7 +286,7 @@ final class QueryLexer
 
 	private function peekNext(): string
 	{
-		if ($this->current + 1 > $this->length - 1) {
+		if (($this->current + 1) > ($this->length - 1)) {
 			return '';
 		}
 
@@ -307,7 +310,7 @@ final class QueryLexer
 
 	private function atEnd(): bool
 	{
-		return $this->current > $this->length - 1;
+		return $this->current > ($this->length - 1);
 	}
 
 	private function addToken(TokenGroup $group, TokenType $type): void
@@ -358,9 +361,10 @@ final class QueryLexer
 	{
 		throw new ParserException(
 			"Parse error at position {$this->start}. {$msg}\n\n"
-				. "Query: `{$this->query}`\n"
-				. str_repeat(' ', $this->start + 8)
-				. str_repeat('^', $this->current - $this->start) . "\n\n",
+			. "Query: `{$this->query}`\n"
+			. str_repeat(' ', $this->start + 8)
+			. str_repeat('^', $this->current - $this->start)
+			. "\n\n",
 		);
 	}
 }

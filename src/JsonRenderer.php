@@ -13,7 +13,9 @@ use Traversable;
 /** @psalm-api */
 class JsonRenderer implements AfterRenderer
 {
-	public function __construct(protected Factory $factory) {}
+	public function __construct(
+		protected Factory $factory,
+	) {}
 
 	public function handle(mixed $data): PsrResponse
 	{

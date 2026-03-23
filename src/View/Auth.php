@@ -113,7 +113,7 @@ class Auth
 			$this->auth->invalidateOneTimeToken($token);
 		}
 
-		return  Response::create($this->factory)->json([
+		return Response::create($this->factory)->json([
 			'success' => true,
 		], 200);
 	}

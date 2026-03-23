@@ -171,7 +171,11 @@ final class Nodes implements Iterator
 
 	public function count(): int
 	{
-		$record = $this->context->db->nodes->count($this->baseParams())->one();
+		$record = $this->context
+			->db
+			->nodes
+			->count($this->baseParams())
+			->one();
 
 		return (int) ($record['count'] ?? 0);
 	}
@@ -259,15 +263,22 @@ final class Nodes implements Iterator
 			$params['offset'] = $this->offset;
 		}
 
-		$this->result = $this->context->db->nodes->find($params)->lazy();
+		$this->result = $this->context
+			->db
+			->nodes
+			->find($params)
+			->lazy();
 	}
 
 	private function baseParams(): array
 	{
-		$conditions = implode(' AND ', array_filter([
-			trim($this->whereFields),
-			trim($this->whereTypes),
-		], fn($clause) => !empty($clause)));
+		$conditions = implode(' AND ', array_filter(
+			[
+				trim($this->whereFields),
+				trim($this->whereTypes),
+			],
+			fn($clause) => !empty($clause),
+		));
 
 		$params = [
 			'condition' => $conditions,
@@ -339,9 +350,7 @@ final class Nodes implements Iterator
 		return match (count($result)) {
 			0 => '',
 			1 => '    ' . $result[0],
-			default => "    (\n        "
-				. implode("\n        OR ", $result)
-				. "\n    )",
+			default => "    (\n        " . implode("\n        OR ", $result) . "\n    )",
 		};
 	}
 

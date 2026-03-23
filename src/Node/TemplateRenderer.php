@@ -108,11 +108,11 @@ class TemplateRenderer
 		[$type, $id] = $this->resolveRenderer($node);
 		$renderer = $this->container->tag(Renderer::class)->get($type);
 
-		return (new Response(
+		return new Response(
 			$this->factory
 				->response()
 				->withHeader('Content-Type', 'text/html; charset=utf-8'),
-		))->body(
+		)->body(
 			$renderer->render($id, $context),
 		);
 	}

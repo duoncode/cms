@@ -32,10 +32,7 @@ final readonly class Comparison extends Expression implements Output
 		}
 
 		if ($this->left->type === TokenType::Field) {
-			if (
-				$this->right->type === TokenType::Builtin
-				|| $this->right->type === TokenType::Field
-			) {
+			if ($this->right->type === TokenType::Builtin || $this->right->type === TokenType::Field) {
 				return $this->getSqlExpression();
 			}
 
@@ -137,10 +134,7 @@ final readonly class Comparison extends Expression implements Output
 	{
 		return match ($this->right->type) {
 			TokenType::String => $this->quote($this->right->lexeme),
-			TokenType::Number,
-			TokenType::Boolean,
-			TokenType::List,
-			TokenType::Null => $this->right->lexeme,
+			TokenType::Number, TokenType::Boolean, TokenType::List, TokenType::Null => $this->right->lexeme,
 			default => throw new ParserOutputException(
 				$this->right,
 				'The right hand side in a field expression must be a literal',

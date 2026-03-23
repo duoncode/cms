@@ -42,7 +42,7 @@ class Matrix extends Field implements Capability\Limitable
 
 			foreach ($this->subfields as $name => $subfield) {
 				$subfieldData = $itemData[$name] ?? null;
-				$subfieldValue = is_array($subfieldData) ? ($subfieldData['value'] ?? null) : null;
+				$subfieldValue = is_array($subfieldData) ? $subfieldData['value'] ?? null : null;
 				$subfieldStructure = $subfield->structure($subfieldValue);
 
 				if (is_array($subfieldData)) {
@@ -128,7 +128,7 @@ class Matrix extends Field implements Capability\Limitable
 		foreach ($reflection->getProperties(ReflectionProperty::IS_PROTECTED) as $property) {
 			$type = $property->getType();
 
-			if (!$type || !($type instanceof ReflectionNamedType)) {
+			if (!$type || !$type instanceof ReflectionNamedType) {
 				continue;
 			}
 

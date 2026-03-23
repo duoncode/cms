@@ -30,10 +30,20 @@ class Grid extends Field implements Capability\Translatable, Capability\Grid\Res
 		$value = $value ?: $this->default;
 
 		if (is_array($value)) {
-			return ['type' => 'grid', 'columns' => $this->columns, 'minCellWidth' => $this->minCellWidth, 'value' => $value];
+			return [
+				'type' => 'grid',
+				'columns' => $this->columns,
+				'minCellWidth' => $this->minCellWidth,
+				'value' => $value,
+			];
 		}
 
-		$result = ['type' => 'grid', 'columns' => $this->columns, 'minCellWidth' => $this->minCellWidth, 'value' => []];
+		$result = [
+			'type' => 'grid',
+			'columns' => $this->columns,
+			'minCellWidth' => $this->minCellWidth,
+			'value' => [],
+		];
 
 		if ($this->translate) {
 			foreach ($this->owner->locales() as $locale) {

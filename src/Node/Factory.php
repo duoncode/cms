@@ -125,7 +125,7 @@ class Factory
 		self::$nodeState ??= new WeakMap();
 		$node = Node::unwrap($node);
 
-		return (self::$nodeState[$node] ?? [])['data'] ?? [];
+		return ((self::$nodeState[$node] ?? []))['data'] ?? [];
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Factory
 		self::$nodeState ??= new WeakMap();
 		$node = Node::unwrap($node);
 
-		return (self::$nodeState[$node] ?? [])['fieldNames'] ?? [];
+		return ((self::$nodeState[$node] ?? []))['fieldNames'] ?? [];
 	}
 
 	/**

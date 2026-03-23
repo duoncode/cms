@@ -75,16 +75,19 @@ final class CollectionHierarchyTest extends End2EndTestCase
 		$this->assertNotNull($rootRow);
 		$this->assertNull($rootRow['parent']);
 		$this->assertTrue($rootRow['hasChildren']);
-		$this->assertSame([
+		$this->assertSame(
 			[
-				'slug' => 'test-hierarchy-parent',
-				'name' => 'Hierarchy Parent',
+				[
+					'slug' => 'test-hierarchy-parent',
+					'name' => 'Hierarchy Parent',
+				],
+				[
+					'slug' => 'test-hierarchy-child',
+					'name' => 'Hierarchy Child',
+				],
 			],
-			[
-				'slug' => 'test-hierarchy-child',
-				'name' => 'Hierarchy Child',
-			],
-		], $rootRow['childBlueprints']);
+			$rootRow['childBlueprints'],
+		);
 
 		$secondaryRoot = $this->findRow($payload['nodes'], 'hierarchy-secondary-root');
 		$this->assertNotNull($secondaryRoot);

@@ -34,10 +34,10 @@ class RecreateDb extends Command
 
 			// Terminate existing connections to the target database
 			echo "Terminating existing connections...\n";
-			$sql = "SELECT pg_terminate_backend(pg_stat_activity.pid)
+			$sql = 'SELECT pg_terminate_backend(pg_stat_activity.pid)
 					FROM pg_stat_activity
 					WHERE pg_stat_activity.datname = :dbname
-					AND pid <> pg_backend_pid()";
+					AND pid <> pg_backend_pid()';
 			$stmt = $pdo->prepare($sql);
 			$stmt->execute(['dbname' => $this->database]);
 
@@ -62,7 +62,9 @@ class RecreateDb extends Command
 				echo "Make sure the user '{$this->username}' exists and has the correct password.\n";
 				echo "You may need to create the user first:\n";
 				echo "  sudo -u postgres createuser -d {$this->username}\n";
-				echo "  sudo -u postgres psql -c \"ALTER USER {$this->username} WITH PASSWORD '{$this->password}';\"\n\n";
+				echo
+					"  sudo -u postgres psql -c \"ALTER USER {$this->username} WITH PASSWORD '{$this->password}';\"\n\n"
+				;
 			} elseif (str_contains($e->getMessage(), 'permission denied')) {
 				echo "The user '{$this->username}' needs CREATEDB privileges:\n";
 				echo "  sudo -u postgres psql -c \"ALTER USER {$this->username} CREATEDB;\"\n\n";

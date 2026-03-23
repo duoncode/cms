@@ -65,9 +65,17 @@ class Routes
 			[Panel::class, 'boot'],
 			'cms.panel.boot',
 		)->after(new JsonRenderer($this->factory));
-		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall')->middleware($this->session);
+		$app->get(
+			$this->panelPath . '/...slug',
+			[Panel::class, 'catchall'],
+			'cms.panel.catchall',
+		)->middleware($this->session);
 		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel')->middleware($this->session);
-		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash')->middleware($this->session);
+		$app->get(
+			$this->panelPath . '/',
+			[Panel::class, 'index'],
+			'cms.panel.slash',
+		)->middleware($this->session);
 
 		if ($this->sessionEnabled) {
 			foreach ($sessionIfEnabled as $route) {

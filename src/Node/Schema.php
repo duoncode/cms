@@ -35,7 +35,9 @@ class Schema
 	public function __get(string $key): mixed
 	{
 		if (!$this->has($key)) {
-			throw new NoSuchProperty("The node schema '{$this->nodeClass}' doesn't have the property '{$key}'");
+			throw new NoSuchProperty(
+				"The node schema '{$this->nodeClass}' doesn't have the property '{$key}'",
+			);
 		}
 
 		return $this->get($key);
@@ -102,11 +104,14 @@ class Schema
 				if (!$this->isFieldProperty($property)) {
 					throw new RuntimeException(
 						"The #[Title] attribute on property '{$this->nodeClass}::{$property->getName()}' "
-							. "requires a field-typed property.",
+						. 'requires a field-typed property.',
 					);
 				}
 
-				$resolved = array_merge($resolved, $handler->resolve(new Title($property->getName()), $this->nodeClass));
+				$resolved = array_merge($resolved, $handler->resolve(
+					new Title($property->getName()),
+					$this->nodeClass,
+				));
 			}
 		}
 

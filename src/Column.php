@@ -100,17 +100,19 @@ final class Column
 			case 'meta.editor':
 				$editorData = (array) $node->meta->get('editor_data', []);
 
-				return escape(
-					$editorData['name']
-					?? $node->meta->get('editor_username'),
-				) ?? $node->meta->get('editor_email');
+				return (
+					escape(
+						$editorData['name'] ?? $node->meta->get('editor_username'),
+					) ?? $node->meta->get('editor_email')
+				);
 			case 'meta.creator':
 				$creatorData = (array) $node->meta->get('creator_data', []);
 
-				return escape(
-					$creatorData['name']
-					?? $node->meta->get('creator_username'),
-				) ?? $node->meta->get('creator_email');
+				return (
+					escape(
+						$creatorData['name'] ?? $node->meta->get('creator_username'),
+					) ?? $node->meta->get('creator_email')
+				);
 			default:
 				$hydrator = new FieldHydrator();
 				$fieldObj = $hydrator->getField($inner, $field);

@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 readonly class Rows
 {
-	public function __construct(public int $rows) {}
+	public function __construct(
+		public int $rows,
+	) {}
 }

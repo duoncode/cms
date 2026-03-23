@@ -66,18 +66,21 @@ class Picture extends Image
 			);
 		}
 
-		return sprintf('type="%s"', [
-			'jpg' => 'image/jpeg',
-			'png' => 'image/png',
-			'gif' => 'image/gif',
-			'svg' => 'image/svg+xml',
-			'apng' => 'image/apng',
-			'avif' => 'image/avif',
-			'jpeg' => 'image/jpeg',
-			'jfif' => 'image/jpeg',
-			'pjpeg' => 'image/jpeg',
-			'pjp' => 'image/jpeg',
-			'webp' => 'image/webp',
-		][strtolower(pathinfo($image['file'], PATHINFO_EXTENSION))]);
+		return sprintf(
+			'type="%s"',
+			[
+				'jpg' => 'image/jpeg',
+				'png' => 'image/png',
+				'gif' => 'image/gif',
+				'svg' => 'image/svg+xml',
+				'apng' => 'image/apng',
+				'avif' => 'image/avif',
+				'jpeg' => 'image/jpeg',
+				'jfif' => 'image/jpeg',
+				'pjpeg' => 'image/jpeg',
+				'pjp' => 'image/jpeg',
+				'webp' => 'image/webp',
+			][strtolower(pathinfo($image['file'], PATHINFO_EXTENSION))],
+		);
 	}
 }

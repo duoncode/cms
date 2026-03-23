@@ -234,8 +234,7 @@ final class MultiLocaleScenariosTest extends IntegrationTestCase
 		$this->assertEquals('Deutscher Titel', $content['title']['value']['de']);
 		// 'fr' key should not exist or be null
 		$this->assertTrue(
-			!isset($content['title']['value']['fr'])
-			|| $content['title']['value']['fr'] === null,
+			!isset($content['title']['value']['fr']) || $content['title']['value']['fr'] === null,
 		);
 	}
 

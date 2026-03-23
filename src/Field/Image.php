@@ -9,7 +9,10 @@ use Duon\Cms\Validation\Shape as ValidationShape;
 use Duon\Cms\Value;
 use Duon\Sire\Shape;
 
-class Image extends Field implements Capability\Translatable, Capability\File\Translatable, Capability\Limitable
+class Image extends Field implements
+	Capability\Translatable,
+	Capability\File\Translatable,
+	Capability\Limitable
 {
 	use Capability\IsLimitable;
 	use Capability\IsTranslatable;

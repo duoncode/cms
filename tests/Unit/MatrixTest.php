@@ -40,7 +40,11 @@ class MatrixTest extends TestCase
 		$context = $this->createContext();
 		$owner = new FieldOwner($context, 'test-node');
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', []),
+		);
 
 		$this->assertInstanceOf(Matrix::class, $matrix);
 		$this->assertInstanceOf(MatrixValue::class, $matrix->value());
@@ -54,7 +58,11 @@ class MatrixTest extends TestCase
 		$context = $this->createContext();
 		$owner = new FieldOwner($context, 'test-node');
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', []),
+		);
 		$structure = $matrix->structure();
 
 		$this->assertEquals('matrix', $structure['type']);
@@ -66,7 +74,11 @@ class MatrixTest extends TestCase
 		$context = $this->createContext();
 		$owner = new FieldOwner($context, 'test-node');
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', []),
+		);
 		$shape = $matrix->shape();
 
 		$this->assertInstanceOf(\Duon\Sire\Shape::class, $shape);
@@ -77,7 +89,11 @@ class MatrixTest extends TestCase
 		$context = $this->createContext();
 		$owner = new FieldOwner($context, 'test-node');
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', []));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', []),
+		);
 		$subfields = $matrix->getSubfields();
 
 		// Check that title subfield has translate capability set
@@ -111,14 +127,21 @@ class MatrixTest extends TestCase
 			],
 		];
 
-		$matrix = new TestMatrix('test_matrix', $owner, new \Duon\Cms\Value\ValueContext('test_matrix', $storedData));
+		$matrix = new TestMatrix(
+			'test_matrix',
+			$owner,
+			new \Duon\Cms\Value\ValueContext('test_matrix', $storedData),
+		);
 
 		// Call structure() without arguments - this is how Node::content() calls it
 		$structure = $matrix->structure();
 
 		// The output should have locale keys even though input had empty string
 		$titleValue = $structure['value'][0]['title']['value'];
-		$this->assertIsArray($titleValue, 'Title value should be array with locale keys, got: ' . var_export($titleValue, true));
+		$this->assertIsArray(
+			$titleValue,
+			'Title value should be array with locale keys, got: ' . var_export($titleValue, true),
+		);
 		$this->assertArrayHasKey('en', $titleValue);
 		$this->assertArrayHasKey('de', $titleValue);
 	}

@@ -48,7 +48,7 @@ final class QueryParser
 
 		$this->query = $query;
 		$this->tokens = $this->materializeLists(
-			(new QueryLexer(array_keys($this->builtins)))->tokens($query),
+			new QueryLexer(array_keys($this->builtins))->tokens($query),
 		);
 		$this->length = count($this->tokens);
 
@@ -65,7 +65,6 @@ final class QueryParser
 					TokenGroup::BooleanOperator => $this->getBooleanOperator($token),
 					TokenGroup::LeftParen => $this->getLeftParen($token),
 					TokenGroup::RightParen => $this->getRightParen($token),
-
 					// Special case Operator:
 					// As we consume operators together with operands, it would
 					// be invalid if we would find operators anywhere else.
@@ -158,7 +157,7 @@ final class QueryParser
 
 		// Consume the whole condition if valid
 		if (
-			$this->pos + 2 <= $this->length
+			($this->pos + 2) <= $this->length
 			&& $this->tokens[$this->pos + 1]->group === TokenGroup::Operator
 			&& $this->tokens[$this->pos + 2]->group === TokenGroup::Operand
 		) {
@@ -167,9 +166,9 @@ final class QueryParser
 		}
 
 		if (
-			($this->pos + 2 <= $this->length
-			&& $this->tokens[$this->pos + 1]->group === TokenGroup::BooleanOperator)
-			|| count($this->tokens) === $this->pos + 1
+			($this->pos + 2) <= $this->length
+			&& $this->tokens[$this->pos + 1]->group === TokenGroup::BooleanOperator
+			|| count($this->tokens) === ($this->pos + 1)
 		) {
 			// Key exists query
 			return $this->getExistsCondition($token);
@@ -215,8 +214,7 @@ final class QueryParser
 		if ($token->type !== TokenType::Field) {
 			$this->error(
 				$token,
-				'Conditions of type `field exists` must consist of '
-				. 'a single operand of type Field.',
+				'Conditions of type `field exists` must consist of ' . 'a single operand of type Field.',
 			);
 		}
 
@@ -235,11 +233,11 @@ final class QueryParser
 			$this->error(
 				$token,
 				'Invalid position for a boolean operator. '
-					. 'Maybe you used && instead of & or || instead of |',
+				. 'Maybe you used && instead of & or || instead of |',
 			);
 		}
 
-		if ($this->pos >= $this->length - 1) {
+		if ($this->pos >= ($this->length - 1)) {
 			$this->error($token, 'Boolean operator at the end of the expression.');
 		}
 
@@ -269,10 +267,7 @@ final class QueryParser
 	 */
 	private function getRightParen(Token $token): RightParen
 	{
-		if (
-			$this->pos > 0
-			&& $this->tokens[$this->pos - 1]->type === TokenType::LeftParen
-		) {
+		if ($this->pos > 0 && $this->tokens[$this->pos - 1]->type === TokenType::LeftParen) {
 			$this->error(
 				$token,
 				'Invalid parenthesis: empty group.',
@@ -304,9 +299,10 @@ final class QueryParser
 
 		throw new ParserException(
 			"Parse error at position {$position}. {$msg}\n\n"
-				. "Query: `{$this->query}`\n"
-				. str_repeat(' ', $start)
-				. str_repeat('^', $len) . "\n\n",
+			. "Query: `{$this->query}`\n"
+			. str_repeat(' ', $start)
+			. str_repeat('^', $len)
+			. "\n\n",
 		);
 	}
 }

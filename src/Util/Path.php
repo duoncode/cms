@@ -19,7 +19,9 @@ class Path
 		$path = realpath(rtrim($parent, '\\/') . DIRECTORY_SEPARATOR . ltrim($child, '\\/'));
 
 		if (!$path || strncmp($path, $parent, strlen($parent)) !== 0) {
-			throw new RuntimeException('File or directory does not exist or is not in the expected location.');
+			throw new RuntimeException(
+				'File or directory does not exist or is not in the expected location.',
+			);
 		}
 
 		if ($checkIsFile && !is_file($path)) {

@@ -40,7 +40,7 @@ class Cms
 	public function nodes(
 		string $query = '',
 	): Nodes {
-		return (new Nodes($this->context, $this, $this->nodeFactory, $this->types))->filter($query);
+		return new Nodes($this->context, $this, $this->nodeFactory, $this->types)->filter($query);
 	}
 
 	public function node(
@@ -49,7 +49,7 @@ class Cms
 		int $limit = 0,
 		string $order = '',
 	): array {
-		$finder = (new Nodes($this->context, $this, $this->nodeFactory, $this->types))->filter($query);
+		$finder = new Nodes($this->context, $this, $this->nodeFactory, $this->types)->filter($query);
 
 		if ($types !== []) {
 			$finder->types(...$types);
@@ -77,7 +77,16 @@ class Cms
 		?bool $deleted = false,
 		?bool $published = true,
 	): Render {
-		return new Render($this->context, $this, $this->nodeFactory, $this->types, $uid, $templateContext, $deleted, $published);
+		return new Render(
+			$this->context,
+			$this,
+			$this->nodeFactory,
+			$this->types,
+			$uid,
+			$templateContext,
+			$deleted,
+			$published,
+		);
 	}
 
 	public function nodeFactory(): Factory

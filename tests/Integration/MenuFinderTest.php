@@ -33,27 +33,47 @@ final class MenuFinderTest extends IntegrationTestCase
 
 		// Create menu items
 		$items = [
-			['item' => 'home', 'parent' => null, 'displayorder' => 1, 'data' => [
-				'type' => 'page',
-				'title' => ['en' => 'Home', 'de' => 'Startseite'],
-				'path' => ['en' => '/', 'de' => '/de/'],
-			]],
-			['item' => 'about', 'parent' => null, 'displayorder' => 2, 'data' => [
-				'type' => 'page',
-				'title' => ['en' => 'About', 'de' => 'Über uns'],
-				'path' => ['en' => '/about', 'de' => '/ueber-uns'],
-			]],
-			['item' => 'about.team', 'parent' => 'about', 'displayorder' => 1, 'data' => [
-				'type' => 'page',
-				'title' => ['en' => 'Team', 'de' => 'Team'],
-				'path' => ['en' => '/about/team', 'de' => '/ueber-uns/team'],
-			]],
-			['item' => 'contact', 'parent' => null, 'displayorder' => 3, 'data' => [
-				'type' => 'page',
-				'title' => ['en' => 'Contact', 'de' => 'Kontakt'],
-				'path' => ['en' => '/contact', 'de' => '/kontakt'],
-				'class' => 'contact-link',
-			]],
+			[
+				'item' => 'home',
+				'parent' => null,
+				'displayorder' => 1,
+				'data' => [
+					'type' => 'page',
+					'title' => ['en' => 'Home', 'de' => 'Startseite'],
+					'path' => ['en' => '/', 'de' => '/de/'],
+				],
+			],
+			[
+				'item' => 'about',
+				'parent' => null,
+				'displayorder' => 2,
+				'data' => [
+					'type' => 'page',
+					'title' => ['en' => 'About', 'de' => 'Über uns'],
+					'path' => ['en' => '/about', 'de' => '/ueber-uns'],
+				],
+			],
+			[
+				'item' => 'about.team',
+				'parent' => 'about',
+				'displayorder' => 1,
+				'data' => [
+					'type' => 'page',
+					'title' => ['en' => 'Team', 'de' => 'Team'],
+					'path' => ['en' => '/about/team', 'de' => '/ueber-uns/team'],
+				],
+			],
+			[
+				'item' => 'contact',
+				'parent' => null,
+				'displayorder' => 3,
+				'data' => [
+					'type' => 'page',
+					'title' => ['en' => 'Contact', 'de' => 'Kontakt'],
+					'path' => ['en' => '/contact', 'de' => '/kontakt'],
+					'class' => 'contact-link',
+				],
+			],
 		];
 
 		foreach ($items as $item) {

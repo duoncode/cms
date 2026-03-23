@@ -165,12 +165,17 @@ final class NodeFactoryTest extends TestCase
 
 	public function testPropertyTitleAttributeResolvesNodeTitleFromField(): void
 	{
-		$node = $this->factory->create(NodeWithPropertyTitleAttribute::class, $this->context, $this->cms, [
-			'uid' => 'property-title-1',
-			'content' => [
-				'heading' => ['value' => 'Property Title'],
+		$node = $this->factory->create(
+			NodeWithPropertyTitleAttribute::class,
+			$this->context,
+			$this->cms,
+			[
+				'uid' => 'property-title-1',
+				'content' => [
+					'heading' => ['value' => 'Property Title'],
+				],
 			],
-		]);
+		);
 
 		$serializer = new Serializer($this->factory->hydrator(), $this->types);
 		$title = $serializer->resolveTitle($node);
@@ -193,12 +198,17 @@ final class NodeFactoryTest extends TestCase
 
 	public function testNodeTitleResolvesFromPropertyTitleAttribute(): void
 	{
-		$node = $this->factory->create(NodeWithPropertyTitleAttribute::class, $this->context, $this->cms, [
-			'uid' => 'node-title-property-1',
-			'content' => [
-				'heading' => ['value' => 'Node Property Title'],
+		$node = $this->factory->create(
+			NodeWithPropertyTitleAttribute::class,
+			$this->context,
+			$this->cms,
+			[
+				'uid' => 'node-title-property-1',
+				'content' => [
+					'heading' => ['value' => 'Node Property Title'],
+				],
 			],
-		]);
+		);
 
 		$proxy = $this->factory->proxy($node, $this->context->request);
 
@@ -207,12 +217,17 @@ final class NodeFactoryTest extends TestCase
 
 	public function testNodeTitleIgnoresMethodWithoutTitleInterface(): void
 	{
-		$node = $this->factory->create(NodeWithTitleMethodWithoutInterface::class, $this->context, $this->cms, [
-			'uid' => 'node-title-no-interface-1',
-			'content' => [
-				'title' => ['value' => 'Property fallback title'],
+		$node = $this->factory->create(
+			NodeWithTitleMethodWithoutInterface::class,
+			$this->context,
+			$this->cms,
+			[
+				'uid' => 'node-title-no-interface-1',
+				'content' => [
+					'title' => ['value' => 'Property fallback title'],
+				],
 			],
-		]);
+		);
 
 		$proxy = $this->factory->proxy($node, $this->context->request);
 
@@ -250,12 +265,17 @@ final class NodeFactoryTest extends TestCase
 
 	public function testColumnTitleResolvesFromPropertyTitleAttribute(): void
 	{
-		$node = $this->factory->create(NodeWithPropertyTitleAttribute::class, $this->context, $this->cms, [
-			'uid' => 'column-title-property-1',
-			'content' => [
-				'heading' => ['value' => 'Property Attribute Title'],
+		$node = $this->factory->create(
+			NodeWithPropertyTitleAttribute::class,
+			$this->context,
+			$this->cms,
+			[
+				'uid' => 'column-title-property-1',
+				'content' => [
+					'heading' => ['value' => 'Property Attribute Title'],
+				],
 			],
-		]);
+		);
 
 		$column = Column::new('Title', 'title');
 		$row = $column->get($this->factory->proxy($node, $this->context->request));
@@ -502,7 +522,10 @@ final class NodeFactoryTest extends TestCase
 		$this->assertNull($proxy->meta->get('missing'));
 		$this->assertSame('fallback', $proxy->meta->get('missing', 'fallback'));
 
-		$this->throws(NoSuchProperty::class, "The node '" . PlainPage::class . "' doesn't have the meta property 'missing'");
+		$this->throws(
+			NoSuchProperty::class,
+			"The node '" . PlainPage::class . "' doesn't have the meta property 'missing'",
+		);
 		$proxy->meta->missing;
 	}
 

@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class Deletable
 {
-	public function __construct(public readonly bool $value = true) {}
+	public function __construct(
+		public readonly bool $value = true,
+	) {}
 }

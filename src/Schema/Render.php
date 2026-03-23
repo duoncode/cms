@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute]
 class Render
 {
-	public function __construct(public readonly string $value) {}
+	public function __construct(
+		public readonly string $value,
+	) {}
 }

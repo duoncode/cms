@@ -45,7 +45,7 @@ final class QueryCompilerTest extends TestCase
 		);
 		$this->assertSame(
 			"builtin IN ('1', '2', '3', '4')",
-			$compiler->compile("builtin @ [,1, 2,3 4]"),
+			$compiler->compile('builtin @ [,1, 2,3 4]'),
 		);
 
 		$this->assertSame(
@@ -54,7 +54,7 @@ final class QueryCompilerTest extends TestCase
 		);
 		$this->assertSame(
 			"builtin NOT IN ('1', '2', '3', '4')",
-			$compiler->compile("builtin !@ [1    2  3,,4]"),
+			$compiler->compile('builtin !@ [1    2  3,,4]'),
 		);
 	}
 
@@ -68,7 +68,7 @@ final class QueryCompilerTest extends TestCase
 		);
 		$this->assertSame(
 			"n.content->'field'->>'value' IN ('1', '2', '3', '4.513')",
-			$compiler->compile("field @ [1,2 , 3 4.513]"),
+			$compiler->compile('field @ [1,2 , 3 4.513]'),
 		);
 
 		$this->assertSame(
@@ -77,7 +77,7 @@ final class QueryCompilerTest extends TestCase
 		);
 		$this->assertSame(
 			"n.content->'field'->>'value' NOT IN ('1', '0.0002', '3', '4')",
-			$compiler->compile("field !@ [, 1 0.0002 , 3 , ,4 ,]"),
+			$compiler->compile('field !@ [, 1 0.0002 , 3 , ,4 ,]'),
 		);
 	}
 
@@ -103,7 +103,10 @@ final class QueryCompilerTest extends TestCase
 
 	public function testNestedQuery2(): void
 	{
-		$compiler = new QueryCompiler($this->context, ['builtin' => 'n.builtin', 'another' => 't.another']);
+		$compiler = new QueryCompiler($this->context, [
+			'builtin' => 'n.builtin',
+			'another' => 't.another',
+		]);
 
 		$this->assertSame(
 			"n.content @@ '$.field.value == 1' AND (t.another = 'test' OR (n.builtin > 2 AND n.builtin < 5))",
@@ -113,12 +116,15 @@ final class QueryCompilerTest extends TestCase
 
 	public function testNestedQuery3(): void
 	{
-		$compiler = new QueryCompiler($this->context, ['builtin' => 'n.builtin', 'another' => 't.another']);
+		$compiler = new QueryCompiler($this->context, [
+			'builtin' => 'n.builtin',
+			'another' => 't.another',
+		]);
 
 		$this->assertSame(
 			"(n.builtin = 1 OR n.content @@ '$.field.value == 1')"
-				. ' AND '
-				. "(t.another = 'test' OR (n.builtin > 2 AND n.builtin < 5))",
+			. ' AND '
+			. "(t.another = 'test' OR (n.builtin > 2 AND n.builtin < 5))",
 			$compiler->compile("(builtin = 1 | field=1) & (another='test'|(builtin>2 & builtin<5))"),
 		);
 	}
@@ -139,7 +145,10 @@ final class QueryCompilerTest extends TestCase
 
 	public function testNullQueryWrongPosition(): void
 	{
-		$this->throws(ParserException::class, 'Parse error at position 1. Invalid position for a null value.');
+		$this->throws(
+			ParserException::class,
+			'Parse error at position 1. Invalid position for a null value.',
+		);
 
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'n.builtin']);
 
@@ -148,7 +157,10 @@ final class QueryCompilerTest extends TestCase
 
 	public function testNullQueryWrongOperant(): void
 	{
-		$this->throws(ParserOutputException::class, 'Only equal (=) or unequal (!=) operators are allowed');
+		$this->throws(
+			ParserOutputException::class,
+			'Only equal (=) or unequal (!=) operators are allowed',
+		);
 
 		$compiler = new QueryCompiler($this->context, ['builtin' => 'n.builtin']);
 

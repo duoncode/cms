@@ -111,7 +111,7 @@ class Node
 			throw new RuntimeException('children() is only available on finder-backed node proxies');
 		}
 
-		$children = (new Nodes($this->context, $this->cms, $this->nodeFactory, $this->types))
+		$children = new Nodes($this->context, $this->cms, $this->nodeFactory, $this->types)
 			->published(null)
 			->hidden(null)
 			->childrenOf($this->meta->uid);

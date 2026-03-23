@@ -74,8 +74,13 @@ class Page
 		return $this->renderPage($page, $context, $cms);
 	}
 
-	private function dispatch(object $page, Context $context, Cms $cms, string $method, ?array $formBody): Response
-	{
+	private function dispatch(
+		object $page,
+		Context $context,
+		Cms $cms,
+		string $method,
+		?array $formBody,
+	): Response {
 		return match ($method) {
 			'GET' => $this->renderPage($page, $context, $cms),
 			'POST' => $this->handleFormPost($page, $formBody),
@@ -124,11 +129,11 @@ class Page
 			JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR,
 		);
 
-		return (new Response(
+		return new Response(
 			$this->factory
 				->response()
 				->withHeader('Content-Type', 'application/json'),
-		))->body($content);
+		)->body($content);
 	}
 
 	private function handleFormPost(object $node, ?array $formBody): Response
@@ -168,7 +173,7 @@ class Page
 
 				if ($path) {
 					header('Location: ' . $path, true, 301);
-					exit;
+					exit();
 				}
 
 				$locale = $locale->fallback();

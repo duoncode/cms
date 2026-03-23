@@ -57,12 +57,11 @@ class Nodes
 		$serializer = new Serializer($hydrator, $this->types);
 		$result = [];
 
-		foreach (
-			$nodes->published($query->published)
-				->hidden($query->hidden)
-				->order($query->order)
-				->deleted($query->deleted) as $node
-		) {
+		foreach ($nodes
+			->published($query->published)
+			->hidden($query->hidden)
+			->order($query->order)
+			->deleted($query->deleted) as $node) {
 			$uid = $node->meta->uid;
 			$n = [
 				'uid' => $uid,
@@ -87,7 +86,11 @@ class Nodes
 			}
 
 			if ($query->content) {
-				$n['content'] = $serializer->content($node, NodeFactory::dataFor($node), NodeFactory::fieldNamesFor($node));
+				$n['content'] = $serializer->content(
+					$node,
+					NodeFactory::dataFor($node),
+					NodeFactory::fieldNamesFor($node),
+				);
 			}
 
 			if ($query->map) {
@@ -101,6 +104,6 @@ class Nodes
 			$result = new stdClass();
 		}
 
-		return (new Response($factory->response()))->json($result);
+		return new Response($factory->response())->json($result);
 	}
 }

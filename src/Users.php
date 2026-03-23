@@ -8,29 +8,37 @@ use Duon\Quma\Database;
 
 class Users
 {
-	public function __construct(protected Database $db) {}
+	public function __construct(
+		protected Database $db,
+	) {}
 
 	public function byLogin(string $login): ?User
 	{
-		return $this->getUserOrNull($this->db->users->get([
-			'login' => $login,
-		])->one());
+		return $this->getUserOrNull(
+			$this->db->users->get([
+				'login' => $login,
+			])->one(),
+		);
 	}
 
 	public function byAuthToken(string $token): ?User
 	{
-		return $this->getUserOrNull($this->db->users->get([
-			'token' => hash('sha256', $token),
-		])->one());
+		return $this->getUserOrNull(
+			$this->db->users->get([
+				'token' => hash('sha256', $token),
+			])->one(),
+		);
 	}
 
 	public function byOneTimeToken(string $token): ?User
 	{
 		$hashedToken = hash('sha256', $token);
 
-		$user = $this->getUserOrNull($this->db->users->get([
-			'onetimetoken' => $hashedToken,
-		])->one());
+		$user = $this->getUserOrNull(
+			$this->db->users->get([
+				'onetimetoken' => $hashedToken,
+			])->one(),
+		);
 
 		if ($user) {
 			$this->db->users->removeOneTimeToken([
@@ -43,23 +51,29 @@ class Users
 
 	public function bySession(string $hash): ?User
 	{
-		return $this->getUserOrNull($this->db->users->get([
-			'sessionhash' => $hash,
-		])->one());
+		return $this->getUserOrNull(
+			$this->db->users->get([
+				'sessionhash' => $hash,
+			])->one(),
+		);
 	}
 
 	public function byUid(string $uid): ?User
 	{
-		return $this->getUserOrNull($this->db->users->get([
-			'uid' => $uid,
-		])->one());
+		return $this->getUserOrNull(
+			$this->db->users->get([
+				'uid' => $uid,
+			])->one(),
+		);
 	}
 
 	public function byId(int $id): ?User
 	{
-		return $this->getUserOrNull($this->db->users->get([
-			'usr' => $id,
-		])->one());
+		return $this->getUserOrNull(
+			$this->db->users->get([
+				'usr' => $id,
+			])->one(),
+		);
 	}
 
 	public function remember(string $hash, int $userId, string $expires): bool

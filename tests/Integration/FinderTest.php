@@ -50,9 +50,12 @@ final class FinderTest extends IntegrationTestCase
 	public function testFinderFiltersUnpublishedNodes(): void
 	{
 		$finder = $this->createCms();
-		$unpublishedNodes = iterator_to_array($finder->nodes()
-			->types('test-article')
-			->published(false));
+		$unpublishedNodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('test-article')
+				->published(false),
+		);
 
 		$this->assertNotEmpty($unpublishedNodes);
 
@@ -70,10 +73,13 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('routing-test-page', 'test-article')
-			->published(null)
-			->filter('routable = true'));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('routing-test-page', 'test-article')
+				->published(null)
+				->filter('routable = true'),
+		);
 
 		$this->assertNotEmpty($nodes);
 
@@ -91,14 +97,20 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$renderable = iterator_to_array($finder->nodes()
-			->types('renderable-test-page', 'test-article')
-			->published(null)
-			->filter('renderable = true'));
-		$notRenderable = iterator_to_array($finder->nodes()
-			->types('test-article')
-			->published(null)
-			->filter('renderable = false'));
+		$renderable = iterator_to_array(
+			$finder
+				->nodes()
+				->types('renderable-test-page', 'test-article')
+				->published(null)
+				->filter('renderable = true'),
+		);
+		$notRenderable = iterator_to_array(
+			$finder
+				->nodes()
+				->types('test-article')
+				->published(null)
+				->filter('renderable = false'),
+		);
 
 		$this->assertNotEmpty($renderable);
 		$this->assertNotEmpty($notRenderable);
@@ -145,9 +157,12 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('ordered-test-page')
-			->order('uid ASC'));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('ordered-test-page')
+				->order('uid ASC'),
+		);
 
 		$this->assertCount(3, $nodes);
 		$this->assertEquals('ordered-a', Factory::meta($nodes[0], 'uid'));
@@ -167,9 +182,12 @@ final class FinderTest extends IntegrationTestCase
 		}
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('limit-test-page')
-			->limit(3));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('limit-test-page')
+				->limit(3),
+		);
 
 		$this->assertCount(3, $nodes);
 	}
@@ -211,11 +229,14 @@ final class FinderTest extends IntegrationTestCase
 		}
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('limit-test-page')
-			->order('uid ASC')
-			->limit(2)
-			->offset(2));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('limit-test-page')
+				->order('uid ASC')
+				->limit(2)
+				->offset(2),
+		);
 
 		$this->assertCount(2, $nodes);
 		$this->assertEquals('offset-node-3', Factory::meta($nodes[0], 'uid'));
@@ -233,7 +254,9 @@ final class FinderTest extends IntegrationTestCase
 			]);
 		}
 
-		$finder = $this->createCms()->nodes()
+		$finder = $this
+			->createCms()
+			->nodes()
 			->types('ordered-test-page')
 			->order('uid ASC')
 			->limit(1)
@@ -263,10 +286,13 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('ordered-test-page')
-			->order('uid ASC')
-			->search('search ALPHA', ['uid', 'title']));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('ordered-test-page')
+				->order('uid ASC')
+				->search('search ALPHA', ['uid', 'title']),
+		);
 
 		$this->assertCount(1, $nodes);
 		$this->assertSame('search-node-alpha', Factory::meta($nodes[0], 'uid'));
@@ -289,9 +315,12 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$visibleNodes = iterator_to_array($finder->nodes()
-			->types('hidden-test-page')
-			->hidden(false));
+		$visibleNodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('hidden-test-page')
+				->hidden(false),
+		);
 
 		$this->assertCount(1, $visibleNodes);
 		$this->assertEquals('visible-node', Factory::meta($visibleNodes[0], 'uid'));
@@ -316,11 +345,14 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('nested-test-page')
-			->published(null)
-			->roots()
-			->order('uid ASC'));
+		$nodes = iterator_to_array(
+			$finder
+				->nodes()
+				->types('nested-test-page')
+				->published(null)
+				->roots()
+				->order('uid ASC'),
+		);
 
 		$uids = [];
 
@@ -358,11 +390,14 @@ final class FinderTest extends IntegrationTestCase
 		]);
 
 		$finder = $this->createCms();
-		$directChildren = iterator_to_array($finder->nodes()
-			->types('nested-test-page')
-			->published(null)
-			->childrenOf('children-parent')
-			->order('uid ASC'));
+		$directChildren = iterator_to_array(
+			$finder
+				->nodes()
+				->types('nested-test-page')
+				->published(null)
+				->childrenOf('children-parent')
+				->order('uid ASC'),
+		);
 
 		$uids = [];
 
@@ -372,11 +407,14 @@ final class FinderTest extends IntegrationTestCase
 
 		$this->assertSame(['children-a', 'children-b'], $uids);
 
-		$filtered = iterator_to_array($finder->nodes()
-			->types('nested-test-page')
-			->published(null)
-			->filter("parent = 'children-parent'")
-			->order('uid ASC'));
+		$filtered = iterator_to_array(
+			$finder
+				->nodes()
+				->types('nested-test-page')
+				->published(null)
+				->filter("parent = 'children-parent'")
+				->order('uid ASC'),
+		);
 
 		$filteredUids = [];
 
@@ -460,9 +498,11 @@ final class FinderTest extends IntegrationTestCase
 
 		$this->assertNotNull($parent);
 
-		$children = iterator_to_array($parent
-			->children("published = true & uid ~~ 'node-dsl-%'")
-			->order('uid ASC'));
+		$children = iterator_to_array(
+			$parent
+				->children("published = true & uid ~~ 'node-dsl-%'")
+				->order('uid ASC'),
+		);
 
 		$this->assertCount(1, $children);
 		$this->assertSame('node-dsl-alpha', Factory::meta($children[0], 'uid'));
@@ -471,8 +511,7 @@ final class FinderTest extends IntegrationTestCase
 	public function testFinderReturnsEmptyArrayWhenNoResults(): void
 	{
 		$finder = $this->createCms();
-		$nodes = iterator_to_array($finder->nodes()
-			->types('non-existent-type'));
+		$nodes = iterator_to_array($finder->nodes()->types('non-existent-type'));
 
 		$this->assertIsArray($nodes);
 		$this->assertEmpty($nodes);

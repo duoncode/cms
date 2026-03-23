@@ -268,7 +268,11 @@ final class PrimitiveValueTest extends TestCase
 		$this->assertInstanceOf(\Duon\Cms\Value\Files::class, $value);
 		$this->assertSame(2, $value->count());
 		$this->assertTrue($value->isset());
-		$this->assertSame('Files: count(0)', (string) $value, 'Value unwrap uses locale data, not files.');
+		$this->assertSame(
+			'Files: count(0)',
+			(string) $value,
+			'Value unwrap uses locale data, not files.',
+		);
 		$this->assertInstanceOf(\Duon\Cms\Value\File::class, $value->first());
 
 		$files = [];
@@ -365,7 +369,10 @@ final class PrimitiveValueTest extends TestCase
 		/** @var \Duon\Cms\Value\Image $value */
 		$value = $field->value();
 
-		$this->assertStringContainsString('/cms/media/image/node/test-node/hero.jpg', $value->publicPath());
+		$this->assertStringContainsString(
+			'/cms/media/image/node/test-node/hero.jpg',
+			$value->publicPath(),
+		);
 		$this->assertStringContainsString('http://www.example.com', $value->url());
 		$this->assertSame('Hero', $value->alt());
 	}
@@ -424,7 +431,10 @@ final class PrimitiveValueTest extends TestCase
 
 		$this->assertTrue($value->isset());
 		$this->assertSame('Hero', $value->alt());
-		$this->assertStringContainsString('/cms/media/image/node/test-node/hero.jpg', $value->publicPath());
+		$this->assertStringContainsString(
+			'/cms/media/image/node/test-node/hero.jpg',
+			$value->publicPath(),
+		);
 	}
 
 	public function testFileValueTitleFallsBackToDefaultLocale(): void
@@ -502,7 +512,7 @@ final class PrimitiveValueTest extends TestCase
 		$field = new \Duon\Cms\Field\Picture('hero', $owner, $valueContext);
 		$field->translate();
 
-		$value = new class ($owner, $field, $valueContext) extends \Duon\Cms\Value\Picture {
+		$value = new class($owner, $field, $valueContext) extends \Duon\Cms\Value\Picture {
 			public function url(bool $bust = true, int $index = 0): string
 			{
 				return "https://cdn.example.com/hero-{$index}.jpg";
@@ -562,7 +572,7 @@ final class PrimitiveValueTest extends TestCase
 		]);
 		$field = new \Duon\Cms\Field\Video('clip', $owner, $valueContext);
 
-		$value = new class ($owner, $field, $valueContext) extends \Duon\Cms\Value\Video {
+		$value = new class($owner, $field, $valueContext) extends \Duon\Cms\Value\Video {
 			public function url(bool $bust = false): string
 			{
 				return 'http://www.example.com/assets/clip.mp4';

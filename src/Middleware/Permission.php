@@ -22,7 +22,9 @@ class Permission implements Middleware
 	protected Users $users;
 	protected Config $config;
 
-	public function __construct(public readonly string $permission) {}
+	public function __construct(
+		public readonly string $permission,
+	) {}
 
 	public function process(Request $request, Handler $handler): Response
 	{

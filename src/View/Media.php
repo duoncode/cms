@@ -65,23 +65,23 @@ class Media
 				ResizeMode::Fit->value => [new Size((int) $qs['w'], (int) $qs['h']), ResizeMode::Fit],
 				ResizeMode::Resize->value => [new Size((int) $qs['w'], (int) $qs['h']), ResizeMode::Resize],
 				ResizeMode::FreeCrop->value => [new Size((int) $qs['w'], (int) $qs['h'], [
-					'x' => $qs['x'] ? (int) $qs['x'] : false,
-					'y' => $qs['y'] ? (int) $qs['y'] : false,
-				]), ResizeMode::FreeCrop],
+						'x' => $qs['x'] ? (int) $qs['x'] : false,
+						'y' => $qs['y'] ? (int) $qs['y'] : false,
+					]), ResizeMode::FreeCrop],
 				ResizeMode::Crop->value => [new Size((int) $qs['w'], (int) $qs['h'], match ($qs['pos']) {
-					'top' => ImageResize::CROPTOP,
-					'centre' => ImageResize::CROPCENTRE,
-					'center' => ImageResize::CROPCENTER,
-					'bottom' => ImageResize::CROPBOTTOM,
-					'left' => ImageResize::CROPLEFT,
-					'right' => ImageResize::CROPRIGHT,
-					'topcenter' => ImageResize::CROPTOPCENTER,
-					default => throw new RuntimeException('Crop position not supported: ' . $qs['pos']),
-				}), ResizeMode::Crop],
+						'top' => ImageResize::CROPTOP,
+						'centre' => ImageResize::CROPCENTRE,
+						'center' => ImageResize::CROPCENTER,
+						'bottom' => ImageResize::CROPBOTTOM,
+						'left' => ImageResize::CROPLEFT,
+						'right' => ImageResize::CROPRIGHT,
+						'topcenter' => ImageResize::CROPTOPCENTER,
+						default => throw new RuntimeException('Crop position not supported: ' . $qs['pos']),
+					}), ResizeMode::Crop],
 				default => throw new RuntimeException('Resize mode not supported: ' . $qs['resize']),
 			};
 
-			$quality = ($qs['quality'] ?? null) ? (int) $qs['quality'] : null;
+			$quality = $qs['quality'] ?? null ? (int) $qs['quality'] : null;
 			$image->resize($size, $mode, $qs['enlarge'] ?? false, $quality);
 		}
 
@@ -134,26 +134,38 @@ class Media
 			'code' => 0,
 		];
 
-		if (($file['error'] ?? null === UPLOAD_ERR_INI_SIZE) || ($fileSize > $maxSize)) {
-			$size = number_format((float) ($fileSize / 1024 / 1024), 2, '.', '');
-			$allowed = number_format((float) ($maxSize / 1024 / 1024), 2, '.', '');
+		if (($file['error'] ?? null === UPLOAD_ERR_INI_SIZE) || $fileSize > $maxSize) {
+			$size = number_format((float) (($fileSize / 1024) / 1024), 2, '.', '');
+			$allowed = number_format((float) (($maxSize / 1024) / 1024), 2, '.', '');
 
-			return array_merge($result, ['ok' => false,
-				'error' => "Die Datei ist zu groß: {$size} MB. Erlaubt sind {$allowed} MB", ]);
+			return array_merge($result, [
+				'ok' => false,
+				'error' => "Die Datei ist zu groß: {$size} MB. Erlaubt sind {$allowed} MB",
+			]);
 		}
 
 		if ($file['error'] ?? null !== UPLOAD_ERR_OK) {
-			return array_merge($result, ['ok' => false, 'error' => _('Der Dateiupload ist aufgrund eines Serverfehlers fehlgeschlagen.')]);
+			return array_merge($result, [
+				'ok' => false,
+				'error' => _('Der Dateiupload ist aufgrund eines Serverfehlers fehlgeschlagen.'),
+			]);
 		}
 
 		if (!$allowedExtensions) {
-			return array_merge($result, ['ok' => false, 'error' => _("Der Dateityp ist nicht erlaubt: {$mimeType}.")]);
+			return array_merge($result, [
+				'ok' => false,
+				'error' => _("Der Dateityp ist nicht erlaubt: {$mimeType}."),
+			]);
 		}
 
 		if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
 			return array_merge($result, [
 				'ok' => false,
-				'error' => _("Falsche Dateiendung: {$ext}. Für diesen Dateityp sind folgende Endungen erlaubt: " . join(', ', $allowedExtensions) . '.'),
+				'error' => _(
+					"Falsche Dateiendung: {$ext}. Für diesen Dateityp sind folgende Endungen erlaubt: "
+					. join(', ', $allowedExtensions)
+					. '.',
+				),
 			]);
 		}
 
@@ -186,9 +198,7 @@ class Media
 				break;
 			default:
 				throw new RuntimeException(
-					'File server not supported: `'
-					. $fileServer
-					. '`. Supported values `nginx`, `apache`.',
+					'File server not supported: `' . $fileServer . '`. Supported values `nginx`, `apache`.',
 				);
 		}
 

@@ -18,8 +18,9 @@ class User
 	public readonly ?string $deleted;
 	public readonly ?string $expires;
 
-	public function __construct(protected readonly array $data)
-	{
+	public function __construct(
+		protected readonly array $data,
+	) {
 		$this->id = $data['usr'];
 		$this->uid = $data['uid'];
 		$this->username = $data['username'] ?? '';
@@ -49,8 +50,12 @@ class User
 
 	public function array(): array
 	{
-		return array_filter($this->data, function ($key) {
-			return $key !== 'pwhash';
-		}, ARRAY_FILTER_USE_KEY);
+		return array_filter(
+			$this->data,
+			function ($key) {
+				return $key !== 'pwhash';
+			},
+			ARRAY_FILTER_USE_KEY,
+		);
 	}
 }

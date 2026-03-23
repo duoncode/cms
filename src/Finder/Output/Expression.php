@@ -53,8 +53,6 @@ abstract readonly class Expression
 
 	protected function translateKeyword(string $keyword): string
 	{
-		return match ($keyword) {
-			'now' => 'NOW()',
-		};
+		return match ($keyword) { 'now' => 'NOW()' };
 	}
 }

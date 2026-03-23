@@ -18,7 +18,9 @@ abstract class Handler
 		$fieldType = $field::class;
 		$nodeType = $field->owner::class;
 
-		return "The field \"{$field->name}\" (type: {$fieldType}) of node {$nodeType} "
-			. "cannot be used with the capability {$capabilityClass}";
+		return (
+			"The field \"{$field->name}\" (type: {$fieldType}) of node {$nodeType} "
+			. "cannot be used with the capability {$capabilityClass}"
+		);
 	}
 }

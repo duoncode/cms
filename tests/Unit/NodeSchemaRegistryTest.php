@@ -53,9 +53,15 @@ final class NodeSchemaRegistryTest extends TestCase
 		$this->assertInstanceOf(RenderHandler::class, $registry->getHandler(new Render('test')));
 		$this->assertInstanceOf(PermissionHandler::class, $registry->getHandler(new Permission('test')));
 		$this->assertInstanceOf(TitleHandler::class, $registry->getHandler(new Title('test')));
-		$this->assertInstanceOf(FieldOrderHandler::class, $registry->getHandler(new FieldOrder('a', 'b')));
+		$this->assertInstanceOf(
+			FieldOrderHandler::class,
+			$registry->getHandler(new FieldOrder('a', 'b')),
+		);
 		$this->assertInstanceOf(DeletableHandler::class, $registry->getHandler(new Deletable()));
-		$this->assertInstanceOf(ChildrenHandler::class, $registry->getHandler(new Children(PlainPage::class, PlainBlock::class)));
+		$this->assertInstanceOf(
+			ChildrenHandler::class,
+			$registry->getHandler(new Children(PlainPage::class, PlainBlock::class)),
+		);
 	}
 
 	public function testRegistryReturnsNullForUnknownAttribute(): void
@@ -96,10 +102,13 @@ final class NodeSchemaRegistryTest extends TestCase
 		$handler = new RouteHandler();
 		$result = $handler->resolve(new Route('/article/{uid}'), PlainPage::class);
 
-		$this->assertEquals([
-			'route' => '/article/{uid}',
-			'routable' => true,
-		], $result);
+		$this->assertEquals(
+			[
+				'route' => '/article/{uid}',
+				'routable' => true,
+			],
+			$result,
+		);
 	}
 
 	public function testRenderHandlerResolve(): void
@@ -107,10 +116,13 @@ final class NodeSchemaRegistryTest extends TestCase
 		$handler = new RenderHandler();
 		$result = $handler->resolve(new Render('my-template'), PlainPage::class);
 
-		$this->assertEquals([
-			'renderer' => 'my-template',
-			'renderable' => true,
-		], $result);
+		$this->assertEquals(
+			[
+				'renderer' => 'my-template',
+				'renderable' => true,
+			],
+			$result,
+		);
 	}
 
 	public function testPermissionHandlerResolve(): void
@@ -133,7 +145,10 @@ final class NodeSchemaRegistryTest extends TestCase
 	{
 		$handler = new TitleHandler();
 
-		$this->throws(RuntimeException::class, "The #[Title] attribute on node 'Duon\\Cms\\Tests\\Fixtures\\Node\\PlainPage' requires a non-empty field name when used on a class.");
+		$this->throws(
+			RuntimeException::class,
+			"The #[Title] attribute on node 'Duon\\Cms\\Tests\\Fixtures\\Node\\PlainPage' requires a non-empty field name when used on a class.",
+		);
 		$handler->resolve(new Title(), PlainPage::class);
 	}
 
@@ -158,12 +173,15 @@ final class NodeSchemaRegistryTest extends TestCase
 		$handler = new ChildrenHandler();
 		$result = $handler->resolve(new Children(PlainPage::class, PlainBlock::class), PlainPage::class);
 
-		$this->assertEquals([
-			'children' => [
-				PlainPage::class,
-				PlainBlock::class,
+		$this->assertEquals(
+			[
+				'children' => [
+					PlainPage::class,
+					PlainBlock::class,
+				],
 			],
-		], $result);
+			$result,
+		);
 	}
 
 	// -- Schema integration with Registry -------------------------------------
@@ -190,12 +208,15 @@ final class NodeSchemaRegistryTest extends TestCase
 		// No #[Handle] => fallback to kebab-case
 		$this->assertEquals('node-with-route-attribute', $schema->handle);
 		// No #[Permission] => default permission map
-		$this->assertEquals([
-			'read' => 'everyone',
-			'create' => 'authenticated',
-			'change' => 'authenticated',
-			'delete' => 'authenticated',
-		], $schema->permission);
+		$this->assertEquals(
+			[
+				'read' => 'everyone',
+				'create' => 'authenticated',
+				'change' => 'authenticated',
+				'delete' => 'authenticated',
+			],
+			$schema->permission,
+		);
 		// No #[Title] => null
 		$this->assertNull($schema->titleField);
 		// No #[FieldOrder] => null
@@ -211,10 +232,13 @@ final class NodeSchemaRegistryTest extends TestCase
 		$registry = Registry::withDefaults();
 		$schema = new Schema(NodeWithChildrenAttribute::class, $registry);
 
-		$this->assertSame([
-			PlainPage::class,
-			PlainBlock::class,
-		], $schema->children);
+		$this->assertSame(
+			[
+				PlainPage::class,
+				PlainBlock::class,
+			],
+			$schema->children,
+		);
 	}
 
 	public function testSchemaResolvesTitleFromPropertyAttribute(): void
@@ -229,7 +253,10 @@ final class NodeSchemaRegistryTest extends TestCase
 	{
 		$registry = Registry::withDefaults();
 
-		$this->throws(RuntimeException::class, "The #[Title] attribute on property 'Duon\\Cms\\Tests\\Fixtures\\Node\\NodeWithInvalidPropertyTitleAttribute::heading' requires a field-typed property.");
+		$this->throws(
+			RuntimeException::class,
+			"The #[Title] attribute on property 'Duon\\Cms\\Tests\\Fixtures\\Node\\NodeWithInvalidPropertyTitleAttribute::heading' requires a field-typed property.",
+		);
 		new Schema(NodeWithInvalidPropertyTitleAttribute::class, $registry);
 	}
 

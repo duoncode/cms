@@ -48,7 +48,11 @@ class Node
 	public function get(
 		array $params,
 	): ?NodeWrapper {
-		$data = $this->context->db->nodes->find($params)->one();
+		$data = $this->context
+			->db
+			->nodes
+			->find($params)
+			->one();
 
 		if (!$data) {
 			return null;
@@ -58,8 +62,7 @@ class Node
 		$data['editor_data'] = json_decode($data['editor_data'], true);
 		$data['creator_data'] = json_decode($data['creator_data'], true);
 		$data['paths'] = json_decode($data['paths'], true);
-		$class = $this
-			->context
+		$class = $this->context
 			->container
 			->tag(Plugin::NODE_TAG)
 			->entry($data['handle'])

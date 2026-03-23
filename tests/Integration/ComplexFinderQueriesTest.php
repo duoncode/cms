@@ -62,10 +62,30 @@ final class ComplexFinderQueriesTest extends IntegrationTestCase
 		$typeId = $this->createTestType('combined-filter-test');
 
 		// Create nodes with different published/hidden combinations
-		$this->createTestNode(['uid' => 'pub-visible', 'type' => $typeId, 'published' => true, 'hidden' => false]);
-		$this->createTestNode(['uid' => 'pub-hidden', 'type' => $typeId, 'published' => true, 'hidden' => true]);
-		$this->createTestNode(['uid' => 'unpub-visible', 'type' => $typeId, 'published' => false, 'hidden' => false]);
-		$this->createTestNode(['uid' => 'unpub-hidden', 'type' => $typeId, 'published' => false, 'hidden' => true]);
+		$this->createTestNode([
+			'uid' => 'pub-visible',
+			'type' => $typeId,
+			'published' => true,
+			'hidden' => false,
+		]);
+		$this->createTestNode([
+			'uid' => 'pub-hidden',
+			'type' => $typeId,
+			'published' => true,
+			'hidden' => true,
+		]);
+		$this->createTestNode([
+			'uid' => 'unpub-visible',
+			'type' => $typeId,
+			'published' => false,
+			'hidden' => false,
+		]);
+		$this->createTestNode([
+			'uid' => 'unpub-hidden',
+			'type' => $typeId,
+			'published' => false,
+			'hidden' => true,
+		]);
 
 		// Get published and not hidden (visible to public)
 		$visible = $this->db()->execute(

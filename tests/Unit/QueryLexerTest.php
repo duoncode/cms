@@ -8,7 +8,8 @@ use Duon\Cms\Exception\ParserException;
 use Duon\Cms\Finder\QueryLexer;
 use Duon\Cms\Tests\TestCase;
 
-const QUERY_ALL_ELEMENTS = '(true = field1 & builtin1>now&null >=   13 & field2 < "string") |'
+const QUERY_ALL_ELEMENTS =
+	'(true = field1 & builtin1>now&null >=   13 & field2 < "string") |'
 	. '(13.73 <= builtin2 | field3 ~ "%string" | builtin3!~"string%" | path.de-DE != 31 | '
 	. ' path !~~ \'url\' &field4 ~~\'%str%\' & field5 ~* "(a|b)" & field6 !~* "(a|b)" | '
 	. ' field7 ~~* /%abc%/ | field8 !~~* /%a\\/bc/)';

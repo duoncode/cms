@@ -28,13 +28,16 @@ class Render
 		?bool $deleted = false,
 		?bool $published = true,
 	) {
-		$data = $this->context->db->nodes->find([
-			'uid' => $uid,
-			'published' => $published,
-			'deleted' => $deleted,
-		])->one();
-		$class = $this
-			->context
+		$data = $this->context
+			->db
+			->nodes
+			->find([
+				'uid' => $uid,
+				'published' => $published,
+				'deleted' => $deleted,
+			])
+			->one();
+		$class = $this->context
 			->container
 			->tag(Plugin::NODE_TAG)
 			->entry($data['handle'])

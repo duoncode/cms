@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 readonly class Options
 {
-	public function __construct(public array $options) {}
+	public function __construct(
+		public array $options,
+	) {}
 }

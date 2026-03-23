@@ -46,7 +46,7 @@ class Session extends BaseSession
 		setcookie(
 			$this->authCookie,
 			'',
-			time() - 60 * 60 * 24,
+			time() - (60 * 60 * 24),
 		);
 	}
 

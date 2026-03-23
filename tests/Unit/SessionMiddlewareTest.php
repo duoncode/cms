@@ -48,10 +48,12 @@ final class SessionMiddlewareTest extends TestCase
 
 		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/');
 		$middleware = new SessionMiddleware($config, $this->db());
-		$handler = new class ($this->factory()) implements RequestHandlerInterface {
+		$handler = new class($this->factory()) implements RequestHandlerInterface {
 			public ?ServerRequestInterface $request = null;
 
-			public function __construct(private Factory $factory) {}
+			public function __construct(
+				private Factory $factory,
+			) {}
 
 			public function handle(ServerRequestInterface $request): ResponseInterface
 			{

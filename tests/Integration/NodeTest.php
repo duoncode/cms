@@ -251,7 +251,7 @@ final class NodeTest extends IntegrationTestCase
 		$this->assertSame('admin', $user['userrole']);
 		$this->assertTrue($user['active']);
 		$data = json_decode($user['data'], true);
-		$this->assertSame('Integration User', ($data['name'] ?? null));
+		$this->assertSame('Integration User', $data['name'] ?? null);
 	}
 
 	public function testPagePathRequiresDefaultLocale(): void
@@ -273,9 +273,15 @@ final class NodeTest extends IntegrationTestCase
 			'Hauptsprache',
 		);
 
-		$pathManager->persist($db, [
-			'paths' => ['de' => '/nur-de'],
-			'generatedPaths' => [],
-		], 1, $nodeId, $locales);
+		$pathManager->persist(
+			$db,
+			[
+				'paths' => ['de' => '/nur-de'],
+				'generatedPaths' => [],
+			],
+			1,
+			$nodeId,
+			$locales,
+		);
 	}
 }

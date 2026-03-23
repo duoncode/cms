@@ -82,7 +82,9 @@ class End2EndTestCase extends IntegrationTestCase
 
 		// Delete created one-time tokens
 		foreach ($this->createdOneTimeTokens as $tokenHash) {
-			$db->execute('DELETE FROM cms.onetimetokens WHERE token = :token', ['token' => $tokenHash])->run();
+			$db->execute('DELETE FROM cms.onetimetokens WHERE token = :token', [
+				'token' => $tokenHash,
+			])->run();
 		}
 
 		// Delete created auth tokens
@@ -196,8 +198,8 @@ class End2EndTestCase extends IntegrationTestCase
 		$this->createdUserIds[] = $userId;
 
 		// Create auth token
-		$sql = "INSERT INTO cms.authtokens (token, usr, creator, editor)
-				VALUES (:token, :usr, 1, 1)";
+		$sql = 'INSERT INTO cms.authtokens (token, usr, creator, editor)
+				VALUES (:token, :usr, 1, 1)';
 
 		$db->execute($sql, [
 			'token' => $tokenHash,
@@ -293,7 +295,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$logger = new NullLogger();
 
 		// Set environment variables for error handler (it uses env() function)
-		$_ENV['CMS_DEBUG'] = false;  // Disable debug mode (Whoops not available in tests)
+		$_ENV['CMS_DEBUG'] = false; // Disable debug mode (Whoops not available in tests)
 		$_ENV['CMS_ENV'] = 'test';
 
 		$handler = new Handler($root, $logger, $factory);
@@ -389,8 +391,11 @@ class End2EndTestCase extends IntegrationTestCase
 	/**
 	 * Assert that the response has the expected status code.
 	 */
-	protected function assertResponseStatus(int $expected, ResponseInterface $response, string $message = ''): void
-	{
+	protected function assertResponseStatus(
+		int $expected,
+		ResponseInterface $response,
+		string $message = '',
+	): void {
 		$this->assertEquals(
 			$expected,
 			$response->getStatusCode(),
@@ -457,8 +462,11 @@ class End2EndTestCase extends IntegrationTestCase
 	/**
 	 * Assert that response header has expected value.
 	 */
-	protected function assertResponseHeaderEquals(string $header, string $expected, ResponseInterface $response): void
-	{
+	protected function assertResponseHeaderEquals(
+		string $header,
+		string $expected,
+		ResponseInterface $response,
+	): void {
 		$this->assertResponseHasHeader($header, $response);
 		$actual = $response->getHeaderLine($header);
 		$this->assertEquals($expected, $actual, "Header {$header} has unexpected value");

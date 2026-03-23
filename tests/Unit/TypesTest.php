@@ -29,20 +29,35 @@ final class TypesTest extends TestCase
 
 	public function testLabelAttributeSet(): void
 	{
-		$this->assertEquals('NodeWithHandleAttribute', $this->types->get(NodeWithHandleAttribute::class, 'label'));
-		$this->assertEquals('Node With Custom Name Attribute', $this->types->get(NodeWithNameAttribute::class, 'label'));
+		$this->assertEquals('NodeWithHandleAttribute', $this->types->get(
+			NodeWithHandleAttribute::class,
+			'label',
+		));
+		$this->assertEquals('Node With Custom Name Attribute', $this->types->get(
+			NodeWithNameAttribute::class,
+			'label',
+		));
 	}
 
 	public function testHandleAttributeSet(): void
 	{
-		$this->assertEquals('node-with-name-attribute', $this->types->get(NodeWithNameAttribute::class, 'handle'));
-		$this->assertEquals('node-with-custom-handle-attribute', $this->types->get(NodeWithHandleAttribute::class, 'handle'));
+		$this->assertEquals('node-with-name-attribute', $this->types->get(
+			NodeWithNameAttribute::class,
+			'handle',
+		));
+		$this->assertEquals('node-with-custom-handle-attribute', $this->types->get(
+			NodeWithHandleAttribute::class,
+			'handle',
+		));
 	}
 
 	public function testRouteAttributeSet(): void
 	{
 		$this->assertEquals('', $this->types->get(NodeWithNameAttribute::class, 'route'));
-		$this->assertEquals('/node-with-custom/{route}', $this->types->get(NodeWithRouteAttribute::class, 'route'));
+		$this->assertEquals('/node-with-custom/{route}', $this->types->get(
+			NodeWithRouteAttribute::class,
+			'route',
+		));
 	}
 
 	public function testRoutableIsDerivedFromRouteAttribute(): void
@@ -53,8 +68,14 @@ final class TypesTest extends TestCase
 
 	public function testRenderAttributeSet(): void
 	{
-		$this->assertEquals('node-with-name-attribute', $this->types->schemaOf(NodeWithNameAttribute::class)->renderer);
-		$this->assertEquals('template-defined-by-render-attribute', $this->types->schemaOf(NodeWithRenderAttribute::class)->renderer);
+		$this->assertEquals(
+			'node-with-name-attribute',
+			$this->types->schemaOf(NodeWithNameAttribute::class)->renderer,
+		);
+		$this->assertEquals(
+			'template-defined-by-render-attribute',
+			$this->types->schemaOf(NodeWithRenderAttribute::class)->renderer,
+		);
 	}
 
 	public function testRenderableRequiresRenderOrRouteAttribute(): void
@@ -65,23 +86,32 @@ final class TypesTest extends TestCase
 
 	public function testPermissionAttributeSet(): void
 	{
-		$this->assertEquals([
-			'read' => 'everyone',
-			'create' => 'authenticated',
-			'change' => 'authenticated',
-			'delete' => 'authenticated',
-		], $this->types->schemaOf(NodeWithNameAttribute::class)->permission);
-		$this->assertEquals([
-			'read' => 'me',
-		], $this->types->schemaOf(NodeWithPermissionAttribute::class)->permission);
+		$this->assertEquals(
+			[
+				'read' => 'everyone',
+				'create' => 'authenticated',
+				'change' => 'authenticated',
+				'delete' => 'authenticated',
+			],
+			$this->types->schemaOf(NodeWithNameAttribute::class)->permission,
+		);
+		$this->assertEquals(
+			[
+				'read' => 'me',
+			],
+			$this->types->schemaOf(NodeWithPermissionAttribute::class)->permission,
+		);
 	}
 
 	public function testChildrenAttributeSet(): void
 	{
-		$this->assertSame([
-			PlainPage::class,
-			PlainBlock::class,
-		], $this->types->get(NodeWithChildrenAttribute::class, 'children'));
+		$this->assertSame(
+			[
+				PlainPage::class,
+				PlainBlock::class,
+			],
+			$this->types->get(NodeWithChildrenAttribute::class, 'children'),
+		);
 		$this->assertSame([], $this->types->get(NodeWithNameAttribute::class, 'children'));
 	}
 
@@ -100,7 +130,10 @@ final class TypesTest extends TestCase
 		$this->assertNull($schema->get('missing'));
 		$this->assertSame('fallback', $schema->get('missing', 'fallback'));
 
-		$this->throws(NoSuchProperty::class, "The node schema '" . PlainPage::class . "' doesn't have the property 'missing'");
+		$this->throws(
+			NoSuchProperty::class,
+			"The node schema '" . PlainPage::class . "' doesn't have the property 'missing'",
+		);
 		$schema->missing;
 	}
 
@@ -121,7 +154,10 @@ final class TypesTest extends TestCase
 		$this->assertNull($type->get('missing'));
 		$this->assertSame('fallback', $type->get('missing', 'fallback'));
 
-		$this->throws(NoSuchProperty::class, "The node type '" . PlainPage::class . "' doesn't have the property 'missing'");
+		$this->throws(
+			NoSuchProperty::class,
+			"The node type '" . PlainPage::class . "' doesn't have the property 'missing'",
+		);
 		$type->missing;
 	}
 

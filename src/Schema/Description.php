@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 readonly class Description
 {
-	public function __construct(public string $description) {}
+	public function __construct(
+		public string $description,
+	) {}
 }

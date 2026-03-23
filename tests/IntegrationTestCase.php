@@ -55,13 +55,14 @@ class IntegrationTestCase extends TestCase
 		$db = new Database(self::$sharedConnection);
 
 		// Check if migrations table exists
-		$tableExists = $db->execute(
-			"SELECT EXISTS (
+		$tableExists =
+			$db->execute(
+				"SELECT EXISTS (
 				SELECT FROM information_schema.tables
 				WHERE table_schema = 'public'
 				AND table_name = 'migrations'
 			) as exists",
-		)->one()['exists'] ?? false;
+			)->one()['exists'] ?? false;
 
 		if (!$tableExists) {
 			echo "\n⚠ Test database not initialized. Run: ./run recreate-db && ./run migrate --apply\n\n";
@@ -72,12 +73,13 @@ class IntegrationTestCase extends TestCase
 		}
 
 		// Check if cms schema exists (indicates migrations have been run)
-		$schemaExists = $db->execute(
-			"SELECT EXISTS (
+		$schemaExists =
+			$db->execute(
+				"SELECT EXISTS (
 				SELECT FROM information_schema.schemata
 				WHERE schema_name = 'cms'
 			) as exists",
-		)->one()['exists'] ?? false;
+			)->one()['exists'] ?? false;
 
 		if (!$schemaExists) {
 			echo "\n⚠ Migrations not applied. Run: ./run migrate --apply\n\n";
@@ -206,9 +208,9 @@ class IntegrationTestCase extends TestCase
 	 */
 	protected function createTestType(string $handle): int
 	{
-		$sql = "INSERT INTO cms.types (handle)
+		$sql = 'INSERT INTO cms.types (handle)
 				VALUES (:handle)
-				RETURNING type";
+				RETURNING type';
 
 		return $this->db()->execute($sql, [
 			'handle' => $handle,
@@ -243,9 +245,9 @@ class IntegrationTestCase extends TestCase
 			$data['content'] = json_encode($data['content']);
 		}
 
-		$sql = "INSERT INTO cms.nodes (uid, parent, published, hidden, locked, type, creator, editor, created, changed, content)
+		$sql = 'INSERT INTO cms.nodes (uid, parent, published, hidden, locked, type, creator, editor, created, changed, content)
 				VALUES (:uid, :parent, :published, :hidden, :locked, :type, :creator, :editor, :created, :changed, :content::jsonb)
-				RETURNING node";
+				RETURNING node';
 
 		return $this->db()->execute($sql, $data)->one()['node'];
 	}
@@ -261,7 +263,7 @@ class IntegrationTestCase extends TestCase
 		$defaults = [
 			'uid' => $uid,
 			'username' => $data['username'] ?? $uid,
-			'email' => $data['email'] ?? ($uid . '@example.com'),
+			'email' => $data['email'] ?? $uid . '@example.com',
 			'pwhash' => password_hash('password', PASSWORD_ARGON2ID),
 			'userrole' => 'editor',
 			'active' => true,
@@ -276,9 +278,9 @@ class IntegrationTestCase extends TestCase
 			$data['data'] = json_encode($data['data']);
 		}
 
-		$sql = "INSERT INTO cms.users (uid, username, email, pwhash, userrole, active, data, creator, editor)
+		$sql = 'INSERT INTO cms.users (uid, username, email, pwhash, userrole, active, data, creator, editor)
 				VALUES (:uid, :username, :email, :pwhash, :userrole, :active, :data::jsonb, :creator, :editor)
-				RETURNING usr";
+				RETURNING usr';
 
 		return $this->db()->execute($sql, $data)->one()['usr'];
 	}
@@ -292,8 +294,8 @@ class IntegrationTestCase extends TestCase
 	 */
 	protected function createTestPath(int $nodeId, string $path, string $locale = 'en'): void
 	{
-		$sql = "INSERT INTO cms.urlpaths (node, path, locale, creator, editor)
-				VALUES (:node, :path, :locale, 1, 1)";
+		$sql = 'INSERT INTO cms.urlpaths (node, path, locale, creator, editor)
+				VALUES (:node, :path, :locale, 1, 1)';
 
 		$this->db()->execute($sql, [
 			'node' => $nodeId,

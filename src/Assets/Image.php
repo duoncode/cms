@@ -39,7 +39,11 @@ class Image
 
 	public function publicPath(bool $bust = false): string
 	{
-		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $this->path()))));
+		$path = implode('/', array_map('rawurlencode', explode('/', str_replace(
+			'\\',
+			'/',
+			$this->path(),
+		))));
 
 		if ($bust) {
 			$buster = hash('xxh32', (string) filemtime($this->file));
@@ -101,8 +105,12 @@ class Image
 		return new ImageResize($this->file);
 	}
 
-	protected function createCacheFile(Size $size, ResizeMode $mode, bool $enlarge, ?int $quality): void
-	{
+	protected function createCacheFile(
+		Size $size,
+		ResizeMode $mode,
+		bool $enlarge,
+		?int $quality,
+	): void {
 		try {
 			$image = match ($mode) {
 				ResizeMode::Width => $this->get()->resizeToWidth($size->firstDimension, $enlarge),
@@ -161,11 +169,18 @@ class Image
 		$suffix = '-' . match ($mode) {
 			ResizeMode::Width => 'w' . $size->firstDimension,
 			ResizeMode::Fit => $size->firstDimension . 'x' . $size->secondDimension . '-fit',
-			ResizeMode::Crop => $size->firstDimension . 'x' . $size->secondDimension . '-crop' . $size->cropMode,
-			ResizeMode::FreeCrop => $size->firstDimension . 'x'
-				. $size->secondDimension . '-crop-x'
+			ResizeMode::Crop => $size->firstDimension
+				. 'x'
+				. $size->secondDimension
+				. '-crop'
+				. $size->cropMode,
+			ResizeMode::FreeCrop => $size->firstDimension
+				. 'x'
+				. $size->secondDimension
+				. '-crop-x'
 				. $size->cropMode['x']
-				. 'y' . $size->cropMode['y'],
+				. 'y'
+				. $size->cropMode['y'],
 			ResizeMode::Height => 'h' . $size->firstDimension,
 			ResizeMode::LongSide => 'l' . $size->firstDimension,
 			ResizeMode::ShortSide => 's' . $size->firstDimension,

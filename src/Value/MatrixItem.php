@@ -84,7 +84,7 @@ class MatrixItem extends Value
 		foreach ($reflection->getProperties(ReflectionProperty::IS_PROTECTED) as $property) {
 			$type = $property->getType();
 
-			if (!$type || !($type instanceof ReflectionNamedType)) {
+			if (!$type || !$type instanceof ReflectionNamedType) {
 				continue;
 			}
 

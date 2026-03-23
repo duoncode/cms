@@ -9,5 +9,7 @@ use Attribute;
 #[Attribute]
 class Handle
 {
-	public function __construct(public readonly string $value) {}
+	public function __construct(
+		public readonly string $value,
+	) {}
 }

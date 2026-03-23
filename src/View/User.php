@@ -13,7 +13,9 @@ use Duon\Quma\Database;
 
 class User
 {
-	public function __construct(protected readonly Database $db) {}
+	public function __construct(
+		protected readonly Database $db,
+	) {}
 
 	#[Permission('authenticated')]
 	public function list() {}
@@ -100,7 +102,9 @@ class User
 			$passwordUtil = Password::fromConfig($config);
 
 			if (!$passwordUtil->strongEnough($pw)) {
-				throw new HttpBadRequest($request, ['error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.']);
+				throw new HttpBadRequest($request, [
+					'error' => 'Das Passwort ist zu schwach. Es sollte mindestens 12 Zeichen haben.',
+				]);
 			}
 
 			if (trim($data['password']) !== trim($data['passwordRepeat'])) {

@@ -29,8 +29,9 @@ class InstallPanel extends Command
 
 	protected const string defaultPath = '/cms';
 
-	public function __construct(private Config $config)
-	{
+	public function __construct(
+		private Config $config,
+	) {
 		$this->prefix = $this->config->get('path.prefix');
 		$this->panelPath = $this->config->get('path.panel');
 		$this->publicPath = $this->config->get('path.public') . $this->panelPath;
@@ -66,7 +67,7 @@ class InstallPanel extends Command
 
 		if ($this->panelPath !== self::defaultPath) {
 			$this->echoln(
-				"Changing panel path from `" . self::defaultPath . "` to `{$this->prefix}{$this->panelPath}`:",
+				'Changing panel path from `' . self::defaultPath . "` to `{$this->prefix}{$this->panelPath}`:",
 			);
 
 			if ($this->updatePanelPath() !== 0) {
@@ -130,7 +131,7 @@ class InstallPanel extends Command
 			$tarGzPath = $archivePath . '.tar.gz';
 
 			if (!rename($archivePath, $tarGzPath)) {
-				throw new RuntimeException("Failed to rename archive");
+				throw new RuntimeException('Failed to rename archive');
 			}
 
 			// Open the .tar.gz archive
