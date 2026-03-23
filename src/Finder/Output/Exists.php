@@ -11,6 +11,7 @@ use Duon\Cms\Finder\Input\Token;
 final readonly class Exists extends Expression implements Output
 {
 	public function __construct(
+		#[\SensitiveParameter]
 		private Token $token,
 		private Context $context,
 	) {}

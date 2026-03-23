@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
-use Duon\Cms\Field\Field;
 use Duon\Cms\Value\Decimal as DecimalValue;
 use Duon\Sire\Shape;
 

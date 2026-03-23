@@ -38,9 +38,11 @@ class Strings
 		$matches = [];
 
 		foreach (str_split("/[ ,.?!\"┬ú$%^&*()-_=+[]{};:'@#~<>/\\|`┬¼┬ª]/", 1) as $char) {
-			if (strpos($str, $char) !== false) {
-				$matches[] = $char;
+			if (strpos($str, $char) === false) {
+				continue;
 			}
+
+			$matches[] = $char;
 		}
 		$foundSpecialChars = count(array_unique($matches));
 

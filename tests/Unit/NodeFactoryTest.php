@@ -7,7 +7,6 @@ namespace Duon\Cms\Tests\Unit;
 use Duon\Cms\Column;
 use Duon\Cms\Context;
 use Duon\Cms\Exception\NoSuchProperty;
-use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Locales;
 use Duon\Cms\Node\Factory;
 use Duon\Cms\Node\Node;

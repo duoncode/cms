@@ -17,7 +17,6 @@ use Duon\Core\Plugin as CorePlugin;
 use Duon\Core\Request;
 use Duon\Router\Router;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 
 /**

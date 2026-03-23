@@ -149,7 +149,7 @@ final class QueryParser
 	/**
 	 * @throws ParserException
 	 */
-	private function getExpression(Token $token): Expression
+	private function getExpression(#[\SensitiveParameter] Token $token): Expression
 	{
 		if (!$this->readyForCondition) {
 			$this->error($token, 'Invalid position for a condition.');
@@ -209,12 +209,12 @@ final class QueryParser
 		return new Comparison($left, $operator, $right, $this->context, $this->builtins);
 	}
 
-	private function getExistsCondition(Token $token): Exists
+	private function getExistsCondition(#[\SensitiveParameter] Token $token): Exists
 	{
 		if ($token->type !== TokenType::Field) {
 			$this->error(
 				$token,
-				'Conditions of type `field exists` must consist of ' . 'a single operand of type Field.',
+				'Conditions of type `field exists` must consist of a single operand of type Field.',
 			);
 		}
 
@@ -227,7 +227,7 @@ final class QueryParser
 	/**
 	 * @throws ParserException
 	 */
-	private function getBooleanOperator(Token $token): Operator
+	private function getBooleanOperator(#[\SensitiveParameter] Token $token): Operator
 	{
 		if ($this->readyForCondition) {
 			$this->error(
@@ -250,7 +250,7 @@ final class QueryParser
 	/**
 	 * @throws ParserException
 	 */
-	private function getLeftParen(Token $token): LeftParen
+	private function getLeftParen(#[\SensitiveParameter] Token $token): LeftParen
 	{
 		if (!$this->readyForCondition) {
 			$this->error($token, 'Invalid position for parenthesis.');
@@ -265,7 +265,7 @@ final class QueryParser
 	/**
 	 * @throws ParserException
 	 */
-	private function getRightParen(Token $token): RightParen
+	private function getRightParen(#[\SensitiveParameter] Token $token): RightParen
 	{
 		if ($this->pos > 0 && $this->tokens[$this->pos - 1]->type === TokenType::LeftParen) {
 			$this->error(
@@ -284,7 +284,7 @@ final class QueryParser
 	/**
 	 * @throws ParserException
 	 */
-	private function error(Token $token, string $msg): never
+	private function error(#[\SensitiveParameter] Token $token, string $msg): never
 	{
 		$position = $token->position + 1;
 

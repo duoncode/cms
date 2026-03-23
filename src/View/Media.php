@@ -43,7 +43,7 @@ class Media
 		$dir = "{$public}{$assets}/{$doctype}/{$uid}";
 
 		if (!is_dir($dir)) {
-			mkdir($dir, 0755, true);
+			mkdir($dir, 0o755, true);
 		}
 
 		move_uploaded_file($file['tmp_name'], "{$dir}/{$result['file']}");

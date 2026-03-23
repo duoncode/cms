@@ -171,7 +171,7 @@ final class FieldPropertiesTest extends IntegrationTestCase
 		}
 
 		// Find title field and verify its properties
-		$titleField = array_values(array_filter($fields, fn($f) => $f['name'] === 'title'))[0];
+		$titleField = array_values(array_filter($fields, static fn($f) => $f['name'] === 'title'))[0];
 		$this->assertEquals('Document Title', $titleField['label']);
 		$this->assertTrue($titleField['required']);
 	}

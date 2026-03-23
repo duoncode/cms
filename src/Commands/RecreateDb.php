@@ -17,6 +17,7 @@ class RecreateDb extends Command
 	public function __construct(
 		private string $database,
 		private string $username,
+		#[\SensitiveParameter]
 		private string $password,
 		private string $host = 'localhost',
 	) {}

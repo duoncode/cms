@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-use Duon\Cms\Config;
 use Duon\Cms\Util\Time;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
@@ -37,6 +36,7 @@ class Auth
 
 	public function authenticate(
 		string $login,
+		#[\SensitiveParameter]
 		string $password,
 		bool $remember,
 		bool $initSession,
@@ -59,6 +59,7 @@ class Auth
 	}
 
 	public function authenticateByOneTimeToken(
+		#[\SensitiveParameter]
 		string $token,
 		bool $initSession,
 	): User|false {
@@ -76,6 +77,7 @@ class Auth
 	}
 
 	public function getOneTimeToken(
+		#[\SensitiveParameter]
 		string $token,
 	): string|false {
 		$user = $this->users->byAuthToken($token);
@@ -88,6 +90,7 @@ class Auth
 	}
 
 	public function invalidateOneTimeToken(
+		#[\SensitiveParameter]
 		string $token,
 	): void {
 		$this->users->removeOneTimeToken($token);

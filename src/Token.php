@@ -9,8 +9,12 @@ class Token
 	protected string $token;
 	protected string $secret;
 
-	public function __construct(string $secret, ?string $token = null)
-	{
+	public function __construct(
+		#[\SensitiveParameter]
+		string $secret,
+		#[\SensitiveParameter]
+		?string $token = null,
+	) {
 		$this->secret = $secret;
 
 		if ($token === null) {

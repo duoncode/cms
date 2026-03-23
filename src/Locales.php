@@ -165,9 +165,11 @@ class Locales implements Iterator, CorePlugin
 				$langs = array_combine($matches[1], $matches[4]);
 
 				foreach ($langs as $lang => $val) {
-					if ($val === '') {
-						$langs[$lang] = 1;
+					if ($val !== '') {
+						continue;
 					}
+
+					$langs[$lang] = 1;
 				}
 
 				arsort($langs, SORT_NUMERIC);

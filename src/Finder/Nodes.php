@@ -96,7 +96,7 @@ final class Nodes implements Iterator
 		foreach ($terms as $term) {
 			$needle = $this->context->db->quote('%' . $term . '%');
 			$fieldClauses = array_map(
-				fn(string $expression): string => "COALESCE(({$expression})::text, '') ILIKE {$needle}",
+				static fn(string $expression): string => "COALESCE(({$expression})::text, '') ILIKE {$needle}",
 				$expressions,
 			);
 
@@ -277,7 +277,7 @@ final class Nodes implements Iterator
 				trim($this->whereFields),
 				trim($this->whereTypes),
 			],
-			fn($clause) => !empty($clause),
+			static fn($clause) => !empty($clause),
 		));
 
 		$params = [

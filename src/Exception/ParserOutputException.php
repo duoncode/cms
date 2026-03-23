@@ -10,6 +10,7 @@ use Throwable;
 class ParserOutputException extends ParserException implements CmsException
 {
 	public function __construct(
+		#[\SensitiveParameter]
 		public readonly Token $token,
 		string $message,
 		int $code = 0,

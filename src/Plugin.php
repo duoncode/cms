@@ -172,7 +172,7 @@ class Plugin implements CorePlugin
 		}
 
 		$types = array_map(
-			fn($record) => $record['handle'],
+			static fn($record) => $record['handle'],
 			$this->db
 				->nodes
 				->types()
@@ -180,11 +180,13 @@ class Plugin implements CorePlugin
 		);
 
 		foreach ($this->nodes as $handle => $class) {
-			if (!in_array($handle, $types)) {
-				$this->db->nodes->addType([
-					'handle' => $handle,
-				])->run();
+			if (in_array($handle, $types)) {
+				continue;
 			}
+
+			$this->db->nodes->addType([
+				'handle' => $handle,
+			])->run();
 		}
 	}
 }

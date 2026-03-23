@@ -162,8 +162,8 @@ class Page
 			$paths = $db->paths->activeByNode(['node' => $path['node']])->all();
 
 			$pathsByLocale = array_combine(
-				array_map(fn($p) => $p['locale'], $paths),
-				array_map(fn($p) => $p['path'], $paths),
+				array_map(static fn($p) => $p['locale'], $paths),
+				array_map(static fn($p) => $p['path'], $paths),
 			);
 
 			$locale = $context->request->get('locale');

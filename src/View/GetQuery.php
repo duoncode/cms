@@ -19,7 +19,7 @@ class GetQuery implements Query
 		$this->_deleted = $this->tristateValue($request->param('deleted', 'false'));
 		$this->_content = $this->tristateValue($request->param('content', 'false'));
 		$this->_uids = array_map(
-			fn(string $uid) => trim($uid),
+			static fn(string $uid) => trim($uid),
 			explode(',', $request->param('uids', '')),
 		);
 		$this->_order = $request->param('order', 'changed');

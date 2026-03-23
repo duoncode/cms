@@ -73,7 +73,7 @@ final class ColumnTest extends TestCase
 
 	public function testFieldCanBeClosure(): void
 	{
-		$column = new Column('Computed', fn($node) => $node->title());
+		$column = new Column('Computed', static fn($node) => $node->title());
 
 		$this->assertSame('Computed', $column->title);
 		$this->assertInstanceOf(Closure::class, $column->field);

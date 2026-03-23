@@ -31,7 +31,7 @@ class Session extends BaseSession
 		return $_SESSION['user_id'] ?? null;
 	}
 
-	public function remember(Token $token, int $expires): void
+	public function remember(#[\SensitiveParameter] Token $token, int $expires): void
 	{
 		setcookie(
 			$this->authCookie,

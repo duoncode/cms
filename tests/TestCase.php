@@ -32,8 +32,7 @@ class TestCase extends BaseTestCase
 		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip, deflate, br';
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-US,de;q=0.7,en;q=0.3';
 		$_SERVER['HTTP_HOST'] = 'www.example.com';
-		$_SERVER['HTTP_USER_AGENT'] =
-			'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) ' . 'Gecko/20100101 Firefox/108.0';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['REQUEST_URI'] = '/';
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
@@ -108,9 +107,7 @@ class TestCase extends BaseTestCase
 
 	public function config(array $settings = [], bool $debug = false): Config
 	{
-		$config = new Config('duon', debug: $debug, settings: $settings);
-
-		return $config;
+		return new Config('duon', debug: $debug, settings: $settings);
 	}
 
 	public function request(

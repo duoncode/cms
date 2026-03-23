@@ -19,7 +19,7 @@ class Locale
 		?string $urlPrefix = null,
 	) {
 		if ($domains) {
-			$this->domains = array_map(fn($d) => strtolower($d), $domains);
+			$this->domains = array_map(static fn($d) => strtolower($d), $domains);
 		} else {
 			$this->domains = [];
 		}

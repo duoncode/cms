@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Duon\Cms\Tests\End2End;
 
 use Duon\Cms\Tests\End2EndTestCase;
-use PHPUnit\Framework\Attributes\Group as G;
 
 /**
  * End-to-end tests for Node CRUD operations through HTTP API.

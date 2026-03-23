@@ -61,7 +61,7 @@ final readonly class UrlPath extends Expression implements Output
 	/**
 	 * @return array{0: string, 1: bool, 2: string}
 	 */
-	private function condition(Token $valueToken, TokenType $operator): array
+	private function condition(#[\SensitiveParameter] Token $valueToken, TokenType $operator): array
 	{
 		$localeClause = $this->localeClause();
 
@@ -89,7 +89,7 @@ final readonly class UrlPath extends Expression implements Output
 		};
 	}
 
-	private function isComparison(Token $valueToken, bool $allowNull): string
+	private function isComparison(#[\SensitiveParameter] Token $valueToken, bool $allowNull): string
 	{
 		if ($valueToken->type === TokenType::Null) {
 			if (!$allowNull) {
@@ -102,8 +102,11 @@ final readonly class UrlPath extends Expression implements Output
 		return 'p.path = ' . $this->literal($valueToken);
 	}
 
-	private function scalarComparison(Token $valueToken, string $operator): string
-	{
+	private function scalarComparison(
+		#[\SensitiveParameter]
+		Token $valueToken,
+		string $operator,
+	): string {
 		if ($valueToken->type === TokenType::Null) {
 			throw new ParserOutputException(
 				$valueToken,
@@ -114,7 +117,7 @@ final readonly class UrlPath extends Expression implements Output
 		return 'p.path ' . $operator . ' ' . $this->literal($valueToken);
 	}
 
-	private function literal(Token $token): string
+	private function literal(#[\SensitiveParameter] Token $token): string
 	{
 		return match ($token->type) {
 			TokenType::String => $this->context->db->quote($token->lexeme),

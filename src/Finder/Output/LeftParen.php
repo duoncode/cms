@@ -9,6 +9,7 @@ use Duon\Cms\Finder\Input\Token;
 class LeftParen implements Output
 {
 	public function __construct(
+		#[\SensitiveParameter]
 		public Token $token,
 	) {}
 

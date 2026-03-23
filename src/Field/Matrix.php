@@ -29,7 +29,7 @@ class Matrix extends Field implements Capability\Limitable
 	public function structure(mixed $value = null): array
 	{
 		$this->initSubfields();
-		$value = $value ?? $this->valueContext->data['value'] ?? $this->default ?? [];
+		$value ??= $this->valueContext->data['value'] ?? $this->default ?? [];
 
 		if (!is_array($value)) {
 			$value = [];

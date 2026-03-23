@@ -15,7 +15,7 @@ final class RememberDetailsTest extends TestCase
 		$secret = 'test-secret';
 		$tokenValue = 'test-token-value';
 		$token = new Token($secret, $tokenValue);
-		$expires = 1704067200;
+		$expires = 1_704_067_200;
 
 		$details = new RememberDetails($token, $expires);
 
@@ -27,12 +27,12 @@ final class RememberDetailsTest extends TestCase
 	{
 		$secret = 'test-secret';
 		$token = new Token($secret, 'test-token');
-		$expires = 1704067200;
+		$expires = 1_704_067_200;
 
 		$details = new RememberDetails($token, $expires);
 
 		// Verify properties are accessible
 		$this->assertInstanceOf(Token::class, $details->token);
-		$this->assertSame(1704067200, $details->expires);
+		$this->assertSame(1_704_067_200, $details->expires);
 	}
 }

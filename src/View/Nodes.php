@@ -41,7 +41,7 @@ class Nodes
 			$nodes = $cms->nodes($query->query);
 		} elseif (count($query->uids) > 0) {
 			if (count($query->uids) > 1) {
-				$quoted = implode(',', array_map(fn($uid) => "'{$uid}'", $query->uids));
+				$quoted = implode(',', array_map(static fn($uid) => "'{$uid}'", $query->uids));
 				$queryString = "uid @ [{$quoted}]";
 			} else {
 				$queryString = "uid = '{$query->uids[0]}'";
@@ -77,12 +77,14 @@ class Nodes
 			];
 
 			foreach ($query->fields as $field) {
-				if ($field) {
-					$fieldName = trim($field);
-					$fieldObj = $hydrator->getField($node, $fieldName);
-					$value = $fieldObj->value();
-					$n[$field] = $value->isset() ? $value->unwrap() : null;
+				if (!$field) {
+					continue;
 				}
+
+				$fieldName = trim($field);
+				$fieldObj = $hydrator->getField($node, $fieldName);
+				$value = $fieldObj->value();
+				$n[$field] = $value->isset() ? $value->unwrap() : null;
 			}
 
 			if ($query->content) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-use Duon\Cms\Config;
 use Duon\Cms\Middleware\InitRequest;
 use Duon\Cms\Middleware\Session;
 use Duon\Cms\View\Auth;

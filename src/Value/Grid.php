@@ -50,18 +50,20 @@ class Grid extends Value
 		$i = 0;
 
 		foreach ($this->preparedData as $value) {
-			if ($value->type === 'image') {
-				$i++;
+			if ($value->type !== 'image') {
+				continue;
+			}
 
-				if ($i === $index) {
-					return new Field\Image(
-						$this->context->fieldName,
-						$this->owner,
-						new ValueContext($this->context->fieldName, $value->data),
-					)
-						->limit(1)
-						->value();
-				}
+			$i++;
+
+			if ($i === $index) {
+				return new Field\Image(
+					$this->context->fieldName,
+					$this->owner,
+					new ValueContext($this->context->fieldName, $value->data),
+				)
+					->limit(1)
+					->value();
 			}
 		}
 
@@ -122,12 +124,14 @@ class Grid extends Value
 		$i = 0;
 
 		foreach ($this->preparedData as $value) {
-			if ($value->type === 'image') {
-				$i++;
+			if ($value->type !== 'image') {
+				continue;
+			}
 
-				if ($i === $index) {
-					return true;
-				}
+			$i++;
+
+			if ($i === $index) {
+				return true;
 			}
 		}
 
@@ -142,12 +146,14 @@ class Grid extends Value
 		$i = 0;
 
 		foreach ($this->preparedData as $value) {
-			if ($value->type === 'richtext') {
-				$i++;
+			if ($value->type !== 'richtext') {
+				continue;
+			}
 
-				if ($i === $index) {
-					return HtmlUtil::excerpt($value->data['value'] ?? '', $words, $allowedTags);
-				}
+			$i++;
+
+			if ($i === $index) {
+				return HtmlUtil::excerpt($value->data['value'] ?? '', $words, $allowedTags);
 			}
 		}
 

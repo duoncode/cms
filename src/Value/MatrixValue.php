@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Value;
 
-use Duon\Cms\Field\Field;
 use Duon\Cms\Field\Matrix;
 use Duon\Cms\Field\Owner;
 use Generator;
@@ -100,13 +99,15 @@ class MatrixValue extends Value implements IteratorAggregate
 		}
 
 		foreach ($data as $itemData) {
-			if (is_array($itemData)) {
-				$this->items[] = new MatrixItem(
-					$this->owner,
-					$this->field,
-					new ValueContext($this->fieldName, $itemData),
-				);
+			if (!is_array($itemData)) {
+				continue;
 			}
+
+			$this->items[] = new MatrixItem(
+				$this->owner,
+				$this->field,
+				new ValueContext($this->fieldName, $itemData),
+			);
 		}
 	}
 }

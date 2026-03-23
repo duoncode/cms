@@ -47,7 +47,7 @@ class Panel
 	{
 		$config = $this->config;
 		$localesList = array_map(
-			function ($locale) {
+			static function ($locale) {
 				return [
 					'id' => $locale->id,
 					'title' => $locale->title,

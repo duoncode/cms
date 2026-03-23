@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
-use Duon\Cms\Field\Owner;
 use Duon\Cms\Field\Schema\Registry;
 use Duon\Cms\Value\ValueContext;
 use ReflectionClass;

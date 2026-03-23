@@ -138,7 +138,7 @@ class InstallPanel extends Command
 			$phar = new PharData($tarGzPath);
 
 			// Ensure destination directory exists
-			if (!is_dir($destination) && !mkdir($destination, 0775, true)) {
+			if (!is_dir($destination) && !mkdir($destination, 0o775, true)) {
 				throw new RuntimeException("Failed to create destination directory: {$destination}");
 			}
 
@@ -245,12 +245,14 @@ class InstallPanel extends Command
 		$files = [];
 
 		foreach ($iterator as $file) {
-			if ($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html'])) {
-				$content = file_get_contents($file->getPathname());
+			if (!($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html']))) {
+				continue;
+			}
 
-				if (strpos($content, self::defaultPath) !== false) {
-					$files[] = $file->getPathname();
-				}
+			$content = file_get_contents($file->getPathname());
+
+			if (strpos($content, self::defaultPath) !== false) {
+				$files[] = $file->getPathname();
 			}
 		}
 

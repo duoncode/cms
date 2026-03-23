@@ -28,7 +28,7 @@ class Password
 		return new self($algo, $entropy);
 	}
 
-	public function strongEnough(string $password): bool
+	public function strongEnough(#[\SensitiveParameter] string $password): bool
 	{
 		if (Strings::entropy($password) < $this->entropy) {
 			return false;
@@ -37,12 +37,12 @@ class Password
 		return true;
 	}
 
-	public function valid(string $password, string $hash): bool
+	public function valid(#[\SensitiveParameter] string $password, string $hash): bool
 	{
 		return password_verify($password, $hash);
 	}
 
-	public function hash(string $password): string
+	public function hash(#[\SensitiveParameter] string $password): string
 	{
 		return password_hash($password, $this->algo);
 	}

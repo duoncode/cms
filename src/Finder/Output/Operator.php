@@ -11,6 +11,7 @@ use Duon\Cms\Finder\Input\TokenType;
 class Operator implements Output
 {
 	public function __construct(
+		#[\SensitiveParameter]
 		public Token $token,
 	) {}
 

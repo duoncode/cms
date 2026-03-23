@@ -527,10 +527,12 @@ final class FinderTest extends IntegrationTestCase
 		$homepageNode = null;
 
 		foreach ($homepage as $node) {
-			if (Factory::meta($node, 'uid') === 'test-homepage') {
-				$homepageNode = $node;
-				break;
+			if (Factory::meta($node, 'uid') !== 'test-homepage') {
+				continue;
 			}
+
+			$homepageNode = $node;
+			break;
 		}
 
 		$this->assertNotNull($homepageNode, 'test-homepage node should exist');

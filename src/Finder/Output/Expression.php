@@ -37,8 +37,12 @@ abstract readonly class Expression
 		};
 	}
 
-	protected function getOperand(Token $token, Database $db, array $builtins): string
-	{
+	protected function getOperand(
+		#[\SensitiveParameter]
+		Token $token,
+		Database $db,
+		array $builtins,
+	): string {
 		return match ($token->type) {
 			TokenType::Boolean => strtolower($token->lexeme),
 			TokenType::Field => $this->compileField($token->lexeme, 'n.content'),

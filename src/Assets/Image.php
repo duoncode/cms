@@ -162,7 +162,7 @@ class Image
 
 			// create cache sub directory if it does not exist
 			if (!is_dir($cacheDir)) {
-				mkdir($cacheDir, 0755, true);
+				mkdir($cacheDir, 0o755, true);
 			}
 		}
 

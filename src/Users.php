@@ -21,7 +21,7 @@ class Users
 		);
 	}
 
-	public function byAuthToken(string $token): ?User
+	public function byAuthToken(#[\SensitiveParameter] string $token): ?User
 	{
 		return $this->getUserOrNull(
 			$this->db->users->get([
@@ -30,7 +30,7 @@ class Users
 		);
 	}
 
-	public function byOneTimeToken(string $token): ?User
+	public function byOneTimeToken(#[\SensitiveParameter] string $token): ?User
 	{
 		$hashedToken = hash('sha256', $token);
 
@@ -104,7 +104,7 @@ class Users
 		return $token;
 	}
 
-	public function removeOneTimeToken(string $token): void
+	public function removeOneTimeToken(#[\SensitiveParameter] string $token): void
 	{
 		$this->db->users->removeOneTimeToken([
 			'token' => hash('sha256', $token),

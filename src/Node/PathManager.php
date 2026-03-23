@@ -42,10 +42,12 @@ class PathManager
 		$noPathsGiven = true;
 
 		foreach ($data['paths'] ?? [] as $path) {
-			if ($path) {
-				$noPathsGiven = false;
-				break;
+			if (!$path) {
+				continue;
 			}
+
+			$noPathsGiven = false;
+			break;
 		}
 
 		if ($noPathsGiven) {
@@ -98,26 +100,28 @@ class PathManager
 		$alreadyPersisted = [];
 
 		foreach ($paths as $locale => $path) {
-			if ($path) {
-				$this->prepareUrlPath($db, $path);
-
-				if (in_array($path, $alreadyPersisted)) {
-					continue;
-				}
-
-				if ($db->nodes->pathExists(['path' => $path])->one()) {
-					$path = $path . '-' . substr(nanoid(), 0, 5);
-				}
-
-				$db->nodes->savePath([
-					'node' => $node,
-					'path' => $path,
-					'locale' => $locale,
-					'editor' => $editor,
-				])->run();
-
-				$alreadyPersisted[] = $path;
+			if (!$path) {
+				continue;
 			}
+
+			$this->prepareUrlPath($db, $path);
+
+			if (in_array($path, $alreadyPersisted)) {
+				continue;
+			}
+
+			if ($db->nodes->pathExists(['path' => $path])->one()) {
+				$path = $path . '-' . substr(nanoid(), 0, 5);
+			}
+
+			$db->nodes->savePath([
+				'node' => $node,
+				'path' => $path,
+				'locale' => $locale,
+				'editor' => $editor,
+			])->run();
+
+			$alreadyPersisted[] = $path;
 		}
 	}
 
