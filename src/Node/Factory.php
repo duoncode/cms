@@ -122,10 +122,7 @@ class Factory
 	 */
 	public static function dataFor(object $node): array
 	{
-		self::$nodeState ??= new WeakMap();
-		$node = Node::unwrap($node);
-
-		return (self::$nodeState[$node] ?? [])['data'] ?? [];
+		return self::getNodeState($node)['data'] ?? [];
 	}
 
 	/**
@@ -133,10 +130,15 @@ class Factory
 	 */
 	public static function fieldNamesFor(object $node): array
 	{
+		return self::getNodeState($node)['fieldNames'] ?? [];
+	}
+
+	private static function getNodeState(object $node): array
+	{
 		self::$nodeState ??= new WeakMap();
 		$node = Node::unwrap($node);
 
-		return (self::$nodeState[$node] ?? [])['fieldNames'] ?? [];
+		return self::$nodeState[$node] ?? [];
 	}
 
 	/**
