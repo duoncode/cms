@@ -88,7 +88,7 @@ final class Nodes implements Iterator
 		}
 
 		$expressions = array_map(
-			fn(string $field): string => $this->fieldExpression($field),
+			$this->fieldExpression(...),
 			$fields,
 		);
 		$termClauses = [];
