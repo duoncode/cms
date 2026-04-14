@@ -27,7 +27,7 @@ class InstallPanel extends Command
 	private string $panelFileName = 'panel-nightly.tar.gz';
 	private string $panelUrl = 'https://github.com/duonrun/cms/releases/download/nightly/panel-nightly.tar.gz';
 
-	protected const string defaultPath = '/cms';
+	protected const string DEFAULT_PATH = '/cms';
 
 	public function __construct(
 		private Config $config,
@@ -65,9 +65,9 @@ class InstallPanel extends Command
 			return 1;
 		}
 
-		if ($this->panelPath !== self::defaultPath) {
+		if ($this->panelPath !== self::DEFAULT_PATH) {
 			$this->echoln(
-				'Changing panel path from `' . self::defaultPath . "` to `{$this->prefix}{$this->panelPath}`:",
+				'Changing panel path from `' . self::DEFAULT_PATH . "` to `{$this->prefix}{$this->panelPath}`:",
 			);
 
 			if ($this->updatePanelPath() !== 0) {
@@ -251,7 +251,7 @@ class InstallPanel extends Command
 
 			$content = file_get_contents($file->getPathname());
 
-			if (str_contains($content, self::defaultPath)) {
+			if (str_contains($content, self::DEFAULT_PATH)) {
 				$files[] = $file->getPathname();
 			}
 		}
@@ -268,7 +268,7 @@ class InstallPanel extends Command
 		}
 
 		$content = file_get_contents($file);
-		$updatedContent = str_replace(self::defaultPath, $this->prefix . $this->panelPath, $content);
+		$updatedContent = str_replace(self::DEFAULT_PATH, $this->prefix . $this->panelPath, $content);
 
 		if ($content === $updatedContent) {
 			$this->warn('No changes were made to the panel path: ' . $this->removeCwdFromPath($file));
