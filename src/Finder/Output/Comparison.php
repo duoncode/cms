@@ -115,7 +115,7 @@ final readonly class Comparison extends Expression implements Output
 	{
 		$accessor = implode('.', $segments);
 
-		if (strpos($accessor, '?') !== false) {
+		if (str_contains($accessor, '?')) {
 			throw new ParserOutputException(
 				$this->left,
 				'The questionmark is allowed after the first dot only.',

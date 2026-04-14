@@ -38,7 +38,7 @@ class Strings
 		$matches = [];
 
 		foreach (str_split("/[ ,.?!\"┬ú$%^&*()-_=+[]{};:'@#~<>/\\|`┬¼┬ª]/", 1) as $char) {
-			if (strpos($str, $char) === false) {
+			if (!str_contains($str, $char)) {
 				continue;
 			}
 

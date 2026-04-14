@@ -251,7 +251,7 @@ class InstallPanel extends Command
 
 			$content = file_get_contents($file->getPathname());
 
-			if (strpos($content, self::defaultPath) !== false) {
+			if (str_contains($content, self::defaultPath)) {
 				$files[] = $file->getPathname();
 			}
 		}

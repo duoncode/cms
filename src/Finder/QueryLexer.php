@@ -329,7 +329,7 @@ final class QueryLexer
 
 	private function getIdentifierType(string $lexeme): TokenType
 	{
-		if (str_ends_with($lexeme, '.') || strpos($lexeme, '..') !== false) {
+		if (str_ends_with($lexeme, '.') || str_contains($lexeme, '..')) {
 			$this->error('Invalid use of dot (.) in indentifier');
 		}
 
