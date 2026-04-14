@@ -277,7 +277,7 @@ final class Nodes implements Iterator
 				trim($this->whereFields),
 				trim($this->whereTypes),
 			],
-			static fn($clause) => !empty($clause),
+			static fn(string $clause): bool => $clause !== '',
 		));
 
 		$params = [

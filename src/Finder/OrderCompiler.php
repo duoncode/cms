@@ -16,7 +16,7 @@ final class OrderCompiler
 
 	public function compile(string $statement): string
 	{
-		if (empty(trim($statement))) {
+		if (trim($statement) === '') {
 			throw new ParserException('Empty order by clause');
 		}
 
