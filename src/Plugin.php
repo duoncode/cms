@@ -120,15 +120,27 @@ class Plugin implements CorePlugin
 
 		$root = dirname(__DIR__);
 		$sqlConfig = $this->config->get('db.sql', []);
+		$sqlPaths = [];
+
+		if ($sqlConfig) {
+			$sqlPaths = is_array($sqlConfig) ? $sqlConfig : [$sqlConfig];
+		}
+
 		$sql = array_merge(
 			[$root . '/db/sql'],
-			$sqlConfig ? (is_array($sqlConfig) ? $sqlConfig : [$sqlConfig]) : [],
+			$sqlPaths,
 		);
 		$migrations = $this->config->get('db.migrations', []);
+		$migrationPaths = [];
+
+		if ($migrations) {
+			$migrationPaths = is_array($migrations) ? $migrations : [$migrations];
+		}
+
 		$namespacedMigrations = [];
 		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
 		$namespacedMigrations['default'] = array_merge(
-			$migrations ? (is_array($migrations) ? $migrations : [$migrations]) : [],
+			$migrationPaths,
 			[$root . '/db/migrations/update'],
 		);
 
