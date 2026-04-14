@@ -1,14 +1,5 @@
-*.log
-*.mo
-.DS_Store
-.env
-.php*.cache
-composer.lock
-node_modules
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+/.coverage
 /build
-/coverage
 /data/
 /ui/.svelte-kit
 /ui/build/
@@ -16,7 +7,12 @@ vite.config.ts.timestamp-*
 /ui/package
 /ui/src/locale/
 /vendor/
-
-# Local config overrides (not committed)
-/phpunit.xml
-/psalm.xml
+*.log
+*.mo
+.DS_Store
+.env
+.php*.cache
+composer.lock
+node_modules
+phpunit.xml
+psalm.xml
