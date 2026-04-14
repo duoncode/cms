@@ -43,7 +43,7 @@ class Permissions
 
 	public function has(string $role, string $permission): bool
 	{
-		return in_array($permission, $this->permissions[$role] ?? []);
+		return in_array($permission, $this->permissions[$role] ?? [], true);
 	}
 
 	public function get(string $role): array

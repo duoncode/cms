@@ -49,6 +49,6 @@ class Password
 
 	public static function hasArgon2(): bool
 	{
-		return in_array('argon2id', password_algos());
+		return in_array('argon2id', password_algos(), true);
 	}
 }

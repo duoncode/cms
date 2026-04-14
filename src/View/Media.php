@@ -158,7 +158,7 @@ class Media
 			]);
 		}
 
-		if (!$ext || !in_array(strtolower($ext), $allowedExtensions)) {
+		if (!$ext || !in_array(strtolower($ext), $allowedExtensions, true)) {
 			return array_merge($result, [
 				'ok' => false,
 				'error' => _(

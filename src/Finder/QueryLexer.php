@@ -346,7 +346,7 @@ final class QueryLexer
 					return TokenType::Path;
 				}
 
-				if (in_array($lexeme, $this->builtins)) {
+				if (in_array($lexeme, $this->builtins, true)) {
 					return TokenType::Builtin;
 				}
 

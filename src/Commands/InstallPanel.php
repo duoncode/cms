@@ -245,7 +245,7 @@ class InstallPanel extends Command
 		$files = [];
 
 		foreach ($iterator as $file) {
-			if (!($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html']))) {
+			if (!($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html'], true))) {
 				continue;
 			}
 

@@ -15,6 +15,6 @@ trait IsRequirable
 
 	public function isRequired(): bool
 	{
-		return in_array('required', $this->validators);
+		return in_array('required', $this->validators, true);
 	}
 }

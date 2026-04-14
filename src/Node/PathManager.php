@@ -106,7 +106,7 @@ class PathManager
 
 			$this->prepareUrlPath($db, $path);
 
-			if (in_array($path, $alreadyPersisted)) {
+			if (in_array($path, $alreadyPersisted, true)) {
 				continue;
 			}
 
@@ -154,7 +154,7 @@ class PathManager
 					])->run();
 				}
 
-				if (in_array($newPath, $alreadyPersisted)) {
+				if (in_array($newPath, $alreadyPersisted, true)) {
 					continue;
 				}
 

@@ -180,7 +180,7 @@ class Plugin implements CorePlugin
 		);
 
 		foreach ($this->nodes as $handle => $class) {
-			if (in_array($handle, $types)) {
+			if (in_array($handle, $types, true)) {
 				continue;
 			}
 
