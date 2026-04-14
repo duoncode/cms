@@ -163,7 +163,7 @@ class Media
 				'ok' => false,
 				'error' => _(
 					"Falsche Dateiendung: {$ext}. Für diesen Dateityp sind folgende Endungen erlaubt: "
-					. join(', ', $allowedExtensions)
+					. implode(', ', $allowedExtensions)
 					. '.',
 				),
 			]);
