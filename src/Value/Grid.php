@@ -173,9 +173,13 @@ class Grid extends Value
 	// - class: An additional class added to the container
 	public function render(mixed ...$args): string
 	{
-		$args['tag'] = $tag = $args['tag'] ?? 'div';
-		$args['prefix'] = $prefix = $args['prefix'] ?? 'cms';
-		$args['class'] = $class = $args['class'] ?? '' ? ' ' . $args['class'] : '';
+		$tag = $args['tag'] ?? 'div';
+		$args['tag'] = $tag;
+		$prefix = $args['prefix'] ?? 'cms';
+		$args['prefix'] = $prefix;
+		$class = $args['class'] ?? '';
+		$class = $class !== '' ? ' ' . $class : '';
+		$args['class'] = $class;
 
 		$columns = $this->columns();
 
