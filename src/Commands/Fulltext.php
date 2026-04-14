@@ -30,7 +30,6 @@ class Fulltext extends Command
 		foreach ($db->fulltext->nodes()->lazy() as $node) {
 			$json = json_decode($node['content'], true);
 			error_log(print_r($json, true));
-			break;
 		}
 	}
 }
