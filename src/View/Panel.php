@@ -63,7 +63,7 @@ class Panel
 			'defaultLocale' => $this->locales->getDefault()->id,
 			'debug' => $config->debug(),
 			'env' => $config->env(),
-			'csrfToken' => 'TOKEN', // TODO: real token
+			'csrfToken' => '', // TODO: real token
 			'logo' => $config->get('panel.logo', null),
 			'theme' => $this->themeStylesheets(),
 			'api' => $config->apiPath(),
