@@ -10,6 +10,7 @@ excludes = []
 print-width = 100
 use-tabs = true
 array-table-style-alignment = false
+empty-line-between-same-symbols = false
 preserve-breaking-member-access-chain = true
 preserve-breaking-argument-list = true
 preserve-breaking-parameter-list = true
@@ -22,10 +23,23 @@ integrations = []
 [linter.rules]
 ambiguous-function-call = { enabled = false }
 cyclomatic-complexity = { enabled = false }
+function-name = { camel = true }
 halstead = { enabled = false }
+kan-defect = { enabled = false }
 literal-named-argument = { enabled = false }
 no-assign-in-condition = { enabled = false }
+no-else-clause = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
+no-global = { exclude = ["tests"] }
+no-isset = { enabled = false }
 no-shorthand-ternary = { enabled = false }
+no-literal-password = { exclude = ["tests"] }
+readable-literal = { min-digits = 7 }
+strict-types = { exclude = ["tests/Fixtures"] }
+tagged-todo = { enabled = false }
 too-many-methods = { enabled = false }
 too-many-properties = { enabled = false }
+too-many-enum-cases = { enabled = false }
+
+# TODO: fix the issues reported by these rules
+excessive-parameter-list = { enabled = false }
