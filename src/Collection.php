@@ -58,9 +58,7 @@ abstract class Collection
 
 	public function header(): array
 	{
-		return array_map(static function (Column $column) {
-			return $column->title;
-		}, $this->columns());
+		return array_map(static fn(Column $column) => $column->title, $this->columns());
 	}
 
 	public function listing(): array

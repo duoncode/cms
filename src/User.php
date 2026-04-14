@@ -52,9 +52,7 @@ class User
 	{
 		return array_filter(
 			$this->data,
-			static function ($key) {
-				return $key !== 'pwhash';
-			},
+			static fn($key) => $key !== 'pwhash',
 			ARRAY_FILTER_USE_KEY,
 		);
 	}

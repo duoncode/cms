@@ -47,13 +47,11 @@ class Panel
 	{
 		$config = $this->config;
 		$localesList = array_map(
-			static function ($locale) {
-				return [
-					'id' => $locale->id,
-					'title' => $locale->title,
-					'fallback' => $locale->fallback,
-				];
-			},
+			static fn($locale) => [
+				'id' => $locale->id,
+				'title' => $locale->title,
+				'fallback' => $locale->fallback,
+			],
 			iterator_to_array($this->locales),
 			[], // Add an empty array to remove the assoc array keys
 			//    See: https://www.php.net/manual/en/function.array-map.php#refsect1-function.array-map-returnvalues
