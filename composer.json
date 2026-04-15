@@ -6,10 +6,12 @@
 	"authors": [
 		{
 			"name": "Ernst",
-			"email": "ernst@duon.run"
+			"email": "ernst@duon.sh"
 		}
 	],
-	"homepage": "https://duon.run/cms",
+	"homepage": "https://duon.sh/cms",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"require": {
 		"php": "^8.5",
 		"ext-pgsql": "*",
@@ -18,7 +20,7 @@
 		"ext-curl": "*",
 		"ext-dom": "*",
 		"ext-xml": "*",
-		"duon/core": "^0.2",
+		"duon/core": "dev-main",
 		"duon/error": "^0.1",
 		"duon/quma": "^0.1",
 		"duon/session": "^0.1",
