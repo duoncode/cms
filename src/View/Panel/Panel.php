@@ -13,11 +13,11 @@ use Duon\Core\Response;
 
 final class Panel
 {
-	private string $root;
+	private string $panelDir;
 
 	public function __construct()
 	{
-		$this->root = dirname(dirname(dirname(__DIR__)));
+		$this->panelDir = __DIR__ . '/../../../panel';
 	}
 
 	public function index(): array
@@ -28,7 +28,7 @@ final class Panel
 	public function asset(Request $request, Factory $factory, string $slug): Response
 	{
 		try {
-			$file = Path::inside($this->root . '/panel', $slug, checkIsFile: true);
+			$file = Path::inside($this->panelDir, $slug, checkIsFile: true);
 		} catch (RuntimeException $e) {
 			throw new HttpNotFound($request, previous: $e);
 		}
