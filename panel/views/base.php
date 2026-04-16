@@ -11,6 +11,10 @@
 
 <body>
 	<?= $this->body() ?>
+<?php if ($debug): ?>
+	<p>DEBUG</p>
+<?php endif ?>
+	<p><?= $env ?></p>
 
 <?php foreach ($jsFiles as $jsFile): ?>
 	<script src="<?= $panelPath ?>/assets/app/<?= $jsFile ?>"></script>

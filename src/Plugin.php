@@ -212,9 +212,6 @@ class Plugin implements CorePlugin
 		$this->renderer('panel', BoilerRenderer::class)->args(
 			dirs: "{$root}/panel/views",
 			autoescape: true,
-			defaults: [
-				'panelPath' => $this->config->get('path.panel'),
-			],
 		);
 	}
 }
