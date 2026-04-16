@@ -20,6 +20,7 @@
 		"ext-curl": "*",
 		"ext-dom": "*",
 		"ext-xml": "*",
+		"duon/cms-boiler": "dev-main",
 		"duon/core": "dev-main",
 		"duon/error": "^0.1",
 		"duon/quma": "^0.1",
@@ -31,7 +32,6 @@
 		"psr/http-message-implementation": "^1.0"
 	},
 	"require-dev": {
-		"duon/cms-boiler": "^0.1",
 		"duon/dev": "^3.0",
 		"laminas/laminas-diactoros": "^3"
 	},
