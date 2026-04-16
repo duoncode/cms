@@ -150,14 +150,14 @@ class Routes
 				$panel
 					->get(
 						'',
-						[Panel\Panel::class, 'index'],
+						[Panel\Index::class, 'index'],
 						'index',
 					)
 					->after($renderers->get('index'));
 				$panel
 					->get(
 						'/assets/...slug',
-						[Panel\Panel::class, 'asset'],
+						[Panel\Assets::class, 'asset'],
 						'asset',
 					);
 			},
