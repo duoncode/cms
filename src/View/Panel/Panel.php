@@ -4,28 +4,60 @@ declare(strict_types=1);
 
 namespace Duon\Cms\View\Panel;
 
-use Duon\Cms\Config;
-use Duon\Cms\Locales;
-use Duon\Cms\Node\Types;
-use Duon\Container\Container;
+use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Util\Path;
+use Duon\Core\Exception\HttpNotFound;
+use Duon\Core\Factory;
 use Duon\Core\Request;
+use Duon\Core\Response;
 
-class Panel
+final class Panel
 {
-	protected string $publicPath;
+	private string $root;
 
-	public function __construct(
-		protected readonly Request $request,
-		protected readonly Config $config,
-		protected readonly Container $container,
-		protected readonly Locales $locales,
-		protected readonly Types $types,
-	) {
-		$this->publicPath = $config->get('path.public');
+	public function __construct()
+	{
+		$this->root = dirname(dirname(dirname(__DIR__)));
 	}
 
 	public function index(): array
 	{
 		return [];
+	}
+
+	public function asset(Request $request, Factory $factory, string $slug): Response
+	{
+		try {
+			$file = Path::inside($this->root . '/panel', $slug, checkIsFile: true);
+		} catch (RuntimeException $e) {
+			throw new HttpNotFound($request, previous: $e);
+		}
+
+		$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+		if (!in_array($ext, ['css', 'js', 'svg'], true)) {
+			throw new HttpNotFound($request);
+		}
+
+		$etag = md5_file($file);
+		$lastModified = filemtime($file);
+
+		if ($etag === false || $lastModified === false) {
+			throw new HttpNotFound($request);
+		}
+
+		$etag = '"' . $etag . '"';
+		$response = Response::create($factory)
+			->header('Cache-Control', 'private, max-age=3600')
+			->header('ETag', $etag)
+			->header('Last-Modified', gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
+		$ifNoneMatch = array_map('trim', explode(',', $request->header('If-None-Match')));
+
+		// Return 304 when the client already has this asset revision cached.
+		if (in_array('*', $ifNoneMatch, true) || in_array($etag, $ifNoneMatch, true)) {
+			return $response->status(304);
+		}
+
+		return $response->file($file);
 	}
 }
