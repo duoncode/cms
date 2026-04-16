@@ -22,7 +22,7 @@ final class Panel
 
 	public function index(): array
 	{
-		return [];
+		return $this->context();
 	}
 
 	public function asset(Request $request, Factory $factory, string $slug): Response
@@ -59,5 +59,18 @@ final class Panel
 		}
 
 		return $response->file($file);
+	}
+
+	private function context(): array
+	{
+		return [
+			'cssFiles' => [
+				'tokens.css',
+				'app.css',
+			],
+			'jsFiles' => [
+				'panel.js',
+			],
+		];
 	}
 }
