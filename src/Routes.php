@@ -9,6 +9,7 @@ use Duon\Cms\Middleware\Session;
 use Duon\Cms\View\Auth;
 use Duon\Cms\View\Media;
 use Duon\Cms\View\Nodes;
+use Duon\Cms\View\OldPanel;
 use Duon\Cms\View\Page;
 use Duon\Cms\View\Panel;
 use Duon\Cms\View\User;
@@ -56,25 +57,30 @@ class Routes
 			'cms.media.upload',
 		)->middleware($this->session);
 
-		$this->addPanelApi($app, $this->session);
+		// TODO: remove when new panel is finished
+		$this->addOldPanelApi($app, $this->session);
+
 		$this->addApi($app);
 
+		// TODO: remove when new panel is finished
+		// OLD PANEL ROUTES
 		$app->get(
-			$this->panelPath . '/boot',
-			[Panel::class, 'boot'],
-			'cms.panel.boot',
+			'/cms/boot',
+			[OldPanel::class, 'boot'],
+			'cms.oldpanel.boot',
 		)->after(new JsonRenderer($this->factory));
 		$app->get(
-			$this->panelPath . '/...slug',
-			[Panel::class, 'catchall'],
-			'cms.panel.catchall',
+			'/cms/...slug',
+			[OldPanel::class, 'catchall'],
+			'cms.oldpanel.catchall',
 		)->middleware($this->session);
-		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel')->middleware($this->session);
+		$app->get('/cms', [OldPanel::class, 'index'], 'cms.oldpanel')->middleware($this->session);
 		$app->get(
-			$this->panelPath . '/',
-			[Panel::class, 'index'],
-			'cms.panel.slash',
+			'/cms/',
+			[OldPanel::class, 'index'],
+			'cms.oldpanel.slash',
 		)->middleware($this->session);
+		// END OLD PANEL ROUTES
 
 		if ($this->sessionEnabled) {
 			foreach ($sessionIfEnabled as $route) {
@@ -120,21 +126,21 @@ class Routes
 
 	protected function addSystem(Group $api): void
 	{
-		$api->get('/collections', [Panel::class, 'collections'], 'collections');
-		$api->get('/collection/{collection}', [Panel::class, 'collection'], 'collection');
+		$api->get('/collections', [OldPanel::class, 'collections'], 'collections');
+		$api->get('/collection/{collection}', [OldPanel::class, 'collection'], 'collection');
 		$api->get('/nodes', [Nodes::class, 'get'], 'nodes.search.get');
 		$api->post('/nodes', [Nodes::class, 'get'], 'nodes.search.post');
-		$api->get('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.get');
-		$api->put('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.update');
-		$api->delete('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [Panel::class, 'node'], 'node.delete');
-		$api->post('/node/{type}', [Panel::class, 'createNode'], 'node.create');
-		$api->get('/blueprint/{type}', [Panel::class, 'blueprint'], 'node.blueprint');
+		$api->get('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [OldPanel::class, 'node'], 'node.get');
+		$api->put('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [OldPanel::class, 'node'], 'node.update');
+		$api->delete('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [OldPanel::class, 'node'], 'node.delete');
+		$api->post('/node/{type}', [OldPanel::class, 'createNode'], 'node.create');
+		$api->get('/blueprint/{type}', [OldPanel::class, 'blueprint'], 'node.blueprint');
 	}
 
-	protected function addPanelApi(App $app, Session $session): void
+	protected function addOldPanelApi(App $app, Session $session): void
 	{
 		$app->group(
-			$this->panelApiPath,
+			'/cms/api',
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
 				$api->middleware($session);
@@ -143,7 +149,7 @@ class Routes
 				$this->addUser($api);
 				$this->addSystem($api);
 			},
-			'cms.panel.api.',
+			'cms.oldpanel.api.',
 		);
 	}
 

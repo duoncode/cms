@@ -26,7 +26,7 @@ use Duon\Core\Request;
 use Duon\Core\Response;
 use Duon\Wire\Creator;
 
-class Panel
+class OldPanel
 {
 	private const int LIMIT_DEFAULT = 50;
 	private const int LIMIT_MAX = 250;
