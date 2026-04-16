@@ -44,11 +44,12 @@ class Plugin implements CorePlugin
 
 	public function load(App $app): void
 	{
-		$this->addPanelRenderer();
-
 		$this->factory = $app->factory();
 		$this->container = $app->container();
 		$this->config = $app->config();
+
+		$this->addPanelRenderer();
+
 		$this->collect();
 		$this->database();
 
@@ -211,6 +212,9 @@ class Plugin implements CorePlugin
 		$this->renderer('panel', BoilerRenderer::class)->args(
 			dirs: "{$root}/panel/views",
 			autoescape: true,
+			defaults: [
+				'panelPath' => $this->config->get('path.panel'),
+			],
 		);
 	}
 }
