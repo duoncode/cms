@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
+use Duon\Cms\Boiler\Renderer as BoilerRenderer;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
@@ -43,6 +44,8 @@ class Plugin implements CorePlugin
 
 	public function load(App $app): void
 	{
+		$this->addPanelRenderer();
+
 		$this->factory = $app->factory();
 		$this->container = $app->container();
 		$this->config = $app->config();
@@ -200,5 +203,14 @@ class Plugin implements CorePlugin
 				'handle' => $handle,
 			])->run();
 		}
+	}
+
+	protected function addPanelRenderer(): void
+	{
+		$root = dirname(__DIR__);
+		$this->renderer('panel', BoilerRenderer::class)->args(
+			dirs: "{$root}/panel/views",
+			autoescape: true,
+		);
 	}
 }

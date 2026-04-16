@@ -82,6 +82,8 @@ class Routes
 		)->middleware($this->session);
 		// END OLD PANEL ROUTES
 
+		$this->addPanel($app);
+
 		if ($this->sessionEnabled) {
 			foreach ($sessionIfEnabled as $route) {
 				$route->middleware($this->session);
@@ -135,6 +137,26 @@ class Routes
 		$api->delete('/node/{uid:[A-Za-z0-9-_.]{1,64}}', [OldPanel::class, 'node'], 'node.delete');
 		$api->post('/node/{type}', [OldPanel::class, 'createNode'], 'node.create');
 		$api->get('/blueprint/{type}', [OldPanel::class, 'blueprint'], 'node.blueprint');
+	}
+
+	protected function addPanel(App $app): void
+	{
+		$app->group(
+			$this->panelPath,
+			function (Group $panel) use ($app) {
+				$renderers = new PanelRenderers($app, $this->factory);
+				$panel->middleware($this->session);
+
+				$panel
+					->get(
+						'',
+						[Panel\Panel::class, 'index'],
+						'index',
+					)
+					->after($renderers->get('index'));
+			},
+			'cms.panel.',
+		);
 	}
 
 	protected function addOldPanelApi(App $app, Session $session): void
