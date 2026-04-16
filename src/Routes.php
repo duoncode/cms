@@ -154,6 +154,12 @@ class Routes
 						'index',
 					)
 					->after($renderers->get('index'));
+				$panel
+					->get(
+						'/assets/...slug',
+						[Panel\Panel::class, 'asset'],
+						'asset',
+					);
 			},
 			'cms.panel.',
 		);
