@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Duon CMS Panel</title>
 <?php foreach ($cssFiles as $cssFile): ?>
-	<link rel="stylesheet" href="<?= $panelPath ?>/assets/styles/<?= $cssFile ?>">
+	<link rel="stylesheet" href="<?= $cssFile ?>">
 <?php endforeach ?>
 </head>
 

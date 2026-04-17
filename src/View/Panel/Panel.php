@@ -18,15 +18,22 @@ abstract class Panel
 
 	protected function context(): array
 	{
+		$panelPath = $this->config->get('path.panel');
+		$theme = $this->config->get('panel.theme');
+		$cssFiles = array_merge(
+			$theme ? [$theme] : [],
+			[
+				"{$panelPath}/assets/styles/tokens.css",
+				"{$panelPath}/assets/styles/app.css",
+			],
+		);
+
 		return [
 			'debug' => $this->config->debug,
 			'env' => $this->config->env,
 			'panelPath' => $this->config->get('path.panel'),
 			'config' => $this->config,
-			'cssFiles' => [
-				'tokens.css',
-				'app.css',
-			],
+			'cssFiles' => $cssFiles,
 			'jsFiles' => [
 				'panel.js',
 			],
