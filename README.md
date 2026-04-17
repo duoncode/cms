@@ -44,16 +44,16 @@ final class Department implements Title
 
 ### Derived behavior
 
-| Signal | Behavior |
-| ------ | -------- |
-| `#[Route('...')]` is present | Node is routable and has URL path settings |
-| `#[Render('...')]` is present | Explicit renderer id is used |
-| `#[Render]` is absent | Node handle is used as renderer id |
+| Signal                        | Behavior                                   |
+| ----------------------------- | ------------------------------------------ |
+| `#[Route('...')]` is present  | Node is routable and has URL path settings |
+| `#[Render('...')]` is present | Explicit renderer id is used               |
+| `#[Render]` is absent         | Node handle is used as renderer id         |
 
 ### Metadata attributes
 
 | Attribute | Purpose |
-| --------- | ------- |
+| --- | --- |
 | `#[Label('...')]` | Human-readable display name |
 | `#[Handle('...')]` | URL-safe identifier (auto-derived if omitted) |
 | `#[Route('...')]` | URL pattern for routable nodes |
@@ -74,7 +74,7 @@ final class Department implements Title
 ### Behavioral interfaces
 
 | Interface | Method | Purpose |
-| --------- | ------ | ------- |
+| --- | --- | --- |
 | `Title` | `title(): string` | Computed title (takes precedence over `#[Title]`) |
 | `HasInit` | `init(): void` | Post-hydration initialization hook |
 | `HandlesFormPost` | `formPost(?array $body): Response` | Frontend form submission handling |
@@ -97,9 +97,7 @@ Render a node by uid from templates with the neutral cms API:
 
 ### Admin panel theming
 
-You can style the admin panel through `panel.theme` in your CMS config.
-Set it to a single stylesheet path (`string`) or multiple stylesheet paths (`string[]`).
-The panel links those CSS files and uses your overrides for `--cms-*` tokens.
+You can style the admin panel through `panel.theme` in your CMS config. Set it to a single stylesheet path (`string`) or multiple stylesheet paths (`string[]`). The panel links those CSS files and reads theme overrides from `--theme-*` variables that mirror the built-in token names, such as `--theme-color-*`, `--theme-space-*`, `--theme-radius-*`, `--theme-font-*`, and `--theme-sidebar-width`.
 
 ```php
 return [
