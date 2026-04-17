@@ -6,6 +6,7 @@ namespace Duon\Cms;
 
 use Closure;
 use Duon\Cms\Exception\RuntimeException;
+use Override;
 
 final class Section extends NavigationItem implements NavGroup
 {
@@ -28,9 +29,37 @@ final class Section extends NavigationItem implements NavGroup
 		$this->onCollection = $onCollection;
 	}
 
+	#[Override]
 	public function type(): string
 	{
 		return 'section';
+	}
+
+	#[Override]
+	public function slug(): ?string
+	{
+		return null;
+	}
+
+	/** @return list<NavigationItem> */
+	#[Override]
+	public function children(): array
+	{
+		$visible = [];
+
+		foreach ($this->children as $item) {
+			if ($item->isHidden()) {
+				continue;
+			}
+
+			if ($item instanceof self && $item->children() === []) {
+				continue;
+			}
+
+			$visible[] = $item;
+		}
+
+		return $this->sort($visible);
 	}
 
 	public function section(string $label): self
@@ -51,26 +80,6 @@ final class Section extends NavigationItem implements NavGroup
 		}
 
 		return $collection;
-	}
-
-	/** @return list<NavigationItem> */
-	public function children(): array
-	{
-		$visible = [];
-
-		foreach ($this->children as $item) {
-			if ($item->isHidden()) {
-				continue;
-			}
-
-			if ($item instanceof self && $item->children() === []) {
-				continue;
-			}
-
-			$visible[] = $item;
-		}
-
-		return $this->sort($visible);
 	}
 
 	/**

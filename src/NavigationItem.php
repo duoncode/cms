@@ -14,6 +14,8 @@ abstract class NavigationItem
 
 	abstract public function type(): string;
 
+	abstract public function slug(): ?string;
+
 	public function name(): string
 	{
 		return $this->meta->label;
@@ -25,15 +27,7 @@ abstract class NavigationItem
 	}
 
 	/** @return list<NavigationItem> */
-	public function children(): array
-	{
-		return [];
-	}
-
-	public function slug(): ?string
-	{
-		return null;
-	}
+	abstract public function children(): array;
 
 	public function isHidden(): bool
 	{

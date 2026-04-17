@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Cms\Exception\RuntimeException;
+use Override;
 
 final class CollectionRef extends NavigationItem
 {
@@ -20,9 +21,23 @@ final class CollectionRef extends NavigationItem
 		parent::__construct($class::nav());
 	}
 
+	#[Override]
 	public function type(): string
 	{
 		return 'collection';
+	}
+
+	#[Override]
+	/** @return list<NavigationItem> */
+	public function children(): array
+	{
+		return [];
+	}
+
+	#[Override]
+	public function slug(): ?string
+	{
+		return $this->handle();
 	}
 
 	/** @return class-string<Collection> */
@@ -34,11 +49,6 @@ final class CollectionRef extends NavigationItem
 	public function handle(): string
 	{
 		return $this->class::handle();
-	}
-
-	public function slug(): ?string
-	{
-		return $this->handle();
 	}
 
 	public function section(string $label): Section
