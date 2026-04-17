@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Tests\TestCase;
-use Duon\Cms\View\Panel\Panel;
+use Duon\Cms\View\Panel\Assets;
 use Duon\Core\Exception\HttpNotFound;
 use Duon\Core\Request;
 
@@ -18,7 +18,7 @@ final class PanelAssetTest extends TestCase
 {
 	public function testAssetReturnsNotFoundForPathTraversal(): void
 	{
-		$panel = new Panel();
+		$panel = new Assets($this->config(), $this->container(), $this->request());
 
 		$this->throws(HttpNotFound::class);
 		$panel->asset($this->request(), $this->factory(), '../composer.json');
@@ -26,7 +26,7 @@ final class PanelAssetTest extends TestCase
 
 	public function testAssetReturnsNotModifiedWhenEtagMatches(): void
 	{
-		$panel = new Panel();
+		$panel = new Assets($this->config(), $this->container(), $this->request());
 		$file = self::root() . '/panel/styles/app.css';
 		$etag = md5_file($file);
 		$this->assertNotFalse($etag);
@@ -42,7 +42,7 @@ final class PanelAssetTest extends TestCase
 
 	public function testAssetReturnsCssFileWithCacheHeaders(): void
 	{
-		$panel = new Panel();
+		$panel = new Assets($this->config(), $this->container(), $this->request());
 		$file = self::root() . '/panel/styles/app.css';
 		$etag = md5_file($file);
 		$this->assertNotFalse($etag);
