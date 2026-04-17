@@ -32,12 +32,6 @@ final class Section implements NavigationItem
 	}
 
 	#[Override]
-	public function type(): string
-	{
-		return 'section';
-	}
-
-	#[Override]
 	public function slug(): ?string
 	{
 		return null;

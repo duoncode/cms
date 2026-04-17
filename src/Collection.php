@@ -45,12 +45,6 @@ abstract class Collection implements NavigationItem
 	}
 
 	#[Override]
-	public function type(): string
-	{
-		return 'collection';
-	}
-
-	#[Override]
 	public function slug(): ?string
 	{
 		return static::handle();

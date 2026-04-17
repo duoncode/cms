@@ -85,7 +85,7 @@ final class Navigation
 		foreach ($items as $item) {
 			if ($item instanceof Section) {
 				$result[] = [
-					'type' => $item->type(),
+					'type' => 'section',
 					'name' => $item->meta->label,
 					'meta' => $item->meta->array(),
 					'children' => $this->serialize($item->children()),
@@ -95,7 +95,7 @@ final class Navigation
 			}
 
 			$result[] = [
-				'type' => $item->type(),
+				'type' => 'collection',
 				'slug' => $item->slug(),
 				'name' => $item->meta->label,
 				'meta' => $item->meta->array(),
