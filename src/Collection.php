@@ -38,6 +38,15 @@ abstract class Collection implements NavigationItem
 
 	abstract public function entries(): Nodes;
 
+	public CollectionListMeta $listMeta {
+		get => new CollectionListMeta(
+			showPublished: static::$showPublished,
+			showLocked: static::$showLocked,
+			showHidden: static::$showHidden,
+			showChildren: static::$showChildren,
+		);
+	}
+
 	/** @return list<class-name> */
 	public function blueprints(): array
 	{
@@ -93,7 +102,7 @@ abstract class Collection implements NavigationItem
 	): array {
 		$nodes = $this->entries();
 
-		if ($this->showChildren()) {
+		if ($this->listMeta->showChildren) {
 			$parent = trim((string) $parent);
 
 			if ($parent === '') {
@@ -157,7 +166,7 @@ abstract class Collection implements NavigationItem
 	private function rows(array $nodes): array
 	{
 		$result = [];
-		$hasChildren = $this->showChildren()
+		$hasChildren = $this->listMeta->showChildren
 			? $this->hasChildrenMap($nodes)
 			: [];
 
@@ -177,7 +186,7 @@ abstract class Collection implements NavigationItem
 			$parent = null;
 		}
 
-		$childBlueprints = $this->showChildren()
+		$childBlueprints = $this->listMeta->showChildren
 			? $this->childBlueprints($node)
 			: [];
 
@@ -309,36 +318,6 @@ abstract class Collection implements NavigationItem
 				'-',
 			)
 		);
-	}
-
-	public static function listMeta(): CollectionListMeta
-	{
-		return new CollectionListMeta(
-			showPublished: static::$showPublished,
-			showLocked: static::$showLocked,
-			showHidden: static::$showHidden,
-			showChildren: static::$showChildren,
-		);
-	}
-
-	public static function showPublished(): bool
-	{
-		return static::listMeta()->showPublished;
-	}
-
-	public static function showHidden(): bool
-	{
-		return static::listMeta()->showHidden;
-	}
-
-	public static function showLocked(): bool
-	{
-		return static::listMeta()->showLocked;
-	}
-
-	public static function showChildren(): bool
-	{
-		return static::listMeta()->showChildren;
 	}
 
 	private static function humanizeClassName(): string
