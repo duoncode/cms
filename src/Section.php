@@ -8,7 +8,7 @@ use Closure;
 use Duon\Cms\Exception\RuntimeException;
 use Override;
 
-final class Section implements NavigationItem, NavGroup
+final class Section implements NavigationItem
 {
 	public readonly NavMeta $meta;
 

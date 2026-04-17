@@ -7,7 +7,7 @@ namespace Duon\Cms;
 use Closure;
 use Duon\Cms\Exception\RuntimeException;
 
-final class Navigation implements NavGroup
+final class Navigation
 {
 	private readonly Section $root;
 

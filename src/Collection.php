@@ -10,7 +10,7 @@ use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Types;
 use Override;
 
-abstract class Collection implements NavigationItem, NavGroup
+abstract class Collection implements NavigationItem
 {
 	protected static string $name = '';
 	protected static string $handle = '';
@@ -31,7 +31,7 @@ abstract class Collection implements NavigationItem, NavGroup
 	public function __construct(
 		public readonly ?Cms $cms = null,
 		?Types $types = null,
-		private readonly ?NavGroup $parent = null,
+		private readonly ?NavigationItem $parent = null,
 	) {
 		$this->meta = static::nav();
 		$this->types = $types ?? new Types();
@@ -64,10 +64,9 @@ abstract class Collection implements NavigationItem, NavGroup
 		return [];
 	}
 
-	#[Override]
 	public function section(string $label): Section
 	{
-		if ($this->parent === null) {
+		if (!$this->parent instanceof Section) {
 			throw new RuntimeException('Collection navigation parent is not available');
 		}
 
@@ -75,10 +74,9 @@ abstract class Collection implements NavigationItem, NavGroup
 	}
 
 	/** @param class-string<Collection> $class */
-	#[Override]
 	public function collection(string $class): Collection
 	{
-		if ($this->parent === null) {
+		if (!$this->parent instanceof Section) {
 			throw new RuntimeException('Collection navigation parent is not available');
 		}
 
