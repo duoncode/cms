@@ -4,7 +4,7 @@
 	<li>
 	<?php if ($item->slug() !== null): ?>
 		<a href="<?= $panelPath ?>/collection/<?= $item->slug() ?>"
-			hx-target="#collection">
+			hx-target="#main">
 			<?= $item->meta->label ?>
 		</a>
 	<?php else: ?>
