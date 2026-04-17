@@ -79,7 +79,7 @@ final class Section implements NavigationItem
 			throw new RuntimeException('Collections must extend ' . Collection::class);
 		}
 
-		$collection = new $class(parent: $this);
+		$collection = new $class();
 		$this->children[] = $collection;
 
 		if ($this->onCollection !== null) {

@@ -31,7 +31,6 @@ abstract class Collection implements NavigationItem
 	public function __construct(
 		public readonly ?Cms $cms = null,
 		?Types $types = null,
-		private readonly ?NavigationItem $parent = null,
 	) {
 		$this->meta = static::nav();
 		$this->types = $types ?? new Types();
@@ -62,25 +61,6 @@ abstract class Collection implements NavigationItem
 	public function children(): array
 	{
 		return [];
-	}
-
-	public function section(string $label): Section
-	{
-		if (!$this->parent instanceof Section) {
-			throw new RuntimeException('Collection navigation parent is not available');
-		}
-
-		return $this->parent->section($label);
-	}
-
-	/** @param class-string<Collection> $class */
-	public function collection(string $class): Collection
-	{
-		if (!$this->parent instanceof Section) {
-			throw new RuntimeException('Collection navigation parent is not available');
-		}
-
-		return $this->parent->collection($class);
 	}
 
 	/**
