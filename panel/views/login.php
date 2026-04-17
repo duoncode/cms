@@ -3,7 +3,7 @@
 <main id="main">
 	<h1>Login</h1>
 
-	<?php if ($message !== ''): ?>
+	<?php if ($message !== null): ?>
 	<p><?= $message ?></p>
 	<?php endif ?>
 

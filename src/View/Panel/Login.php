@@ -33,7 +33,7 @@ final class Login extends Panel
 			'next' => $this->sanitizedNext(),
 			'login' => '',
 			'rememberme' => false,
-			'message' => '',
+			'message' => null,
 		]);
 	}
 
@@ -48,7 +48,7 @@ final class Login extends Panel
 				'next' => $this->sanitizedNext($data['next'] ?? ''),
 				'login' => (string) ($data['login'] ?? ''),
 				'rememberme' => (bool) ($data['rememberme'] ?? false),
-				'message' => _('Please provide username and password'),
+				'message' => $this->message(_('Please provide username and password')),
 			]);
 		}
 
@@ -65,7 +65,7 @@ final class Login extends Panel
 				'next' => $this->sanitizedNext($data['next'] ?? ''),
 				'login' => (string) ($data['login'] ?? ''),
 				'rememberme' => (bool) ($data['rememberme'] ?? false),
-				'message' => _('Invalid username or password'),
+				'message' => $this->message(_('Invalid username or password')),
 			]);
 		}
 
@@ -76,7 +76,7 @@ final class Login extends Panel
 				'next' => $this->sanitizedNext($data['next'] ?? ''),
 				'login' => (string) ($data['login'] ?? ''),
 				'rememberme' => false,
-				'message' => _('You are not allowed to access the panel'),
+				'message' => $this->message(_('You are not allowed to access the panel')),
 			]);
 		}
 
@@ -162,6 +162,13 @@ final class Login extends Panel
 	private function panelPath(): string
 	{
 		return $this->config->panelPath();
+	}
+
+	private function message(string $message): ?string
+	{
+		$message = trim($message);
+
+		return $message === '' ? null : $message;
 	}
 
 	private function redirect(Factory $factory, string $target): Response
