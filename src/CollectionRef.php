@@ -36,6 +36,11 @@ final class CollectionRef extends NavigationItem
 		return $this->class::handle();
 	}
 
+	public function slug(): ?string
+	{
+		return $this->handle();
+	}
+
 	public function section(string $label): Section
 	{
 		return $this->parent->section($label);

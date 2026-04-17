@@ -63,6 +63,6 @@ abstract class Panel
 		/** @var Navigation $navigation */
 		$navigation = $this->container->get(Navigation::class);
 
-		return $navigation->payload();
+		return $navigation->items();
 	}
 }

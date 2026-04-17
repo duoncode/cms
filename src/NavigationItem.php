@@ -24,6 +24,27 @@ abstract class NavigationItem
 		return $this->meta;
 	}
 
+	/** @return list<NavigationItem> */
+	public function children(): array
+	{
+		return [];
+	}
+
+	public function slug(): ?string
+	{
+		return null;
+	}
+
+	public function isHidden(): bool
+	{
+		return $this->meta->hidden;
+	}
+
+	public function sortOrder(): int
+	{
+		return $this->meta->order;
+	}
+
 	public function label(string $label): static
 	{
 		$label = trim($label);

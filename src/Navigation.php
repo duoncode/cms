@@ -35,6 +35,12 @@ final class Navigation implements NavGroup
 		return $this->root->children();
 	}
 
+	/** @return list<NavigationItem> */
+	public function items(): array
+	{
+		return $this->children();
+	}
+
 	/** @return array<string, CollectionRef> */
 	public function refs(): array
 	{
@@ -52,7 +58,7 @@ final class Navigation implements NavGroup
 
 	public function payload(): array
 	{
-		return $this->serialize($this->children());
+		return $this->serialize($this->items());
 	}
 
 	private function register(CollectionRef $collection): void
@@ -74,23 +80,13 @@ final class Navigation implements NavGroup
 	{
 		$result = [];
 
-		foreach ($this->sort($items) as $item) {
-			if ($item->meta()->hidden) {
-				continue;
-			}
-
+		foreach ($items as $item) {
 			if ($item instanceof Section) {
-				$children = $this->serialize($item->children());
-
-				if ($children === []) {
-					continue;
-				}
-
 				$result[] = [
 					'type' => $item->type(),
 					'name' => $item->name(),
 					'meta' => $item->meta()->array(),
-					'children' => $children,
+					'children' => $this->serialize($item->children()),
 				];
 
 				continue;
@@ -98,7 +94,7 @@ final class Navigation implements NavGroup
 
 			$result[] = [
 				'type' => $item->type(),
-				'slug' => $item->handle(),
+				'slug' => $item->slug(),
 				'name' => $item->name(),
 				'meta' => $item->meta()->array(),
 				'children' => [],
@@ -106,36 +102,5 @@ final class Navigation implements NavGroup
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @param list<NavigationItem> $items
-	 * @return list<NavigationItem>
-	 */
-	private function sort(array $items): array
-	{
-		$indexed = [];
-
-		foreach ($items as $index => $item) {
-			$indexed[] = [
-				'index' => $index,
-				'item' => $item,
-			];
-		}
-
-		usort($indexed, static function (array $left, array $right): int {
-			$cmp = $left['item']->meta()->order <=> $right['item']->meta()->order;
-
-			if ($cmp !== 0) {
-				return $cmp;
-			}
-
-			return $left['index'] <=> $right['index'];
-		});
-
-		return array_map(
-			static fn(array $item): NavigationItem => $item['item'],
-			$indexed,
-		);
 	}
 }

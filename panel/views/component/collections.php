@@ -2,13 +2,12 @@
 <ul class="level-<?= $level ?>">
 <?php foreach ($collections as $item): ?>
 	<li>
-		<?php $slug = $item['slug'] ?? null ?>
-		<?php if ($slug !== null): ?>
-			<a href="<?= $panelPath ?>/collection/<?= $slug ?>" hx-target="#collection"><?= $item['name'] ?></a>
+		<?php if ($item->slug() !== null): ?>
+			<a href="<?= $panelPath ?>/collection/<?= $item->slug() ?>" hx-target="#collection"><?= $item->name() ?></a>
 		<?php else: ?>
-			<span><?= $item['name'] ?></span>
+			<span><?= $item->name() ?></span>
 			<?php $this->insert('component/collections', [
-				'collections' => $item['children'] ?? [],
+				'collections' => $item->children(),
 				'level' => $level + 1,
 			]) ?>
 		<?php endif ?>

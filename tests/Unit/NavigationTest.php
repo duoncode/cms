@@ -12,7 +12,7 @@ use Duon\Cms\Tests\TestCase;
 
 final class NavigationTest extends TestCase
 {
-	public function testNestedSectionsBuildRecursivePayload(): void
+	public function testNestedSectionsBuildRecursiveItemsAndPayload(): void
 	{
 		$navigation = new Navigation();
 		$navigation
@@ -23,7 +23,17 @@ final class NavigationTest extends TestCase
 			->section('Nested')
 			->collection(TestHierarchyCollection::class);
 
+		$items = $navigation->items();
 		$payload = $navigation->payload();
+
+		$this->assertCount(1, $items);
+		$this->assertSame('Content', $items[0]->name());
+		$this->assertNull($items[0]->slug());
+		$this->assertCount(2, $items[0]->children());
+		$this->assertSame('Articles', $items[0]->children()[0]->name());
+		$this->assertSame('test-articles', $items[0]->children()[0]->slug());
+		$this->assertSame('Nested', $items[0]->children()[1]->name());
+		$this->assertSame('test-hierarchy', $items[0]->children()[1]->children()[0]->slug());
 
 		$this->assertCount(1, $payload);
 		$this->assertSame('section', $payload[0]['type']);
@@ -49,17 +59,17 @@ final class NavigationTest extends TestCase
 		$navigation->section('Other')->collection(TestArticlesCollection::class);
 	}
 
-	public function testOrderedItemsAreSortedInPayload(): void
+	public function testOrderedItemsAreSortedAndEmptySectionsAreFiltered(): void
 	{
 		$navigation = new Navigation();
 		$navigation->collection(TestArticlesCollection::class)->order(20);
 		$navigation->collection(TestHierarchyCollection::class)->order(10);
 		$navigation->section('Empty');
 
-		$payload = $navigation->payload();
+		$items = $navigation->items();
 
-		$this->assertCount(2, $payload);
-		$this->assertSame('test-hierarchy', $payload[0]['slug']);
-		$this->assertSame('test-articles', $payload[1]['slug']);
+		$this->assertCount(2, $items);
+		$this->assertSame('test-hierarchy', $items[0]->slug());
+		$this->assertSame('test-articles', $items[1]->slug());
 	}
 }

@@ -56,6 +56,51 @@ final class Section extends NavigationItem implements NavGroup
 	/** @return list<NavigationItem> */
 	public function children(): array
 	{
-		return $this->children;
+		$visible = [];
+
+		foreach ($this->children as $item) {
+			if ($item->isHidden()) {
+				continue;
+			}
+
+			if ($item instanceof self && $item->children() === []) {
+				continue;
+			}
+
+			$visible[] = $item;
+		}
+
+		return $this->sort($visible);
+	}
+
+	/**
+	 * @param list<NavigationItem> $items
+	 * @return list<NavigationItem>
+	 */
+	private function sort(array $items): array
+	{
+		$indexed = [];
+
+		foreach ($items as $index => $item) {
+			$indexed[] = [
+				'index' => $index,
+				'item' => $item,
+			];
+		}
+
+		usort($indexed, static function (array $left, array $right): int {
+			$cmp = $left['item']->sortOrder() <=> $right['item']->sortOrder();
+
+			if ($cmp !== 0) {
+				return $cmp;
+			}
+
+			return $left['index'] <=> $right['index'];
+		});
+
+		return array_map(
+			static fn(array $item): NavigationItem => $item['item'],
+			$indexed,
+		);
 	}
 }
