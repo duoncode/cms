@@ -11,7 +11,7 @@ final class Navigation implements NavGroup
 {
 	private readonly Section $root;
 
-	/** @var array<string, CollectionRef> */
+	/** @var array<string, Collection> */
 	private array $collections = [];
 
 	public function __construct()
@@ -24,7 +24,8 @@ final class Navigation implements NavGroup
 		return $this->root->section($label);
 	}
 
-	public function collection(string $class): CollectionRef
+	/** @param class-string<Collection> $class */
+	public function collection(string $class): Collection
 	{
 		return $this->root->collection($class);
 	}
@@ -41,13 +42,13 @@ final class Navigation implements NavGroup
 		return $this->children();
 	}
 
-	/** @return array<string, CollectionRef> */
+	/** @return array<string, Collection> */
 	public function refs(): array
 	{
 		return $this->collections;
 	}
 
-	public function ref(string $handle): CollectionRef
+	public function ref(string $handle): Collection
 	{
 		if (!isset($this->collections[$handle])) {
 			throw new RuntimeException('Unknown collection handle: ' . $handle);
@@ -61,9 +62,10 @@ final class Navigation implements NavGroup
 		return $this->serialize($this->items());
 	}
 
-	private function register(CollectionRef $collection): void
+	private function register(Collection $collection): void
 	{
-		$handle = $collection->handle();
+		$handle = $collection->slug();
+		assert(is_string($handle), 'Collection slugs must be strings');
 
 		if (isset($this->collections[$handle])) {
 			throw new RuntimeException('Duplicate collection handle: ' . $handle);

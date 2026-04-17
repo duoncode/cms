@@ -107,7 +107,7 @@ class OldPanel
 		$creator = new Creator($this->container);
 		$ref = $this->navigation()->ref($collection);
 		$obj = $creator->create(
-			$ref->class(),
+			$ref::class,
 			predefinedTypes: [Request::class => $this->request],
 		);
 		$blueprints = [];

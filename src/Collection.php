@@ -8,8 +8,9 @@ use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Finder\Nodes;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Types;
+use Override;
 
-abstract class Collection
+abstract class Collection extends NavigationItem implements NavGroup
 {
 	protected static string $name = '';
 	protected static string $handle = '';
@@ -26,9 +27,11 @@ abstract class Collection
 	private readonly Types $types;
 
 	public function __construct(
-		public readonly Cms $cms,
+		public readonly ?Cms $cms = null,
 		?Types $types = null,
+		private readonly ?NavGroup $parent = null,
 	) {
+		parent::__construct(static::nav());
 		$this->types = $types ?? new Types();
 	}
 
@@ -40,14 +43,56 @@ abstract class Collection
 		return [];
 	}
 
-	public function meta(): NavMeta
+	#[Override]
+	public function type(): string
 	{
-		return static::nav();
+		return 'collection';
 	}
 
+	#[Override]
+	public function slug(): ?string
+	{
+		return static::handle();
+	}
+
+	/** @return list<NavigationItem> */
+	#[Override]
+	public function children(): array
+	{
+		return [];
+	}
+
+	#[Override]
+	public function meta(): NavMeta
+	{
+		return $this->meta;
+	}
+
+	#[Override]
 	public function name(): string
 	{
-		return static::nav()->label;
+		return $this->meta->label;
+	}
+
+	#[Override]
+	public function section(string $label): Section
+	{
+		if ($this->parent === null) {
+			throw new RuntimeException('Collection navigation parent is not available');
+		}
+
+		return $this->parent->section($label);
+	}
+
+	/** @param class-string<Collection> $class */
+	#[Override]
+	public function collection(string $class): Collection
+	{
+		if ($this->parent === null) {
+			throw new RuntimeException('Collection navigation parent is not available');
+		}
+
+		return $this->parent->collection($class);
 	}
 
 	/**
@@ -102,7 +147,7 @@ abstract class Collection
 			$nodes->search($q, $this->searchFields());
 		}
 
-		[$sort, $dir, $order] = $this->order($sort, $dir);
+		[$sort, $dir, $order] = $this->resolveOrder($sort, $dir);
 		$nodes->order(...$order);
 
 		$total = $nodes->count();
@@ -261,7 +306,7 @@ abstract class Collection
 		return $result;
 	}
 
-	private function order(string $sort, string $dir): array
+	private function resolveOrder(string $sort, string $dir): array
 	{
 		$sort = trim($sort);
 		$dir = strtolower(trim($dir));

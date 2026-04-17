@@ -70,9 +70,14 @@ final class Section extends NavigationItem implements NavGroup
 		return $section;
 	}
 
-	public function collection(string $class): CollectionRef
+	/** @param class-string<Collection> $class */
+	public function collection(string $class): Collection
 	{
-		$collection = new CollectionRef($this, $class);
+		if (!is_a($class, Collection::class, true)) {
+			throw new RuntimeException('Collections must extend ' . Collection::class);
+		}
+
+		$collection = new $class(parent: $this);
 		$this->children[] = $collection;
 
 		if ($this->onCollection !== null) {

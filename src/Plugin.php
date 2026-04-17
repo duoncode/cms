@@ -71,7 +71,7 @@ class Plugin implements CorePlugin
 		foreach ($this->navigation->refs() as $name => $collection) {
 			$this->container
 				->tag(Collection::class)
-				->add($name, $collection->class());
+				->add($name, $collection::class);
 		}
 
 		foreach ($this->nodes as $name => $node) {
@@ -92,7 +92,8 @@ class Plugin implements CorePlugin
 		return $this->navigation->section($name);
 	}
 
-	public function collection(string $class): CollectionRef
+	/** @param class-string<Collection> $class */
+	public function collection(string $class): Collection
 	{
 		return $this->navigation->collection($class);
 	}

@@ -8,5 +8,6 @@ interface NavGroup
 {
 	public function section(string $label): Section;
 
-	public function collection(string $class): CollectionRef;
+	/** @param class-string<Collection> $class */
+	public function collection(string $class): Collection;
 }
