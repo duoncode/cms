@@ -31,7 +31,7 @@ final class CollectionPaginationTest extends End2EndTestCase
 		$this->createArticle('page-node-a', 'Page node A');
 		$this->createArticle('page-node-b', 'Page node B');
 
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-articles', [
+		$response = $this->makeRequest('GET', '/api/collection/test-articles', [
 			'query' => [
 				'limit' => '2',
 				'offset' => '1',
@@ -52,7 +52,7 @@ final class CollectionPaginationTest extends End2EndTestCase
 	{
 		$this->createArticle('needle-node', 'Needle title');
 
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-articles', [
+		$response = $this->makeRequest('GET', '/api/collection/test-articles', [
 			'query' => [
 				'q' => 'needle',
 			],
@@ -71,7 +71,7 @@ final class CollectionPaginationTest extends End2EndTestCase
 		$this->createArticle('stable-b', 'Stable B', $changed);
 		$this->createArticle('stable-a', 'Stable A', $changed);
 
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-articles', [
+		$response = $this->makeRequest('GET', '/api/collection/test-articles', [
 			'query' => [
 				'q' => 'stable-',
 				'sort' => 'changed',
@@ -89,7 +89,7 @@ final class CollectionPaginationTest extends End2EndTestCase
 
 	public function testCollectionEndpointRejectsInvalidLimit(): void
 	{
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-articles', [
+		$response = $this->makeRequest('GET', '/api/collection/test-articles', [
 			'query' => [
 				'limit' => 'nope',
 			],

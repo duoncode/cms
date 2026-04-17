@@ -17,7 +17,7 @@ final class AuthTest extends End2EndTestCase
 {
 	public function testAuthTokenExchangeRequiresValidToken(): void
 	{
-		$response = $this->makeRequest('GET', '/panel/api/login/token', [
+		$response = $this->makeRequest('GET', '/api/login/token', [
 			'authToken' => 'invalid-token',
 		]);
 
@@ -30,7 +30,7 @@ final class AuthTest extends End2EndTestCase
 	{
 		$this->authenticateAs('editor');
 
-		$response = $this->makeRequest('GET', '/panel/api/login/token', [
+		$response = $this->makeRequest('GET', '/api/login/token', [
 			'authToken' => $this->defaultAuthToken,
 		]);
 
@@ -42,7 +42,7 @@ final class AuthTest extends End2EndTestCase
 
 	public function testTokenLoginRequiresValidToken(): void
 	{
-		$response = $this->makeRequest('POST', '/panel/api/token-login', [
+		$response = $this->makeRequest('POST', '/api/token-login', [
 			'body' => ['token' => 'invalid-token'],
 		]);
 
@@ -54,7 +54,7 @@ final class AuthTest extends End2EndTestCase
 	{
 		$this->authenticateAs('editor');
 
-		$tokenResponse = $this->makeRequest('GET', '/panel/api/login/token', [
+		$tokenResponse = $this->makeRequest('GET', '/api/login/token', [
 			'authToken' => $this->defaultAuthToken,
 		]);
 		$tokenPayload = $this->assertJsonResponse($tokenResponse);
@@ -62,7 +62,7 @@ final class AuthTest extends End2EndTestCase
 		$this->assertNotEmpty($oneTimeToken);
 		$this->createdOneTimeTokens[] = hash('sha256', $oneTimeToken);
 
-		$response = $this->makeRequest('POST', '/panel/api/token-login', [
+		$response = $this->makeRequest('POST', '/api/token-login', [
 			'body' => ['token' => $oneTimeToken],
 		]);
 
@@ -72,7 +72,7 @@ final class AuthTest extends End2EndTestCase
 
 	public function testLoginWithWrongCredentialsReturnsValidationPayload(): void
 	{
-		$response = $this->makeRequest('POST', '/panel/api/login', [
+		$response = $this->makeRequest('POST', '/api/login', [
 			'body' => [
 				'login' => 'nobody@example.com',
 				'password' => 'wrong-password',
@@ -90,7 +90,7 @@ final class AuthTest extends End2EndTestCase
 
 	public function testPermissionEnforcementReturnsUnauthorizedWithoutToken(): void
 	{
-		$response = $this->makeRequest('GET', '/panel/api/nodes', [
+		$response = $this->makeRequest('GET', '/api/nodes', [
 			'query' => ['type' => 'test-article'],
 		]);
 
@@ -104,12 +104,12 @@ final class AuthTest extends End2EndTestCase
 		$this->createdAuthTokens[] = hash('sha256', $superuserToken);
 		$this->createdAuthTokens[] = hash('sha256', $editorToken);
 
-		$response = $this->makeRequest('GET', '/panel/api/users', [
+		$response = $this->makeRequest('GET', '/api/users', [
 			'authToken' => $editorToken,
 		]);
 		$this->assertResponseOk($response);
 
-		$response = $this->makeRequest('GET', '/panel/api/users', [
+		$response = $this->makeRequest('GET', '/api/users', [
 			'authToken' => $superuserToken,
 		]);
 		$this->assertResponseOk($response);

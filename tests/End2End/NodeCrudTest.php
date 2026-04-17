@@ -26,7 +26,7 @@ final class NodeCrudTest extends End2EndTestCase
 	{
 		$this->authenticateAs('editor');
 
-		$response = $this->makeRequest('GET', '/panel/api/nodes', [
+		$response = $this->makeRequest('GET', '/api/nodes', [
 			'query' => ['type' => 'test-article'],
 		]);
 
@@ -50,7 +50,7 @@ final class NodeCrudTest extends End2EndTestCase
 		]);
 		$this->createTestPath($this->createdNodeIds[count($this->createdNodeIds) - 1], $nodePath);
 
-		$response = $this->makeRequest('GET', '/panel/api/node/crud-test-node');
+		$response = $this->makeRequest('GET', '/api/node/crud-test-node');
 
 		$payload = $this->assertJsonResponse($response);
 		$this->assertSame('crud-test-node', $payload['uid'] ?? null);
@@ -73,7 +73,7 @@ final class NodeCrudTest extends End2EndTestCase
 		]);
 		$this->createTestPath($this->createdNodeIds[count($this->createdNodeIds) - 1], $nodePath);
 
-		$response = $this->makeRequest('GET', '/panel/api/node/crud-test-unauth-node');
+		$response = $this->makeRequest('GET', '/api/node/crud-test-unauth-node');
 
 		$this->assertResponseStatus(401, $response);
 	}
@@ -96,7 +96,7 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		];
 
-		$response = $this->makeRequest('POST', '/panel/api/node/create-test-page', [
+		$response = $this->makeRequest('POST', '/api/node/create-test-page', [
 			'body' => $nodeData,
 		]);
 
@@ -105,7 +105,7 @@ final class NodeCrudTest extends End2EndTestCase
 
 		$this->trackNodeByUid($uid);
 
-		$created = $this->makeRequest('GET', "/panel/api/node/{$uid}");
+		$created = $this->makeRequest('GET', "/api/node/{$uid}");
 		$createdPayload = $this->assertJsonResponse($created);
 		$this->assertSame('New Node', $createdPayload['title'] ?? null);
 		$this->assertSame($nodePath, $createdPayload['paths']['en'] ?? null);
@@ -145,7 +145,7 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		];
 
-		$response = $this->makeRequest('POST', '/panel/api/node/test-page', [
+		$response = $this->makeRequest('POST', '/api/node/test-page', [
 			'body' => $nodeData,
 		]);
 
@@ -183,7 +183,7 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		];
 
-		$response = $this->makeRequest('POST', '/panel/api/node/test-page', [
+		$response = $this->makeRequest('POST', '/api/node/test-page', [
 			'body' => $nodeData,
 		]);
 
@@ -223,7 +223,7 @@ final class NodeCrudTest extends End2EndTestCase
 			],
 		];
 
-		$response = $this->makeRequest('PUT', "/panel/api/node/{$uid}", [
+		$response = $this->makeRequest('PUT', "/api/node/{$uid}", [
 			'body' => $updateData,
 		]);
 
@@ -231,7 +231,7 @@ final class NodeCrudTest extends End2EndTestCase
 		$this->assertTrue($payload['success'] ?? false);
 		$this->assertSame($uid, $payload['uid'] ?? null);
 
-		$reloaded = $this->makeRequest('GET', "/panel/api/node/{$uid}");
+		$reloaded = $this->makeRequest('GET', "/api/node/{$uid}");
 		$reloadedPayload = $this->assertJsonResponse($reloaded);
 		$this->assertSame('Updated Title', $reloadedPayload['title'] ?? null);
 	}
@@ -251,7 +251,7 @@ final class NodeCrudTest extends End2EndTestCase
 		]);
 		$this->createTestPath($this->createdNodeIds[count($this->createdNodeIds) - 1], '/test/' . $uid);
 
-		$response = $this->makeRequest('DELETE', "/panel/api/node/{$uid}", [
+		$response = $this->makeRequest('DELETE', "/api/node/{$uid}", [
 			'headers' => ['Accept' => 'application/json'],
 		]);
 

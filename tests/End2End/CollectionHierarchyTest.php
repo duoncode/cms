@@ -59,7 +59,7 @@ final class CollectionHierarchyTest extends End2EndTestCase
 			],
 		]);
 
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-hierarchy', [
+		$response = $this->makeRequest('GET', '/api/collection/test-hierarchy', [
 			'query' => [
 				'limit' => '50',
 				'offset' => '0',
@@ -117,7 +117,7 @@ final class CollectionHierarchyTest extends End2EndTestCase
 			'parent' => $childParentId,
 		]);
 
-		$response = $this->makeRequest('GET', '/panel/api/collection/test-hierarchy', [
+		$response = $this->makeRequest('GET', '/api/collection/test-hierarchy', [
 			'query' => [
 				'parent' => 'hierarchy-parent-filter',
 			],

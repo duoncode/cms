@@ -275,7 +275,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$plugin->renderer('template', \Duon\Cms\Boiler\Renderer::class)->args(
 			dirs: self::root() . '/tests/Fixtures/templates',
 			autoescape: true,
-			whitelist: [
+			trusted: [
 				Node::class,
 				Cms::class,
 				\Duon\Cms\Locales::class,
@@ -300,7 +300,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$handler = new Handler($root, $logger, $factory);
 		$handler->views('tests/Fixtures/templates');
 
-		$handler->whitelist([
+		$handler->trusted([
 			Node::class,
 			Cms::class,
 			Locales::class,
