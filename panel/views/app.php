@@ -1,5 +1,5 @@
 <?php $this->layout('base') ?>
-<?php $this->insert('component/collections', ['level' => 1]) ?>
+<?php $this->insert('component/navigation') ?>
 
 <main id="main">
 	<?= $this->body() ?>
