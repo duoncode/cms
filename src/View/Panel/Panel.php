@@ -21,11 +21,11 @@ abstract class Panel
 		$this->panelDir = __DIR__ . '/../../../panel';
 	}
 
-	protected function context(): array
+	protected function context(array $data = []): array
 	{
 		$panelPath = $this->config->get('path.panel');
 
-		return [
+		return array_merge([
 			'debug' => $this->config->debug,
 			'env' => $this->config->env,
 			'boosted' => $this->request->hasHeader('HX-Boosted'),
@@ -35,12 +35,12 @@ abstract class Panel
 			'stylesheets' => $this->stylesheets($panelPath),
 			'scripts' => $this->scripts($panelPath),
 			'collections' => $this->collections(),
-		];
+		], $data);
 	}
 
 	private function stylesheets(string $panelPath): array
 	{
-		$theme = $this->config->get('panel.theme');
+		$theme = $this->config->get('panel.theme', null);
 		return array_merge(
 			$theme ? [$theme] : [],
 			[

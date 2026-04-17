@@ -145,7 +145,7 @@ class Routes
 		$app->group(
 			$this->panelPath,
 			function (Group $panel) use ($app) {
-				$renderers = new PanelRenderers($app, $this->factory);
+				$renderers = new PanelRenderers($app);
 				$panelAuth = new PanelAuth(
 					$this->config,
 					new Users($this->db),

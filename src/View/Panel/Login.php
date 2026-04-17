@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Duon\Cms\View\Panel;
 
 use Duon\Cms\Auth as CmsAuth;
+use Duon\Cms\Config;
 use Duon\Cms\Validation;
+use Duon\Container\Container;
 use Duon\Core\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
@@ -13,9 +15,9 @@ use Duon\Core\Response;
 final class Login extends Panel
 {
 	public function __construct(
-		protected \Duon\Cms\Config $config,
-		protected \Duon\Container\Container $container,
-		protected readonly Request $request,
+		Config $config,
+		Container $container,
+		Request $request,
 		private readonly CmsAuth $auth,
 	) {
 		parent::__construct($config, $container, $request);
