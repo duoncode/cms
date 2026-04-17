@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Cms\Middleware\InitRequest;
+use Duon\Cms\Middleware\PanelAuth;
 use Duon\Cms\Middleware\Session;
 use Duon\Cms\View\Auth;
 use Duon\Cms\View\Media;
@@ -145,14 +146,29 @@ class Routes
 			$this->panelPath,
 			function (Group $panel) use ($app) {
 				$renderers = new PanelRenderers($app, $this->factory);
+				$panelAuth = new PanelAuth(
+					$this->config,
+					new Users($this->db),
+					$this->factory,
+				);
 				$panel->middleware($this->session);
 
+				$panel
+					->get('/login', [Panel\Login::class, 'login'], 'login')
+					->after($renderers->get('login'));
+				$panel
+					->post('/login', [Panel\Login::class, 'authenticate'], 'login.authenticate')
+					->after($renderers->get('login'));
+				$panel
+					->post('/logout', [Panel\Login::class, 'logout'], 'logout')
+					->middleware($panelAuth);
 				$panel
 					->get(
 						'',
 						[Panel\Index::class, 'index'],
 						'index',
 					)
+					->middleware($panelAuth)
 					->after($renderers->get('index'));
 				$panel
 					->get(
@@ -166,6 +182,7 @@ class Routes
 						[Panel\Collection::class, 'collection'],
 						'collection',
 					)
+					->middleware($panelAuth)
 					->after($renderers->get('collection'));
 			},
 			'cms.panel.',
