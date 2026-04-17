@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Duon\Cms\View\Panel;
 
-use Duon\Cms\Collection;
 use Duon\Cms\Config;
-use Duon\Cms\Section;
+use Duon\Cms\Navigation;
 use Duon\Container\Container;
 use Duon\Core\Request;
-use Duon\Wire\Creator;
 
 abstract class Panel
 {
@@ -62,22 +60,9 @@ abstract class Panel
 
 	protected function collections(): array
 	{
-		$creator = new Creator($this->container);
-		$tag = $this->container->tag(Collection::class);
-		$collections = [];
+		/** @var Navigation $navigation */
+		$navigation = $this->container->get(Navigation::class);
 
-		foreach ($tag->entries() as $id) {
-			$class = $tag->entry($id)->definition();
-
-			if (is_object($class)) {
-				$item = $class;
-			} else {
-				$item = $creator->create($class, predefinedTypes: [Request::class => $this->request]);
-			}
-
-			$collections[] = $item;
-		}
-
-		return $collections;
+		return $navigation->payload();
 	}
 }

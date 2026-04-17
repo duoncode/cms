@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { _ } from '$lib/locale';
-	import { logoutUser } from '$lib/user';
-	import { navVisible } from '$lib/ui';
 	import { collections } from '$lib/collections';
-	import NavLogo from '$shell/NavLogo.svelte';
+	import { navVisible } from '$lib/ui';
+	import { logoutUser } from '$lib/user';
 	import Link from '$shell/Link.svelte';
+	import NavLogo from '$shell/NavLogo.svelte';
+	import NavTree from '$shell/NavTree.svelte';
 </script>
 
 <div
@@ -12,17 +13,7 @@
 	class:open={$navVisible}>
 	<NavLogo />
 
-	{#each $collections as item (item)}
-		{#if item.type === 'section'}
-			<h2 class="cms-nav-section-title">{item.name}</h2>
-		{:else}
-			<div class="cms-nav-link-row">
-				<Link href="collection/{item.slug}">
-					{item.name}
-				</Link>
-			</div>
-		{/if}
-	{/each}
+	<NavTree items={$collections} />
 	<h2 class="cms-nav-section-title">{_('Benutzer')}</h2>
 	<div class="cms-nav-link-row"><Link href="userprofile">{_('Mein Benutzerprofil')}</Link></div>
 	<div class="cms-nav-link-row"><button onclick={logoutUser}>{_('Abmelden')}</button></div>

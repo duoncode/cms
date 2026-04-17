@@ -13,6 +13,11 @@ abstract class Collection
 {
 	protected static string $name = '';
 	protected static string $handle = '';
+	protected static ?string $icon = null;
+	protected static ?string $badge = null;
+	protected static ?string $permission = null;
+	protected static bool $hidden = false;
+	protected static int $order = 0;
 	protected static bool $showPublished = true;
 	protected static bool $showLocked = false;
 	protected static bool $showHidden = false;
@@ -35,9 +40,14 @@ abstract class Collection
 		return [];
 	}
 
+	public function meta(): NavMeta
+	{
+		return static::nav();
+	}
+
 	public function name(): string
 	{
-		return static::$name ?: preg_replace('/(?<!^)[A-Z]/', ' $0', static::class);
+		return static::nav()->label;
 	}
 
 	/**
@@ -268,6 +278,18 @@ abstract class Collection
 		return [$sort, $dir, $order];
 	}
 
+	public static function nav(): NavMeta
+	{
+		return new NavMeta(
+			label: static::$name ?: static::humanizeClassName(),
+			icon: static::$icon,
+			badge: static::$badge,
+			permission: static::$permission,
+			hidden: static::$hidden,
+			order: static::$order,
+		);
+	}
+
 	public static function handle(): string
 	{
 		return (
@@ -282,23 +304,40 @@ abstract class Collection
 		);
 	}
 
+	public static function listMeta(): CollectionListMeta
+	{
+		return new CollectionListMeta(
+			showPublished: static::$showPublished,
+			showLocked: static::$showLocked,
+			showHidden: static::$showHidden,
+			showChildren: static::$showChildren,
+		);
+	}
+
 	public static function showPublished(): bool
 	{
-		return static::$showPublished;
+		return static::listMeta()->showPublished;
 	}
 
 	public static function showHidden(): bool
 	{
-		return static::$showHidden;
+		return static::listMeta()->showHidden;
 	}
 
 	public static function showLocked(): bool
 	{
-		return static::$showLocked;
+		return static::listMeta()->showLocked;
 	}
 
 	public static function showChildren(): bool
 	{
-		return static::$showChildren;
+		return static::listMeta()->showChildren;
+	}
+
+	private static function humanizeClassName(): string
+	{
+		$class = basename(str_replace('\\', '/', static::class));
+
+		return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $class);
 	}
 }

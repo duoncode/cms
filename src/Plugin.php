@@ -32,7 +32,7 @@ class Plugin implements CorePlugin
 	/** @property array<Entry> */
 	protected array $renderers = [];
 
-	protected array $collections = [];
+	protected readonly Navigation $navigation;
 	protected array $nodes = [];
 
 	public function __construct(
@@ -40,6 +40,7 @@ class Plugin implements CorePlugin
 		?Types $types = null,
 	) {
 		$this->types = $types ?? new Types();
+		$this->navigation = new Navigation();
 	}
 
 	public function load(App $app): void
@@ -65,10 +66,12 @@ class Plugin implements CorePlugin
 
 	protected function collect(): void
 	{
-		foreach ($this->collections as $name => $collection) {
+		$this->container->add(Navigation::class, $this->navigation)->value();
+
+		foreach ($this->navigation->refs() as $name => $collection) {
 			$this->container
 				->tag(Collection::class)
-				->add($name, $collection);
+				->add($name, $collection->class());
 		}
 
 		foreach ($this->nodes as $name => $node) {
@@ -84,20 +87,19 @@ class Plugin implements CorePlugin
 		}
 	}
 
-	public function section(string $name): void
+	public function section(string $name): Section
 	{
-		$this->collections[$name] = new Section($name);
+		return $this->navigation->section($name);
 	}
 
-	public function collection(string $class): void
+	public function collection(string $class): CollectionRef
 	{
-		$handle = $class::handle();
+		return $this->navigation->collection($class);
+	}
 
-		if (isset($this->collections[$handle])) {
-			throw new RuntimeException('Duplicate collection handle: ' . $handle);
-		}
-
-		$this->collections[$class::handle()] = $class;
+	public function navigation(): Navigation
+	{
+		return $this->navigation;
 	}
 
 	public function meta(): Types
