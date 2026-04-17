@@ -10,14 +10,7 @@
 </head>
 
 <body hx-boost:inherited="true">
-	<?php $this->insert('component/collections', ['level' => 1]) ?>
-
 	<?= $this->body() ?>
-
-<?php if ($debug): ?>
-	<p>DEBUG</p>
-<?php endif ?>
-	<p><?= $env ?></p>
 
 <?php foreach ($scripts as $script): ?>
 	<script src="<?= $script ?>"></script>

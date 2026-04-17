@@ -1,3 +1,3 @@
-<?php $this->layout('base'); ?>
+<?php $this->layout('app'); ?>
 
 <h1>Dashboard</h1>

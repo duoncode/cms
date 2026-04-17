@@ -1,5 +1,5 @@
 <?php if (!$boosted)
-	$this->layout('base'); ?>
+	$this->layout('app'); ?>
 
 <div id="collection">
 	<h1>Collection</h1>
