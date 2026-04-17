@@ -10,7 +10,7 @@
 </head>
 
 <body hx-boost:inherited="true">
-	<?php $this->insert('component/collections') ?>
+	<?php $this->insert('component/collections', ['level' => 1]) ?>
 
 	<?= $this->body() ?>
 

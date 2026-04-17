@@ -1,22 +1,18 @@
-<?php
-$render = function (array $items) use (&$render, $panelPath): void {
-	if ($items === []) {
-		return;
-	}
-	?>
-	<ul>
-	<?php foreach ($items as $item): ?>
-		<li>
-			<?php if (($item['type'] ?? null) === 'section'): ?>
-				<span><?= $item['name'] ?></span>
-				<?php $render($item['children'] ?? []) ?>
-			<?php else: ?>
-				<a href="<?= $panelPath ?>/collection/<?= $item['slug'] ?>" hx-target="#collection"><?= $item['name'] ?></a>
-			<?php endif ?>
-		</li>
-	<?php endforeach ?>
-	</ul>
-	<?php
-};
-
-$render($collections);
+<?php if (count($collections) > 0): ?>
+<ul class="level-<?= $level ?>">
+<?php foreach ($collections as $item): ?>
+	<li>
+		<?php $slug = $item['slug'] ?? null ?>
+		<?php if ($slug !== null): ?>
+			<a href="<?= $panelPath ?>/collection/<?= $slug ?>" hx-target="#collection"><?= $item['name'] ?></a>
+		<?php else: ?>
+			<span><?= $item['name'] ?></span>
+			<?php $this->insert('component/collections', [
+				'collections' => $item['children'] ?? [],
+				'level' => $level + 1,
+			]) ?>
+		<?php endif ?>
+	</li>
+<?php endforeach ?>
+</ul>
+<?php endif ?>
