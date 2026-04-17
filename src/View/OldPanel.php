@@ -115,7 +115,7 @@ class OldPanel
 			if ($item::class === Section::class) {
 				$collections[] = [
 					'type' => 'section',
-					'name' => $item->name,
+					'name' => $item->name(),
 				];
 			} else {
 				$collections[] = [
@@ -372,6 +372,6 @@ class OldPanel
 
 	protected function getPanelIndex(): string
 	{
-		return $this->publicPath . $this->config->get('path.panel') . '/index.html';
+		return $this->publicPath . '/cms/index.html';
 	}
 }
