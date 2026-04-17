@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-class Section
+final class Section
 {
 	public function __construct(
-		public readonly string $name,
+		private readonly string $name,
 	) {}
+
+	public function name(): string
+	{
+		return $this->name;
+	}
 }
