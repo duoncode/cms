@@ -4,12 +4,12 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Duon CMS Panel</title>
-<?php foreach ($cssFiles as $cssFile): ?>
-	<link rel="stylesheet" href="<?= $cssFile ?>">
+<?php foreach ($stylesheets as $stylesheet): ?>
+	<link rel="stylesheet" href="<?= $stylesheet ?>">
 <?php endforeach ?>
 </head>
 
-<body>
+<body hx-boost:inherited="true">
 	<?php $this->insert('component/collections') ?>
 
 	<?= $this->body() ?>
@@ -19,8 +19,8 @@
 <?php endif ?>
 	<p><?= $env ?></p>
 
-<?php foreach ($jsFiles as $jsFile): ?>
-	<script src="<?= $panelPath ?>/assets/app/<?= $jsFile ?>"></script>
+<?php foreach ($scripts as $script): ?>
+	<script src="<?= $script ?>"></script>
 <?php endforeach ?>
 </body>
 </html>

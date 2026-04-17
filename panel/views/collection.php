@@ -1,4 +1,10 @@
-<?php $this->layout('base'); ?>
+<?php if (!$boosted)
+	$this->layout('base'); ?>
 
-<h1>Collection</h1>
-<p> <?= $uid ?></p>
+<div id="collection">
+	<h1>Collection</h1>
+	<p> <?= $uid ?></p>
+	<?php if ($htmx): ?>
+	<p><b>BOOSTED!</b></p>
+	<?php endif ?>
+</div>

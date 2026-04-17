@@ -26,25 +26,37 @@ abstract class Panel
 	protected function context(): array
 	{
 		$panelPath = $this->config->get('path.panel');
+
+		return [
+			'debug' => $this->config->debug,
+			'env' => $this->config->env,
+			'boosted' => $this->request->hasHeader('HX-Boosted'),
+			'htmx' => $this->request->hasHeader('HX-Request'),
+			'panelPath' => $this->config->get('path.panel'),
+			'config' => $this->config,
+			'stylesheets' => $this->stylesheets($panelPath),
+			'scripts' => $this->scripts($panelPath),
+			'collections' => $this->collections(),
+		];
+	}
+
+	private function stylesheets(string $panelPath): array
+	{
 		$theme = $this->config->get('panel.theme');
-		$cssFiles = array_merge(
+		return array_merge(
 			$theme ? [$theme] : [],
 			[
 				"{$panelPath}/assets/styles/tokens.css",
 				"{$panelPath}/assets/styles/app.css",
 			],
 		);
+	}
 
+	private function scripts(string $panelPath): array
+	{
 		return [
-			'debug' => $this->config->debug,
-			'env' => $this->config->env,
-			'panelPath' => $this->config->get('path.panel'),
-			'config' => $this->config,
-			'cssFiles' => $cssFiles,
-			'jsFiles' => [
-				'panel.js',
-			],
-			'collections' => $this->collections(),
+			"{$panelPath}/assets/app/vendor/htmx.js",
+			"{$panelPath}/assets/app/panel.js",
 		];
 	}
 
