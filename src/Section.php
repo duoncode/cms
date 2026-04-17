@@ -8,8 +8,10 @@ use Closure;
 use Duon\Cms\Exception\RuntimeException;
 use Override;
 
-final class Section extends NavigationItem implements NavGroup
+final class Section implements NavigationItem, NavGroup
 {
+	public readonly NavMeta $meta;
+
 	/** @var list<NavigationItem> */
 	private array $children = [];
 
@@ -25,7 +27,7 @@ final class Section extends NavigationItem implements NavGroup
 			throw new RuntimeException('Section labels must not be empty');
 		}
 
-		parent::__construct(new NavMeta($label));
+		$this->meta = new NavMeta($label);
 		$this->onCollection = $onCollection;
 	}
 
@@ -48,7 +50,7 @@ final class Section extends NavigationItem implements NavGroup
 		$visible = [];
 
 		foreach ($this->children as $item) {
-			if ($item->isHidden()) {
+			if ($item->meta->hidden) {
 				continue;
 			}
 
@@ -103,7 +105,7 @@ final class Section extends NavigationItem implements NavGroup
 		}
 
 		usort($indexed, static function (array $left, array $right): int {
-			$cmp = $left['item']->sortOrder() <=> $right['item']->sortOrder();
+			$cmp = $left['item']->meta->order <=> $right['item']->meta->order;
 
 			if ($cmp !== 0) {
 				return $cmp;

@@ -10,7 +10,7 @@ use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Types;
 use Override;
 
-abstract class Collection extends NavigationItem implements NavGroup
+abstract class Collection implements NavigationItem, NavGroup
 {
 	protected static string $name = '';
 	protected static string $handle = '';
@@ -24,6 +24,8 @@ abstract class Collection extends NavigationItem implements NavGroup
 	protected static bool $showHidden = false;
 	protected static bool $showChildren = false;
 
+	public readonly NavMeta $meta;
+
 	private readonly Types $types;
 
 	public function __construct(
@@ -31,7 +33,7 @@ abstract class Collection extends NavigationItem implements NavGroup
 		?Types $types = null,
 		private readonly ?NavGroup $parent = null,
 	) {
-		parent::__construct(static::nav());
+		$this->meta = static::nav();
 		$this->types = $types ?? new Types();
 	}
 
@@ -60,18 +62,6 @@ abstract class Collection extends NavigationItem implements NavGroup
 	public function children(): array
 	{
 		return [];
-	}
-
-	#[Override]
-	public function meta(): NavMeta
-	{
-		return $this->meta;
-	}
-
-	#[Override]
-	public function name(): string
-	{
-		return $this->meta->label;
 	}
 
 	#[Override]

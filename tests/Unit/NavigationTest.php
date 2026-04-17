@@ -15,11 +15,11 @@ final class NavigationTest extends TestCase
 	public function testNestedSectionsBuildRecursiveItemsAndPayload(): void
 	{
 		$navigation = new Navigation();
-		$navigation
-			->section('Content')
-			->collection(TestArticlesCollection::class)
-			->label('Articles')
-			->badge('new')
+		$content = $navigation->section('Content');
+		$articles = $content->collection(TestArticlesCollection::class);
+		$articles->meta->label = 'Articles';
+		$articles->meta->badge = 'new';
+		$content
 			->section('Nested')
 			->collection(TestHierarchyCollection::class);
 
@@ -27,12 +27,12 @@ final class NavigationTest extends TestCase
 		$payload = $navigation->payload();
 
 		$this->assertCount(1, $items);
-		$this->assertSame('Content', $items[0]->name());
+		$this->assertSame('Content', $items[0]->meta->label);
 		$this->assertNull($items[0]->slug());
 		$this->assertCount(2, $items[0]->children());
-		$this->assertSame('Articles', $items[0]->children()[0]->name());
+		$this->assertSame('Articles', $items[0]->children()[0]->meta->label);
 		$this->assertSame('test-articles', $items[0]->children()[0]->slug());
-		$this->assertSame('Nested', $items[0]->children()[1]->name());
+		$this->assertSame('Nested', $items[0]->children()[1]->meta->label);
 		$this->assertSame('test-hierarchy', $items[0]->children()[1]->children()[0]->slug());
 
 		$this->assertCount(1, $payload);
@@ -47,7 +47,7 @@ final class NavigationTest extends TestCase
 			'test-hierarchy',
 			$payload[0]['children'][1]['children'][0]['slug'],
 		);
-		$this->assertSame('Articles', $navigation->ref('test-articles')->name());
+		$this->assertSame('Articles', $navigation->ref('test-articles')->meta->label);
 	}
 
 	public function testDuplicateHandlesAreRejectedAcrossSections(): void
@@ -62,8 +62,8 @@ final class NavigationTest extends TestCase
 	public function testOrderedItemsAreSortedAndEmptySectionsAreFiltered(): void
 	{
 		$navigation = new Navigation();
-		$navigation->collection(TestArticlesCollection::class)->order(20);
-		$navigation->collection(TestHierarchyCollection::class)->order(10);
+		$navigation->collection(TestArticlesCollection::class)->meta->order = 20;
+		$navigation->collection(TestHierarchyCollection::class)->meta->order = 10;
 		$navigation->section('Empty');
 
 		$items = $navigation->items();

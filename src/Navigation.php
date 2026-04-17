@@ -86,8 +86,8 @@ final class Navigation implements NavGroup
 			if ($item instanceof Section) {
 				$result[] = [
 					'type' => $item->type(),
-					'name' => $item->name(),
-					'meta' => $item->meta()->array(),
+					'name' => $item->meta->label,
+					'meta' => $item->meta->array(),
 					'children' => $this->serialize($item->children()),
 				];
 
@@ -97,8 +97,8 @@ final class Navigation implements NavGroup
 			$result[] = [
 				'type' => $item->type(),
 				'slug' => $item->slug(),
-				'name' => $item->name(),
-				'meta' => $item->meta()->array(),
+				'name' => $item->meta->label,
+				'meta' => $item->meta->array(),
 				'children' => [],
 			];
 		}

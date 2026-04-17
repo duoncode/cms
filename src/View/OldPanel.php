@@ -145,8 +145,8 @@ class OldPanel
 		}
 
 		return [
-			'name' => $ref->name(),
-			'meta' => $ref->meta()->array(),
+			'name' => $ref->meta->label,
+			'meta' => $ref->meta->array(),
 			'slug' => $collection,
 			'header' => $obj->header(),
 			'showPublished' => $obj->showPublished(),
