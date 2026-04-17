@@ -47,6 +47,7 @@ abstract class Panel
 			$theme ? [$theme] : [],
 			[
 				"{$panelPath}/assets/styles/tokens.css",
+				"{$panelPath}/assets/styles/reset.css",
 				"{$panelPath}/assets/styles/app.css",
 			],
 		);

@@ -1,0 +1,33 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+	font: inherit;
+}
+
+button {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
