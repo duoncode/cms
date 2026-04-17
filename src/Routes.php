@@ -160,6 +160,13 @@ class Routes
 						[Panel\Assets::class, 'asset'],
 						'asset',
 					);
+				$panel
+					->get(
+						'/collection/{uid}',
+						[Panel\Collection::class, 'collection'],
+						'collection',
+					)
+					->after($renderers->get('collection'));
 			},
 			'cms.panel.',
 		);

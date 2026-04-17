@@ -10,7 +10,10 @@
 </head>
 
 <body>
+	<?php $this->insert('component/collections') ?>
+
 	<?= $this->body() ?>
+
 <?php if ($debug): ?>
 	<p>DEBUG</p>
 <?php endif ?>
