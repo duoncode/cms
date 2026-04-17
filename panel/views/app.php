@@ -1,11 +1,11 @@
 <?php $this->layout('base') ?>
-<?php $this->insert('component/navigation') ?>
 
-<main id="main">
-	<?= $this->body() ?>
-</main>
+<div class="cms-app">
+	<?php $this->insert('component/navigation') ?>
 
-<?php if ($debug): ?>
-	<p>DEBUG</p>
-<?php endif ?>
-	<p><?= $env ?></p>
+	<main id="main" class="cms-main">
+		<div class="cms-page">
+			<?= $this->body() ?>
+		</div>
+	</main>
+</div>

@@ -84,6 +84,24 @@ final class PanelAuthTest extends End2EndTestCase
 		$this->assertSame('/panel', $response->getHeaderLine('Location'));
 	}
 
+	public function testAuthenticatedPanelRendersSidebarLayout(): void
+	{
+		$this->authenticateAs('editor');
+
+		$response = $this->makeRequest('GET', '/panel', [
+			'authToken' => $this->defaultAuthToken,
+		]);
+
+		$this->assertResponseOk($response);
+		$html = $this->getHtmlResponse($response);
+		$this->assertStringContainsString('class="cms-app"', $html);
+		$this->assertStringContainsString('class="cms-sidebar"', $html);
+		$this->assertStringContainsString('class="cms-main"', $html);
+		$this->assertStringContainsString('class="cms-sidebar-logo"', $html);
+		$this->assertStringContainsString('action="/panel/logout"', $html);
+		$this->assertStringContainsString('Dashboard', $html);
+	}
+
 	public function testHtmxGuestRequestReturnsHxRedirectHeader(): void
 	{
 		$response = $this->makeRequest('GET', '/panel', [

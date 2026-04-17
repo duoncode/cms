@@ -31,6 +31,8 @@ abstract class Panel
 			'boosted' => $this->request->hasHeader('HX-Boosted'),
 			'htmx' => $this->request->hasHeader('HX-Request'),
 			'panelPath' => $this->config->get('path.panel'),
+			'currentPath' => $this->request->uri()->getPath(),
+			'logo' => $this->logo(),
 			'config' => $this->config,
 			'stylesheets' => $this->stylesheets($panelPath),
 			'scripts' => $this->scripts($panelPath),
@@ -56,6 +58,19 @@ abstract class Panel
 			"{$panelPath}/assets/app/vendor/htmx.js",
 			"{$panelPath}/assets/app/panel.js",
 		];
+	}
+
+	private function logo(): ?string
+	{
+		$logo = $this->config->get('panel.logo', null);
+
+		if ($logo === null) {
+			return null;
+		}
+
+		$logo = trim((string) $logo);
+
+		return $logo === '' ? null : $logo;
 	}
 
 	protected function collections(): array
