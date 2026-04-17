@@ -23,7 +23,7 @@
 
 <Modal>
 	<div class="cms-panel-layout">
-		<Nav collections={data.system.collections} />
+		<Nav />
 		<main class="cms-panel-main">
 			{@render children()}
 		</main>

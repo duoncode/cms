@@ -8,26 +8,44 @@ use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Finder\Nodes;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Types;
+use Override;
 
-abstract class Collection
+abstract class Collection implements NavigationItem
 {
 	protected static string $name = '';
 	protected static string $handle = '';
+	protected static ?string $icon = null;
+	protected static ?string $badge = null;
+	protected static ?string $permission = null;
+	protected static bool $hidden = false;
+	protected static int $order = 0;
 	protected static bool $showPublished = true;
 	protected static bool $showLocked = false;
 	protected static bool $showHidden = false;
 	protected static bool $showChildren = false;
 
+	public readonly NavMeta $meta;
+
 	private readonly Types $types;
 
 	public function __construct(
-		public readonly Cms $cms,
+		public readonly ?Cms $cms = null,
 		?Types $types = null,
 	) {
+		$this->meta = static::nav();
 		$this->types = $types ?? new Types();
 	}
 
 	abstract public function entries(): Nodes;
+
+	public CollectionListMeta $listMeta {
+		get => new CollectionListMeta(
+			showPublished: static::$showPublished,
+			showLocked: static::$showLocked,
+			showHidden: static::$showHidden,
+			showChildren: static::$showChildren,
+		);
+	}
 
 	/** @return list<class-name> */
 	public function blueprints(): array
@@ -35,9 +53,17 @@ abstract class Collection
 		return [];
 	}
 
-	public function name(): string
+	#[Override]
+	public function slug(): ?string
 	{
-		return static::$name ?: preg_replace('/(?<!^)[A-Z]/', ' $0', static::class);
+		return static::handle();
+	}
+
+	/** @return list<NavigationItem> */
+	#[Override]
+	public function children(): array
+	{
+		return [];
 	}
 
 	/**
@@ -76,7 +102,7 @@ abstract class Collection
 	): array {
 		$nodes = $this->entries();
 
-		if ($this->showChildren()) {
+		if ($this->listMeta->showChildren) {
 			$parent = trim((string) $parent);
 
 			if ($parent === '') {
@@ -92,7 +118,7 @@ abstract class Collection
 			$nodes->search($q, $this->searchFields());
 		}
 
-		[$sort, $dir, $order] = $this->order($sort, $dir);
+		[$sort, $dir, $order] = $this->resolveOrder($sort, $dir);
 		$nodes->order(...$order);
 
 		$total = $nodes->count();
@@ -140,7 +166,7 @@ abstract class Collection
 	private function rows(array $nodes): array
 	{
 		$result = [];
-		$hasChildren = $this->showChildren()
+		$hasChildren = $this->listMeta->showChildren
 			? $this->hasChildrenMap($nodes)
 			: [];
 
@@ -160,7 +186,7 @@ abstract class Collection
 			$parent = null;
 		}
 
-		$childBlueprints = $this->showChildren()
+		$childBlueprints = $this->listMeta->showChildren
 			? $this->childBlueprints($node)
 			: [];
 
@@ -251,7 +277,7 @@ abstract class Collection
 		return $result;
 	}
 
-	private function order(string $sort, string $dir): array
+	private function resolveOrder(string $sort, string $dir): array
 	{
 		$sort = trim($sort);
 		$dir = strtolower(trim($dir));
@@ -268,6 +294,18 @@ abstract class Collection
 		return [$sort, $dir, $order];
 	}
 
+	public static function nav(): NavMeta
+	{
+		return new NavMeta(
+			label: static::$name ?: static::humanizeClassName(),
+			icon: static::$icon,
+			badge: static::$badge,
+			permission: static::$permission,
+			hidden: static::$hidden,
+			order: static::$order,
+		);
+	}
+
 	public static function handle(): string
 	{
 		return (
@@ -282,23 +320,10 @@ abstract class Collection
 		);
 	}
 
-	public static function showPublished(): bool
+	private static function humanizeClassName(): string
 	{
-		return static::$showPublished;
-	}
+		$class = basename(str_replace('\\', '/', static::class));
 
-	public static function showHidden(): bool
-	{
-		return static::$showHidden;
-	}
-
-	public static function showLocked(): bool
-	{
-		return static::$showLocked;
-	}
-
-	public static function showChildren(): bool
-	{
-		return static::$showChildren;
+		return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $class);
 	}
 }

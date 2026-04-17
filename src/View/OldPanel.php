@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Duon\Cms\View;
 
 use Duon\Cms\Cms;
-use Duon\Cms\Collection;
 use Duon\Cms\Config;
 use Duon\Cms\Context;
 use Duon\Cms\Locales;
 use Duon\Cms\Middleware\Permission;
+use Duon\Cms\Navigation;
 use Duon\Cms\Node\Factory as NodeFactory;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Node\PathManager;
@@ -17,7 +17,6 @@ use Duon\Cms\Node\Serializer;
 use Duon\Cms\Node\Store;
 use Duon\Cms\Node\Types;
 use Duon\Cms\Plugin;
-use Duon\Cms\Section;
 use Duon\Container\Container;
 use Duon\Core\Exception\HttpBadRequest;
 use Duon\Core\Exception\HttpNotFound;
@@ -99,45 +98,16 @@ class OldPanel
 	#[Permission('panel')]
 	public function collections(): array
 	{
-		$creator = new Creator($this->container);
-		$tag = $this->container->tag(Collection::class);
-		$collections = [];
-
-		foreach ($tag->entries() as $id) {
-			$class = $tag->entry($id)->definition();
-
-			if (is_object($class)) {
-				$item = $class;
-			} else {
-				$item = $creator->create($class, predefinedTypes: [Request::class => $this->request]);
-			}
-
-			if ($item::class === Section::class) {
-				$collections[] = [
-					'type' => 'section',
-					'name' => $item->name(),
-				];
-			} else {
-				$collections[] = [
-					'type' => 'collection',
-					'slug' => $id,
-					'name' => $item->name(),
-				];
-			}
-		}
-
-		return $collections;
+		return $this->navigation()->payload();
 	}
 
 	#[Permission('panel')]
 	public function collection(string $collection): array
 	{
 		$creator = new Creator($this->container);
+		$ref = $this->navigation()->ref($collection);
 		$obj = $creator->create(
-			$this->container
-				->tag(Collection::class)
-				->entry($collection)
-				->definition(),
+			$ref::class,
 			predefinedTypes: [Request::class => $this->request],
 		);
 		$blueprints = [];
@@ -175,13 +145,14 @@ class OldPanel
 		}
 
 		return [
-			'name' => $obj->name(),
+			'name' => $ref->meta->label,
+			'meta' => $ref->meta->array(),
 			'slug' => $collection,
 			'header' => $obj->header(),
-			'showPublished' => $obj->showPublished(),
-			'showHidden' => $obj->showHidden(),
-			'showLocked' => $obj->showLocked(),
-			'showChildren' => $obj->showChildren(),
+			'showPublished' => $obj->listMeta->showPublished,
+			'showHidden' => $obj->listMeta->showHidden,
+			'showLocked' => $obj->listMeta->showLocked,
+			'showChildren' => $obj->listMeta->showChildren,
 			'total' => $listing['total'],
 			'offset' => $listing['offset'],
 			'limit' => $listing['limit'],
@@ -373,5 +344,13 @@ class OldPanel
 	protected function getPanelIndex(): string
 	{
 		return $this->publicPath . '/cms/index.html';
+	}
+
+	private function navigation(): Navigation
+	{
+		$navigation = $this->container->get(Navigation::class);
+		assert($navigation instanceof Navigation, 'The navigation service must be available');
+
+		return $navigation;
 	}
 }
