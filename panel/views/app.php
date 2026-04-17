@@ -1,10 +1,10 @@
 <?php $this->layout('base') ?>
 
-<div class="cms-app">
+<div class="app">
 	<?php $this->insert('component/navigation') ?>
 
-	<main id="main" class="cms-main">
-		<div class="cms-page">
+	<main id="main" class="main">
+		<div class="page">
 			<?= $this->body() ?>
 		</div>
 	</main>

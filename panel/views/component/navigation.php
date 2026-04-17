@@ -1,14 +1,14 @@
-<aside class="cms-sidebar">
-	<header class="cms-sidebar-header">
+<aside class="sidebar">
+	<header class="sidebar-header">
 		<?php $this->insert('component/logo') ?>
 	</header>
 
-	<nav class="cms-sidebar-nav" aria-label="Panel navigation">
-		<div class="cms-sidebar-scroll">
-			<ul class="cms-nav-list level-0">
-				<li class="cms-nav-item">
+	<nav class="sidebar-nav" aria-label="Panel navigation">
+		<div class="sidebar-scroll">
+			<ul class="nav-list level-0">
+				<li class="nav-item">
 					<a
-						class="cms-nav-link"
+						class="nav-link"
 						href="<?= $panelPath ?>"
 						hx-target="#main"
 						<?= (string) $currentPath === (string) $panelPath ? 'aria-current="page"' : '' ?>>
@@ -21,9 +21,9 @@
 		</div>
 	</nav>
 
-	<footer class="cms-sidebar-footer">
+	<footer class="sidebar-footer">
 		<form method="post" action="<?= $panelPath ?>/logout" hx-boost="false">
-			<button class="cms-sidebar-action" type="submit">Logout</button>
+			<button class="sidebar-action" type="submit">Logout</button>
 		</form>
 	</footer>
 </aside>
