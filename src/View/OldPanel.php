@@ -98,7 +98,7 @@ class OldPanel
 	#[Permission('panel')]
 	public function collections(): array
 	{
-		return $this->navigation()->payload();
+		return $this->flattenCollections($this->navigation()->payload());
 	}
 
 	#[Permission('panel')]
@@ -344,6 +344,60 @@ class OldPanel
 	protected function getPanelIndex(): string
 	{
 		return $this->publicPath . '/cms/index.html';
+	}
+
+	/**
+	 * Keep the old panel collections API backward-compatible.
+	 *
+	 * The legacy Svelte panel expects a flat sequence of section and collection items.
+	 * Newer navigation payloads can be nested, so we flatten them depth-first here.
+	 *
+	 * @param list<array<string, mixed>> $items
+	 * @return list<array<string, mixed>>
+	 */
+	private function flattenCollections(array $items): array
+	{
+		$result = [];
+
+		foreach ($items as $item) {
+			if (!is_array($item)) {
+				continue;
+			}
+
+			$type = $item['type'] ?? null;
+			$meta = $item['meta'] ?? [];
+			$meta = is_array($meta) ? $meta : [];
+
+			if ($type === 'section') {
+				$result[] = [
+					'type' => 'section',
+					'name' => (string) ($item['name'] ?? ''),
+					'meta' => $meta,
+					'children' => [],
+				];
+				$children = $item['children'] ?? [];
+
+				if (is_array($children)) {
+					$result = array_merge($result, $this->flattenCollections($children));
+				}
+
+				continue;
+			}
+
+			if ($type !== 'collection') {
+				continue;
+			}
+
+			$result[] = [
+				'type' => 'collection',
+				'slug' => (string) ($item['slug'] ?? ''),
+				'name' => (string) ($item['name'] ?? ''),
+				'meta' => $meta,
+				'children' => [],
+			];
+		}
+
+		return $result;
 	}
 
 	private function navigation(): Navigation
