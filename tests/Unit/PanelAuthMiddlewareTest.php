@@ -167,7 +167,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 				return null;
 			}
 
-			public function byAuthToken(string $token): ?User
+			public function byAuthToken(#[\SensitiveParameter] string $token): ?User
 			{
 				return null;
 			}
