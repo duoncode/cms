@@ -178,7 +178,7 @@ class Routes
 					);
 				$panel
 					->get(
-						'/collection/{uid}',
+						'/collection/{collection}',
 						[Panel\Collection::class, 'collection'],
 						'collection',
 					)
