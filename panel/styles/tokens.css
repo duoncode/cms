@@ -20,12 +20,12 @@
 	--font-size-sm: var(--theme-font-size-sm, 0.875rem);
 	--font-size-md: var(--theme-font-size-md, 1rem);
 	--space: var(--theme-space, 0.25rem);
-	--space-2: var(--theme-space-2, calc(--theme-space * 2));
-	--space-3: var(--theme-space-3, calc(--theme-space * 3));
-	--space-4: var(--theme-space-4, calc(--theme-space * 4));
-	--space-5: var(--theme-space-5, calc(--theme-space * 5));
-	--space-6: var(--theme-space-6, calc(--theme-space * 6));
-	--space-8: var(--theme-space-8, calc(--theme-space * 7));
+	--space-2: var(--theme-space-2, calc(var(--space) * 2));
+	--space-3: var(--theme-space-3, calc(var(--space) * 3));
+	--space-4: var(--theme-space-4, calc(var(--space) * 4));
+	--space-5: var(--theme-space-5, calc(var(--space) * 5));
+	--space-6: var(--theme-space-6, calc(var(--space) * 6));
+	--space-8: var(--theme-space-8, calc(var(--space) * 7));
 	--radius-sm: var(--theme-radius-sm, 0.5rem);
 	--radius-md: var(--theme-radius-md, 0.75rem);
 	--radius-lg: var(--theme-radius-lg, 1rem);
