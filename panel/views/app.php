@@ -3,8 +3,8 @@
 <div class="app">
 	<?php $this->insert('component/navigation') ?>
 
-	<main id="main" class="main">
-		<div class="page">
+	<main class="main">
+		<div class="page" id="main">
 			<?= $this->body() ?>
 		</div>
 	</main>
