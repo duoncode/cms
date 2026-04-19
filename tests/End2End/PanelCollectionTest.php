@@ -44,6 +44,23 @@ final class PanelCollectionTest extends End2EndTestCase
 		$this->assertStringNotContainsString('<table', $html);
 	}
 
+	public function testBoostedCollectionRequestRendersPartialWithoutLayoutShell(): void
+	{
+		$this->createArticle('panel-grid-boosted', 'Panel Grid Boosted');
+		$response = $this->makeRequest('GET', '/panel/collection/test-articles', [
+			'headers' => [
+				'HX-Request' => 'true',
+				'HX-Boosted' => 'true',
+			],
+		]);
+
+		$this->assertResponseOk($response);
+		$html = $this->getHtmlResponse($response);
+		$this->assertStringContainsString('class="collection-page"', $html);
+		$this->assertStringNotContainsString('<!DOCTYPE html>', $html);
+		$this->assertStringNotContainsString('class="app"', $html);
+	}
+
 	public function testPanelCollectionRouteReturnsNotFoundForUnknownCollection(): void
 	{
 		$response = $this->makeRequest('GET', '/panel/collection/does-not-exist');
