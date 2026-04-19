@@ -1,0 +1,70 @@
+.collection-page {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-6);
+}
+
+.collection-title {
+	margin: 0;
+	font-size: var(--font-size-xl);
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.collection-empty {
+	margin: 0;
+	padding: var(--space-4);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: var(--color-surface);
+	color: var(--color-muted);
+}
+
+.collection-list {
+	display: grid;
+	gap: var(--space-4);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.collection-row {
+	padding: var(--space-4);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background: var(--color-surface);
+}
+
+.collection-grid {
+	display: grid;
+	gap: var(--space-4);
+	grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+}
+
+.collection-cell {
+	display: grid;
+	gap: var(--space-1);
+	min-width: 0;
+}
+
+.collection-label {
+	font-size: var(--font-size-xs);
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--color-muted);
+}
+
+.collection-value {
+	font-size: var(--font-size-sm);
+	color: var(--color-text);
+	overflow-wrap: anywhere;
+}
+
+.collection-cell.is-bold .collection-value {
+	font-weight: 700;
+}
+
+.collection-cell.is-italic .collection-value {
+	font-style: italic;
+}

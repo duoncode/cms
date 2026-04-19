@@ -49,6 +49,7 @@ abstract class Panel
 				"{$panelPath}/assets/styles/tokens.css",
 				"{$panelPath}/assets/styles/reset.css",
 				"{$panelPath}/assets/styles/app.css",
+				"{$panelPath}/assets/styles/collection.css",
 			],
 		);
 	}
