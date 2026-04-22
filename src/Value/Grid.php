@@ -225,11 +225,24 @@ class Grid extends Value
 	{
 		$colspan = $prefix . '-colspan-' . $value->data['colspan'];
 		$rowspan = $prefix . '-rowspan-' . $value->data['rowspan'];
+		$colstart = $value->data['colstart'] ?? null
+			? $prefix . '-colstart-' . $value->data['colstart']
+			: null;
 		$styleClass = $value->styleClass();
 		$class = $styleClass ? ' ' . $styleClass : '';
 
 		$out =
-			'<div class="' . $prefix . '-' . $value->type . ' ' . $colspan . ' ' . $rowspan . $class . '">';
+			'<div class="'
+			. $prefix
+			. '-'
+			. $value->type
+			. ' '
+			. $colspan
+			. ' '
+			. $rowspan
+			. ($colstart ? ' ' . $colstart : '')
+			. $class
+			. '">';
 		$out .= match ($value->type) {
 			'richtext' => $value->data['value'],
 			'text' => $value->data['value'],
