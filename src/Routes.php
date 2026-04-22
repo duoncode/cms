@@ -8,6 +8,7 @@ use Duon\Cms\Config;
 use Duon\Cms\Middleware\InitRequest;
 use Duon\Cms\Middleware\Session;
 use Duon\Cms\View\Auth;
+use Duon\Cms\View\Embed;
 use Duon\Cms\View\Media;
 use Duon\Cms\View\Nodes;
 use Duon\Cms\View\Page;
@@ -65,6 +66,16 @@ class Routes
 			[Panel::class, 'boot'],
 			'cms.panel.boot',
 		)->after(new JsonRenderer($this->factory));
+		$app->get(
+			$this->panelPath . '/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/create',
+			[Embed::class, 'create'],
+			'cms.panel.embed.create',
+		)->middleware($this->session);
+		$app->get(
+			$this->panelPath . '/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/{node:[A-Za-z0-9-_.]{1,64}}',
+			[Embed::class, 'node'],
+			'cms.panel.embed.node',
+		)->middleware($this->session);
 		$app->get($this->panelPath . '/...slug', [Panel::class, 'catchall'], 'cms.panel.catchall')->middleware($this->session);
 		$app->get($this->panelPath, [Panel::class, 'index'], 'cms.panel')->middleware($this->session);
 		$app->get($this->panelPath . '/', [Panel::class, 'index'], 'cms.panel.slash')->middleware($this->session);
