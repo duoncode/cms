@@ -8,6 +8,7 @@ use Duon\Cms\Middleware\InitRequest;
 use Duon\Cms\Middleware\PanelAuth;
 use Duon\Cms\Middleware\Session;
 use Duon\Cms\View\Auth;
+use Duon\Cms\View\Embed;
 use Duon\Cms\View\Media;
 use Duon\Cms\View\Nodes;
 use Duon\Cms\View\OldPanel;
@@ -70,6 +71,16 @@ class Routes
 			[OldPanel::class, 'boot'],
 			'cms.oldpanel.boot',
 		)->after(new JsonRenderer($this->factory));
+		$app->get(
+			'/cms/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/create',
+			[Embed::class, 'create'],
+			'cms.panel.embed.create',
+		)->middleware($this->session);
+		$app->get(
+			'/cms/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/{node:[A-Za-z0-9-_.]{1,64}}',
+			[Embed::class, 'node'],
+			'cms.panel.embed.node',
+		)->middleware($this->session);
 		$app->get(
 			'/cms/...slug',
 			[OldPanel::class, 'catchall'],
