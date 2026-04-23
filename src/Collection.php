@@ -296,14 +296,44 @@ abstract class Collection implements NavigationItem
 
 	public static function nav(): NavMeta
 	{
+		$icon = static::$icon;
+		$icon = $icon === null ? null : trim($icon);
+
 		return new NavMeta(
 			label: static::$name ?: static::humanizeClassName(),
-			icon: static::$icon,
+			icon: $icon === null || $icon === '' ? null : [
+				'id' => $icon,
+				'color' => null,
+				'class' => null,
+				'style' => null,
+			],
 			badge: static::$badge,
 			permission: static::$permission,
 			hidden: static::$hidden,
 			order: static::$order,
 		);
+	}
+
+	public function icon(
+		string $id,
+		?string $color = null,
+		?string $class = null,
+		?string $style = null,
+	): static {
+		$id = trim($id);
+
+		if ($id === '') {
+			throw new RuntimeException('Collection icon ids must not be empty');
+		}
+
+		$this->meta->icon = [
+			'id' => $id,
+			'color' => $this->normalizeIconValue($color),
+			'class' => $this->normalizeIconValue($class),
+			'style' => $this->normalizeIconValue($style),
+		];
+
+		return $this;
 	}
 
 	public static function handle(): string
@@ -325,5 +355,16 @@ abstract class Collection implements NavigationItem
 		$class = basename(str_replace('\\', '/', static::class));
 
 		return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $class);
+	}
+
+	private function normalizeIconValue(?string $value): ?string
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		$value = trim($value);
+
+		return $value === '' ? null : $value;
 	}
 }

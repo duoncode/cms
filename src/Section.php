@@ -66,6 +66,28 @@ final class Section implements NavigationItem
 		return $section;
 	}
 
+	public function icon(
+		string $id,
+		?string $color = null,
+		?string $class = null,
+		?string $style = null,
+	): static {
+		$id = trim($id);
+
+		if ($id === '') {
+			throw new RuntimeException('Section icon ids must not be empty');
+		}
+
+		$this->meta->icon = [
+			'id' => $id,
+			'color' => $this->normalizeIconValue($color),
+			'class' => $this->normalizeIconValue($class),
+			'style' => $this->normalizeIconValue($style),
+		];
+
+		return $this;
+	}
+
 	/** @param class-string<Collection> $class */
 	public function collection(string $class): Collection
 	{
@@ -112,5 +134,16 @@ final class Section implements NavigationItem
 			static fn(array $item): NavigationItem => $item['item'],
 			$indexed,
 		);
+	}
+
+	private function normalizeIconValue(?string $value): ?string
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		$value = trim($value);
+
+		return $value === '' ? null : $value;
 	}
 }
