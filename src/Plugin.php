@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Cms\Boiler\Renderer as BoilerRenderer;
+use Duon\Cms\Contract\Icons;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
@@ -59,6 +60,7 @@ class Plugin implements CorePlugin
 		$this->container->add(Database::class, $this->db);
 		$this->container->add(Factory::class, $this->factory);
 		$this->container->add(Types::class, $this->types);
+		$this->container->add(Icons::class, IconifyIcons::class);
 
 		$this->routes = new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled);
 		$this->routes->add($app);
