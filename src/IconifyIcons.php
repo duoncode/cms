@@ -258,7 +258,9 @@ final class IconifyIcons implements Icons
 
 		if (preg_match($pattern, $tag, $matches) === 1) {
 			$current = $matches[1] !== '' ? $matches[1] : $matches[2];
-			$merged = trim($current . ' ' . $value);
+			$merged = $name === 'style'
+				? $this->joinStyles($current, $value)
+				: trim($current . ' ' . $value);
 			$replacement = sprintf(' %s="%s"', $name, escape($merged));
 
 			return (string) preg_replace($pattern, $replacement, $tag, 1);
@@ -269,6 +271,22 @@ final class IconifyIcons implements Icons
 		$base = substr($tag, 0, -strlen($closer));
 
 		return $base . $injection . $closer;
+	}
+
+	private function joinStyles(string $base, string $append): string
+	{
+		$base = trim($base);
+		$append = trim($append);
+
+		if ($base === '') {
+			return $append;
+		}
+
+		if ($append === '') {
+			return $base;
+		}
+
+		return rtrim($base, '; ') . '; ' . ltrim($append, '; ');
 	}
 
 	private function clean(?string $value): ?string
