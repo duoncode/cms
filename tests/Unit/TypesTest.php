@@ -9,6 +9,7 @@ use Duon\Cms\Node\Schema\Registry;
 use Duon\Cms\Node\Types;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithChildrenAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithHandleAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithIconAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithNameAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithPermissionAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithRenderAttribute;
@@ -113,6 +114,20 @@ final class TypesTest extends TestCase
 			$this->types->get(NodeWithChildrenAttribute::class, 'children'),
 		);
 		$this->assertSame([], $this->types->get(NodeWithNameAttribute::class, 'children'));
+	}
+
+	public function testIconAttributeSet(): void
+	{
+		$this->assertSame(
+			[
+				'id' => 'bi:check',
+				'color' => '#ff0000',
+				'class' => 'cms-node-icon',
+				'style' => 'height: 1rem',
+			],
+			$this->types->get(NodeWithIconAttribute::class, 'icon'),
+		);
+		$this->assertNull($this->types->get(NodeWithNameAttribute::class, 'icon'));
 	}
 
 	public function testSchemaMagicAccessCoversAllBuiltinKeys(): void

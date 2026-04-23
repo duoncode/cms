@@ -8,6 +8,7 @@ use Duon\Cms\Schema\Children;
 use Duon\Cms\Schema\Deletable;
 use Duon\Cms\Schema\FieldOrder;
 use Duon\Cms\Schema\Handle;
+use Duon\Cms\Schema\Icon;
 use Duon\Cms\Schema\Label;
 use Duon\Cms\Schema\Permission;
 use Duon\Cms\Schema\Render;
@@ -77,6 +78,7 @@ class Registry
 		$registry = new self();
 		$registry->register(Handle::class, new HandleHandler());
 		$registry->register(Label::class, new LabelHandler());
+		$registry->register(Icon::class, new IconHandler());
 		$registry->register(Route::class, new RouteHandler());
 		$registry->register(Render::class, new RenderHandler());
 		$registry->register(Permission::class, new PermissionHandler());
@@ -98,6 +100,7 @@ class Registry
 			string $nodeClass,
 			array $properties,
 		): string => self::className($nodeClass));
+		$this->default('icon', static fn(string $nodeClass, array $properties): ?array => null);
 		$this->default(
 			'renderer',
 			static fn(string $nodeClass, array $properties): string => (string) (
