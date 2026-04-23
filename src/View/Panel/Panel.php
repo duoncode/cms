@@ -99,7 +99,10 @@ abstract class Panel
 		}
 
 		$service = $this->container->get(Icons::class);
-		assert($service instanceof Icons, 'The icons service must be available');
+
+		if (!$service instanceof Icons) {
+			return '';
+		}
 
 		return $service->icon(
 			trim($id),
