@@ -34,13 +34,17 @@ final class Icons implements Contract\Icons
 			return $this->failed('empty icon id');
 		}
 
-		$parts = $this->splitId($id);
+		$parts = $this->splitLocalId($id);
 
 		if ($parts === null) {
 			return $this->failed('invalid icon id: ' . $id);
 		}
 
-		$svg = $this->loadSvg($id, $parts['prefix'], $parts['name']);
+		$svg = $this->loadLocalSvg($parts['prefix'], $parts['name']);
+
+		if ($svg === null && $parts['prefix'] !== null) {
+			$svg = $this->loadRemoteSvg($id, $parts['prefix'], $parts['name']);
+		}
 
 		if ($svg === null) {
 			return $this->failed('icon not found: ' . $id);
@@ -50,25 +54,46 @@ final class Icons implements Contract\Icons
 	}
 
 	/**
-	 * @return array{prefix: string, name: string}|null
+	 * @return array{prefix: ?string, name: string}|null
 	 */
-	private function splitId(string $id): ?array
+	private function splitLocalId(string $id): ?array
 	{
-		if (!preg_match('/^(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i', $id, $matches)) {
+		if (!preg_match('/^(?:(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):)?(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i', $id, $matches)) {
 			return null;
 		}
 
-		$prefix = strtolower((string) $matches['prefix']);
 		$name = strtolower((string) $matches['name']);
 
-		if ($prefix === '' || $name === '') {
+		if ($name === '') {
 			return null;
 		}
+
+		$prefix = $matches['prefix'] ?? null;
+		$prefix = is_string($prefix) && $prefix !== '' ? strtolower($prefix) : null;
 
 		return ['prefix' => $prefix, 'name' => $name];
 	}
 
-	private function loadSvg(string $id, string $prefix, string $name): ?string
+	private function loadLocalSvg(?string $prefix, string $name): ?string
+	{
+		foreach ($this->customPaths() as $path) {
+			$file = $this->localIconFile($path, $prefix, $name);
+
+			if ($file === null) {
+				continue;
+			}
+
+			$svg = file_get_contents($file);
+
+			if (is_string($svg) && $this->isSvg($svg)) {
+				return $svg;
+			}
+		}
+
+		return null;
+	}
+
+	private function loadRemoteSvg(string $id, string $prefix, string $name): ?string
 	{
 		$file = $this->cacheFile($id);
 
@@ -95,6 +120,52 @@ final class Icons implements Contract\Icons
 		}
 
 		return $svg;
+	}
+
+	/** @return list<string> */
+	private function customPaths(): array
+	{
+		$paths = $this->config->get('icons.paths', []);
+
+		if (!is_array($paths)) {
+			return [];
+		}
+
+		$result = [];
+
+		foreach ($paths as $path) {
+			if (!is_string($path)) {
+				continue;
+			}
+
+			$path = trim($path);
+
+			if ($path === '') {
+				continue;
+			}
+
+			$real = realpath($path);
+
+			if ($real !== false && is_dir($real)) {
+				$result[] = $real;
+			}
+		}
+
+		return $result;
+	}
+
+	private function localIconFile(string $path, ?string $prefix, string $name): ?string
+	{
+		$file = $prefix === null
+			? $path . DIRECTORY_SEPARATOR . $name . '.svg'
+			: $path . DIRECTORY_SEPARATOR . $prefix . DIRECTORY_SEPARATOR . $name . '.svg';
+		$resolved = realpath($file);
+
+		if ($resolved === false || !is_file($resolved)) {
+			return null;
+		}
+
+		return strncmp($resolved, $path, strlen($path)) === 0 ? $resolved : null;
 	}
 
 	private function iconUrl(string $prefix, string $name): string

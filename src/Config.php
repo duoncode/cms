@@ -29,6 +29,7 @@ class Config implements ConfigInterface
 			'icons.base_url' => 'https://api.iconify.design',
 			'icons.timeout' => 5,
 			'icons.user_agent' => 'duon/cms',
+			'icons.paths' => [],
 			'db.dsn' => null,
 			'db.sql' => [],
 			'db.migrations' => [],
