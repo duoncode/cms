@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
-use Duon\Cms\IconifyIcons;
+use Duon\Cms\Icons;
 use Duon\Cms\Tests\TestCase;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-final class IconifyIconsTest extends TestCase
+final class IconsTest extends TestCase
 {
 	public function testCacheMissFetchesAndStoresSvg(): void
 	{
@@ -151,14 +151,14 @@ final class IconifyIconsTest extends TestCase
 		}
 	}
 
-	private function icons(string $publicDir, callable $fetch): IconifyIcons
+	private function icons(string $publicDir, callable $fetch): Icons
 	{
 		$config = $this->config([
 			'path.public' => $publicDir,
 			'path.cache' => '/cache',
 		]);
 
-		return new IconifyIcons($config, $fetch);
+		return new Icons($config, $fetch);
 	}
 
 	private function publicDir(): string

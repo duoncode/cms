@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Closure;
-use Duon\Cms\Contract\Icons;
 
 use function Duon\Cms\Util\escape;
 
-final class IconifyIcons implements Icons
+final class Icons implements Contract\Icons
 {
 	/** @var Closure(string, int, string): ?string */
 	private readonly Closure $fetch;
