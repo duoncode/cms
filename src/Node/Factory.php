@@ -47,7 +47,7 @@ class Factory
 	{
 		$serializer = new Serializer($this->hydrator, $this->types);
 		$store = new Store($context->db, new PathManager(), $this->types);
-		$templateRenderer = new TemplateRenderer(
+		$templateRenderer = new ViewRenderer(
 			$this->container,
 			$context->factory,
 			$this->hydrator,
@@ -66,7 +66,7 @@ class Factory
 			CoreFactory::class => $context->factory,
 			self::class => $this,
 			Type::class => $type,
-			TemplateRenderer::class => $templateRenderer,
+			ViewRenderer::class => $templateRenderer,
 			Serializer::class => $serializer,
 			Store::class => $store,
 			FieldHydrator::class => $this->hydrator,

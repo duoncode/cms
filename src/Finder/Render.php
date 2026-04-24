@@ -8,8 +8,8 @@ use Duon\Cms\Cms;
 use Duon\Cms\Context;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Node\Factory;
-use Duon\Cms\Node\TemplateRenderer;
 use Duon\Cms\Node\Types;
+use Duon\Cms\Node\ViewRenderer;
 use Duon\Cms\Plugin;
 use Duon\Core\Exception\HttpBadRequest;
 use Throwable;
@@ -54,7 +54,7 @@ class Render
 	public function __toString(): string
 	{
 		try {
-			$renderer = new TemplateRenderer(
+			$renderer = new ViewRenderer(
 				$this->context->container,
 				$this->context->factory,
 				$this->nodeFactory->hydrator(),

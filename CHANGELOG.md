@@ -30,7 +30,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - `NodeSerializer` service for node data serialization, blueprint generation, and title resolution.
 - `NodeManager` service for node CRUD operations (save, create, delete).
 - `PathManager` service for URL path persistence.
-- `TemplateRenderer` service for rendering nodes to templates.
+- `ViewRenderer` service for rendering nodes to templates.
 - `NodeProxy` for template-friendly access to node fields and methods.
 - `NodeMeta` caching facade and `Meta` reflection reader for node metadata.
 - `NodeFieldOwner` adapter bridging `FieldOwner` with `Context` and uid.

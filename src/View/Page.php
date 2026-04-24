@@ -12,8 +12,8 @@ use Duon\Cms\Node\Contract\HandlesFormPost;
 use Duon\Cms\Node\Factory as NodeFactory;
 use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Serializer;
-use Duon\Cms\Node\TemplateRenderer;
 use Duon\Cms\Node\Types;
+use Duon\Cms\Node\ViewRenderer;
 use Duon\Cms\Util\Path;
 use Duon\Container\Container;
 use Duon\Core\Exception\HttpBadRequest;
@@ -97,7 +97,7 @@ class Page
 		}
 
 		$hydrator = $cms->nodeFactory()->hydrator();
-		$renderer = new TemplateRenderer($this->container, $this->factory, $hydrator, $this->types);
+		$renderer = new ViewRenderer($this->container, $this->factory, $hydrator, $this->types);
 
 		return $renderer->renderPage(
 			$node,

@@ -14,7 +14,7 @@ use Duon\Core\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 
-class TemplateRenderer
+class ViewRenderer
 {
 	public function __construct(
 		private readonly Container $container,
