@@ -41,6 +41,7 @@ use Duon\Cms\Tests\Fixtures\Node\NodeWithRouteAttribute;
 use Duon\Cms\Tests\Fixtures\Node\PlainBlock;
 use Duon\Cms\Tests\Fixtures\Node\PlainPage;
 use Duon\Cms\Tests\TestCase;
+use ValueError;
 
 final class NodeSchemaRegistryTest extends TestCase
 {
@@ -118,6 +119,39 @@ final class NodeSchemaRegistryTest extends TestCase
 			],
 			$result,
 		);
+	}
+
+	public function testIconAcceptsNamedArguments(): void
+	{
+		$icon = new Icon('bi:check', width: '1rem', color: '#f00');
+
+		$this->assertSame(
+			[
+				'width' => '1rem',
+				'color' => '#f00',
+			],
+			$icon->args,
+		);
+	}
+
+	public function testIconRejectsPositionalArguments(): void
+	{
+		$this->throws(
+			ValueError::class,
+			'Icon arguments must be an associative array or named arguments',
+		);
+
+		new Icon('bi:check', 'width');
+	}
+
+	public function testIconRejectsListArrayArguments(): void
+	{
+		$this->throws(
+			ValueError::class,
+			'Icon arguments must be an associative array or named arguments',
+		);
+
+		new Icon('bi:check', ['width', 'color']);
 	}
 
 	public function testRouteHandlerResolve(): void
