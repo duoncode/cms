@@ -20,7 +20,7 @@
 		"ext-curl": "*",
 		"ext-dom": "*",
 		"ext-xml": "*",
-		"duon/boiler": "^0.3.2",
+		"duon/boiler": "^0.3.3",
 		"duon/core": "dev-main",
 		"duon/error": "^0.1",
 		"duon/quma": "^0.1",
