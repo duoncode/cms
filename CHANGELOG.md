@@ -6,38 +6,28 @@ Codename: Plain Objects
 
 ### Breaking changes
 
-This release removes the `Node` / `Page` / `Block` / `Document` inheritance
-hierarchy and dedicated node kind modeling. Content types are now plain PHP
-classes with metadata attributes, and behavior is derived from route/render
-conventions.
+This release removes the `Node` / `Page` / `Block` / `Document` inheritance hierarchy and dedicated node kind modeling. Content types are now plain PHP classes with metadata attributes, and behavior is derived from route/render conventions.
 
 - **Removed** abstract base classes `Node`, `Page`, `Block`, `Document`.
 - **Removed** the `RendersTemplate` trait.
 - **Removed** the dead `Fulltext` class.
 - **Removed** `#[Page]`, `#[Block]`, `#[Document]` metadata attributes.
-- **Changed** routability/rendering semantics to use `#[Route]` and `#[Render]`
-  conventions (renderer fallback remains node handle).
-- **Changed** finder facade class from `Duon\Cms\Finder\Finder` to
-  `Duon\Cms\Cms`.
+- **Changed** routability/rendering semantics to use `#[Route]` and `#[Render]` conventions (renderer fallback remains node handle).
+- **Changed** finder facade class from `Duon\Cms\Finder\Finder` to `Duon\Cms\Cms`.
 - **Changed** plugin class from `Duon\Cms\Cms` to `Duon\Cms\Plugin`.
-- **Changed** template embedding API from `find->block(...)` to
-  `cms->render(...)`.
-- **Changed** all Field and Value classes to depend on the `FieldOwner`
-  interface instead of the `Node` class.
+- **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
+- **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.
 - **Changed** node type-hints throughout the framework from `Node` to `object`.
 - **Changed** the `Node::class` registry tag to `Plugin::NODE_TAG` constant.
 
 ### Added
 
-- `#[Name]`, `#[Handle]`, `#[Route]`, `#[Render]`, `#[Title]`, `#[FieldOrder]`,
-  `#[Deletable]`, `#[Permission]` attributes for node metadata.
-- `Title`, `HasInit`, `HandlesFormPost`, `ProvidesRenderContext` interfaces
-  for behavioral hooks.
+- `#[Name]`, `#[Handle]`, `#[Route]`, `#[Render]`, `#[Title]`, `#[FieldOrder]`, `#[Deletable]`, `#[Permission]` attributes for node metadata.
+- `Title`, `HasInit`, `HandlesFormPost`, `ProvidesRenderContext` interfaces for behavioral hooks.
 - `FieldOwner` interface decoupling fields from the node hierarchy.
 - `FieldHydrator` service for external field initialization (two-phase init).
 - `NodeFactory` service for creating node instances via `duon/wire` autowiring.
-- `NodeSerializer` service for node data serialization, blueprint generation,
-  and title resolution.
+- `NodeSerializer` service for node data serialization, blueprint generation, and title resolution.
 - `NodeManager` service for node CRUD operations (save, create, delete).
 - `PathManager` service for URL path persistence.
 - `TemplateRenderer` service for rendering nodes to templates.
@@ -45,6 +35,7 @@ conventions.
 - `NodeMeta` caching facade and `Meta` reflection reader for node metadata.
 - `NodeFieldOwner` adapter bridging `FieldOwner` with `Context` and uid.
 - `Plugin::NODE_TAG` constant replacing the old `Node::class` registry tag.
+- Bundled Boiler renderer and error integration under the existing `Duon\Cms\Boiler` namespace. `duon/cms` now requires `duon/boiler` directly, so applications no longer need the separate `duon/cms-boiler` package.
 
 ### Migration guide
 

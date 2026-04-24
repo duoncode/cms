@@ -88,6 +88,27 @@ Render a node by uid from templates with the neutral cms API:
 <?= $cms->render('some-node-uid') ?>
 ```
 
+## Boiler rendering
+
+`duon/cms` bundles the Boiler renderer under the existing `Duon\Cms\Boiler` namespace. You do not need to require `duon/cms-boiler` separately.
+
+```php
+use Duon\Cms\Boiler\Renderer;
+use Duon\Cms\Plugin;
+use Duon\Core\App;
+
+$cms = new Plugin();
+$cms->renderer('template', Renderer::class)->args(
+    dirs: __DIR__ . '/templates',
+    defaults: ['siteName' => 'My Site'],
+);
+
+$app = App::create();
+$app->load($cms);
+```
+
+The bundled error integration remains available as `Duon\Cms\Boiler\Error\Handler`.
+
 ## Settings
 
 ```text
