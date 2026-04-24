@@ -120,7 +120,6 @@ final class Iconify implements Contract\Icons
 		$body = curl_exec($handle);
 		$status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
 		$error = curl_errno($handle);
-		curl_close($handle);
 
 		if (!is_string($body) || $error !== 0 || $status < 200 || $status >= 300) {
 			return null;
