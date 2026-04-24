@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
+use Duon\Cms\Config;
 use Duon\Cms\Field\Code;
+use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Field\Grid;
 use Duon\Cms\Field\Image;
 use Duon\Cms\Field\Option;
+use Duon\Cms\Field\Owner;
 use Duon\Cms\Field\Schema\Registry;
 use Duon\Cms\Field\Text;
-use Duon\Cms\Node\FieldOwner;
+use Duon\Cms\Locale;
+use Duon\Cms\Locales;
 use Duon\Cms\Schema\Columns;
 use Duon\Cms\Schema\Description;
 use Duon\Cms\Schema\Hidden;
@@ -25,8 +29,10 @@ use Duon\Cms\Schema\Translate;
 use Duon\Cms\Schema\TranslateFile;
 use Duon\Cms\Schema\Validate;
 use Duon\Cms\Schema\Width;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithFieldIconAttribute;
 use Duon\Cms\Tests\TestCase;
 use Duon\Cms\Value\ValueContext;
+use Duon\Core\Request;
 
 final class FieldCapabilityPropertiesTest extends TestCase
 {
@@ -38,17 +44,52 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$this->registry = Registry::withDefaults();
 	}
 
-	private function createOwner(): FieldOwner
+	private function createOwner(): Owner
 	{
-		$context = new \Duon\Cms\Context(
-			$this->db(),
-			$this->request(),
-			$this->config(),
-			$this->container(),
-			$this->factory(),
-		);
+		$config = $this->config();
+		$request = $this->request();
+		$locales = new Locales();
+		$locales->add('en', 'English');
+		$locale = $locales->getDefault();
 
-		return new FieldOwner($context, 'test-node');
+		return new class($config, $request, $locales, $locale) implements Owner {
+			public function __construct(
+				private readonly Config $config,
+				private readonly Request $request,
+				private readonly Locales $locales,
+				private readonly Locale $locale,
+			) {}
+
+			public function uid(): string
+			{
+				return 'test-node';
+			}
+
+			public function locale(): Locale
+			{
+				return $this->locale;
+			}
+
+			public function defaultLocale(): Locale
+			{
+				return $this->locale;
+			}
+
+			public function locales(): Locales
+			{
+				return $this->locales;
+			}
+
+			public function request(): Request
+			{
+				return $this->request;
+			}
+
+			public function config(): Config
+			{
+				return $this->config;
+			}
+		};
 	}
 
 	private function createTextField(string $name = 'test'): Text
@@ -93,6 +134,28 @@ final class FieldCapabilityPropertiesTest extends TestCase
 
 		$this->assertArrayHasKey('label', $properties);
 		$this->assertEquals('Test Label', $properties['label']);
+	}
+
+	public function testFieldIconAttributeIsExposedViaFieldProperties(): void
+	{
+		$owner = $this->createOwner();
+		$node = new NodeWithFieldIconAttribute();
+		$hydrator = new FieldHydrator($this->registry);
+		$fieldNames = $hydrator->hydrate($node, [], $owner);
+		$field = $hydrator->getField($node, 'title');
+
+		$this->assertSame(['title'], $fieldNames);
+		$this->assertSame(
+			[
+				'id' => 'bi:type',
+				'args' => [
+					'color' => '#00ff00',
+					'class' => 'cms-field-icon',
+					'style' => 'width: 1rem',
+				],
+			],
+			$field->properties()['icon'],
+		);
 	}
 
 	public function testDescriptionCapabilityReturnsDescriptionProperty(): void

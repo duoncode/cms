@@ -95,7 +95,7 @@ class UpdatePanelPath extends Command
 
 			$content = file_get_contents($file->getPathname());
 
-			if ($content !== false && str_contains($content, self::DEFAULT_PATH)) {
+			if (is_string($content) && str_contains($content, self::DEFAULT_PATH)) {
 				$files[] = $file->getPathname();
 			}
 		}

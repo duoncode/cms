@@ -66,6 +66,23 @@ final class Section implements NavigationItem
 		return $section;
 	}
 
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): static
+	{
+		$id = trim($id);
+
+		if ($id === '') {
+			throw new RuntimeException('Section icon ids must not be empty');
+		}
+
+		$this->meta->icon = [
+			'id' => $id,
+			'args' => $args,
+		];
+
+		return $this;
+	}
+
 	/** @param class-string<Collection> $class */
 	public function collection(string $class): Collection
 	{

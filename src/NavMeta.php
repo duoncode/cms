@@ -6,9 +6,12 @@ namespace Duon\Cms;
 
 final class NavMeta
 {
+	/**
+	 * @param array{id: string, args: array<array-key, mixed>}|null $icon
+	 */
 	public function __construct(
 		public string $label,
-		public ?string $icon = null,
+		public ?array $icon = null,
 		public ?string $badge = null,
 		public ?string $permission = null,
 		public bool $hidden = false,
@@ -19,7 +22,8 @@ final class NavMeta
 	{
 		return [
 			'label' => $this->label,
-			'icon' => $this->icon,
+			'icon' => $this->icon['id'] ?? null,
+			'iconMeta' => $this->icon,
 			'badge' => $this->badge,
 			'permission' => $this->permission,
 			'hidden' => $this->hidden,

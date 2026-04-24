@@ -9,6 +9,7 @@ use Duon\Cms\Schema\DefaultValue;
 use Duon\Cms\Schema\Description;
 use Duon\Cms\Schema\Fulltext;
 use Duon\Cms\Schema\Hidden;
+use Duon\Cms\Schema\Icon;
 use Duon\Cms\Schema\Immutable;
 use Duon\Cms\Schema\Label;
 use Duon\Cms\Schema\Limit;
@@ -41,6 +42,7 @@ class Registry
 	{
 		$registry = new self();
 		$registry->register(Label::class, new LabelHandler());
+		$registry->register(Icon::class, new IconHandler());
 		$registry->register(Description::class, new DescriptionHandler());
 		$registry->register(Translate::class, new TranslateHandler());
 		$registry->register(TranslateFile::class, new TranslateFileHandler());

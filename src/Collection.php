@@ -296,14 +296,39 @@ abstract class Collection implements NavigationItem
 
 	public static function nav(): NavMeta
 	{
+		$icon = static::$icon;
+		$icon = $icon === null ? null : trim($icon);
+
 		return new NavMeta(
 			label: static::$name ?: static::humanizeClassName(),
-			icon: static::$icon,
+			icon: $icon === null || $icon === ''
+				? null
+				: [
+					'id' => $icon,
+					'args' => [],
+				],
 			badge: static::$badge,
 			permission: static::$permission,
 			hidden: static::$hidden,
 			order: static::$order,
 		);
+	}
+
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): static
+	{
+		$id = trim($id);
+
+		if ($id === '') {
+			throw new RuntimeException('Collection icon ids must not be empty');
+		}
+
+		$this->meta->icon = [
+			'id' => $id,
+			'args' => $args,
+		];
+
+		return $this;
 	}
 
 	public static function handle(): string

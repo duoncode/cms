@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\View\Panel;
 
 use Duon\Cms\Config;
+use Duon\Cms\Contract\Icons;
 use Duon\Cms\Navigation;
 use Duon\Container\Container;
 use Duon\Core\Request;
@@ -34,6 +35,7 @@ abstract class Panel
 			'currentPath' => $this->request->uri()->getPath(),
 			'logo' => $this->logo(),
 			'config' => $this->config,
+			'renderIcon' => $this->renderIcon(...),
 			'stylesheets' => $this->stylesheets($panelPath),
 			'scripts' => $this->scripts($panelPath),
 			'collections' => $this->collections(),
@@ -81,5 +83,29 @@ abstract class Panel
 		$navigation = $this->container->get(Navigation::class);
 
 		return $navigation->items();
+	}
+
+	/** @param array{id: string, args?: array<array-key, mixed>}|null $icon */
+	private function renderIcon(?array $icon): string
+	{
+		if ($icon === null) {
+			return '';
+		}
+
+		$id = $icon['id'] ?? null;
+
+		if (!is_string($id) || trim($id) === '') {
+			return '';
+		}
+
+		$service = $this->container->get(Icons::class);
+
+		if (!$service instanceof Icons) {
+			return '';
+		}
+
+		$args = $icon['args'] ?? [];
+
+		return $service->icon(trim($id), is_array($args) ? $args : []);
 	}
 }

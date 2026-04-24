@@ -10,6 +10,7 @@ use Duon\Cms\Node\Schema\ChildrenHandler;
 use Duon\Cms\Node\Schema\DeletableHandler;
 use Duon\Cms\Node\Schema\FieldOrderHandler;
 use Duon\Cms\Node\Schema\HandleHandler;
+use Duon\Cms\Node\Schema\IconHandler;
 use Duon\Cms\Node\Schema\LabelHandler;
 use Duon\Cms\Node\Schema\PermissionHandler;
 use Duon\Cms\Node\Schema\Registry;
@@ -21,6 +22,7 @@ use Duon\Cms\Schema\Children;
 use Duon\Cms\Schema\Deletable;
 use Duon\Cms\Schema\FieldOrder;
 use Duon\Cms\Schema\Handle;
+use Duon\Cms\Schema\Icon;
 use Duon\Cms\Schema\Label;
 use Duon\Cms\Schema\Permission;
 use Duon\Cms\Schema\Render;
@@ -31,6 +33,7 @@ use Duon\Cms\Tests\Fixtures\Node\CustomIconHandler;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithChildrenAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithCustomAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithHandleAttribute;
+use Duon\Cms\Tests\Fixtures\Node\NodeWithIconAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithInvalidPropertyTitleAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithNameAttribute;
 use Duon\Cms\Tests\Fixtures\Node\NodeWithPropertyTitleAttribute;
@@ -38,6 +41,7 @@ use Duon\Cms\Tests\Fixtures\Node\NodeWithRouteAttribute;
 use Duon\Cms\Tests\Fixtures\Node\PlainBlock;
 use Duon\Cms\Tests\Fixtures\Node\PlainPage;
 use Duon\Cms\Tests\TestCase;
+use ValueError;
 
 final class NodeSchemaRegistryTest extends TestCase
 {
@@ -49,6 +53,10 @@ final class NodeSchemaRegistryTest extends TestCase
 
 		$this->assertInstanceOf(HandleHandler::class, $registry->getHandler(new Handle('test')));
 		$this->assertInstanceOf(LabelHandler::class, $registry->getHandler(new Label('test')));
+		$this->assertInstanceOf(
+			IconHandler::class,
+			$registry->getHandler(new Icon('bi:check')),
+		);
 		$this->assertInstanceOf(RouteHandler::class, $registry->getHandler(new Route('/test')));
 		$this->assertInstanceOf(RenderHandler::class, $registry->getHandler(new Render('test')));
 		$this->assertInstanceOf(PermissionHandler::class, $registry->getHandler(new Permission('test')));
@@ -95,6 +103,55 @@ final class NodeSchemaRegistryTest extends TestCase
 		$result = $handler->resolve(new Label('My Label'), PlainPage::class);
 
 		$this->assertEquals(['label' => 'My Label'], $result);
+	}
+
+	public function testIconHandlerResolve(): void
+	{
+		$handler = new IconHandler();
+		$result = $handler->resolve(new Icon('bi:check', ['color' => '#ff0000']), PlainPage::class);
+
+		$this->assertEquals(
+			[
+				'icon' => [
+					'id' => 'bi:check',
+					'args' => ['color' => '#ff0000'],
+				],
+			],
+			$result,
+		);
+	}
+
+	public function testIconAcceptsNamedArguments(): void
+	{
+		$icon = new Icon('bi:check', width: '1rem', color: '#f00');
+
+		$this->assertSame(
+			[
+				'width' => '1rem',
+				'color' => '#f00',
+			],
+			$icon->args,
+		);
+	}
+
+	public function testIconRejectsPositionalArguments(): void
+	{
+		$this->throws(
+			ValueError::class,
+			'Icon arguments must be an associative array or named arguments',
+		);
+
+		new Icon('bi:check', 'width');
+	}
+
+	public function testIconRejectsListArrayArguments(): void
+	{
+		$this->throws(
+			ValueError::class,
+			'Icon arguments must be an associative array or named arguments',
+		);
+
+		new Icon('bi:check', ['width', 'color']);
 	}
 
 	public function testRouteHandlerResolve(): void
@@ -221,6 +278,8 @@ final class NodeSchemaRegistryTest extends TestCase
 		$this->assertNull($schema->titleField);
 		// No #[FieldOrder] => null
 		$this->assertNull($schema->fieldOrder);
+		// No #[Icon] => null
+		$this->assertNull($schema->icon);
 		// No #[Deletable] => true
 		$this->assertTrue($schema->deletable);
 		// No #[Children] => []
@@ -238,6 +297,24 @@ final class NodeSchemaRegistryTest extends TestCase
 				PlainBlock::class,
 			],
 			$schema->children,
+		);
+	}
+
+	public function testSchemaResolvesIconAttributeFromClass(): void
+	{
+		$registry = Registry::withDefaults();
+		$schema = new Schema(NodeWithIconAttribute::class, $registry);
+
+		$this->assertSame(
+			[
+				'id' => 'bi:check',
+				'args' => [
+					'color' => '#ff0000',
+					'class' => 'cms-node-icon',
+					'style' => 'height: 1rem',
+				],
+			],
+			$schema->icon,
 		);
 	}
 
@@ -319,7 +396,7 @@ final class NodeSchemaRegistryTest extends TestCase
 		$types = new Types();
 
 		$this->assertNull($types->get(PlainPage::class, 'icon'));
-		$this->assertEquals('fallback', $types->get(PlainPage::class, 'icon', 'fallback'));
+		$this->assertNull($types->get(PlainPage::class, 'icon', 'fallback'));
 	}
 
 	public function testUnregisteredCustomAttributeIsSilentlyIgnored(): void
@@ -352,6 +429,7 @@ final class NodeSchemaRegistryTest extends TestCase
 		$this->assertArrayHasKey('renderable', $props);
 		$this->assertArrayHasKey('route', $props);
 		$this->assertArrayHasKey('permission', $props);
+		$this->assertArrayHasKey('icon', $props);
 		$this->assertArrayHasKey('titleField', $props);
 		$this->assertArrayHasKey('fieldOrder', $props);
 		$this->assertArrayHasKey('deletable', $props);
