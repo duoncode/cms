@@ -294,7 +294,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$logger = new NullLogger();
 
 		// Set environment variables for error handler (it uses env() function)
-		$_ENV['CMS_DEBUG'] = false; // Disable debug mode (Whoops not available in tests)
+		$_ENV['CMS_DEBUG'] = false; // Disable debug mode for deterministic error responses
 		$_ENV['CMS_ENV'] = 'test';
 
 		$handler = new Handler($root, $logger, $factory);
