@@ -95,7 +95,7 @@ $plugin->node(App\Cms\Node\HomePage::class);
 $plugin->node(App\Cms\Node\ArticlePage::class);
 
 // The default Boiler renderer reads from {path.root}{path.views}.
-// path.views defaults to /views; register a template renderer only to replace it.
+// path.views defaults to /views; register a view renderer only to replace it.
 
 $app->load($locales);
 $app->load($plugin);

@@ -26,19 +26,19 @@ final class PluginTest extends TestCase
 	public function testLoadRegistersDefaultViewRenderer(): void
 	{
 		$app = $this->loadPlugin(new Plugin());
-		$renderer = $app->container()->tag(Renderer::class)->get('template');
+		$renderer = $app->container()->tag(Renderer::class)->get('view');
 
 		$this->assertInstanceOf(BoilerRenderer::class, $renderer);
 		$this->assertSame('<p>plain</p>', trim($renderer->render('plain', [])));
 	}
 
-	public function testExplicitTemplateRendererOverridesDefaultViewRenderer(): void
+	public function testExplicitViewRendererOverridesDefaultViewRenderer(): void
 	{
 		$plugin = new Plugin();
-		$plugin->renderer('template', StaticRenderer::class);
+		$plugin->renderer('view', StaticRenderer::class);
 
 		$app = $this->loadPlugin($plugin);
-		$renderer = $app->container()->tag(Renderer::class)->get('template');
+		$renderer = $app->container()->tag(Renderer::class)->get('view');
 
 		$this->assertInstanceOf(StaticRenderer::class, $renderer);
 		$this->assertSame('custom:plain', $renderer->render('plain', []));

@@ -90,7 +90,7 @@ Render a node by uid from templates with the neutral cms API:
 
 ## Boiler rendering
 
-`duon/cms` bundles the Boiler renderer under the existing `Duon\Cms\Boiler` namespace and registers it as the default `template` renderer. You do not need to require `duon/cms-boiler` separately or register a renderer for the common case.
+`duon/cms` bundles the Boiler renderer under the existing `Duon\Cms\Boiler` namespace and registers it as the default `view` renderer. You do not need to require `duon/cms-boiler` separately or register a renderer for the common case.
 
 By default, views are loaded from `{path.root}{path.views}`. `path.views` defaults to `/views` and can be overridden in CMS config:
 
@@ -106,14 +106,14 @@ $config = new Config(settings: [
 $cms = new Plugin();
 ```
 
-To replace the default renderer or pass custom Boiler arguments, register a `template` renderer before loading the plugin:
+To replace the default renderer or pass custom Boiler arguments, register a `view` renderer before loading the plugin:
 
 ```php
 use Duon\Cms\Boiler\Renderer;
 use Duon\Cms\Plugin;
 
 $cms = new Plugin();
-$cms->renderer('template', Renderer::class)->args(
+$cms->renderer('view', Renderer::class)->args(
     dirs: __DIR__ . '/custom-views',
     defaults: ['siteName' => 'My Site'],
 );

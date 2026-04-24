@@ -223,11 +223,11 @@ class Plugin implements CorePlugin
 
 	protected function addViewRenderer(): void
 	{
-		if ($this->hasRenderer('template')) {
+		if ($this->hasRenderer('view')) {
 			return;
 		}
 
-		$this->renderer('template', BoilerRenderer::class)->args(
+		$this->renderer('view', BoilerRenderer::class)->args(
 			dirs: $this->viewPath(),
 			autoescape: true,
 			trusted: $this->trustedViewClasses(),
