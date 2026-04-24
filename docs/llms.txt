@@ -2,7 +2,7 @@ project: Duon Content Management Framework (duon/cms)
 repository: https://github.com/duonrun/cms
 canonical_branch: main
 license: MIT (https://github.com/duonrun/cms/blob/main/LICENSE.md)
-last_updated: 2026-03-02
+last_updated: 2026-04-24
 contact: https://github.com/duonrun/cms/issues
 
 summary:
@@ -76,19 +76,15 @@ Core setup pattern (see tests for real working examples):
 1. Create and load `Locales` plugin.
 2. Create `Plugin` instance from `duon/cms`.
 3. Register node classes with `Plugin::node(...)`.
-4. Register optional collections and renderers.
+4. Optionally set `path.views` or register custom renderers.
 5. Load plugin into app.
 6. Add `plugin->catchallRoute()` as the last route.
 
 Example pattern:
 
 ```php
-use Duon\Cms\Cms;
-use Duon\Cms\Locale;
 use Duon\Cms\Locales;
-use Duon\Cms\Node\Node;
 use Duon\Cms\Plugin;
-use Duon\Core\Request;
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -98,17 +94,8 @@ $plugin = new Plugin(sessionEnabled: true);
 $plugin->node(App\Cms\Node\HomePage::class);
 $plugin->node(App\Cms\Node\ArticlePage::class);
 
-$plugin->renderer('template', App\Cms\Renderer::class)->args(
-    dirs: __DIR__ . '/templates',
-    autoescape: true,
-    whitelist: [
-        Node::class,
-        Cms::class,
-        Locale::class,
-        Locales::class,
-        Request::class,
-    ],
-);
+// The default Boiler renderer reads from {path.root}{path.views}.
+// path.views defaults to /views; register a template renderer only to replace it.
 
 $app->load($locales);
 $app->load($plugin);
@@ -391,6 +378,7 @@ Paths and panel:
 - `path.prefix`: `''`
 - `path.assets`: `'/assets'`
 - `path.cache`: `'/cache'`
+- `path.views`: `'/views'` (view directory relative to `path.root`)
 - `path.panel`: `'/cms'`
 - `path.api`: `null`
 - `panel.theme`: `null` (string or string[])

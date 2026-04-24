@@ -36,6 +36,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - `NodeFieldOwner` adapter bridging `FieldOwner` with `Context` and uid.
 - `Plugin::NODE_TAG` constant replacing the old `Node::class` registry tag.
 - Bundled Boiler renderer and error integration under the existing `Duon\Cms\Boiler` namespace. `duon/cms` now requires `duon/boiler` directly, so applications no longer need the separate `duon/cms-boiler` package.
+- Default Boiler `template` renderer registration using the new `path.views` config key, which defaults to `/views` relative to `path.root`.
 
 ### Migration guide
 
