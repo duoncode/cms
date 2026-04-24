@@ -58,7 +58,7 @@ final class IconsTest extends TestCase
 
 			$icons = $this->icons(
 				$publicDir,
-				function () use (&$calls): ?string {
+				static function () use (&$calls): ?string {
 					$calls++;
 
 					return null;
@@ -81,7 +81,7 @@ final class IconsTest extends TestCase
 		try {
 			$icons = $this->icons(
 				$publicDir,
-				function () use (&$calls): string {
+				static function () use (&$calls): string {
 					$calls++;
 
 					return '<svg></svg>';
@@ -105,7 +105,7 @@ final class IconsTest extends TestCase
 		try {
 			$icons = $this->icons(
 				$publicDir,
-				function () use (&$calls): string {
+				static function () use (&$calls): string {
 					$calls++;
 
 					return '<svg data-source="remote"></svg>';
@@ -131,7 +131,7 @@ final class IconsTest extends TestCase
 		try {
 			$icons = $this->icons(
 				$publicDir,
-				function () use (&$calls): string {
+				static function () use (&$calls): string {
 					$calls++;
 
 					return '<svg data-source="remote"></svg>';
@@ -159,7 +159,7 @@ final class IconsTest extends TestCase
 		try {
 			$icons = $this->icons(
 				$publicDir,
-				function () use (&$calls): string {
+				static function () use (&$calls): string {
 					$calls++;
 
 					return '<svg data-source="remote"></svg>';

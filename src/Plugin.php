@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Cms\Boiler\Renderer as BoilerRenderer;
-use Duon\Cms\Contract;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Icons\Iconify;
 use Duon\Cms\Icons\Local;
