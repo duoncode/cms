@@ -1,9 +1,9 @@
 project: Duon Content Management Framework (duon/cms)
-repository: https://github.com/duonrun/cms
+repository: https://github.com/duoncode/cms
 canonical_branch: main
-license: MIT (https://github.com/duonrun/cms/blob/main/LICENSE.md)
+license: MIT (https://github.com/duoncode/cms/blob/main/LICENSE.md)
 last_updated: 2026-04-24
-contact: https://github.com/duonrun/cms/issues
+contact: https://github.com/duoncode/cms/issues
 
 summary:
 Duon CMS is a PHP CMS framework based on typed node classes, PHP attributes,
@@ -21,11 +21,11 @@ audience:
 - Developers integrating duon/cms into downstream site projects
 
 preferred_sources_in_order:
-1) https://github.com/duonrun/cms/blob/main/README.md
-2) https://github.com/duonrun/cms/tree/main/src
-3) https://github.com/duonrun/cms/tree/main/tests
-4) https://github.com/duonrun/cms/blob/main/composer.json
-5) https://github.com/duonrun/cms/blob/main/AGENTS.md
+1) https://github.com/duoncode/cms/blob/main/README.md
+2) https://github.com/duoncode/cms/tree/main/src
+3) https://github.com/duoncode/cms/tree/main/tests
+4) https://github.com/duoncode/cms/blob/main/composer.json
+5) https://github.com/duoncode/cms/blob/main/AGENTS.md
 
 usage_guidance:
 - Prefer `src/` and tests over assumptions.

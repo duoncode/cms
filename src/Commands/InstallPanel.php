@@ -25,7 +25,7 @@ class InstallPanel extends Command
 	private string $cmsVersion = 'unknown';
 	private string $panelReleaseTag = 'nightly';
 	private string $panelFileName = 'panel-nightly.tar.gz';
-	private string $panelUrl = 'https://github.com/duonrun/cms/releases/download/nightly/panel-nightly.tar.gz';
+	private string $panelUrl = 'https://github.com/duoncode/cms/releases/download/nightly/panel-nightly.tar.gz';
 
 	protected const string DEFAULT_PATH = '/cms';
 
@@ -203,7 +203,7 @@ class InstallPanel extends Command
 	{
 		$tag = $this->resolvePanelReleaseTag($version);
 		$file = $tag === 'nightly' ? 'panel-nightly.tar.gz' : "panel-{$tag}.tar.gz";
-		$url = "https://github.com/duonrun/cms/releases/download/{$tag}/{$file}";
+		$url = "https://github.com/duoncode/cms/releases/download/{$tag}/{$file}";
 
 		$this->panelReleaseTag = $tag;
 		$this->panelFileName = $file;
