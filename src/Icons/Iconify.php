@@ -232,34 +232,14 @@ final class Iconify implements Contract\Icons
 		$temp = $file . '.tmp.' . bin2hex(random_bytes(6));
 
 		if (file_put_contents($temp, $svg, LOCK_EX) === false) {
-			$this->deleteFile($temp);
+			unlink($temp);
 			return;
 		}
 
-		if (!$this->moveFile($temp, $file)) {
-			$this->deleteFile($temp);
-		}
-	}
-
-	private function moveFile(string $source, string $target): bool
-	{
-		return $this->filesystemOperation(static fn(): bool => rename($source, $target));
-	}
-
-	private function deleteFile(string $file): void
-	{
-		$this->filesystemOperation(static fn(): bool => unlink($file));
-	}
-
-	/** @param Closure(): bool $operation */
-	private function filesystemOperation(Closure $operation): bool
-	{
-		set_error_handler(static fn(): bool => true);
-
-		try {
-			return $operation();
-		} finally {
-			restore_error_handler();
+		if (!rename($temp, $file)) {
+			if (is_file($temp)) {
+				unlink($temp);
+			}
 		}
 	}
 
