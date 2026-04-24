@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Cms\Boiler\Renderer as BoilerRenderer;
-use Duon\Cms\Contract\Icons as IconsContract;
+use Duon\Cms\Contract;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Icons\Iconify;
 use Duon\Cms\Icons\Local;
@@ -38,8 +38,9 @@ class Plugin implements CorePlugin
 	protected readonly Navigation $navigation;
 	protected array $nodes = [];
 
-	/** @var list<class-string<IconsContract>|IconsContract> */
-	protected array $iconProviders = [];
+	/** @var list<class-string<Contract\Icons>|Contract\Icons> */
+	protected array $customIconProviders = [];
+	protected bool $replaceDefaultIconProviders = false;
 
 	public function __construct(
 		protected readonly bool $sessionEnabled = false,
@@ -47,10 +48,6 @@ class Plugin implements CorePlugin
 	) {
 		$this->types = $types ?? new Types();
 		$this->navigation = new Navigation();
-		$this->iconProviders = [
-			Local::class,
-			Iconify::class,
-		];
 	}
 
 	public function load(App $app): void
@@ -69,7 +66,7 @@ class Plugin implements CorePlugin
 		$this->container->add(Database::class, $this->db);
 		$this->container->add(Factory::class, $this->factory);
 		$this->container->add(Types::class, $this->types);
-		$this->container->add(IconsContract::class, Icons::class);
+		$this->container->add(Contract\Icons::class, Icons::class);
 
 		$this->routes = new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled);
 		$this->routes->add($app);
@@ -97,14 +94,17 @@ class Plugin implements CorePlugin
 				->addEntry($entry);
 		}
 
-		foreach ($this->iconProviders as $index => $provider) {
-			$providerName = is_string($provider) ? $provider : $provider::class;
+		$providers = $this->customIconProviders;
+
+		if (!$this->replaceDefaultIconProviders) {
+			$providers[] = new Local($this->localIconPaths());
+			$providers[] = Iconify::class;
+		}
+
+		foreach ($providers as $index => $provider) {
 			$this->container
-				->tag(IconsContract::class)
-				->add(
-					sprintf('icons.%d.%s', $index, str_replace('\\\\', '.', $providerName)),
-					$provider,
-				);
+				->tag(Contract\Icons::class)
+				->add(sprintf('icons.%d', $index), $provider);
 		}
 	}
 
@@ -120,19 +120,20 @@ class Plugin implements CorePlugin
 	}
 
 	/**
-	 * @param class-string<IconsContract>|IconsContract $icons
+	 * @param class-string<Contract\Icons>|Contract\Icons $icons
 	 */
-	public function icons(string|IconsContract $icons, bool $replace = false): void
+	public function icons(string|Contract\Icons $icons, bool $replace = false): void
 	{
-		if (is_string($icons) && !is_a($icons, IconsContract::class, true)) {
-			throw new RuntimeException('Icons providers must implement ' . IconsContract::class);
+		if (is_string($icons) && !is_a($icons, Contract\Icons::class, true)) {
+			throw new RuntimeException('Icons providers must implement ' . Contract\Icons::class);
 		}
 
 		if ($replace) {
-			$this->iconProviders = [];
+			$this->customIconProviders = [];
+			$this->replaceDefaultIconProviders = true;
 		}
 
-		array_unshift($this->iconProviders, $icons);
+		array_unshift($this->customIconProviders, $icons);
 	}
 
 	public function navigation(): Navigation
@@ -154,6 +155,14 @@ class Plugin implements CorePlugin
 		}
 
 		$this->nodes[$handle] = $class;
+	}
+
+	/** @return array<array-key, mixed> */
+	protected function localIconPaths(): array
+	{
+		$paths = $this->config->get('icons.local.paths', []);
+
+		return is_array($paths) ? $paths : [];
 	}
 
 	protected function database(): void

@@ -270,9 +270,10 @@ final class IconsTest extends TestCase
 			'path.public' => $publicDir,
 			'path.cache' => '/cache',
 		], $settings));
+		$paths = $config->get('icons.local.paths', []);
 		$container = $this->container();
 		$container->add(Config::class, $config);
-		$container->tag(IconsContract::class)->add('local', new Local($config));
+		$container->tag(IconsContract::class)->add('local', new Local(is_array($paths) ? $paths : []));
 		$container->tag(IconsContract::class)->add('iconify', new Iconify($config, $fetch));
 
 		return new Icons($container, $config);

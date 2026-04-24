@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Icons;
 
-use Duon\Cms\Config;
 use Duon\Cms\Contract;
 
 final class Local implements Contract\Icons
 {
-	public function __construct(
-		private readonly Config $config,
-	) {}
+	/** @var list<string> */
+	private array $paths;
+
+	/** @param array<array-key, mixed> $paths */
+	public function __construct(array $paths)
+	{
+		$this->paths = $this->normalizePaths($paths);
+	}
 
 	public function icon(
 		string $id,
@@ -25,7 +29,7 @@ final class Local implements Contract\Icons
 			return '';
 		}
 
-		foreach ($this->paths() as $path) {
+		foreach ($this->paths as $path) {
 			$file = $this->file($path, $parts['prefix'], $parts['name']);
 
 			if ($file === null) {
@@ -49,7 +53,11 @@ final class Local implements Contract\Icons
 	{
 		$id = trim($id);
 
-		if (!preg_match('/^(?:(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):)?(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i', $id, $matches)) {
+		if (!preg_match(
+			'/^(?:(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):)?(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i',
+			$id,
+			$matches,
+		)) {
 			return null;
 		}
 
@@ -65,15 +73,12 @@ final class Local implements Contract\Icons
 		return ['prefix' => $prefix, 'name' => $name];
 	}
 
-	/** @return list<string> */
-	private function paths(): array
+	/**
+	 * @param array<array-key, mixed> $paths
+	 * @return list<string>
+	 */
+	private function normalizePaths(array $paths): array
 	{
-		$paths = $this->config->get('icons.local.paths', []);
-
-		if (!is_array($paths)) {
-			return [];
-		}
-
 		$result = [];
 
 		foreach ($paths as $path) {
@@ -94,7 +99,7 @@ final class Local implements Contract\Icons
 			}
 		}
 
-		return $result;
+		return array_values(array_unique($result));
 	}
 
 	private function file(string $path, ?string $prefix, string $name): ?string
@@ -108,7 +113,13 @@ final class Local implements Contract\Icons
 			return null;
 		}
 
-		return strncmp($resolved, $path, strlen($path)) === 0 ? $resolved : null;
+		$root = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+		if (!str_starts_with($resolved, $root)) {
+			return null;
+		}
+
+		return $resolved;
 	}
 
 	private function isSvg(string $svg): bool

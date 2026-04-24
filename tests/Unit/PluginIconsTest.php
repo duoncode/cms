@@ -6,35 +6,41 @@ namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Contract\Icons as IconsContract;
 use Duon\Cms\Exception\RuntimeException;
-use Duon\Cms\Icons\Iconify;
-use Duon\Cms\Icons\Local;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\TestCase;
 use ReflectionProperty;
 
 final class PluginIconsTest extends TestCase
 {
-	public function testIconsPrependsProvider(): void
+	public function testIconsPrependsProvidersInCustomRegistry(): void
 	{
 		$plugin = new Plugin();
-		$provider = $this->provider();
-		$plugin->icons($provider);
-		$providers = $this->providers($plugin);
+		$first = $this->provider();
+		$second = $this->provider();
+		$plugin->icons($first);
+		$plugin->icons($second);
+		$providers = $this->customProviders($plugin);
 
-		$this->assertSame($provider, $providers[0]);
-		$this->assertSame(Local::class, $providers[1]);
-		$this->assertSame(Iconify::class, $providers[2]);
+		$this->assertSame($second, $providers[0]);
+		$this->assertSame($first, $providers[1]);
+		$this->assertFalse($this->replacesDefaultProviders($plugin));
 	}
 
-	public function testIconsReplaceResetsRegistry(): void
+	public function testIconsReplaceResetsRegistryAndStaysActive(): void
 	{
 		$plugin = new Plugin();
-		$provider = $this->provider();
-		$plugin->icons($provider, replace: true);
-		$providers = $this->providers($plugin);
+		$first = $this->provider();
+		$second = $this->provider();
+		$third = $this->provider();
+		$plugin->icons($first);
+		$plugin->icons($second, replace: true);
+		$plugin->icons($third);
+		$providers = $this->customProviders($plugin);
 
-		$this->assertCount(1, $providers);
-		$this->assertSame($provider, $providers[0]);
+		$this->assertCount(2, $providers);
+		$this->assertSame($third, $providers[0]);
+		$this->assertSame($second, $providers[1]);
+		$this->assertTrue($this->replacesDefaultProviders($plugin));
 	}
 
 	public function testIconsRejectsInvalidClassString(): void
@@ -58,9 +64,16 @@ final class PluginIconsTest extends TestCase
 		};
 	}
 
-	private function providers(Plugin $plugin): array
+	private function customProviders(Plugin $plugin): array
 	{
-		$property = new ReflectionProperty($plugin, 'iconProviders');
+		$property = new ReflectionProperty($plugin, 'customIconProviders');
+
+		return $property->getValue($plugin);
+	}
+
+	private function replacesDefaultProviders(Plugin $plugin): bool
+	{
+		$property = new ReflectionProperty($plugin, 'replaceDefaultIconProviders');
 
 		return $property->getValue($plugin);
 	}
