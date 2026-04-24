@@ -6,6 +6,8 @@ namespace Duon\Cms\Icons;
 
 use Duon\Cms\Contract;
 
+use function Duon\Cms\Util\escape;
+
 final class Local implements Contract\Icons
 {
 	/** @var list<string> */
@@ -17,12 +19,9 @@ final class Local implements Contract\Icons
 		$this->paths = $this->normalizePaths($paths);
 	}
 
-	public function icon(
-		string $id,
-		?string $color = null,
-		?string $class = null,
-		?string $style = null,
-	): string {
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): string
+	{
 		$parts = $this->split($id);
 
 		if ($parts === null) {
@@ -39,7 +38,7 @@ final class Local implements Contract\Icons
 			$svg = file_get_contents($file);
 
 			if (is_string($svg) && $this->isSvg($svg)) {
-				return $svg;
+				return $this->injectAttributes($svg, $args);
 			}
 		}
 
@@ -120,6 +119,101 @@ final class Local implements Contract\Icons
 		}
 
 		return $resolved;
+	}
+
+	/** @param array<array-key, mixed> $args */
+	private function injectAttributes(string $svg, array $args): string
+	{
+		$class = $this->clean($args['class'] ?? null);
+		$style = $this->mergeStyle(
+			$this->clean($args['style'] ?? null),
+			$this->clean($args['color'] ?? null),
+		);
+
+		if ($class === null && $style === null) {
+			return $svg;
+		}
+
+		if (!preg_match('/<svg\\b[^>]*>/i', $svg, $matches, PREG_OFFSET_CAPTURE)) {
+			return $svg;
+		}
+
+		$tag = $matches[0][0];
+		$offset = $matches[0][1];
+		$length = strlen($tag);
+
+		if ($class !== null) {
+			$tag = $this->appendAttribute($tag, 'class', $class);
+		}
+
+		if ($style !== null) {
+			$tag = $this->appendAttribute($tag, 'style', $style);
+		}
+
+		return substr_replace($svg, $tag, $offset, $length);
+	}
+
+	private function appendAttribute(string $tag, string $name, string $value): string
+	{
+		$pattern = sprintf('/\\s%s\\s*=\\s*(?:"([^"]*)"|\'([^\']*)\')/i', preg_quote($name, '/'));
+
+		if (preg_match($pattern, $tag, $matches) === 1) {
+			$current = ($matches[1] ?? '') !== '' ? $matches[1] : $matches[2] ?? '';
+			$merged = $name === 'style'
+				? $this->joinStyles($current, $value)
+				: trim($current . ' ' . $value);
+			$replacement = sprintf(' %s="%s"', $name, escape($merged));
+
+			return (string) preg_replace($pattern, $replacement, $tag, 1);
+		}
+
+		$injection = sprintf(' %s="%s"', $name, escape($value));
+		$closer = str_ends_with($tag, '/>') ? '/>' : '>';
+		$base = substr($tag, 0, -strlen($closer));
+
+		return $base . $injection . $closer;
+	}
+
+	private function mergeStyle(?string $style, ?string $color): ?string
+	{
+		if ($color === null) {
+			return $style;
+		}
+
+		$colorStyle = 'color: ' . $color;
+
+		if ($style === null) {
+			return $colorStyle;
+		}
+
+		return rtrim($style, '; ') . '; ' . $colorStyle;
+	}
+
+	private function joinStyles(string $base, string $append): string
+	{
+		$base = trim($base);
+		$append = trim($append);
+
+		if ($base === '') {
+			return $append;
+		}
+
+		if ($append === '') {
+			return $base;
+		}
+
+		return rtrim($base, '; ') . '; ' . ltrim($append, '; ');
+	}
+
+	private function clean(mixed $value): ?string
+	{
+		if (!is_scalar($value)) {
+			return null;
+		}
+
+		$value = trim((string) $value);
+
+		return $value === '' ? null : $value;
 	}
 
 	private function isSvg(string $svg): bool

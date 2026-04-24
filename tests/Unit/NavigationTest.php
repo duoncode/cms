@@ -16,7 +16,7 @@ final class NavigationTest extends TestCase
 	public function testNestedSectionsBuildRecursiveItemsAndPayload(): void
 	{
 		$navigation = new Navigation();
-		$content = $navigation->section('Content')->icon('bi:folder', class: 'cms-content-icon');
+		$content = $navigation->section('Content')->icon('bi:folder', ['class' => 'cms-content-icon']);
 		$articles = $content->collection(TestArticlesCollection::class)->icon('bi:file-earmark');
 		$articles->meta->label = 'Articles';
 		$articles->meta->badge = 'new';
@@ -45,9 +45,7 @@ final class NavigationTest extends TestCase
 		$this->assertSame(
 			[
 				'id' => 'bi:folder',
-				'color' => null,
-				'class' => 'cms-content-icon',
-				'style' => null,
+				'args' => ['class' => 'cms-content-icon'],
 			],
 			$payload[0]['meta']['iconMeta'],
 		);
@@ -97,9 +95,7 @@ final class NavigationTest extends TestCase
 		$this->assertSame(
 			[
 				'id' => 'bi:archive',
-				'color' => null,
-				'class' => null,
-				'style' => null,
+				'args' => [],
 			],
 			$payload[0]['meta']['iconMeta'],
 		);

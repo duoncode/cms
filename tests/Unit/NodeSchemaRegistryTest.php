@@ -107,15 +107,13 @@ final class NodeSchemaRegistryTest extends TestCase
 	public function testIconHandlerResolve(): void
 	{
 		$handler = new IconHandler();
-		$result = $handler->resolve(new Icon('bi:check', color: '#ff0000'), PlainPage::class);
+		$result = $handler->resolve(new Icon('bi:check', ['color' => '#ff0000']), PlainPage::class);
 
 		$this->assertEquals(
 			[
 				'icon' => [
 					'id' => 'bi:check',
-					'color' => '#ff0000',
-					'class' => null,
-					'style' => null,
+					'args' => ['color' => '#ff0000'],
 				],
 			],
 			$result,
@@ -276,9 +274,11 @@ final class NodeSchemaRegistryTest extends TestCase
 		$this->assertSame(
 			[
 				'id' => 'bi:check',
-				'color' => '#ff0000',
-				'class' => 'cms-node-icon',
-				'style' => 'height: 1rem',
+				'args' => [
+					'color' => '#ff0000',
+					'class' => 'cms-node-icon',
+					'style' => 'height: 1rem',
+				],
 			],
 			$schema->icon,
 		);

@@ -53,12 +53,8 @@ final class PluginIconsTest extends TestCase
 	private function provider(): IconsContract
 	{
 		return new class implements IconsContract {
-			public function icon(
-				string $id,
-				?string $color = null,
-				?string $class = null,
-				?string $style = null,
-			): string {
+			public function icon(string $id, array $args = []): string
+			{
 				return '';
 			}
 		};

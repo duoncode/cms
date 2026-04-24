@@ -24,21 +24,8 @@ class IconHandler extends Handler
 		return [
 			'icon' => [
 				'id' => $id,
-				'color' => $this->normalize($meta->color),
-				'class' => $this->normalize($meta->class),
-				'style' => $this->normalize($meta->style),
+				'args' => $meta->args,
 			],
 		];
-	}
-
-	private function normalize(?string $value): ?string
-	{
-		if ($value === null) {
-			return null;
-		}
-
-		$value = trim($value);
-
-		return $value === '' ? null : $value;
 	}
 }

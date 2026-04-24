@@ -7,7 +7,7 @@ namespace Duon\Cms;
 final class NavMeta
 {
 	/**
-	 * @param array{id: string, color: ?string, class: ?string, style: ?string}|null $icon
+	 * @param array{id: string, args: array<array-key, mixed>}|null $icon
 	 */
 	public function __construct(
 		public string $label,

@@ -305,9 +305,7 @@ abstract class Collection implements NavigationItem
 				? null
 				: [
 					'id' => $icon,
-					'color' => null,
-					'class' => null,
-					'style' => null,
+					'args' => [],
 				],
 			badge: static::$badge,
 			permission: static::$permission,
@@ -316,12 +314,9 @@ abstract class Collection implements NavigationItem
 		);
 	}
 
-	public function icon(
-		string $id,
-		?string $color = null,
-		?string $class = null,
-		?string $style = null,
-	): static {
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): static
+	{
 		$id = trim($id);
 
 		if ($id === '') {
@@ -330,9 +325,7 @@ abstract class Collection implements NavigationItem
 
 		$this->meta->icon = [
 			'id' => $id,
-			'color' => $this->normalizeIconValue($color),
-			'class' => $this->normalizeIconValue($class),
-			'style' => $this->normalizeIconValue($style),
+			'args' => $args,
 		];
 
 		return $this;
@@ -357,16 +350,5 @@ abstract class Collection implements NavigationItem
 		$class = basename(str_replace('\\', '/', static::class));
 
 		return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $class);
-	}
-
-	private function normalizeIconValue(?string $value): ?string
-	{
-		if ($value === null) {
-			return null;
-		}
-
-		$value = trim($value);
-
-		return $value === '' ? null : $value;
 	}
 }

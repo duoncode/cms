@@ -8,5 +8,5 @@ use Duon\Cms\Schema\Icon;
 use Duon\Cms\Schema\Label;
 
 #[Label('Node with icon')]
-#[Icon('bi:check', color: '#ff0000', class: 'cms-node-icon', style: 'height: 1rem')]
+#[Icon('bi:check', ['color' => '#ff0000', 'class' => 'cms-node-icon', 'style' => 'height: 1rem'])]
 class NodeWithIconAttribute {}

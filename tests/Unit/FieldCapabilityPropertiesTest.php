@@ -148,9 +148,11 @@ final class FieldCapabilityPropertiesTest extends TestCase
 		$this->assertSame(
 			[
 				'id' => 'bi:type',
-				'color' => '#00ff00',
-				'class' => 'cms-field-icon',
-				'style' => 'width: 1rem',
+				'args' => [
+					'color' => '#00ff00',
+					'class' => 'cms-field-icon',
+					'style' => 'width: 1rem',
+				],
 			],
 			$field->properties()['icon'],
 		);

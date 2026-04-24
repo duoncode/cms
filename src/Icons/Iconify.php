@@ -22,19 +22,16 @@ final class Iconify implements Contract\Icons
 			: Closure::fromCallable($fetch);
 	}
 
-	public function icon(
-		string $id,
-		?string $color = null,
-		?string $class = null,
-		?string $style = null,
-	): string {
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): string
+	{
 		$parts = $this->split($id);
 
 		if ($parts === null) {
 			return '';
 		}
 
-		$svg = $this->loadSvg($id, $parts['prefix'], $parts['name']);
+		$svg = $this->loadSvg($id, $parts['prefix'], $parts['name'], $args);
 
 		return $svg ?? '';
 	}
@@ -64,9 +61,10 @@ final class Iconify implements Contract\Icons
 		return ['prefix' => $prefix, 'name' => $name];
 	}
 
-	private function loadSvg(string $id, string $prefix, string $name): ?string
+	/** @param array<array-key, mixed> $args */
+	private function loadSvg(string $id, string $prefix, string $name, array $args): ?string
 	{
-		$file = $this->cacheFile($id);
+		$file = $this->cacheFile($id, $args);
 
 		if ($file !== null && is_file($file)) {
 			$cached = file_get_contents($file);
@@ -76,7 +74,7 @@ final class Iconify implements Contract\Icons
 			}
 		}
 
-		$url = $this->iconUrl($prefix, $name);
+		$url = $this->iconUrl($prefix, $name, $args);
 		$timeout = max((int) $this->config->get('icons.iconify.timeout', 5), 1);
 		$userAgent = trim((string) $this->config->get('icons.iconify.user_agent', 'duon/cms'));
 		$userAgent = $userAgent === '' ? 'duon/cms' : $userAgent;
@@ -93,12 +91,64 @@ final class Iconify implements Contract\Icons
 		return $svg;
 	}
 
-	private function iconUrl(string $prefix, string $name): string
+	/** @param array<array-key, mixed> $args */
+	private function iconUrl(string $prefix, string $name, array $args): string
 	{
 		$base = trim((string) $this->config->get('icons.iconify.base_url', 'https://api.iconify.design'));
 		$base = $base === '' ? 'https://api.iconify.design' : rtrim($base, '/');
+		$url = sprintf('%s/%s/%s.svg', $base, rawurlencode($prefix), rawurlencode($name));
+		$query = $this->query($args);
 
-		return sprintf('%s/%s/%s.svg', $base, rawurlencode($prefix), rawurlencode($name));
+		return $query === '' ? $url : $url . '?' . $query;
+	}
+
+	/** @param array<array-key, mixed> $args */
+	private function query(array $args): string
+	{
+		$args = $this->queryArgs($args);
+
+		if ($args === []) {
+			return '';
+		}
+
+		return http_build_query($args, '', '&', PHP_QUERY_RFC3986);
+	}
+
+	/**
+	 * @param array<array-key, mixed> $args
+	 * @return array<array-key, mixed>
+	 */
+	private function queryArgs(array $args): array
+	{
+		$query = [];
+
+		foreach ($args as $key => $value) {
+			$value = $this->queryValue($value);
+
+			if ($value !== null) {
+				$query[$key] = $value;
+			}
+		}
+
+		if (!array_is_list($query)) {
+			ksort($query, SORT_STRING);
+		}
+
+		return $query;
+	}
+
+	/** @return scalar|array<array-key, mixed>|null */
+	private function queryValue(mixed $value): mixed
+	{
+		if (is_scalar($value)) {
+			return $value;
+		}
+
+		if (is_array($value)) {
+			return $this->queryArgs($value);
+		}
+
+		return null;
 	}
 
 	private function request(string $url, int $timeout, string $userAgent): ?string
@@ -128,7 +178,8 @@ final class Iconify implements Contract\Icons
 		return $body;
 	}
 
-	private function cacheFile(string $id): ?string
+	/** @param array<array-key, mixed> $args */
+	private function cacheFile(string $id, array $args): ?string
 	{
 		$dir = $this->cacheDir();
 
@@ -136,7 +187,10 @@ final class Iconify implements Contract\Icons
 			return null;
 		}
 
-		return $dir . DIRECTORY_SEPARATOR . hash('xxh3', $id) . '.svg';
+		$query = $this->query($args);
+		$cacheId = $query === '' ? $id : $id . '?' . $query;
+
+		return $dir . DIRECTORY_SEPARATOR . hash('xxh3', $cacheId) . '.svg';
 	}
 
 	private function cacheDir(): ?string

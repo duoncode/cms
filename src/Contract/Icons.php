@@ -6,10 +6,6 @@ namespace Duon\Cms\Contract;
 
 interface Icons
 {
-	public function icon(
-		string $id,
-		?string $color = null,
-		?string $class = null,
-		?string $style = null,
-	): string;
+	/** @param array<array-key, mixed> $args */
+	public function icon(string $id, array $args = []): string;
 }

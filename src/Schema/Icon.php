@@ -9,10 +9,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
 readonly class Icon
 {
+	/** @param array<array-key, mixed> $args */
 	public function __construct(
 		public string $id,
-		public ?string $color = null,
-		public ?string $class = null,
-		public ?string $style = null,
+		public array $args = [],
 	) {}
 }

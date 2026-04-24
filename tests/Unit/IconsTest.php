@@ -204,6 +204,72 @@ final class IconsTest extends TestCase
 		}
 	}
 
+	public function testIconifyPassesArgsAsQueryString(): void
+	{
+		$publicDir = $this->publicDir();
+		$calls = 0;
+
+		try {
+			$icons = $this->icons(
+				$publicDir,
+				function (string $url, int $timeout, string $userAgent) use (&$calls): string {
+					$calls++;
+					$this->assertSame(
+						'https://api.iconify.design/bi/check.svg?color=%23ff0000&height=24&width=24',
+						$url,
+					);
+					$this->assertSame(5, $timeout);
+					$this->assertSame('duon/cms', $userAgent);
+
+					return '<svg data-source="remote"></svg>';
+				},
+			);
+			$svg = $icons->icon('bi:check', [
+				'width' => 24,
+				'color' => '#ff0000',
+				'height' => 24,
+			]);
+
+			$this->assertSame(1, $calls);
+			$this->assertSame('<svg data-source="remote"></svg>', $svg);
+		} finally {
+			$this->removeDir($publicDir);
+		}
+	}
+
+	public function testIconifyCacheIncludesArgs(): void
+	{
+		$publicDir = $this->publicDir();
+		$urls = [];
+
+		try {
+			$icons = $this->icons(
+				$publicDir,
+				static function (string $url) use (&$urls): string {
+					$urls[] = $url;
+
+					return '<svg data-call="' . count($urls) . '"></svg>';
+				},
+			);
+			$red = $icons->icon('bi:check', ['color' => 'red']);
+			$blue = $icons->icon('bi:check', ['color' => 'blue']);
+			$redAgain = $icons->icon('bi:check', ['color' => 'red']);
+
+			$this->assertSame('<svg data-call="1"></svg>', $red);
+			$this->assertSame('<svg data-call="2"></svg>', $blue);
+			$this->assertSame($red, $redAgain);
+			$this->assertSame(
+				[
+					'https://api.iconify.design/bi/check.svg?color=red',
+					'https://api.iconify.design/bi/check.svg?color=blue',
+				],
+				$urls,
+			);
+		} finally {
+			$this->removeDir($publicDir);
+		}
+	}
+
 	public function testInvalidResponseReturnsEmptyString(): void
 	{
 		$publicDir = $this->publicDir();
@@ -222,22 +288,30 @@ final class IconsTest extends TestCase
 		}
 	}
 
-	public function testIconAddsClassStyleAndColorToSvgTag(): void
+	public function testLocalIconAddsClassStyleAndColorToSvgTag(): void
 	{
 		$publicDir = $this->publicDir();
+		$calls = 0;
+		$iconsPath = $publicDir . '/custom-icons';
+		$this->writeSvg($iconsPath . '/logo.svg', '<svg class="base" style="display: block"></svg>');
 
 		try {
 			$icons = $this->icons(
 				$publicDir,
-				static fn(): string => '<svg class="base" style="display: block"></svg>',
-			);
-			$svg = $icons->icon(
-				'bi:check',
-				color: '#ff0000',
-				class: 'extra',
-				style: 'height: 2rem',
-			);
+				static function () use (&$calls): string {
+					$calls++;
 
+					return '<svg></svg>';
+				},
+				['icons.local.paths' => [$iconsPath]],
+			);
+			$svg = $icons->icon('logo', [
+				'color' => '#ff0000',
+				'class' => 'extra',
+				'style' => 'height: 2rem',
+			]);
+
+			$this->assertSame(0, $calls);
 			$this->assertStringContainsString('class="base extra"', $svg);
 			$this->assertStringContainsString('display: block', $svg);
 			$this->assertStringContainsString('height: 2rem', $svg);

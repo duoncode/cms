@@ -9,6 +9,6 @@ use Duon\Cms\Schema\Icon;
 
 class NodeWithFieldIconAttribute
 {
-	#[Icon('bi:type', color: '#00ff00', class: 'cms-field-icon', style: 'width: 1rem')]
+	#[Icon('bi:type', ['color' => '#00ff00', 'class' => 'cms-field-icon', 'style' => 'width: 1rem'])]
 	protected Text $title;
 }

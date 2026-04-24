@@ -121,9 +121,11 @@ final class TypesTest extends TestCase
 		$this->assertSame(
 			[
 				'id' => 'bi:check',
-				'color' => '#ff0000',
-				'class' => 'cms-node-icon',
-				'style' => 'height: 1rem',
+				'args' => [
+					'color' => '#ff0000',
+					'class' => 'cms-node-icon',
+					'style' => 'height: 1rem',
+				],
 			],
 			$this->types->get(NodeWithIconAttribute::class, 'icon'),
 		);

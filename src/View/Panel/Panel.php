@@ -85,7 +85,7 @@ abstract class Panel
 		return $navigation->items();
 	}
 
-	/** @param array{id: string, color: ?string, class: ?string, style: ?string}|null $icon */
+	/** @param array{id: string, args?: array<array-key, mixed>}|null $icon */
 	private function renderIcon(?array $icon): string
 	{
 		if ($icon === null) {
@@ -104,11 +104,8 @@ abstract class Panel
 			return '';
 		}
 
-		return $service->icon(
-			trim($id),
-			color: is_string($icon['color'] ?? null) ? $icon['color'] : null,
-			class: is_string($icon['class'] ?? null) ? $icon['class'] : null,
-			style: is_string($icon['style'] ?? null) ? $icon['style'] : null,
-		);
+		$args = $icon['args'] ?? [];
+
+		return $service->icon(trim($id), is_array($args) ? $args : []);
 	}
 }
