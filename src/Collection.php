@@ -301,12 +301,14 @@ abstract class Collection implements NavigationItem
 
 		return new NavMeta(
 			label: static::$name ?: static::humanizeClassName(),
-			icon: $icon === null || $icon === '' ? null : [
-				'id' => $icon,
-				'color' => null,
-				'class' => null,
-				'style' => null,
-			],
+			icon: $icon === null || $icon === ''
+				? null
+				: [
+					'id' => $icon,
+					'color' => null,
+					'class' => null,
+					'style' => null,
+				],
 			badge: static::$badge,
 			permission: static::$permission,
 			hidden: static::$hidden,

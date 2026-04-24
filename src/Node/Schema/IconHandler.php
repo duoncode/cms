@@ -14,12 +14,14 @@ class IconHandler extends Handler
 			return ['icon' => null];
 		}
 
-		return ['icon' => [
-			'id' => $id,
-			'color' => $this->normalize($meta->color),
-			'class' => $this->normalize($meta->class),
-			'style' => $this->normalize($meta->style),
-		]];
+		return [
+			'icon' => [
+				'id' => $id,
+				'color' => $this->normalize($meta->color),
+				'class' => $this->normalize($meta->class),
+				'style' => $this->normalize($meta->style),
+			],
+		];
 	}
 
 	private function normalize(?string $value): ?string
