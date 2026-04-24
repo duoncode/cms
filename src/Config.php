@@ -22,6 +22,7 @@ class Config implements ConfigInterface
 			'path.prefix' => '',
 			'path.assets' => '/assets',
 			'path.cache' => '/cache',
+			'path.views' => '/views',
 			'path.panel' => '/cms',
 			'path.api' => null,
 			'panel.theme' => null,
