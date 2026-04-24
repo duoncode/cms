@@ -46,7 +46,11 @@ final class Iconify implements Contract\Icons
 	{
 		$id = trim($id);
 
-		if (!preg_match('/^(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i', $id, $matches)) {
+		if (!preg_match(
+			'/^(?<prefix>[a-z0-9]+(?:[-_][a-z0-9]+)*):(?<name>[a-z0-9]+(?:[-_][a-z0-9]+)*)$/i',
+			$id,
+			$matches,
+		)) {
 			return null;
 		}
 
@@ -150,7 +154,8 @@ final class Iconify implements Contract\Icons
 			return null;
 		}
 
-		$target = rtrim($publicDir, '\\/')
+		$target =
+			rtrim($publicDir, '\\/')
 			. DIRECTORY_SEPARATOR
 			. ltrim($cacheDir, '\\/')
 			. DIRECTORY_SEPARATOR
@@ -174,12 +179,34 @@ final class Iconify implements Contract\Icons
 		$temp = $file . '.tmp.' . bin2hex(random_bytes(6));
 
 		if (file_put_contents($temp, $svg, LOCK_EX) === false) {
-			@unlink($temp);
+			$this->deleteFile($temp);
 			return;
 		}
 
-		if (!@rename($temp, $file)) {
-			@unlink($temp);
+		if (!$this->moveFile($temp, $file)) {
+			$this->deleteFile($temp);
+		}
+	}
+
+	private function moveFile(string $source, string $target): bool
+	{
+		return $this->filesystemOperation(static fn(): bool => rename($source, $target));
+	}
+
+	private function deleteFile(string $file): void
+	{
+		$this->filesystemOperation(static fn(): bool => unlink($file));
+	}
+
+	/** @param Closure(): bool $operation */
+	private function filesystemOperation(Closure $operation): bool
+	{
+		set_error_handler(static fn(): bool => true);
+
+		try {
+			return $operation();
+		} finally {
+			restore_error_handler();
 		}
 	}
 
