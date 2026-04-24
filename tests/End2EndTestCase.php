@@ -227,6 +227,7 @@ class End2EndTestCase extends IntegrationTestCase
 			'db.dsn' => 'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
 			'path.root' => self::root(),
 			'path.public' => self::root() . '/public',
+			'path.views' => '/tests/Fixtures/templates',
 			'path.uploads' => self::root() . '/public/uploads',
 			'path.api' => '/api',
 			'path.panel' => '/panel',
@@ -272,19 +273,6 @@ class End2EndTestCase extends IntegrationTestCase
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestDocument::class);
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestMediaDocument::class);
 
-		$plugin->renderer('template', \Duon\Cms\Boiler\Renderer::class)->args(
-			dirs: self::root() . '/tests/Fixtures/templates',
-			autoescape: true,
-			trusted: [
-				Node::class,
-				Cms::class,
-				\Duon\Cms\Locales::class,
-				\Duon\Cms\Locale::class,
-				\Duon\Cms\Config::class,
-				Request::class,
-			],
-		);
-
 		return $plugin;
 	}
 
@@ -294,7 +282,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$logger = new NullLogger();
 
 		// Set environment variables for error handler (it uses env() function)
-		$_ENV['CMS_DEBUG'] = false; // Disable debug mode (Whoops not available in tests)
+		$_ENV['CMS_DEBUG'] = false; // Disable debug mode for deterministic error responses
 		$_ENV['CMS_ENV'] = 'test';
 
 		$handler = new Handler($root, $logger, $factory);

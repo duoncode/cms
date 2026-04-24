@@ -6,12 +6,14 @@ namespace Duon\Cms;
 
 use Duon\Cms\Boiler\Renderer as BoilerRenderer;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Node\Node;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
 use Duon\Container\Entry;
 use Duon\Core\App;
 use Duon\Core\Factory;
 use Duon\Core\Plugin as CorePlugin;
+use Duon\Core\Request;
 use Duon\Quma\Connection;
 use Duon\Quma\Database;
 use Duon\Router\Route;
@@ -50,6 +52,7 @@ class Plugin implements CorePlugin
 		$this->config = $app->config();
 
 		$this->addPanelRenderer();
+		$this->addViewRenderer();
 
 		$this->collect();
 		$this->database();
@@ -216,5 +219,50 @@ class Plugin implements CorePlugin
 			dirs: "{$root}/panel/views",
 			autoescape: true,
 		);
+	}
+
+	protected function addViewRenderer(): void
+	{
+		if ($this->hasRenderer('view')) {
+			return;
+		}
+
+		$this->renderer('view', BoilerRenderer::class)->args(
+			dirs: $this->viewPath(),
+			autoescape: true,
+			trusted: $this->trustedViewClasses(),
+		);
+	}
+
+	protected function hasRenderer(string $id): bool
+	{
+		foreach ($this->renderers as $entry) {
+			if ($entry->id === $id) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function viewPath(): string
+	{
+		$root = (string) $this->config->get('path.root', getcwd() ?: '.');
+		$views = (string) $this->config->get('path.views');
+
+		return rtrim($root, '/') . '/' . ltrim($views, '/');
+	}
+
+	/** @return list<class-string> */
+	protected function trustedViewClasses(): array
+	{
+		return [
+			Node::class,
+			Cms::class,
+			Locales::class,
+			Locale::class,
+			Config::class,
+			Request::class,
+		];
 	}
 }

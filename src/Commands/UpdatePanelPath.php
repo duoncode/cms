@@ -18,10 +18,11 @@ class UpdatePanelPath extends Command
 	protected string $panelPath;
 	protected string $publicPath;
 
-	protected const string defaultPath = '/cms';
+	protected const string DEFAULT_PATH = '/cms';
 
-	public function __construct(private Config $config)
-	{
+	public function __construct(
+		private Config $config,
+	) {
 		$this->prefix = $this->config->get('path.prefix');
 		$this->panelPath = $this->config->get('path.panel');
 		$this->publicPath = $this->config->get('path.public') . $this->panelPath;
@@ -29,15 +30,13 @@ class UpdatePanelPath extends Command
 
 	public function run(): int
 	{
-		$defaultPublicPath = $this->config->get('path.public') . self::defaultPath;
+		$defaultPublicPath = $this->config->get('path.public') . self::DEFAULT_PATH;
 		$panelPathExists = is_dir($this->publicPath);
 		$defaultPathExists = is_dir($defaultPublicPath);
 
-		if ($this->panelPath !== self::defaultPath && !$panelPathExists && $defaultPathExists) {
+		if ($this->panelPath !== self::DEFAULT_PATH && !$panelPathExists && $defaultPathExists) {
 			$this->info(
-				'Renaming panel directory from '
-					. $this->removeCwdFromPath($defaultPublicPath)
-					. ' to '
+				'Renaming panel directory from ' . $this->removeCwdFromPath($defaultPublicPath) . ' to '
 					. $this->removeCwdFromPath($this->publicPath),
 			);
 
@@ -53,9 +52,7 @@ class UpdatePanelPath extends Command
 
 		if (!$panelPathExists && !$defaultPathExists) {
 			$this->error(
-				'Panel directory does not exist: '
-					. $this->removeCwdFromPath($this->publicPath)
-					. ' and '
+				'Panel directory does not exist: ' . $this->removeCwdFromPath($this->publicPath) . ' and '
 					. $this->removeCwdFromPath($defaultPublicPath),
 			);
 
@@ -92,12 +89,14 @@ class UpdatePanelPath extends Command
 		$files = [];
 
 		foreach ($iterator as $file) {
-			if ($file->isFile() && in_array($file->getExtension(), ['js', 'css', 'html'])) {
-				$content = file_get_contents($file->getPathname());
+			if (!$file->isFile() || !in_array($file->getExtension(), ['js', 'css', 'html'], true)) {
+				continue;
+			}
 
-				if (strpos($content, self::defaultPath) !== false) {
-					$files[] = $file->getPathname();
-				}
+			$content = file_get_contents($file->getPathname());
+
+			if ($content !== false && str_contains($content, self::DEFAULT_PATH)) {
+				$files[] = $file->getPathname();
 			}
 		}
 
@@ -113,7 +112,7 @@ class UpdatePanelPath extends Command
 		}
 
 		$content = file_get_contents($file);
-		$updatedContent = str_replace(self::defaultPath, $this->prefix . $this->panelPath, $content);
+		$updatedContent = str_replace(self::DEFAULT_PATH, $this->prefix . $this->panelPath, $content);
 
 		if ($content === $updatedContent) {
 			$this->warn('No changes were made to the panel path: ' . $this->removeCwdFromPath($file));
