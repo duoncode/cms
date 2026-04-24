@@ -43,22 +43,24 @@ class MatrixIntegrationTest extends TestCase
 		$nodeFactory = new Factory($this->container(), types: new Types());
 		$hydrator = $nodeFactory->hydrator();
 
-		$node = $nodeFactory->create(TestNodeWithMatrix::class, $context, $cms, ['content' => [
-			'title' => ['type' => 'text', 'value' => ['en' => 'Test Node']],
-			'matrix' => [
-				'type' => 'matrix',
-				'value' => [
-					[
-						'title' => ['type' => 'text', 'value' => ['en' => 'First Item']],
-						'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
-					],
-					[
-						'title' => ['type' => 'text', 'value' => ['en' => 'Second Item']],
-						'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+		$node = $nodeFactory->create(TestNodeWithMatrix::class, $context, $cms, [
+			'content' => [
+				'title' => ['type' => 'text', 'value' => ['en' => 'Test Node']],
+				'matrix' => [
+					'type' => 'matrix',
+					'value' => [
+						[
+							'title' => ['type' => 'text', 'value' => ['en' => 'First Item']],
+							'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+						],
+						[
+							'title' => ['type' => 'text', 'value' => ['en' => 'Second Item']],
+							'content' => ['type' => 'grid', 'columns' => 12, 'value' => ['en' => []]],
+						],
 					],
 				],
 			],
-		]]);
+		]);
 
 		// Test that matrix field exists and is accessible
 		$matrixField = $hydrator->getField($node, 'matrix');

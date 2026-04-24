@@ -20,8 +20,9 @@ class UpdatePanelPath extends Command
 
 	protected const string defaultPath = '/cms';
 
-	public function __construct(private Config $config)
-	{
+	public function __construct(
+		private Config $config,
+	) {
 		$this->prefix = $this->config->get('path.prefix');
 		$this->panelPath = $this->config->get('path.panel');
 		$this->publicPath = $this->config->get('path.public') . $this->panelPath;
@@ -35,9 +36,7 @@ class UpdatePanelPath extends Command
 
 		if ($this->panelPath !== self::defaultPath && !$panelPathExists && $defaultPathExists) {
 			$this->info(
-				'Renaming panel directory from '
-					. $this->removeCwdFromPath($defaultPublicPath)
-					. ' to '
+				'Renaming panel directory from ' . $this->removeCwdFromPath($defaultPublicPath) . ' to '
 					. $this->removeCwdFromPath($this->publicPath),
 			);
 
@@ -53,9 +52,7 @@ class UpdatePanelPath extends Command
 
 		if (!$panelPathExists && !$defaultPathExists) {
 			$this->error(
-				'Panel directory does not exist: '
-					. $this->removeCwdFromPath($this->publicPath)
-					. ' and '
+				'Panel directory does not exist: ' . $this->removeCwdFromPath($this->publicPath) . ' and '
 					. $this->removeCwdFromPath($defaultPublicPath),
 			);
 
