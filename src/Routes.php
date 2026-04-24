@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
+use Duon\Cms\Controller\Auth;
+use Duon\Cms\Controller\Embed;
+use Duon\Cms\Controller\Media;
+use Duon\Cms\Controller\Nodes;
+use Duon\Cms\Controller\OldPanel;
+use Duon\Cms\Controller\Page;
+use Duon\Cms\Controller\Panel;
+use Duon\Cms\Controller\User;
 use Duon\Cms\Middleware\InitRequest;
 use Duon\Cms\Middleware\PanelAuth;
 use Duon\Cms\Middleware\Session;
-use Duon\Cms\View\Auth;
-use Duon\Cms\View\Embed;
-use Duon\Cms\View\Media;
-use Duon\Cms\View\Nodes;
-use Duon\Cms\View\OldPanel;
-use Duon\Cms\View\Page;
-use Duon\Cms\View\Panel;
-use Duon\Cms\View\User;
 use Duon\Core\App;
 use Duon\Core\Factory;
 use Duon\Quma\Database;

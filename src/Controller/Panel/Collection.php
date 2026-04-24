@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\View\Panel;
+namespace Duon\Cms\Controller\Panel;
 
 use Duon\Cms\Collection as CmsCollection;
 use Duon\Cms\Exception\RuntimeException;

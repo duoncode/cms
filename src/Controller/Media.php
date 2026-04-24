@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\View;
+namespace Duon\Cms\Controller;
 
 use Duon\Cms\Assets\Assets;
 use Duon\Cms\Assets\ResizeMode;

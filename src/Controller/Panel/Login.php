@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Cms\View\Panel;
+namespace Duon\Cms\Controller\Panel;
 
 use Duon\Cms\Auth as CmsAuth;
 use Duon\Cms\Config;

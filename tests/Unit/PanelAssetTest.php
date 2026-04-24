@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
+use Duon\Cms\Controller\Panel\Assets;
 use Duon\Cms\Tests\TestCase;
-use Duon\Cms\View\Panel\Assets;
 use Duon\Core\Exception\HttpNotFound;
 use Duon\Core\Request;
 
