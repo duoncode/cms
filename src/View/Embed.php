@@ -12,6 +12,7 @@ use Duon\Core\Exception\HttpUnauthorized;
 use Duon\Core\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
+use SensitiveParameter;
 
 class Embed
 {
@@ -22,17 +23,17 @@ class Embed
 		protected readonly Users $users,
 	) {}
 
-	public function node(string $token, string $type, string $node): Response
+	public function node(#[SensitiveParameter] string $token, string $type, string $node): Response
 	{
 		return $this->bootstrap($token, $this->embedPath($type, $node));
 	}
 
-	public function create(string $token, string $type): Response
+	public function create(#[SensitiveParameter] string $token, string $type): Response
 	{
 		return $this->bootstrap($token, $this->embedCreatePath($type));
 	}
 
-	protected function bootstrap(string $token, string $path): Response
+	protected function bootstrap(#[SensitiveParameter] string $token, string $path): Response
 	{
 		$auth = new Auth(
 			$this->request->unwrap(),
