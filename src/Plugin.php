@@ -7,6 +7,8 @@ namespace Duon\Cms;
 use Duon\Cms\Boiler\Renderer as BoilerRenderer;
 use Duon\Cms\Contract\Icons as IconsContract;
 use Duon\Cms\Exception\RuntimeException;
+use Duon\Cms\Icons\Iconify;
+use Duon\Cms\Icons\Local;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
 use Duon\Container\Entry;
@@ -36,12 +38,19 @@ class Plugin implements CorePlugin
 	protected readonly Navigation $navigation;
 	protected array $nodes = [];
 
+	/** @var list<class-string<IconsContract>|IconsContract> */
+	protected array $iconProviders = [];
+
 	public function __construct(
 		protected readonly bool $sessionEnabled = false,
 		?Types $types = null,
 	) {
 		$this->types = $types ?? new Types();
 		$this->navigation = new Navigation();
+		$this->iconProviders = [
+			Local::class,
+			Iconify::class,
+		];
 	}
 
 	public function load(App $app): void
@@ -87,6 +96,16 @@ class Plugin implements CorePlugin
 				->tag(Renderer::class)
 				->addEntry($entry);
 		}
+
+		foreach ($this->iconProviders as $index => $provider) {
+			$providerName = is_string($provider) ? $provider : $provider::class;
+			$this->container
+				->tag(IconsContract::class)
+				->add(
+					sprintf('icons.%d.%s', $index, str_replace('\\\\', '.', $providerName)),
+					$provider,
+				);
+		}
 	}
 
 	public function section(string $name): Section
@@ -98,6 +117,22 @@ class Plugin implements CorePlugin
 	public function collection(string $class): Collection
 	{
 		return $this->navigation->collection($class);
+	}
+
+	/**
+	 * @param class-string<IconsContract>|IconsContract $icons
+	 */
+	public function icons(string|IconsContract $icons, bool $replace = false): void
+	{
+		if (is_string($icons) && !is_a($icons, IconsContract::class, true)) {
+			throw new RuntimeException('Icons providers must implement ' . IconsContract::class);
+		}
+
+		if ($replace) {
+			$this->iconProviders = [];
+		}
+
+		array_unshift($this->iconProviders, $icons);
 	}
 
 	public function navigation(): Navigation

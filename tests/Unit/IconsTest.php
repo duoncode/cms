@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
+use Duon\Cms\Config;
+use Duon\Cms\Contract\Icons as IconsContract;
 use Duon\Cms\Icons;
+use Duon\Cms\Icons\Iconify;
+use Duon\Cms\Icons\Local;
 use Duon\Cms\Tests\TestCase;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -106,7 +110,7 @@ final class IconsTest extends TestCase
 
 					return '<svg data-source="remote"></svg>';
 				},
-				['icons.paths' => [$iconsPath]],
+				['icons.local.paths' => [$iconsPath]],
 			);
 			$svg = $icons->icon('bi:check');
 
@@ -132,7 +136,7 @@ final class IconsTest extends TestCase
 
 					return '<svg data-source="remote"></svg>';
 				},
-				['icons.paths' => [$iconsPath]],
+				['icons.local.paths' => [$iconsPath]],
 			);
 			$svg = $icons->icon('logo');
 
@@ -160,7 +164,7 @@ final class IconsTest extends TestCase
 
 					return '<svg data-source="remote"></svg>';
 				},
-				['icons.paths' => [$first, $second]],
+				['icons.local.paths' => [$first, $second]],
 			);
 			$svg = $icons->icon('logo');
 
@@ -189,7 +193,7 @@ final class IconsTest extends TestCase
 
 					return '<svg data-source="remote"></svg>';
 				},
-				['icons.paths' => [$iconsPath]],
+				['icons.local.paths' => [$iconsPath]],
 			);
 			$svg = $icons->icon('bi:check');
 
@@ -266,8 +270,12 @@ final class IconsTest extends TestCase
 			'path.public' => $publicDir,
 			'path.cache' => '/cache',
 		], $settings));
+		$container = $this->container();
+		$container->add(Config::class, $config);
+		$container->tag(IconsContract::class)->add('local', new Local($config));
+		$container->tag(IconsContract::class)->add('iconify', new Iconify($config, $fetch));
 
-		return new Icons($config, $fetch);
+		return new Icons($container, $config);
 	}
 
 	private function writeSvg(string $file, string $svg): void
