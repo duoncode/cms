@@ -78,7 +78,7 @@ final class Handler
 		$handler->renderer($rendererFactory->withTemplate('http-error'), HttpError::class);
 		$handler->renderer($rendererFactory->withTemplate('http-server-error'));
 
-		if (env('CMS_DEBUG')) {
+		if (env('CMS_DEBUG') && WhoopsHandler::available()) {
 			$handler->debugHandler(new WhoopsHandler());
 		}
 

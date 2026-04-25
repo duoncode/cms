@@ -26,14 +26,17 @@
 		"duon/quma": "^0.1",
 		"duon/session": "^0.1",
 		"duon/sire": "^0.3",
-		"filp/whoops": "^2.15",
 		"gumlet/php-image-resize": "2.0.*",
 		"hidehalo/nanoid-php": "^2",
 		"psr/log": "^3.0"
 	},
 	"require-dev": {
 		"duon/dev": "^3.0",
+		"filp/whoops": "^2.15",
 		"laminas/laminas-diactoros": "^3"
+	},
+	"suggest": {
+		"filp/whoops": "Enables pretty debug error pages in debug mode."
 	},
 	"autoload": {
 		"psr-4": {
