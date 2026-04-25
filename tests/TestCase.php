@@ -107,7 +107,10 @@ class TestCase extends BaseTestCase
 
 	public function config(array $settings = [], bool $debug = false): Config
 	{
-		return new Config('duon', debug: $debug, settings: $settings);
+		return new Config(self::root(), array_merge([
+			'app.name' => 'duon',
+			'app.debug' => $debug,
+		], $settings));
 	}
 
 	public function request(

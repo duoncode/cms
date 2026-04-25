@@ -143,7 +143,10 @@ final class HandlerTest extends TestCase
 	/** @param array<string, mixed> $settings */
 	private function errorConfig(array $settings = [], bool $debug = false): Config
 	{
-		return new Config('duon', debug: $debug, env: 'test', settings: array_merge([
+		return new Config(self::root(), array_merge([
+			'app.name' => 'duon',
+			'app.debug' => $debug,
+			'app.env' => 'test',
 			'path.root' => self::root(),
 			'path.views' => '/tests/Fixtures/Boiler/templates',
 		], $settings));

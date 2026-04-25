@@ -4,21 +4,29 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
+use Dotenv\Dotenv;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
+
+use function Duon\Core\env;
 
 class Config
 {
 	/** @var array<string, mixed> */
 	protected array $settings = [];
 
-	public function __construct(
-		public readonly string $app = 'cms',
-		public readonly bool $debug = false,
-		public readonly string $env = '',
-		array $settings = [],
-	) {
+	protected readonly Dotenv $dotenv;
+
+	public function __construct(string $root, array $settings = [])
+	{
+		$root = $this->normalizeRoot($root);
+		$this->dotenv = Dotenv::createImmutable($root);
+		$this->dotenv->safeLoad();
 		$this->settings = array_merge([
+			'app.name' => 'duoncms',
+			'app.debug' => env('CMS_DEBUG', false),
+			'app.env' => env('CMS_ENV', ''),
+			'path.root' => $root,
 			'path.prefix' => '',
 			'path.assets' => '/assets',
 			'path.cache' => '/cache',
@@ -253,11 +261,23 @@ class Config
 				'ẞ' => 'SS',
 			],
 		], $settings);
-		$this->validateApp($app);
+		$this->validateApp($this->settings['app.name']);
+	}
+
+	/** @param non-empty-string|list<non-empty-string> $variables */
+	public function requireEnv(string|array $variables): self
+	{
+		$this->dotenv->required($variables);
+
+		return $this;
 	}
 
 	public function set(string $key, mixed $value): void
 	{
+		if ($key === 'app.name') {
+			$this->validateApp($value);
+		}
+
 		$this->settings[$key] = $value;
 	}
 
@@ -283,17 +303,17 @@ class Config
 
 	public function app(): string
 	{
-		return $this->app;
+		return (string) $this->get('app.name');
 	}
 
 	public function debug(): bool
 	{
-		return $this->debug;
+		return filter_var($this->get('app.debug'), FILTER_VALIDATE_BOOL);
 	}
 
 	public function panelPath(): string
 	{
-		if ($this->env === 'cms-development') {
+		if ($this->env() === 'cms-development') {
 			return '/cms';
 		}
 
@@ -307,15 +327,23 @@ class Config
 
 	public function env(): string
 	{
-		return $this->env;
+		return (string) $this->get('app.env');
 	}
 
-	protected function validateApp(string $app): void
+	protected function normalizeRoot(string $root): string
 	{
-		if (!preg_match('/^[a-zA-Z0-9_$-]{1,64}$/', $app)) {
+		if ($root === '') {
+			throw new ValueError('The root path must be a non-empty string.');
+		}
+
+		return rtrim($root, '/\\') ?: DIRECTORY_SEPARATOR;
+	}
+
+	protected function validateApp(mixed $app): void
+	{
+		if (!is_string($app) || !preg_match('/^[a-zA-Z0-9_$-]{1,64}$/', $app)) {
 			throw new ValueError(
-				'The app name must be a nonempty string which consist only of lower case '
-				. 'letters and numbers. Its length must not be longer than 32 characters.',
+				'The app name must be a non-empty string containing only letters, numbers, underscores, dollar signs, or hyphens. Its length must not be longer than 64 characters.',
 			);
 		}
 	}

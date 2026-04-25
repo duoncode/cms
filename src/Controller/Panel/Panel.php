@@ -27,8 +27,8 @@ abstract class Panel
 		$panelPath = $this->config->get('path.panel');
 
 		return array_merge([
-			'debug' => $this->config->debug,
-			'env' => $this->config->env,
+			'debug' => $this->config->debug(),
+			'env' => $this->config->env(),
 			'boosted' => $this->request->hasHeader('HX-Boosted'),
 			'htmx' => $this->request->hasHeader('HX-Request'),
 			'panelPath' => $this->config->get('path.panel'),

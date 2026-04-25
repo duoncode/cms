@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\Unit;
 
-use Duon\Cms\Config;
 use Duon\Cms\Tests\TestCase;
 use Duon\Cms\Util\Password;
 
@@ -37,7 +36,7 @@ final class PasswordTest extends TestCase
 
 	public function testPasswordInitFromConfig(): void
 	{
-		$config = new Config('duon');
+		$config = $this->config();
 		$hasArgon = Password::hasArgon2();
 
 		if ($hasArgon) {

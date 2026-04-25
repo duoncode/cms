@@ -7,7 +7,6 @@ namespace Duon\Cms\Tests\Unit\Boiler;
 use Duon\Boiler\Exception\LookupException;
 use Duon\Cms\Boiler\Renderer;
 use Duon\Cms\Boiler\RendererException;
-use Duon\Cms\Config;
 use Duon\Cms\Tests\Fixtures\Boiler\Whitelisted;
 use Duon\Cms\Tests\TestCase;
 
@@ -22,7 +21,7 @@ final class RendererTest extends TestCase
 	{
 		$renderer = new Renderer(
 			$this->templates(),
-			['config' => new Config('boiler')],
+			['config' => $this->config(['app.name' => 'boiler'])],
 			[],
 			true,
 		);
@@ -35,7 +34,7 @@ final class RendererTest extends TestCase
 	{
 		$renderer = new Renderer(
 			$this->templates()[0],
-			['config' => new Config('boiler')],
+			['config' => $this->config(['app.name' => 'boiler'])],
 			[],
 			true,
 		);

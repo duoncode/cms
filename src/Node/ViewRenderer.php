@@ -47,8 +47,8 @@ class ViewRenderer
 			'locales' => $request->get('locales'),
 			'request' => $request,
 			'container' => $this->container,
-			'debug' => $config->debug,
-			'env' => $config->env,
+			'debug' => $config->debug(),
+			'env' => $config->env(),
 		];
 
 		if ($node instanceof ProvidesRenderContext) {
@@ -83,8 +83,8 @@ class ViewRenderer
 			'locales' => $request->get('locales'),
 			'request' => $request,
 			'container' => $this->container,
-			'debug' => $config->debug,
-			'env' => $config->env,
+			'debug' => $config->debug(),
+			'env' => $config->env(),
 		], $context);
 
 		[$type, $id] = $this->resolveRenderer($node);

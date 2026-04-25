@@ -72,7 +72,7 @@ final class Icons implements Contract\Icons
 
 	private function failed(string $message): string
 	{
-		if (!$this->config->debug) {
+		if (!$this->config->debug()) {
 			return '';
 		}
 
