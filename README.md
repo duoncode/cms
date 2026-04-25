@@ -103,16 +103,21 @@ $config = new Config(settings: [
     'path.views' => '/views',
 ]);
 
-$cms = new Plugin();
+$cms = new Plugin($config);
 ```
 
 To replace the default renderer or pass custom Boiler arguments, register a `view` renderer before loading the plugin:
 
 ```php
 use Duon\Cms\Boiler\Renderer;
+use Duon\Cms\Config;
 use Duon\Cms\Plugin;
 
-$cms = new Plugin();
+$config = new Config(settings: [
+    'path.root' => __DIR__,
+]);
+
+$cms = new Plugin($config);
 $cms->renderer('view', Renderer::class)->args(
     dirs: __DIR__ . '/custom-views',
     defaults: ['siteName' => 'My Site'],

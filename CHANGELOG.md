@@ -15,6 +15,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - **Changed** routability/rendering semantics to use `#[Route]` and `#[Render]` conventions (renderer fallback remains node handle).
 - **Changed** finder facade class from `Duon\Cms\Finder\Finder` to `Duon\Cms\Cms`.
 - **Changed** plugin class from `Duon\Cms\Cms` to `Duon\Cms\Plugin`.
+- **Changed** CMS configuration ownership. Pass `Duon\Cms\Config` to `new Plugin($config)` instead of passing it to `Duon\Core\App`. `Duon\Cms\Config` no longer implements the removed core config interfaces.
 - **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
 - **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.
 - **Changed** node type-hints throughout the framework from `Node` to `object`.
@@ -66,6 +67,26 @@ class Article implements Title
         return $this->title?->value()->unwrap() ?? '';
     }
 }
+```
+
+When bootstrapping with `duon/core`, pass the CMS config to the CMS plugin instead of the core app:
+
+```php
+use Duon\Cms\Config;
+use Duon\Cms\Plugin;
+use Duon\Container\Container;
+use Duon\Core\App;
+use Duon\Core\Factory\Laminas;
+use Duon\Router\Router;
+
+$config = new Config('cms', settings: [
+    'path.root' => __DIR__,
+    'path.public' => __DIR__ . '/public',
+]);
+
+$plugin = new Plugin($config);
+$app = new App(new Laminas(), new Router($config->get('path.prefix')), new Container());
+$app->load($plugin);
 ```
 
 Constructor dependencies are autowired from the Registry via `duon/wire`:

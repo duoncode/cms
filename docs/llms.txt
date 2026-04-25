@@ -83,14 +83,19 @@ Core setup pattern (see tests for real working examples):
 Example pattern:
 
 ```php
+use Duon\Cms\Config;
 use Duon\Cms\Locales;
 use Duon\Cms\Plugin;
+
+$config = new Config(settings: [
+    'path.root' => __DIR__,
+]);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
 $locales->add('de', title: 'Deutsch', fallback: 'en', pgDict: 'german');
 
-$plugin = new Plugin(sessionEnabled: true);
+$plugin = new Plugin($config, sessionEnabled: true);
 $plugin->node(App\Cms\Node\HomePage::class);
 $plugin->node(App\Cms\Node\ArticlePage::class);
 
