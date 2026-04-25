@@ -238,7 +238,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$app = new App($factory, $router, $container);
 
 		// Configure error handler middleware
-		$this->errorHandler = $this->createErrorHandler($factory);
+		$this->errorHandler = $this->createErrorHandler($config, $factory);
 		$app->middleware($this->errorHandler);
 
 		// Load locales
@@ -276,16 +276,10 @@ class End2EndTestCase extends IntegrationTestCase
 		return $plugin;
 	}
 
-	protected function createErrorHandler(Laminas $factory): \Duon\Error\Handler
+	protected function createErrorHandler(Config $config, Laminas $factory): \Duon\Error\Handler
 	{
-		$root = self::root();
 		$logger = new NullLogger();
-
-		// Set environment variables for error handler (it uses env() function)
-		$_ENV['CMS_DEBUG'] = false; // Disable debug mode for deterministic error responses
-		$_ENV['CMS_ENV'] = 'test';
-
-		$handler = new Handler($root, $logger, $factory);
+		$handler = new Handler($config, $factory, $logger);
 		$handler->views('tests/Fixtures/templates');
 
 		$handler->trusted([

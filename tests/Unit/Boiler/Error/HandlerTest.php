@@ -5,10 +5,18 @@ declare(strict_types=1);
 namespace Duon\Cms\Tests\Unit\Boiler\Error;
 
 use Duon\Cms\Boiler\Error\Handler;
+use Duon\Cms\Config;
 use Duon\Cms\Tests\TestCase;
 use Duon\Error\Handler as ErrorHandler;
+use Duon\Error\Renderer as ErrorRenderer;
+use Exception;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\NullLogger;
+use ReflectionClass;
+use Throwable;
 
 /**
  * @internal
@@ -19,11 +27,7 @@ final class HandlerTest extends TestCase
 {
 	public function testViewsMethodReturnsInstance(): void
 	{
-		$handler = new Handler(
-			root: self::root(),
-			logger: new NullLogger(),
-			factory: $this->factory(),
-		);
+		$handler = $this->handler();
 
 		$result = $handler->views('tests/Fixtures/Boiler/templates');
 
@@ -32,11 +36,7 @@ final class HandlerTest extends TestCase
 
 	public function testTrustedMergesByDefault(): void
 	{
-		$handler = new Handler(
-			root: self::root(),
-			logger: new NullLogger(),
-			factory: $this->factory(),
-		);
+		$handler = $this->handler();
 
 		$result = $handler->trusted([self::class]);
 
@@ -45,11 +45,7 @@ final class HandlerTest extends TestCase
 
 	public function testTrustedCanReplace(): void
 	{
-		$handler = new Handler(
-			root: self::root(),
-			logger: new NullLogger(),
-			factory: $this->factory(),
-		);
+		$handler = $this->handler();
 
 		$result = $handler->trusted([self::class], replace: true);
 
@@ -59,17 +55,7 @@ final class HandlerTest extends TestCase
 	#[RunInSeparateProcess]
 	public function testCreateReturnsErrorHandler(): void
 	{
-		$_ENV['CMS_DEBUG'] = 'false';
-		$_ENV['CMS_ENV'] = 'test';
-
-		$handler = new Handler(
-			root: self::root(),
-			logger: new NullLogger(),
-			factory: $this->factory(),
-		);
-
-		$handler->views('tests/Fixtures/Boiler/templates');
-		$errorHandler = $handler->create();
+		$errorHandler = $this->handler()->create();
 
 		$this->assertInstanceOf(ErrorHandler::class, $errorHandler);
 		$errorHandler->restoreHandlers();
@@ -78,19 +64,88 @@ final class HandlerTest extends TestCase
 	#[RunInSeparateProcess]
 	public function testCreateWithDebugMode(): void
 	{
-		$_ENV['CMS_DEBUG'] = 'true';
-		$_ENV['CMS_ENV'] = 'test';
-
-		$handler = new Handler(
-			root: self::root(),
-			logger: new NullLogger(),
-			factory: $this->factory(),
-		);
-
-		$handler->views('tests/Fixtures/Boiler/templates');
-		$errorHandler = $handler->create();
+		$errorHandler = $this->handler($this->errorConfig(debug: true))->create();
 
 		$this->assertInstanceOf(ErrorHandler::class, $errorHandler);
 		$errorHandler->restoreHandlers();
+	}
+
+	#[RunInSeparateProcess]
+	public function testCreateUsesConfigDebugInsteadOfEnvironment(): void
+	{
+		$_ENV['CMS_DEBUG'] = 'false';
+		$errorHandler = $this->handler($this->errorConfig(debug: true))->create();
+		$reflection = new ReflectionClass($errorHandler);
+		$property = $reflection->getProperty('debug');
+		$property->setAccessible(true);
+
+		$this->assertTrue($property->getValue($errorHandler));
+		$errorHandler->restoreHandlers();
+	}
+
+	#[RunInSeparateProcess]
+	public function testProjectErrorTemplatesOverrideBuiltInFallback(): void
+	{
+		$errorHandler = $this->handler()->create();
+		$response = $errorHandler->getResponse(new Exception('Boom'), null);
+
+		$this->assertStringContainsString('Server Error', (string) $response->getBody());
+		$errorHandler->restoreHandlers();
+	}
+
+	#[RunInSeparateProcess]
+	public function testBuiltInTemplatesAreFallback(): void
+	{
+		$config = $this->errorConfig([
+			'path.root' => self::root(),
+			'path.views' => '/missing-error-templates',
+		]);
+		$errorHandler = $this->handler($config)->create();
+		$response = $errorHandler->getResponse(new Exception('Boom'), null);
+
+		$this->assertStringContainsString('Internal Server Error', (string) $response->getBody());
+		$errorHandler->restoreHandlers();
+	}
+
+	#[RunInSeparateProcess]
+	public function testCustomRendererCanReplaceDefaultRenderer(): void
+	{
+		$renderer = new class implements ErrorRenderer {
+			public function render(
+				Throwable $exception,
+				ResponseFactory $factory,
+				?Request $request,
+				bool $debug,
+			): Response {
+				$response = $factory->createResponse(500);
+				$response->getBody()->write('custom error');
+
+				return $response;
+			}
+		};
+		$config = $this->errorConfig(['error.renderer' => $renderer]);
+		$errorHandler = $this->handler($config)->create();
+		$response = $errorHandler->getResponse(new Exception('Boom'), null);
+
+		$this->assertSame('custom error', (string) $response->getBody());
+		$errorHandler->restoreHandlers();
+	}
+
+	private function handler(?Config $config = null): Handler
+	{
+		return new Handler(
+			config: $config ?? $this->errorConfig(),
+			factory: $this->factory(),
+			logger: new NullLogger(),
+		);
+	}
+
+	/** @param array<string, mixed> $settings */
+	private function errorConfig(array $settings = [], bool $debug = false): Config
+	{
+		return new Config('duon', debug: $debug, env: 'test', settings: array_merge([
+			'path.root' => self::root(),
+			'path.views' => '/tests/Fixtures/Boiler/templates',
+		], $settings));
 	}
 }
