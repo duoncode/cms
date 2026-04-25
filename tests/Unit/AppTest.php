@@ -12,6 +12,7 @@ use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
 use Duon\Cms\Tests\Fixtures\StaticRenderer;
 use Duon\Cms\Tests\TestCase;
 use Duon\Core\App as CoreApp;
+use Duon\Core\Exception\ValueError;
 use Duon\Core\Plugin as CorePlugin;
 use Duon\Core\Response as CoreResponse;
 use Duon\Error\Handler as ErrorHandler;
@@ -28,12 +29,26 @@ final class AppTest extends TestCase
 {
 	public function testCreateHelperBuildsCoreAppAndPlugin(): void
 	{
-		$config = $this->appConfig();
-		$app = App::create($config);
+		$app = App::create(self::root(), [
+			'app.name' => 'test-cms',
+			'error.enabled' => false,
+		]);
 
-		$this->assertSame($config, $app->config());
+		$app->config->set('custom.value', 3);
+
+		$this->assertSame($app->config, $app->config());
+		$this->assertSame('test-cms', $app->config->app());
+		$this->assertSame(self::root(), $app->config->get('path.root'));
+		$this->assertSame(3, $app->config->get('custom.value'));
 		$this->assertInstanceOf(CoreApp::class, $app->core());
 		$this->assertInstanceOf(Plugin::class, $app->plugin());
+	}
+
+	public function testCreateHelperRequiresRoot(): void
+	{
+		$this->throws(ValueError::class, 'The root path must be a non-empty string.');
+
+		App::create('');
 	}
 
 	public function testInstallsErrorMiddlewareByDefault(): void

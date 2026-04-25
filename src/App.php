@@ -36,7 +36,7 @@ class App implements RouteAdder
 	protected bool $booted = false;
 
 	public function __construct(
-		protected readonly Config $config,
+		public readonly Config $config,
 		Factory $factory,
 		Router $router,
 		Container $container,
@@ -55,8 +55,11 @@ class App implements RouteAdder
 		}
 	}
 
-	public static function create(Config $config): self
+	/** @param array<string, mixed> $settings */
+	public static function create(string $root, array $settings = []): self
 	{
+		$config = new Config($root, $settings);
+
 		return new self(
 			$config,
 			Discovery::create(),

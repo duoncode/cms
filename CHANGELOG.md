@@ -17,6 +17,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - **Changed** `Duon\Cms\Config` construction to `new Config(string $root, array $settings = [])`. App name, debug mode, environment, app secret, public path, frontend sessions, and database DSN now live in `app.name`, `app.debug`, `app.env`, `app.secret`, `path.public`, `session.enabled`, and `db.dsn` settings instead of constructor arguments or public properties. `path.public` defaults to `$root . '/public'`. `session.enabled` reads `CMS_SESSION`. `app.secret` reads `CMS_SECRET`. `db.dsn` reads `CMS_DB_DSN`, falling back to deprecated `CMS_DSN`. `app.name` is not validated or normalized.
 - **Changed** `Duon\Cms\Boiler\Error\Handler` to read debug/env/error settings from `Duon\Cms\Config`; its constructor now accepts config, factory, and logger.
 - **Changed** frontend session middleware configuration from `sessionEnabled` constructor arguments on `Duon\Cms\App` and `Duon\Cms\Plugin` to the `session.enabled` setting.
+- **Changed** `Duon\Cms\App::create()` to accept a root path plus an optional settings array, create `Duon\Cms\Config` internally, and expose the config as public `$app->config`.
 - **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
 - **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.
 - **Changed** node type-hints throughout the framework from `Node` to `object`.
@@ -77,15 +78,12 @@ Use the CMS app facade for regular application bootstrapping:
 
 ```php
 use Duon\Cms\App;
-use Duon\Cms\Config;
 
 $root = dirname(__DIR__);
-$config = new Config($root, [
+$app = App::create($root, [
     'app.name' => 'cms',
     'path.public' => $root . '/public',
 ]);
-
-$app = App::create($config);
 $app->section('Content')->collection(\App\Cms\Collection\Pages::class);
 $app->node(\App\Cms\Node\HomePage::class);
 $app->run();

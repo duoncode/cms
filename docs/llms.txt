@@ -77,8 +77,8 @@ Use `Duon\Cms\App` for normal CMS applications. It wraps the core app and CMS pl
 
 Setup pattern (see tests for real working examples):
 
-1. Create `Config` with the project root path.
-2. Create `Duon\Cms\App` with `App::create(...)`.
+1. Create `Duon\Cms\App` with `App::create($root, $settings)`.
+2. Pass the project root as the first argument.
 3. Create and load `Locales` if the app uses locales.
 4. Register node classes with `App::node(...)` and navigation with `App::section(...)` / `App::collection(...)`.
 5. Optionally set `path.views`, configure `error.*`, or register custom renderers.
@@ -88,16 +88,12 @@ Example pattern:
 
 ```php
 use Duon\Cms\App;
-use Duon\Cms\Config;
 use Duon\Cms\Locales;
 
-$root = dirname(__DIR__);
-$config = new Config($root, [
+$app = App::create(dirname(__DIR__), [
     'app.name' => 'mycms',
     'session.enabled' => true,
 ]);
-
-$app = App::create($config);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -116,9 +112,10 @@ $app->run();
 
 Important:
 
+- `App::create()` creates `Config` internally and exposes it as `$app->config`.
 - `Config` loads `.env` from the root path with `Dotenv::safeLoad()`.
 - `Config::requireEnv(...)` validates required environment variables and may be removed later.
-- Set environment-derived settings after constructing `Config`, because constructor arguments are evaluated first.
+- Set extra environment-derived values with `$app->config->set(...)` after construction, because settings are evaluated before `Config` is created.
 - `Duon\Cms\App` installs default PSR-15 error middleware unless `error.enabled` is false.
 - Error pages use a dedicated Boiler renderer, independent from the CMS `view` renderer.
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
@@ -401,7 +398,7 @@ App and environment:
 
 Paths and panel:
 
-- `path.root`: root path passed to `new Config($root, ...)`
+- `path.root`: root path passed to `new Config($root, ...)` or `App::create($root, ...)`
 - `path.public`: `$root . '/public'`
 - `path.prefix`: `''`
 - `path.assets`: `'/assets'`
