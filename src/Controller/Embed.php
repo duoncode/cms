@@ -9,7 +9,7 @@ use Duon\Cms\Config;
 use Duon\Cms\Users;
 use Duon\Core\Exception\HttpForbidden;
 use Duon\Core\Exception\HttpUnauthorized;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 use SensitiveParameter;

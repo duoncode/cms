@@ -10,7 +10,7 @@ use Duon\Cms\Assets\Size;
 use Duon\Cms\Config;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Middleware\Permission;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 use Gumlet\ImageResize;

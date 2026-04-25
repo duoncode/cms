@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Core\App;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 
 /** @psalm-api */
 final class PanelRenderers

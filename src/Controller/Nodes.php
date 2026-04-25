@@ -13,7 +13,7 @@ use Duon\Cms\Node\Serializer;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
 use Duon\Core\Exception\HttpBadRequest;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 use stdClass;

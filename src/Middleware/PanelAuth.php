@@ -7,7 +7,7 @@ namespace Duon\Cms\Middleware;
 use Duon\Cms\Auth;
 use Duon\Cms\Config;
 use Duon\Cms\Users;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;

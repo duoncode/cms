@@ -16,7 +16,7 @@ use Duon\Cms\Middleware\InitRequest;
 use Duon\Cms\Middleware\PanelAuth;
 use Duon\Cms\Middleware\Session;
 use Duon\Core\App;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Quma\Database;
 use Duon\Router\Group;
 use Duon\Router\Route;

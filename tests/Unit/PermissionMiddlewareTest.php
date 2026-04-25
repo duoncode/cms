@@ -11,7 +11,7 @@ use Duon\Cms\User;
 use Duon\Cms\Users;
 use Duon\Core\Exception\HttpForbidden;
 use Duon\Core\Exception\HttpUnauthorized;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Quma\Database;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

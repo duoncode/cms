@@ -18,7 +18,7 @@ use Duon\Cms\Util\Path;
 use Duon\Container\Container;
 use Duon\Core\Exception\HttpBadRequest;
 use Duon\Core\Exception\HttpNotFound;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Response;
 use ReflectionMethod;
 

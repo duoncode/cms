@@ -11,7 +11,7 @@ use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Field\Schema\Registry as SchemaRegistry;
 use Duon\Cms\Node\Contract\HasInit;
 use Duon\Container\Container;
-use Duon\Core\Factory as CoreFactory;
+use Duon\Core\Factory\Factory as CoreFactory;
 use Duon\Core\Request;
 use Duon\Quma\Database;
 use Duon\Wire\Creator;

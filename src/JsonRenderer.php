@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Response;
 use Duon\Router\After;
 use Psr\Http\Message\ResponseInterface as PsrResponse;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms;
 
 use Duon\Container\Container;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Quma\Database;
 

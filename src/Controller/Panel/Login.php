@@ -8,7 +8,7 @@ use Duon\Cms\Auth as CmsAuth;
 use Duon\Cms\Config;
 use Duon\Cms\Validation;
 use Duon\Container\Container;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 

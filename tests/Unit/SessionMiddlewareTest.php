@@ -7,7 +7,7 @@ namespace Duon\Cms\Tests\Unit;
 use Duon\Cms\Middleware\Session as SessionMiddleware;
 use Duon\Cms\Session;
 use Duon\Cms\Tests\TestCase;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

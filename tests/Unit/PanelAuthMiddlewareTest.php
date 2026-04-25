@@ -9,7 +9,7 @@ use Duon\Cms\Session;
 use Duon\Cms\Tests\TestCase;
 use Duon\Cms\User;
 use Duon\Cms\Users;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Quma\Database;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

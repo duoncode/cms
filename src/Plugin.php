@@ -13,7 +13,7 @@ use Duon\Cms\Node\Types;
 use Duon\Container\Container;
 use Duon\Container\Entry;
 use Duon\Core\App;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Plugin as CorePlugin;
 use Duon\Core\Request;
 use Duon\Quma\Connection;

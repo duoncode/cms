@@ -10,7 +10,7 @@ use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Node\Contract\ProvidesRenderContext;
 use Duon\Cms\Renderer;
 use Duon\Container\Container;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 

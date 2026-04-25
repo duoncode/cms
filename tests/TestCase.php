@@ -7,7 +7,7 @@ namespace Duon\Cms\Tests;
 use Duon\Cms\Config;
 use Duon\Cms\Locales;
 use Duon\Container\Container;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Factory\Laminas;
 use Duon\Core\Request;
 use PDO;

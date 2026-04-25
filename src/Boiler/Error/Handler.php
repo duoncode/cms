@@ -10,7 +10,7 @@ use Duon\Cms\Locale;
 use Duon\Cms\Locales;
 use Duon\Cms\Node\Node;
 use Duon\Core\Exception\HttpError;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Error\Handler as ErrorHandler;
 use Psr\Log\LoggerInterface as Logger;

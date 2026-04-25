@@ -7,7 +7,7 @@ namespace Duon\Cms\Controller\Panel;
 use Duon\Cms\Exception\RuntimeException;
 use Duon\Cms\Util\Path;
 use Duon\Core\Exception\HttpNotFound;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 

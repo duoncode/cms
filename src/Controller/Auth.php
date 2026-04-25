@@ -6,7 +6,7 @@ namespace Duon\Cms\Controller;
 
 use Duon\Cms\Middleware\Permission;
 use Duon\Cms\Validation;
-use Duon\Core\Factory;
+use Duon\Core\Factory\Factory;
 use Duon\Core\Request;
 use Duon\Core\Response;
 
