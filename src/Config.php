@@ -44,7 +44,7 @@ class Config
 			'icons.iconify.base_url' => 'https://api.iconify.design',
 			'icons.iconify.timeout' => 5,
 			'icons.iconify.user_agent' => 'duon/cms',
-			'db.dsn' => null,
+			'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)),
 			'db.sql' => [],
 			'db.migrations' => [],
 			'db.print' => false,
@@ -283,7 +283,7 @@ class Config
 
 	public function get(string $key, mixed $default = null): mixed
 	{
-		if (isset($this->settings[$key])) {
+		if (array_key_exists($key, $this->settings)) {
 			return $this->settings[$key];
 		}
 

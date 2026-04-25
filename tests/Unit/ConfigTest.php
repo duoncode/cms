@@ -26,7 +26,14 @@ final class ConfigTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->clearEnvironment('CMS_DEBUG', 'CMS_ENV', 'CMS_REQUIRED', 'CMS_MISSING');
+		$this->clearEnvironment(
+			'CMS_DB_DSN',
+			'CMS_DEBUG',
+			'CMS_DSN',
+			'CMS_ENV',
+			'CMS_REQUIRED',
+			'CMS_MISSING',
+		);
 	}
 
 	protected function tearDown(): void
@@ -65,6 +72,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame('duoncms', $config->app());
 		$this->assertSame('duoncms', $config->get('app.name'));
 		$this->assertSame(self::root(), $config->get('path.root'));
+		$this->assertNull($config->get('db.dsn'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());
 	}
@@ -97,6 +105,29 @@ final class ConfigTest extends TestCase
 		$this->assertTrue($config->debug());
 		$this->assertSame('testing', $config->env());
 		$this->assertSame('present', $_ENV['CMS_REQUIRED']);
+	}
+
+	public function testDatabaseDsnUsesPreferredEnvironmentVariable(): void
+	{
+		$config = new Config($this->rootWithEnv("CMS_DB_DSN=pgsql:dbname=cms\n"));
+
+		$this->assertSame('pgsql:dbname=cms', $config->get('db.dsn'));
+	}
+
+	public function testDatabaseDsnFallsBackToLegacyEnvironmentVariable(): void
+	{
+		$config = new Config($this->rootWithEnv("CMS_DSN=pgsql:dbname=legacy\n"));
+
+		$this->assertSame('pgsql:dbname=legacy', $config->get('db.dsn'));
+	}
+
+	public function testPreferredDatabaseDsnWinsOverLegacyEnvironmentVariable(): void
+	{
+		$config = new Config($this->rootWithEnv(
+			"CMS_DB_DSN=pgsql:dbname=cms\nCMS_DSN=pgsql:dbname=legacy\n",
+		));
+
+		$this->assertSame('pgsql:dbname=cms', $config->get('db.dsn'));
 	}
 
 	public function testMissingDotenvFileIsIgnored(): void

@@ -168,8 +168,7 @@ $config = new Config(dirname(__DIR__), [
     'app.name' => 'mycms',
 ]);
 
-$config->requireEnv(['CMS_DSN', 'CMS_SECRET']);
-$config->set('db.dsn', env('CMS_DSN'));
+$config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
 $config->set('app.secret', env('CMS_SECRET'));
 ```
 
@@ -179,6 +178,7 @@ $config->set('app.secret', env('CMS_SECRET'));
 'app.env' => env('CMS_ENV', ''),      // App environment from the loaded environment
 'path.root' => $root,                 // Required project root passed to Config
 'path.views' => '/views',             // View directory relative to path.root
+'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
 'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
 'error.views' => null,                // Error template directory; defaults to path.views

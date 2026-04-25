@@ -419,7 +419,7 @@ Errors:
 
 Database:
 
-- `db.dsn`: `null` (must be set in real app)
+- `db.dsn`: `env('CMS_DB_DSN', env('CMS_DSN', null))` after `.env` has loaded; `CMS_DSN` is a deprecated fallback
 - `db.sql`: `[]`
 - `db.migrations`: `[]`
 - `db.options`: `[]`
