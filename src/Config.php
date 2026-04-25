@@ -51,6 +51,7 @@ class Config
 			'db.migrations' => [],
 			'db.print' => false,
 			'db.options' => [],
+			'session.enabled' => env('CMS_SESSION', false),
 			'session.options' => [
 				'cookie_httponly' => true,
 				'cookie_lifetime' => 0,

@@ -6,6 +6,7 @@ namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\App;
 use Duon\Cms\Config;
+use Duon\Cms\Middleware\Session as SessionMiddleware;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
 use Duon\Cms\Tests\Fixtures\StaticRenderer;
@@ -145,6 +146,17 @@ final class AppTest extends TestCase
 		$this->assertSame('cms.catchall', $route->name());
 	}
 
+	public function testSessionMiddlewareCanBeEnabledInConfig(): void
+	{
+		$app = $this->app(['session.enabled' => true]);
+		$app->boot();
+		$route = $app->router()->match(
+			$app->factory()->serverRequestFactory()->createServerRequest('GET', '/missing'),
+		);
+
+		$this->assertTrue($this->hasSessionMiddleware($route->getMiddleware()));
+	}
+
 	public function testCoreMethodsDelegateToInternalCoreApp(): void
 	{
 		$app = $this->app(['path.prefix' => '/site']);
@@ -181,6 +193,18 @@ final class AppTest extends TestCase
 		$app->load($plugin);
 
 		$this->assertSame($plugin::class, $app->container()->get('custom.service'));
+	}
+
+	/** @param list<object> $middleware */
+	private function hasSessionMiddleware(array $middleware): bool
+	{
+		foreach ($middleware as $entry) {
+			if ($entry instanceof SessionMiddleware) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function restoreErrorHandler(App $app): void

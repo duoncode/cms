@@ -28,16 +28,17 @@ class Routes
 	protected ?string $apiPath;
 	protected InitRequest $initRequestMiddlware;
 	protected Session $session;
+	protected bool $frontendSession;
 
 	public function __construct(
 		protected Config $config,
 		protected Database $db,
 		protected Factory $factory,
-		protected bool $sessionEnabled,
 	) {
 		$this->panelPath = $config->panelPath();
 		$this->panelApiPath = $this->panelPath . '/api';
 		$this->apiPath = $config->apiPath();
+		$this->frontendSession = (bool) $config->get('session.enabled');
 		$this->initRequestMiddlware = new InitRequest($config);
 		$this->session = new Session($this->config, $this->db);
 	}
@@ -96,7 +97,7 @@ class Routes
 
 		$this->addPanel($app);
 
-		if ($this->sessionEnabled) {
+		if ($this->frontendSession) {
 			foreach ($sessionIfEnabled as $route) {
 				$route->middleware($this->session);
 			}
@@ -111,7 +112,7 @@ class Routes
 			'cms.catchall',
 		)->method('GET', 'POST')->middleware($this->initRequestMiddlware);
 
-		if ($this->sessionEnabled) {
+		if ($this->frontendSession) {
 			$catchallRoute->middleware($this->session);
 		}
 

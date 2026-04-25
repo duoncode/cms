@@ -44,7 +44,6 @@ class Plugin implements CorePlugin
 
 	public function __construct(
 		protected readonly Config $config,
-		protected readonly bool $sessionEnabled = false,
 		?Types $types = null,
 	) {
 		$this->types = $types ?? new Types();
@@ -71,7 +70,7 @@ class Plugin implements CorePlugin
 		$this->container->add(Types::class, $this->types);
 		$this->container->add(Contract\Icons::class, Icons::class);
 
-		$this->routes = new Routes($this->config, $this->db, $this->factory, $this->sessionEnabled);
+		$this->routes = new Routes($this->config, $this->db, $this->factory);
 		$this->routes->add($app);
 	}
 

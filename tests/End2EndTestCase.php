@@ -263,7 +263,7 @@ class End2EndTestCase extends IntegrationTestCase
 
 	protected function createPlugin(Config $config): Plugin
 	{
-		$plugin = new Plugin($config, sessionEnabled: false);
+		$plugin = new Plugin($config);
 
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestArticle::class);
