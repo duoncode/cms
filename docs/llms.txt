@@ -401,6 +401,7 @@ App and environment:
 Paths and panel:
 
 - `path.root`: root path passed to `new Config($root, ...)`
+- `path.public`: `$root . '/public'`
 - `path.prefix`: `''`
 - `path.assets`: `'/assets'`
 - `path.cache`: `'/cache'`

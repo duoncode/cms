@@ -73,6 +73,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame('duoncms', $config->app());
 		$this->assertSame('duoncms', $config->get('app.name'));
 		$this->assertSame(self::root(), $config->get('path.root'));
+		$this->assertSame(self::root() . '/public', $config->get('path.public'));
 		$this->assertNull($config->get('app.secret'));
 		$this->assertNull($config->get('db.dsn'));
 		$this->assertFalse($config->debug());

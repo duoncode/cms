@@ -175,6 +175,7 @@ $config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
 'app.env' => env('CMS_ENV', ''),      // App environment from the loaded environment
 'app.secret' => env('CMS_SECRET', null), // App secret from the loaded environment
 'path.root' => $root,                 // Required project root passed to Config
+'path.public' => $root . '/public',   // Public document root
 'path.views' => '/views',             // View directory relative to path.root
 'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App

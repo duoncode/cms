@@ -28,6 +28,7 @@ class Config
 			'app.env' => env('CMS_ENV', ''),
 			'app.secret' => env('CMS_SECRET', null),
 			'path.root' => $root,
+			'path.public' => $root . '/public',
 			'path.prefix' => '',
 			'path.assets' => '/assets',
 			'path.cache' => '/cache',
