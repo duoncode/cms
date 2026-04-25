@@ -33,6 +33,7 @@ final class ConfigTest extends TestCase
 			'CMS_ENV',
 			'CMS_REQUIRED',
 			'CMS_MISSING',
+			'CMS_SECRET',
 		);
 	}
 
@@ -72,6 +73,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame('duoncms', $config->app());
 		$this->assertSame('duoncms', $config->get('app.name'));
 		$this->assertSame(self::root(), $config->get('path.root'));
+		$this->assertNull($config->get('app.secret'));
 		$this->assertNull($config->get('db.dsn'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());
@@ -83,11 +85,13 @@ final class ConfigTest extends TestCase
 			'app.name' => 'site-cms',
 			'app.debug' => 'false',
 			'app.env' => 'production',
+			'app.secret' => 'configured-secret',
 		]);
 
 		$this->assertSame('site-cms', $config->app());
 		$this->assertFalse($config->debug());
 		$this->assertSame('production', $config->env());
+		$this->assertSame('configured-secret', $config->get('app.secret'));
 	}
 
 	public function testConstructorRequiresRoot(): void
@@ -99,11 +103,14 @@ final class ConfigTest extends TestCase
 
 	public function testDotenvIsLoadedFromRoot(): void
 	{
-		$root = $this->rootWithEnv("CMS_DEBUG=true\nCMS_ENV=testing\nCMS_REQUIRED=present\n");
+		$root = $this->rootWithEnv(
+			"CMS_DEBUG=true\nCMS_ENV=testing\nCMS_REQUIRED=present\nCMS_SECRET=test-secret\n",
+		);
 		$config = new Config($root);
 
 		$this->assertTrue($config->debug());
 		$this->assertSame('testing', $config->env());
+		$this->assertSame('test-secret', $config->get('app.secret'));
 		$this->assertSame('present', $_ENV['CMS_REQUIRED']);
 	}
 

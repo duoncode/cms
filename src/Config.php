@@ -26,6 +26,7 @@ class Config
 			'app.name' => 'duoncms',
 			'app.debug' => env('CMS_DEBUG', false),
 			'app.env' => env('CMS_ENV', ''),
+			'app.secret' => env('CMS_SECRET', null),
 			'path.root' => $root,
 			'path.prefix' => '',
 			'path.assets' => '/assets',

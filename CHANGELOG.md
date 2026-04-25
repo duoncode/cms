@@ -16,7 +16,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - **Changed** finder facade class from `Duon\Cms\Finder\Finder` to `Duon\Cms\Cms`.
 - **Changed** plugin class from `Duon\Cms\Cms` to `Duon\Cms\Plugin`.
 - **Changed** CMS configuration ownership. Regular apps can use the new `Duon\Cms\App` facade; advanced manual bootstraps pass `Duon\Cms\Config` to `new Plugin($config)` instead of passing it to `Duon\Core\App`. `Duon\Cms\Config` no longer implements the removed core config interfaces.
-- **Changed** `Duon\Cms\Config` construction to `new Config(string $root, array $settings = [])`. App name, debug mode, environment, and database DSN now live in `app.name`, `app.debug`, `app.env`, and `db.dsn` settings instead of constructor arguments or public properties. `db.dsn` reads `CMS_DB_DSN`, falling back to deprecated `CMS_DSN`. `app.name` is not validated or normalized.
+- **Changed** `Duon\Cms\Config` construction to `new Config(string $root, array $settings = [])`. App name, debug mode, environment, app secret, and database DSN now live in `app.name`, `app.debug`, `app.env`, `app.secret`, and `db.dsn` settings instead of constructor arguments or public properties. `app.secret` reads `CMS_SECRET`. `db.dsn` reads `CMS_DB_DSN`, falling back to deprecated `CMS_DSN`. `app.name` is not validated or normalized.
 - **Changed** `Duon\Cms\Boiler\Error\Handler` to read debug/env/error settings from `Duon\Cms\Config`; its constructor now accepts config, factory, and logger.
 - **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
 - **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.

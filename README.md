@@ -162,20 +162,18 @@ For advanced integrations, the bundled error integration remains available as `D
 ```php
 use Duon\Cms\Config;
 
-use function Duon\Core\env;
-
 $config = new Config(dirname(__DIR__), [
     'app.name' => 'mycms',
 ]);
 
 $config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
-$config->set('app.secret', env('CMS_SECRET'));
 ```
 
 ```text
 'app.name' => 'duoncms',              // App name used by sessions and helpers
 'app.debug' => env('CMS_DEBUG', false), // Debug mode from the loaded environment
 'app.env' => env('CMS_ENV', ''),      // App environment from the loaded environment
+'app.secret' => env('CMS_SECRET', null), // App secret from the loaded environment
 'path.root' => $root,                 // Required project root passed to Config
 'path.views' => '/views',             // View directory relative to path.root
 'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated

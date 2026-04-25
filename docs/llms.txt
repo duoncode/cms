@@ -396,6 +396,7 @@ App and environment:
 - `app.name`: `'duoncms'` (not validated or normalized; keep it stable and safe for app-specific identifiers)
 - `app.debug`: `env('CMS_DEBUG', false)` after `.env` has loaded
 - `app.env`: `env('CMS_ENV', '')` after `.env` has loaded
+- `app.secret`: `env('CMS_SECRET', null)` after `.env` has loaded
 
 Paths and panel:
 
