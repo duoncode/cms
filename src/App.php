@@ -36,15 +36,11 @@ class App implements RouteAdder
 
 	public function __construct(
 		protected readonly Config $config,
+		Factory $factory,
+		Router $router,
+		Container $container,
 		protected readonly bool $sessionEnabled = false,
-		?Factory $factory = null,
-		?Router $router = null,
-		?Container $container = null,
 	) {
-		$factory ??= Discovery::create();
-		$router ??= new Router((string) $config->get('path.prefix'));
-		$container ??= new Container();
-
 		$this->core = new CoreApp($factory, $router, $container);
 		$this->plugin = new Plugin($config, sessionEnabled: $sessionEnabled);
 	}
@@ -52,11 +48,14 @@ class App implements RouteAdder
 	public static function create(
 		Config $config,
 		bool $sessionEnabled = false,
-		?Factory $factory = null,
-		?Router $router = null,
-		?Container $container = null,
 	): self {
-		return new self($config, $sessionEnabled, $factory, $router, $container);
+		return new self(
+			$config,
+			Discovery::create(),
+			new Router((string) $config->get('path.prefix')),
+			new Container(),
+			$sessionEnabled,
+		);
 	}
 
 	public function boot(): self

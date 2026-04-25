@@ -6,11 +6,13 @@ namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\App;
 use Duon\Cms\Config;
+use Duon\Cms\Plugin;
 use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
 use Duon\Cms\Tests\TestCase;
 use Duon\Core\App as CoreApp;
 use Duon\Core\Plugin as CorePlugin;
 use Duon\Core\Response as CoreResponse;
+use Duon\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -23,11 +25,11 @@ final class AppTest extends TestCase
 	public function testCreateHelperBuildsCoreAppAndPlugin(): void
 	{
 		$config = $this->appConfig();
-		$app = App::create($config, factory: $this->factory(), container: $this->container());
+		$app = App::create($config);
 
 		$this->assertSame($config, $app->config());
 		$this->assertInstanceOf(CoreApp::class, $app->core());
-		$this->assertSame($app->plugin(), $app->plugin());
+		$this->assertInstanceOf(Plugin::class, $app->plugin());
 	}
 
 	public function testCmsMethodsConfigureInternalPlugin(): void
@@ -99,10 +101,13 @@ final class AppTest extends TestCase
 
 	private function app(array $settings = []): App
 	{
+		$config = $this->appConfig($settings);
+
 		return new App(
-			$this->appConfig($settings),
-			factory: $this->factory(),
-			container: $this->container(),
+			$config,
+			$this->factory(),
+			new Router((string) $config->get('path.prefix')),
+			$this->container(),
 		);
 	}
 
