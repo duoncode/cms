@@ -41,6 +41,7 @@ high_value_topics:
 - Parent/child hierarchy metadata with `#[Children(...)]`
 - Behavioral interfaces (Title, HasInit, HandlesFormPost, ProvidesRenderContext)
 - Admin panel theming via panel.theme
+- Default error handling and error renderer settings via Config defaults
 - Session and upload settings via Config defaults
 
 known_limits:
@@ -79,7 +80,7 @@ Setup pattern (see tests for real working examples):
 2. Create `Duon\Cms\App`.
 3. Create and load `Locales` if the app uses locales.
 4. Register node classes with `App::node(...)` and navigation with `App::section(...)` / `App::collection(...)`.
-5. Optionally set `path.views` or register custom renderers.
+5. Optionally set `path.views`, configure `error.*`, or register custom renderers.
 6. Call `App::run(...)`; it loads the CMS plugin internally and adds the CMS catchall route last.
 
 Example pattern:
@@ -105,12 +106,16 @@ $app->node(\App\Cms\Node\ArticlePage::class);
 
 // The default Boiler renderer reads from {path.root}{path.views}.
 // path.views defaults to /views; register a view renderer only to replace it.
+// Error pages use a separate Boiler renderer and built-in fallback templates.
 
 $app->run();
 ```
 
 Important:
 
+- `Duon\Cms\App` installs default PSR-15 error middleware unless `error.enabled` is false.
+- Error pages use a dedicated Boiler renderer, independent from the CMS `view` renderer.
+- Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
 - `run()` calls `boot()` once, loads the internal CMS plugin, and adds the catchall route after routes and plugins registered through the facade.
 - Routes include panel endpoints and media endpoints automatically.
 - If `sessionEnabled` is true, selected frontend routes get session middleware.
@@ -391,6 +396,14 @@ Paths and panel:
 - `path.api`: `null`
 - `panel.theme`: `null` (string or string[])
 - `panel.logo`: `'/images/logo.png'`
+
+Errors:
+
+- `error.enabled`: `true` (default error middleware in `Duon\Cms\App`)
+- `error.renderer`: `null` (optional `Duon\Error\Renderer` object or class-string)
+- `error.trusted`: `[]` (extra trusted classes for Boiler error templates)
+- `error.views`: `null` (defaults to `{path.root}{path.views}` plus built-in fallback templates)
+- `error.whoops`: `true` (uses `filp/whoops` in debug mode when installed)
 
 Database:
 

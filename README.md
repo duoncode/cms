@@ -4,7 +4,7 @@
 
 ## Bootstrapping
 
-Use `Duon\Cms\App` for regular CMS applications. It creates the core app and CMS plugin internally, adds CMS routes, and registers the catchall route when you call `run()`.
+Use `Duon\Cms\App` for regular CMS applications. It creates the core app and CMS plugin internally, installs the default error handler, adds CMS routes, and registers the catchall route when you call `run()`.
 
 ```php
 use Duon\Cms\App;
@@ -151,12 +151,18 @@ $app->renderer('view', Renderer::class)->args(
 );
 ```
 
-The bundled error integration remains available as `Duon\Cms\Boiler\Error\Handler`.
+`Duon\Cms\App` installs the bundled error handler by default. Error pages use a dedicated Boiler renderer, so replacing the CMS `view` renderer does not affect error rendering. Project templates named `http-error.php` and `http-server-error.php` in `{path.root}{path.views}` override the built-in fallback templates. Set `error.enabled` to `false` if you want to install custom PSR-15 error middleware yourself.
+
+For advanced integrations, the bundled error integration remains available as `Duon\Cms\Boiler\Error\Handler`. Pass a `Duon\Cms\Config`, core factory, and logger when you create it manually.
 
 ## Settings
 
 ```text
 'path.views' => '/views',             // View directory relative to path.root
+'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
+'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
+'error.views' => null,                // Error template directory; defaults to path.views
+'error.whoops' => true,               // Use filp/whoops in debug mode when installed
 'session.authcookie' => '<app>_auth', // Name of the auth cookie
 'session.expires' => 60 * 60 * 24,    // One day by default
 ```
