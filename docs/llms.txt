@@ -94,9 +94,10 @@ use Duon\Cms\Locales;
 $root = dirname(__DIR__);
 $config = new Config($root, [
     'app.name' => 'mycms',
+    'session.enabled' => true,
 ]);
 
-$app = App::create($config, sessionEnabled: true);
+$app = App::create($config);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -123,7 +124,7 @@ Important:
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
 - `run()` calls `boot()` once, loads the internal CMS plugin, and adds the catchall route after routes and plugins registered through the facade.
 - Routes include panel endpoints and media endpoints automatically.
-- If `sessionEnabled` is true, selected frontend routes get session middleware.
+- If `session.enabled` is true, selected frontend routes get session middleware. It defaults to `CMS_SESSION`.
 - The manual `Duon\Core\App` + `Duon\Cms\Plugin` API remains available for advanced integrations.
 
 3) Defining node types
@@ -429,6 +430,7 @@ Database:
 
 Session:
 
+- `session.enabled`: `env('CMS_SESSION', false)` after `.env` has loaded; adds session middleware to selected frontend routes
 - `session.options.cookie_httponly`: `true`
 - `session.options.cookie_lifetime`: `0`
 - `session.options.gc_maxlifetime`: `3600`

@@ -14,9 +14,10 @@ use Duon\Cms\Locales;
 $root = dirname(__DIR__);
 $config = new Config($root, [
     'app.name' => 'mycms',
+    'session.enabled' => true,
 ]);
 
-$app = App::create($config, sessionEnabled: true);
+$app = App::create($config);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -178,6 +179,7 @@ $config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
 'path.public' => $root . '/public',   // Public document root
 'path.views' => '/views',             // View directory relative to path.root
 'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated
+'session.enabled' => env('CMS_SESSION', false), // Add session middleware to frontend routes
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
 'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
 'error.views' => null,                // Error template directory; defaults to path.views
