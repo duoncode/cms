@@ -8,12 +8,15 @@ use Duon\Cms\App;
 use Duon\Cms\Config;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
+use Duon\Cms\Tests\Fixtures\StaticRenderer;
 use Duon\Cms\Tests\TestCase;
 use Duon\Core\App as CoreApp;
 use Duon\Core\Plugin as CorePlugin;
 use Duon\Core\Response as CoreResponse;
+use Duon\Error\Handler as ErrorHandler;
 use Duon\Router\Router;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\AbstractLogger;
 
 /**
  * @internal
@@ -30,6 +33,87 @@ final class AppTest extends TestCase
 		$this->assertSame($config, $app->config());
 		$this->assertInstanceOf(CoreApp::class, $app->core());
 		$this->assertInstanceOf(Plugin::class, $app->plugin());
+	}
+
+	public function testInstallsErrorMiddlewareByDefault(): void
+	{
+		$app = $this->app(['error.enabled' => true]);
+
+		try {
+			$this->assertInstanceOf(ErrorHandler::class, $app->getMiddleware()[0] ?? null);
+		} finally {
+			$this->restoreErrorHandler($app);
+		}
+	}
+
+	public function testErrorMiddlewareCanBeDisabled(): void
+	{
+		$app = $this->app(['error.enabled' => false]);
+
+		$this->assertSame([], $app->getMiddleware());
+	}
+
+	public function testErrorMiddlewareDoesNotUseViewRenderer(): void
+	{
+		$app = $this->app([
+			'error.enabled' => true,
+			'path.root' => self::root(),
+			'path.views' => '/missing-views',
+		]);
+		$app->renderer('view', StaticRenderer::class);
+		$app->get('/boom', static function (): void {
+			throw new \RuntimeException('Boom');
+		});
+		$request = $app->factory()->serverRequestFactory()->createServerRequest('GET', '/boom');
+		ob_start();
+
+		try {
+			$response = $app->run($request);
+			$output = ob_get_contents();
+		} finally {
+			ob_end_clean();
+			$this->restoreErrorHandler($app);
+		}
+
+		$this->assertInstanceOf(ResponseInterface::class, $response);
+		$this->assertStringContainsString('Internal Server Error', $output);
+		$this->assertStringNotContainsString('custom:http-server-error', $output);
+	}
+
+	public function testErrorMiddlewareUsesRegisteredLogger(): void
+	{
+		$logger = new class extends AbstractLogger {
+			/** @var list<array{level: mixed, message: string}> */
+			public array $records = [];
+
+			public function log(mixed $level, string|\Stringable $message, array $context = []): void
+			{
+				$this->records[] = [
+					'level' => $level,
+					'message' => (string) $message,
+				];
+			}
+		};
+		$app = $this->app([
+			'error.enabled' => true,
+			'path.root' => self::root(),
+			'path.views' => '/missing-views',
+		]);
+		$app->logger($logger);
+		$app->get('/boom', static function (): void {
+			throw new \RuntimeException('Boom');
+		});
+		$request = $app->factory()->serverRequestFactory()->createServerRequest('GET', '/boom');
+		ob_start();
+
+		try {
+			$app->run($request);
+		} finally {
+			ob_end_clean();
+			$this->restoreErrorHandler($app);
+		}
+
+		$this->assertNotSame([], $logger->records);
 	}
 
 	public function testCmsMethodsConfigureInternalPlugin(): void
@@ -99,6 +183,17 @@ final class AppTest extends TestCase
 		$this->assertSame($plugin::class, $app->container()->get('custom.service'));
 	}
 
+	private function restoreErrorHandler(App $app): void
+	{
+		foreach ($app->getMiddleware() as $middleware) {
+			if (!$middleware instanceof ErrorHandler) {
+				continue;
+			}
+
+			$middleware->restoreHandlers();
+		}
+	}
+
 	private function app(array $settings = []): App
 	{
 		$config = $this->appConfig($settings);
@@ -115,6 +210,7 @@ final class AppTest extends TestCase
 	{
 		return $this->config(array_merge([
 			'db.dsn' => 'sqlite::memory:',
+			'error.enabled' => false,
 			'path.root' => self::root() . '/tests/Fixtures/Boiler',
 			'path.views' => '/templates',
 		], $settings));

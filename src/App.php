@@ -6,6 +6,7 @@ namespace Duon\Cms;
 
 use BadMethodCallException;
 use Closure;
+use Duon\Cms\Boiler\Error\Handler as ErrorHandler;
 use Duon\Cms\Node\Types;
 use Duon\Container\Container;
 use Duon\Container\Entry;
@@ -43,6 +44,16 @@ class App implements RouteAdder
 	) {
 		$this->core = new CoreApp($factory, $router, $container);
 		$this->plugin = new Plugin($config, sessionEnabled: $sessionEnabled);
+		$this->addErrorHandler($container, $factory);
+	}
+
+	protected function addErrorHandler(Container $container, Factory $factory): void
+	{
+		if ($this->config->get('error.enabled')) {
+			$this->core->middleware(
+				new ErrorHandler($this->config, $factory, new ContainerLogger($container))->create(),
+			);
+		}
 	}
 
 	public static function create(
