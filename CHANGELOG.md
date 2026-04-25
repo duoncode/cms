@@ -1,8 +1,6 @@
 # Changelog
 
-## [0.2.0-beta.1] (Unreleased)
-
-Codename: Plain Objects
+## [Unreleased](https://github.com/duoncode/boiler/compare/0.1.0-beta.2...HEAD)
 
 ### Breaking changes
 
