@@ -15,7 +15,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - **Changed** routability/rendering semantics to use `#[Route]` and `#[Render]` conventions (renderer fallback remains node handle).
 - **Changed** finder facade class from `Duon\Cms\Finder\Finder` to `Duon\Cms\Cms`.
 - **Changed** plugin class from `Duon\Cms\Cms` to `Duon\Cms\Plugin`.
-- **Changed** CMS configuration ownership. Pass `Duon\Cms\Config` to `new Plugin($config)` instead of passing it to `Duon\Core\App`. `Duon\Cms\Config` no longer implements the removed core config interfaces.
+- **Changed** CMS configuration ownership. Regular apps can use the new `Duon\Cms\App` facade; advanced manual bootstraps pass `Duon\Cms\Config` to `new Plugin($config)` instead of passing it to `Duon\Core\App`. `Duon\Cms\Config` no longer implements the removed core config interfaces.
 - **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
 - **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.
 - **Changed** node type-hints throughout the framework from `Node` to `object`.
@@ -38,6 +38,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - `Plugin::NODE_TAG` constant replacing the old `Node::class` registry tag.
 - Bundled Boiler renderer and error integration under the existing `Duon\Cms\Boiler` namespace. `duon/cms` now requires `duon/boiler` directly, so applications no longer need the separate `duon/cms-boiler` package.
 - Default Boiler `view` renderer registration using the new `path.views` config key, which defaults to `/views` relative to `path.root`.
+- `Duon\Cms\App` facade for regular CMS applications. It wraps the core app and CMS plugin, forwards the common app and CMS configuration APIs, and adds the CMS catchall route during `run()`.
 
 ### Migration guide
 
@@ -69,25 +70,24 @@ class Article implements Title
 }
 ```
 
-When bootstrapping with `duon/core`, pass the CMS config to the CMS plugin instead of the core app:
+Use the CMS app facade for regular application bootstrapping:
 
 ```php
+use Duon\Cms\App;
 use Duon\Cms\Config;
-use Duon\Cms\Plugin;
-use Duon\Container\Container;
-use Duon\Core\App;
-use Duon\Core\Factory\Laminas;
-use Duon\Router\Router;
 
 $config = new Config('cms', settings: [
     'path.root' => __DIR__,
     'path.public' => __DIR__ . '/public',
 ]);
 
-$plugin = new Plugin($config);
-$app = new App(new Laminas(), new Router($config->get('path.prefix')), new Container());
-$app->load($plugin);
+$app = new App($config);
+$app->section('Content')->collection(\App\Cms\Collection\Pages::class);
+$app->node(\App\Cms\Node\HomePage::class);
+$app->run();
 ```
+
+When bootstrapping manually with `duon/core`, pass the CMS config to the CMS plugin instead of the core app.
 
 Constructor dependencies are autowired from the Registry via `duon/wire`:
 

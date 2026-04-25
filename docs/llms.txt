@@ -71,47 +71,50 @@ Local test database workflow used in this repo:
 
 2) Minimal integration pattern
 
-Core setup pattern (see tests for real working examples):
+Use `Duon\Cms\App` for normal CMS applications. It wraps the core app and CMS plugin, so callers can configure CMS content and run the app through one object.
 
-1. Create and load `Locales` plugin.
-2. Create `Plugin` instance from `duon/cms`.
-3. Register node classes with `Plugin::node(...)`.
-4. Optionally set `path.views` or register custom renderers.
-5. Load plugin into app.
-6. Add `plugin->catchallRoute()` as the last route.
+Setup pattern (see tests for real working examples):
+
+1. Create `Config`.
+2. Create `Duon\Cms\App`.
+3. Create and load `Locales` if the app uses locales.
+4. Register node classes with `App::node(...)` and navigation with `App::section(...)` / `App::collection(...)`.
+5. Optionally set `path.views` or register custom renderers.
+6. Call `App::run(...)`; it loads the CMS plugin internally and adds the CMS catchall route last.
 
 Example pattern:
 
 ```php
+use Duon\Cms\App;
 use Duon\Cms\Config;
 use Duon\Cms\Locales;
-use Duon\Cms\Plugin;
 
 $config = new Config(settings: [
     'path.root' => __DIR__,
 ]);
 
+$app = new App($config, sessionEnabled: true);
+
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
 $locales->add('de', title: 'Deutsch', fallback: 'en', pgDict: 'german');
+$app->load($locales);
 
-$plugin = new Plugin($config, sessionEnabled: true);
-$plugin->node(App\Cms\Node\HomePage::class);
-$plugin->node(App\Cms\Node\ArticlePage::class);
+$app->node(\App\Cms\Node\HomePage::class);
+$app->node(\App\Cms\Node\ArticlePage::class);
 
 // The default Boiler renderer reads from {path.root}{path.views}.
 // path.views defaults to /views; register a view renderer only to replace it.
 
-$app->load($locales);
-$app->load($plugin);
-$app->addRoute($plugin->catchallRoute());
+$app->run();
 ```
 
 Important:
 
-- `catchallRoute()` should be the last route to avoid swallowing app routes.
+- `run()` calls `boot()` once, loads the internal CMS plugin, and adds the catchall route after routes and plugins registered through the facade.
 - Routes include panel endpoints and media endpoints automatically.
 - If `sessionEnabled` is true, selected frontend routes get session middleware.
+- The manual `Duon\Core\App` + `Duon\Cms\Plugin` API remains available for advanced integrations.
 
 3) Defining node types
 

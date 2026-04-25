@@ -2,6 +2,33 @@
 
 > **Note**: This library is under active development, some of the listed features are still experimental and subject to change. Large parts of the documentation are missing.
 
+## Bootstrapping
+
+Use `Duon\Cms\App` for regular CMS applications. It creates the core app and CMS plugin internally, adds CMS routes, and registers the catchall route when you call `run()`.
+
+```php
+use Duon\Cms\App;
+use Duon\Cms\Config;
+use Duon\Cms\Locales;
+
+$config = new Config(settings: [
+    'path.root' => __DIR__,
+]);
+
+$app = new App($config, sessionEnabled: true);
+
+$locales = new Locales();
+$locales->add('en', title: 'English', pgDict: 'english');
+$app->load($locales);
+
+$app->section('Content')->collection(\App\Cms\Collection\Pages::class);
+$app->node(\App\Cms\Node\HomePage::class);
+
+$app->run();
+```
+
+The CMS app exposes the common CMS configuration API (`section()`, `collection()`, `node()`, `renderer()`, `icons()`) and the common core app API (`load()`, `middleware()`, `get()`, `post()`, `routes()`, `run()`). Use `core()` or `plugin()` only when you need the lower-level APIs directly.
+
 ## Defining content types
 
 Content types (nodes) are plain PHP classes annotated with attributes. There is no base class to extend. Dependencies are autowired from the Registry via `duon/wire`.
@@ -95,30 +122,30 @@ Render a node by uid from templates with the neutral cms API:
 By default, views are loaded from `{path.root}{path.views}`. `path.views` defaults to `/views` and can be overridden in CMS config:
 
 ```php
+use Duon\Cms\App;
 use Duon\Cms\Config;
-use Duon\Cms\Plugin;
 
 $config = new Config(settings: [
     'path.root' => __DIR__,
     'path.views' => '/views',
 ]);
 
-$cms = new Plugin($config);
+$app = new App($config);
 ```
 
-To replace the default renderer or pass custom Boiler arguments, register a `view` renderer before loading the plugin:
+To replace the default renderer or pass custom Boiler arguments, register a `view` renderer before the app boots:
 
 ```php
+use Duon\Cms\App;
 use Duon\Cms\Boiler\Renderer;
 use Duon\Cms\Config;
-use Duon\Cms\Plugin;
 
 $config = new Config(settings: [
     'path.root' => __DIR__,
 ]);
 
-$cms = new Plugin($config);
-$cms->renderer('view', Renderer::class)->args(
+$app = new App($config);
+$app->renderer('view', Renderer::class)->args(
     dirs: __DIR__ . '/custom-views',
     defaults: ['siteName' => 'My Site'],
 );
