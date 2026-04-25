@@ -11,11 +11,12 @@ use Duon\Cms\App;
 use Duon\Cms\Config;
 use Duon\Cms\Locales;
 
-$config = new Config(settings: [
-    'path.root' => __DIR__,
+$root = dirname(__DIR__);
+$config = new Config($root, [
+    'app.name' => 'mycms',
 ]);
 
-$app = new App($config, sessionEnabled: true);
+$app = App::create($config, sessionEnabled: true);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -119,18 +120,17 @@ Render a node by uid from templates with the neutral cms API:
 
 `duon/cms` bundles the Boiler renderer under the existing `Duon\Cms\Boiler` namespace and registers it as the default `view` renderer. You do not need to require `duon/cms-boiler` separately or register a renderer for the common case.
 
-By default, views are loaded from `{path.root}{path.views}`. `path.views` defaults to `/views` and can be overridden in CMS config:
+By default, views are loaded from `{path.root}{path.views}`. `path.root` is the required first `Config` argument. `path.views` defaults to `/views` and can be overridden in CMS config:
 
 ```php
 use Duon\Cms\App;
 use Duon\Cms\Config;
 
-$config = new Config(settings: [
-    'path.root' => __DIR__,
+$config = new Config(dirname(__DIR__), [
     'path.views' => '/views',
 ]);
 
-$app = new App($config);
+$app = App::create($config);
 ```
 
 To replace the default renderer or pass custom Boiler arguments, register a `view` renderer before the app boots:
@@ -140,11 +140,11 @@ use Duon\Cms\App;
 use Duon\Cms\Boiler\Renderer;
 use Duon\Cms\Config;
 
-$config = new Config(settings: [
-    'path.root' => __DIR__,
+$config = new Config(dirname(__DIR__), [
+    'app.name' => 'mycms',
 ]);
 
-$app = new App($config);
+$app = App::create($config);
 $app->renderer('view', Renderer::class)->args(
     dirs: __DIR__ . '/custom-views',
     defaults: ['siteName' => 'My Site'],
@@ -157,7 +157,27 @@ For advanced integrations, the bundled error integration remains available as `D
 
 ## Settings
 
+`Config` loads `.env` from the root path with `Dotenv::safeLoad()`. Use `requireEnv()` when an application wants to fail fast for required environment variables. Because constructor arguments are evaluated before `Config` is created, set environment-derived settings after construction.
+
+```php
+use Duon\Cms\Config;
+
+use function Duon\Core\env;
+
+$config = new Config(dirname(__DIR__), [
+    'app.name' => 'mycms',
+]);
+
+$config->requireEnv(['CMS_DSN', 'CMS_SECRET']);
+$config->set('db.dsn', env('CMS_DSN'));
+$config->set('app.secret', env('CMS_SECRET'));
+```
+
 ```text
+'app.name' => 'duoncms',              // App name used by sessions and helpers
+'app.debug' => env('CMS_DEBUG', false), // Debug mode from the loaded environment
+'app.env' => env('CMS_ENV', ''),      // App environment from the loaded environment
+'path.root' => $root,                 // Required project root passed to Config
 'path.views' => '/views',             // View directory relative to path.root
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
 'error.renderer' => null,             // Optional Duon\Error\Renderer replacement

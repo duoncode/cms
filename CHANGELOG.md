@@ -16,6 +16,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - **Changed** finder facade class from `Duon\Cms\Finder\Finder` to `Duon\Cms\Cms`.
 - **Changed** plugin class from `Duon\Cms\Cms` to `Duon\Cms\Plugin`.
 - **Changed** CMS configuration ownership. Regular apps can use the new `Duon\Cms\App` facade; advanced manual bootstraps pass `Duon\Cms\Config` to `new Plugin($config)` instead of passing it to `Duon\Core\App`. `Duon\Cms\Config` no longer implements the removed core config interfaces.
+- **Changed** `Duon\Cms\Config` construction to `new Config(string $root, array $settings = [])`. App name, debug mode, and environment now live in `app.name`, `app.debug`, and `app.env` settings instead of constructor arguments or public properties.
 - **Changed** `Duon\Cms\Boiler\Error\Handler` to read debug/env/error settings from `Duon\Cms\Config`; its constructor now accepts config, factory, and logger.
 - **Changed** template embedding API from `find->block(...)` to `cms->render(...)`.
 - **Changed** all Field and Value classes to depend on the `FieldOwner` interface instead of the `Node` class.
@@ -41,6 +42,7 @@ This release removes the `Node` / `Page` / `Block` / `Document` inheritance hier
 - Default Boiler `view` renderer registration using the new `path.views` config key, which defaults to `/views` relative to `path.root`.
 - `Duon\Cms\App` facade for regular CMS applications. It wraps the core app and CMS plugin, forwards the common app and CMS configuration APIs, installs the default error middleware, and adds the CMS catchall route during `run()`.
 - Built-in fallback templates for Boiler error pages plus `error.*` config keys for enabling/disabling the default handler, replacing the error renderer, configuring error views, and toggling Whoops debug pages.
+- Root-based `Config` initialization that loads `.env` with `vlucas/phpdotenv`, sets default `app.name` to `duoncms`, and exposes `Config::requireEnv(...)` for required environment variables.
 
 ### Migration guide
 
@@ -78,12 +80,13 @@ Use the CMS app facade for regular application bootstrapping:
 use Duon\Cms\App;
 use Duon\Cms\Config;
 
-$config = new Config('cms', settings: [
-    'path.root' => __DIR__,
-    'path.public' => __DIR__ . '/public',
+$root = dirname(__DIR__);
+$config = new Config($root, [
+    'app.name' => 'cms',
+    'path.public' => $root . '/public',
 ]);
 
-$app = new App($config);
+$app = App::create($config);
 $app->section('Content')->collection(\App\Cms\Collection\Pages::class);
 $app->node(\App\Cms\Node\HomePage::class);
 $app->run();

@@ -2,7 +2,7 @@ project: Duon Content Management Framework (duon/cms)
 repository: https://github.com/duoncode/cms
 canonical_branch: main
 license: MIT (https://github.com/duoncode/cms/blob/main/LICENSE.md)
-last_updated: 2026-04-24
+last_updated: 2026-04-25
 contact: https://github.com/duoncode/cms/issues
 
 summary:
@@ -41,6 +41,7 @@ high_value_topics:
 - Parent/child hierarchy metadata with `#[Children(...)]`
 - Behavioral interfaces (Title, HasInit, HandlesFormPost, ProvidesRenderContext)
 - Admin panel theming via panel.theme
+- Root-based Config initialization, Dotenv loading, and Config defaults
 - Default error handling and error renderer settings via Config defaults
 - Session and upload settings via Config defaults
 
@@ -76,8 +77,8 @@ Use `Duon\Cms\App` for normal CMS applications. It wraps the core app and CMS pl
 
 Setup pattern (see tests for real working examples):
 
-1. Create `Config`.
-2. Create `Duon\Cms\App`.
+1. Create `Config` with the project root path.
+2. Create `Duon\Cms\App` with `App::create(...)`.
 3. Create and load `Locales` if the app uses locales.
 4. Register node classes with `App::node(...)` and navigation with `App::section(...)` / `App::collection(...)`.
 5. Optionally set `path.views`, configure `error.*`, or register custom renderers.
@@ -90,11 +91,12 @@ use Duon\Cms\App;
 use Duon\Cms\Config;
 use Duon\Cms\Locales;
 
-$config = new Config(settings: [
-    'path.root' => __DIR__,
+$root = dirname(__DIR__);
+$config = new Config($root, [
+    'app.name' => 'mycms',
 ]);
 
-$app = new App($config, sessionEnabled: true);
+$app = App::create($config, sessionEnabled: true);
 
 $locales = new Locales();
 $locales->add('en', title: 'English', pgDict: 'english');
@@ -113,6 +115,9 @@ $app->run();
 
 Important:
 
+- `Config` loads `.env` from the root path with `Dotenv::safeLoad()`.
+- `Config::requireEnv(...)` validates required environment variables and may be removed later.
+- Set environment-derived settings after constructing `Config`, because constructor arguments are evaluated first.
 - `Duon\Cms\App` installs default PSR-15 error middleware unless `error.enabled` is false.
 - Error pages use a dedicated Boiler renderer, independent from the CMS `view` renderer.
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
@@ -386,8 +391,15 @@ Image resizing query options:
 
 10) Key configuration settings (defaults)
 
+App and environment:
+
+- `app.name`: `'duoncms'`
+- `app.debug`: `env('CMS_DEBUG', false)` after `.env` has loaded
+- `app.env`: `env('CMS_ENV', '')` after `.env` has loaded
+
 Paths and panel:
 
+- `path.root`: root path passed to `new Config($root, ...)`
 - `path.prefix`: `''`
 - `path.assets`: `'/assets'`
 - `path.cache`: `'/cache'`
