@@ -157,7 +157,7 @@ For advanced integrations, the bundled error integration remains available as `D
 
 ## Settings
 
-`Config` loads `.env` from the root path with `Dotenv::safeLoad()`. Use `requireEnv()` when an application wants to fail fast for required environment variables. Because constructor arguments are evaluated before `Config` is created, set environment-derived settings after construction.
+`Config` loads `.env` from the root path with `Dotenv::safeLoad()`. Use `requireEnv()` when an application wants to fail fast for required environment variables. Because constructor arguments are evaluated before `Config` is created, set environment-derived settings after construction. `app.name` is not validated or normalized, so keep it stable and safe for app-specific identifiers.
 
 ```php
 use Duon\Cms\Config;

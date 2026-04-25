@@ -261,7 +261,6 @@ class Config
 				'ẞ' => 'SS',
 			],
 		], $settings);
-		$this->validateApp($this->settings['app.name']);
 	}
 
 	/** @param non-empty-string|list<non-empty-string> $variables */
@@ -274,10 +273,6 @@ class Config
 
 	public function set(string $key, mixed $value): void
 	{
-		if ($key === 'app.name') {
-			$this->validateApp($value);
-		}
-
 		$this->settings[$key] = $value;
 	}
 
@@ -337,15 +332,6 @@ class Config
 		}
 
 		return rtrim($root, '/\\') ?: DIRECTORY_SEPARATOR;
-	}
-
-	protected function validateApp(mixed $app): void
-	{
-		if (!is_string($app) || !preg_match('/^[a-zA-Z0-9_$-]{1,64}$/', $app)) {
-			throw new ValueError(
-				'The app name must be a non-empty string containing only letters, numbers, underscores, dollar signs, or hyphens. Its length must not be longer than 64 characters.',
-			);
-		}
 	}
 
 	public function printAll(): void

@@ -82,22 +82,6 @@ final class ConfigTest extends TestCase
 		$this->assertSame('production', $config->env());
 	}
 
-	public function testSetValidatesAppName(): void
-	{
-		$config = new Config(self::root());
-
-		$this->throws(ValueError::class, 'The app name must be a non-empty string');
-
-		$config->set('app.name', 'not valid');
-	}
-
-	public function testConstructorValidatesAppName(): void
-	{
-		$this->throws(ValueError::class, 'The app name must be a non-empty string');
-
-		new Config(self::root(), ['app.name' => 'not valid']);
-	}
-
 	public function testConstructorRequiresRoot(): void
 	{
 		$this->throws(ValueError::class, 'The root path must be a non-empty string.');
