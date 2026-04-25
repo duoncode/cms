@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\End2End;
 
+use Duon\Cms\Config;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\End2EndTestCase;
 use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
@@ -18,9 +19,9 @@ final class CollectionPaginationTest extends End2EndTestCase
 		$this->authenticateAs('editor');
 	}
 
-	protected function createPlugin(): Plugin
+	protected function createPlugin(Config $config): Plugin
 	{
-		$plugin = parent::createPlugin();
+		$plugin = parent::createPlugin($config);
 		$plugin->collection(TestArticlesCollection::class);
 
 		return $plugin;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\End2End;
 
+use Duon\Cms\Config;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\End2EndTestCase;
 use Duon\Cms\Tests\Fixtures\Collection\TestArticlesCollection;
@@ -11,9 +12,9 @@ use Duon\Cms\Tests\Fixtures\Collection\TestHierarchyCollection;
 
 final class OldPanelCollectionsTest extends End2EndTestCase
 {
-	protected function createPlugin(): Plugin
+	protected function createPlugin(Config $config): Plugin
 	{
-		$plugin = parent::createPlugin();
+		$plugin = parent::createPlugin($config);
 		$content = $plugin->section('Inhalt');
 		$content->collection(TestArticlesCollection::class);
 		$content->section('Unterbereich')->collection(TestHierarchyCollection::class);

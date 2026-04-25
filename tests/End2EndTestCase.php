@@ -235,7 +235,7 @@ class End2EndTestCase extends IntegrationTestCase
 			'upload.allowedExtensions' => ['jpg', 'jpeg', 'png', 'gif', 'pdf'],
 		]);
 
-		$app = new App($factory, $router, $container, $config);
+		$app = new App($factory, $router, $container);
 
 		// Configure error handler middleware
 		$this->errorHandler = $this->createErrorHandler($factory);
@@ -245,7 +245,7 @@ class End2EndTestCase extends IntegrationTestCase
 		$app->load($this->createLocales());
 
 		// Load CMS
-		$plugin = $this->createPlugin();
+		$plugin = $this->createPlugin($config);
 		$app->load($plugin);
 		$app->addRoute($plugin->catchallRoute());
 
@@ -261,9 +261,9 @@ class End2EndTestCase extends IntegrationTestCase
 		return $locales;
 	}
 
-	protected function createPlugin(): Plugin
+	protected function createPlugin(Config $config): Plugin
 	{
-		$plugin = new Plugin(sessionEnabled: false);
+		$plugin = new Plugin($config, sessionEnabled: false);
 
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestPage::class);
 		$plugin->node(\Duon\Cms\Tests\Fixtures\Node\TestArticle::class);

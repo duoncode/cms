@@ -14,7 +14,7 @@ final class PluginIconsTest extends TestCase
 {
 	public function testIconsPrependsProvidersInCustomRegistry(): void
 	{
-		$plugin = new Plugin();
+		$plugin = new Plugin($this->config());
 		$first = $this->provider();
 		$second = $this->provider();
 		$plugin->icons($first);
@@ -28,7 +28,7 @@ final class PluginIconsTest extends TestCase
 
 	public function testIconsReplaceResetsRegistryAndStaysActive(): void
 	{
-		$plugin = new Plugin();
+		$plugin = new Plugin($this->config());
 		$first = $this->provider();
 		$second = $this->provider();
 		$third = $this->provider();
@@ -45,7 +45,7 @@ final class PluginIconsTest extends TestCase
 
 	public function testIconsRejectsInvalidClassString(): void
 	{
-		$plugin = new Plugin();
+		$plugin = new Plugin($this->config());
 		$this->throws(RuntimeException::class, 'Icons providers must implement ' . IconsContract::class);
 		$plugin->icons(self::class);
 	}

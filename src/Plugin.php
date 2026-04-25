@@ -25,7 +25,6 @@ class Plugin implements CorePlugin
 {
 	public const string NODE_TAG = 'duon.cms.node';
 
-	protected readonly Config $config;
 	protected readonly Factory $factory;
 	protected readonly Container $container;
 	protected readonly Database $db;
@@ -44,6 +43,7 @@ class Plugin implements CorePlugin
 	protected bool $replaceDefaultIconProviders = false;
 
 	public function __construct(
+		protected readonly Config $config,
 		protected readonly bool $sessionEnabled = false,
 		?Types $types = null,
 	) {
@@ -55,7 +55,6 @@ class Plugin implements CorePlugin
 	{
 		$this->factory = $app->factory();
 		$this->container = $app->container();
-		$this->config = $app->config();
 
 		$this->addPanelRenderer();
 		$this->addViewRenderer();
@@ -64,13 +63,15 @@ class Plugin implements CorePlugin
 		$this->database();
 
 		$this->container->add($this->container::class, $this->container);
+		$this->container->add(Config::class, $this->config);
+		$this->container->add($this->config::class, $this->config);
 		$this->container->add(Connection::class, $this->connection);
 		$this->container->add(Database::class, $this->db);
 		$this->container->add(Factory::class, $this->factory);
 		$this->container->add(Types::class, $this->types);
 		$this->container->add(Contract\Icons::class, Icons::class);
 
-		$this->routes = new Routes($app->config(), $this->db, $this->factory, $this->sessionEnabled);
+		$this->routes = new Routes($this->config, $this->db, $this->factory, $this->sessionEnabled);
 		$this->routes->add($app);
 	}
 
@@ -169,10 +170,6 @@ class Plugin implements CorePlugin
 
 	protected function database(): void
 	{
-		if (!$this->config) {
-			throw new RuntimeException('No config given');
-		}
-
 		$root = dirname(__DIR__);
 		$sqlConfig = $this->config->get('db.sql', []);
 		$sqlPaths = [];

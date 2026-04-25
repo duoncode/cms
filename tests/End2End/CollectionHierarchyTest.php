@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Tests\End2End;
 
+use Duon\Cms\Config;
 use Duon\Cms\Plugin;
 use Duon\Cms\Tests\End2EndTestCase;
 use Duon\Cms\Tests\Fixtures\Collection\TestHierarchyCollection;
@@ -24,9 +25,9 @@ final class CollectionHierarchyTest extends End2EndTestCase
 		$this->childTypeId = $this->createTestType('test-hierarchy-child');
 	}
 
-	protected function createPlugin(): Plugin
+	protected function createPlugin(Config $config): Plugin
 	{
-		$plugin = parent::createPlugin();
+		$plugin = parent::createPlugin($config);
 		$plugin->node(TestHierarchyParent::class);
 		$plugin->node(TestHierarchyChild::class);
 		$plugin->collection(TestHierarchyCollection::class);
