@@ -14,9 +14,9 @@ use Duon\Core\App as CoreApp;
 use Duon\Core\Factory\Discovery;
 use Duon\Core\Factory\Factory;
 use Duon\Core\Plugin as CorePlugin;
+use Duon\Router\AddsRoutes;
 use Duon\Router\After;
 use Duon\Router\Before;
-use Duon\Router\Endpoint;
 use Duon\Router\Group;
 use Duon\Router\Route;
 use Duon\Router\RouteAdder;
@@ -31,6 +31,8 @@ use Psr\Log\LoggerInterface as Logger;
  */
 class App implements RouteAdder
 {
+	use AddsRoutes;
+
 	protected readonly CoreApp $core;
 	protected readonly Plugin $plugin;
 	protected bool $booted = false;
@@ -167,60 +169,6 @@ class App implements RouteAdder
 	public function addGroup(Group $group): void
 	{
 		$this->core->addGroup($group);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function route(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->route($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function get(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->get($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function post(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->post($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function put(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->put($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function patch(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->patch($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function delete(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->delete($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function head(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->head($pattern, $view, $name);
-	}
-
-	/** @psalm-param \Duon\Router\Route::View $view */
-	public function options(string $pattern, callable|array|string $view, string $name = ''): Route
-	{
-		return $this->core->options($pattern, $view, $name);
-	}
-
-	/** @psalm-param class-string $controller */
-	public function endpoint(array|string $path, string $controller, string|array $args): Endpoint
-	{
-		return $this->core->endpoint($path, $controller, $args);
 	}
 
 	public function group(
