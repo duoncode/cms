@@ -14,10 +14,9 @@ use Duon\Quma\Connection;
 $connection = new Connection(
 	'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
 	__DIR__ . '/db/sql',
-	__DIR__ . '/db/migrations/install',
-	fetchMode: PDO::FETCH_ASSOC,
-	print: false,
-);
+)
+	->migrations(__DIR__ . '/db/migrations/install')
+	->fetch(PDO::FETCH_ASSOC);
 
 // $commands = I18n::commands(
 //     dir: __DIR__ . '/locale',

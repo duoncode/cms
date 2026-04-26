@@ -198,11 +198,11 @@ class Plugin implements CorePlugin
 		$this->connection = new Connection(
 			$this->config->get('db.dsn'),
 			$sql,
-			$namespacedMigrations,
-			fetchMode: PDO::FETCH_ASSOC,
-			options: $this->config->get('db.options'),
-			print: $this->config->get('db.print'),
-		);
+		)
+			->migrations($namespacedMigrations)
+			->fetch(PDO::FETCH_ASSOC)
+			->options($this->config->get('db.options'))
+			->print($this->config->get('db.print'));
 		$this->db = new Database($this->connection);
 	}
 
