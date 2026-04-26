@@ -6,8 +6,8 @@ namespace Duon\Cms\Tests\Unit;
 
 use Duon\Cms\Tests\TestCase;
 
-use function Duon\Cms\Util\escape;
-use function Duon\Cms\Util\nanoid;
+use function Duon\Cms\escape;
+use function Duon\Cms\nanoid;
 
 final class UtilFunctionsTest extends TestCase
 {

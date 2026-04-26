@@ -17,7 +17,7 @@ use Duon\Quma\Database;
 use Duon\Wire\Creator;
 use WeakMap;
 
-use function Duon\Cms\Util\nanoid;
+use function Duon\Cms\nanoid;
 
 class Factory
 {

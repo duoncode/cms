@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Value;
 
-use function Duon\Cms\Util\escape;
+use function Duon\Cms\escape;
 
 class Str extends Value
 {

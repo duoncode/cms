@@ -6,7 +6,7 @@ namespace Duon\Cms\Icons;
 
 use Duon\Cms\Contract;
 
-use function Duon\Cms\Util\escape;
+use function Duon\Cms\escape;
 
 final class Local implements Contract\Icons
 {

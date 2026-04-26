@@ -6,7 +6,7 @@ namespace Duon\Cms\Value;
 
 use Duon\Cms\Exception\RuntimeException;
 
-use function Duon\Cms\Util\escape;
+use function Duon\Cms\escape;
 
 class Picture extends Image
 {

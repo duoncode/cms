@@ -8,7 +8,7 @@ use Duon\Cms\Assets;
 use Duon\Cms\Exception\RuntimeException;
 use Gumlet\ImageResize;
 
-use function Duon\Cms\Util\escape;
+use function Duon\Cms\escape;
 
 class Image extends File
 {

@@ -9,7 +9,7 @@ use Duon\Cms\Locale;
 use Duon\Cms\Locales;
 use Duon\Quma\Database;
 
-use function Duon\Cms\Util\nanoid;
+use function Duon\Cms\nanoid;
 
 class PathManager
 {

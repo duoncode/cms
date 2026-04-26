@@ -8,7 +8,7 @@ use Duon\Cms\Field\Capability\Translatable;
 use Duon\Cms\Field\Field;
 use Duon\Cms\Field\Owner;
 
-use function Duon\Cms\Util\escape;
+use function Duon\Cms\escape;
 
 /**
  * @property-read Field&Translatable $field

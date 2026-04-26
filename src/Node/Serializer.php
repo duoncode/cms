@@ -8,7 +8,7 @@ use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Locales;
 use ReflectionMethod;
 
-use function Duon\Cms\Util\nanoid;
+use function Duon\Cms\nanoid;
 
 class Serializer
 {
