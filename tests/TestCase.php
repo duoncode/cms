@@ -144,10 +144,9 @@ class TestCase extends BaseTestCase
 			new \Duon\Quma\Connection(
 				'pgsql:host=localhost;dbname=duoncms;user=duoncms;password=duoncms',
 				self::root() . '/db/sql',
-				self::root() . '/db/migrations',
-				fetchMode: PDO::FETCH_ASSOC,
-				print: false,
-			),
+			)
+				->migrations(self::root() . '/db/migrations')
+				->fetch(PDO::FETCH_ASSOC),
 		);
 	}
 
