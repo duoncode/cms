@@ -77,6 +77,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame(self::root() . '/public', $config->get('path.public'));
 		$this->assertNull($config->get('app.secret'));
 		$this->assertFalse($config->get('session.enabled'));
+		$this->assertTrue($config->get('session.options')['cookie_secure']);
 		$this->assertNull($config->get('db.dsn'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());

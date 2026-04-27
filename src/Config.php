@@ -55,6 +55,7 @@ class Config
 			'session.options' => [
 				'cookie_httponly' => true,
 				'cookie_lifetime' => 0,
+				'cookie_secure' => true,
 				'gc_maxlifetime' => 3600,
 			],
 			'media.fileserver' => null,

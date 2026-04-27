@@ -24,7 +24,7 @@
 		"duon/core": "dev-main",
 		"duon/error": "^0.1",
 		"duon/quma": "^0.1",
-		"duon/session": "^0.1",
+		"duon/session": "dev-main",
 		"duon/sire": "^0.3",
 		"gumlet/php-image-resize": "2.0.*",
 		"hidehalo/nanoid-php": "^2",

@@ -31,7 +31,9 @@ class Auth
 			$session->forgetRemembered();
 		}
 
-		$session->forget();
+		if ($session->active()) {
+			$session->destroy();
+		}
 	}
 
 	public function authenticate(
@@ -182,6 +184,10 @@ class Auth
 	protected function login(int $userId, bool $remember): void
 	{
 		$session = $this->session;
+
+		if (!$session->active()) {
+			$session->start();
+		}
 
 		// Regenerate the session id before setting the user id
 		// to mitigate session fixation attack.

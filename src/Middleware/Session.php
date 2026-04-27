@@ -22,8 +22,8 @@ class Session implements Middleware
 	public function process(Request $request, Handler $handler): Response
 	{
 		$session = new \Duon\Cms\Session(
-			$this->config->app(),
 			$this->config->get('session.options'),
+			$this->config->app(),
 			$this->config->get('session.handler', null),
 		);
 
@@ -32,7 +32,7 @@ class Session implements Middleware
 		$lastActivity = $session->lastActivity();
 
 		if ($lastActivity && (time() - $lastActivity) > $expires) {
-			$session->forget();
+			$session->destroy();
 			$session->start();
 		}
 

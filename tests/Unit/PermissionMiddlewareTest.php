@@ -47,7 +47,7 @@ final class PermissionMiddlewareTest extends TestCase
 
 	public function testForbiddenWhenPermissionMissing(): void
 	{
-		$session = new Session('permission-test', ['use_cookies' => 0]);
+		$session = new Session(['use_cookies' => 0], 'permission-test');
 		$session->start();
 		$session->setUser(42);
 

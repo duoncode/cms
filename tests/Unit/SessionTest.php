@@ -27,7 +27,7 @@ final class SessionTest extends TestCase
 
 	public function testAuthenticatedUserIdRoundTrip(): void
 	{
-		$session = new Session('test-session', ['use_cookies' => 0]);
+		$session = new Session(['use_cookies' => 0], 'test-session');
 		$session->start();
 		$session->setUser(42);
 
@@ -36,7 +36,7 @@ final class SessionTest extends TestCase
 
 	public function testSignalActivityPersistsTimestamp(): void
 	{
-		$session = new Session('test-session', ['use_cookies' => 0]);
+		$session = new Session(['use_cookies' => 0], 'test-session');
 		$session->start();
 		$session->signalActivity();
 

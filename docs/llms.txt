@@ -430,6 +430,7 @@ Session:
 - `session.enabled`: `env('CMS_SESSION', false)` after `.env` has loaded; adds session middleware to selected frontend routes
 - `session.options.cookie_httponly`: `true`
 - `session.options.cookie_lifetime`: `0`
+- `session.options.cookie_secure`: `true`
 - `session.options.gc_maxlifetime`: `3600`
 - `session.handler`: optional
 

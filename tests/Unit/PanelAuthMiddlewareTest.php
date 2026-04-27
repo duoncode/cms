@@ -75,7 +75,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 
 	public function testHtmxRequestWithoutPanelPermissionReturnsForbidden(): void
 	{
-		$session = new Session('panel-auth', ['use_cookies' => 0]);
+		$session = new Session(['use_cookies' => 0], 'panel-auth');
 		$session->start();
 		$session->setUser(42);
 
@@ -111,7 +111,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 
 	public function testPanelUserCanAccessProtectedRoute(): void
 	{
-		$session = new Session('panel-auth', ['use_cookies' => 0]);
+		$session = new Session(['use_cookies' => 0], 'panel-auth');
 		$session->start();
 		$session->setUser(7);
 

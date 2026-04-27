@@ -92,7 +92,7 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		]);
 
 		$request = $this->psrRequest();
-		$session = new Session('test_session', ['cache_expire' => 3600]);
+		$session = new Session(['cache_expire' => 3600], 'test_session');
 		$auth = $this->createAuth($request, $session);
 
 		// Authenticate with remember me and session initialization
@@ -353,7 +353,7 @@ final class AuthIntegrationTest extends IntegrationTestCase
 		]);
 
 		$request = $this->psrRequest();
-		$session = new Session('test_session', ['cache_expire' => 3600]);
+		$session = new Session(['cache_expire' => 3600], 'test_session');
 		$session->setUser($userId);
 
 		$auth = $this->createAuth($request, $session);

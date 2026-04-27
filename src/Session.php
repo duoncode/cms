@@ -12,11 +12,11 @@ class Session extends BaseSession
 	protected string $authCookie;
 
 	public function __construct(
-		string $name = '',
 		array $options = [],
+		string $name = '',
 		?SessionHandlerInterface $handler = null,
 	) {
-		parent::__construct($name, $options, $handler);
+		parent::__construct($options, $name, $handler);
 
 		$this->authCookie = $name ? $name . '_auth' : 'duon_auth';
 	}
