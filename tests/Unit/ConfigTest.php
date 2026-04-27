@@ -121,6 +121,13 @@ final class ConfigTest extends TestCase
 		$this->assertSame('present', $_ENV['CMS_REQUIRED']);
 	}
 
+	public function testSecureCookieCanBeDisabledFromEnvironment(): void
+	{
+		$config = new Config($this->rootWithEnv("CMS_SECURE_COOKIE=false\n"));
+
+		$this->assertFalse($config->get('session.options')['cookie_secure']);
+	}
+
 	public function testDatabaseDsnUsesPreferredEnvironmentVariable(): void
 	{
 		$config = new Config($this->rootWithEnv("CMS_DB_DSN=pgsql:dbname=cms\n"));
