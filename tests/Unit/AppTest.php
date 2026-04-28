@@ -153,23 +153,23 @@ final class AppTest extends TestCase
 		$this->assertFalse($app->container()->has(Config::class));
 
 		$app->boot()->boot();
-		$route = $app->router()->match(
+		$match = $app->router()->match(
 			$app->factory()->serverRequestFactory()->createServerRequest('GET', '/missing'),
 		);
 
 		$this->assertSame($app->config(), $app->container()->get(Config::class));
-		$this->assertSame('cms.catchall', $route->name());
+		$this->assertSame('cms.catchall', $match->route()->name());
 	}
 
 	public function testSessionMiddlewareCanBeEnabledInConfig(): void
 	{
 		$app = $this->app(['session.enabled' => true]);
 		$app->boot();
-		$route = $app->router()->match(
+		$match = $app->router()->match(
 			$app->factory()->serverRequestFactory()->createServerRequest('GET', '/missing'),
 		);
 
-		$this->assertTrue($this->hasSessionMiddleware($route->getMiddleware()));
+		$this->assertTrue($this->hasSessionMiddleware($match->route()->getMiddleware()));
 	}
 
 	public function testCoreMethodsDelegateToInternalCoreApp(): void
