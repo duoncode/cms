@@ -429,9 +429,9 @@ Session:
 
 - `session.enabled`: `env('CMS_SESSION', false)` after `.env` has loaded; adds session middleware to selected frontend routes
 - `session.options.cookie_httponly`: `true`
-- `session.options.cookie_lifetime`: `0`
+- `session.options.cookie_lifetime`: `(int) env('CMS_SESSION_COOKIE_LIFETIME', '0')`
 - `session.options.cookie_secure`: `env('CMS_SECURE_COOKIE', true)`
-- `session.options.gc_maxlifetime`: `3600`
+- `session.options.gc_maxlifetime`: `(int) env('CMS_SESSION_IDLE_TIMEOUT', '3600')`
 - `session.handler`: optional
 
 Uploads and media:

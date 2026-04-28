@@ -77,7 +77,9 @@ final class ConfigTest extends TestCase
 		$this->assertSame(self::root() . '/public', $config->get('path.public'));
 		$this->assertNull($config->get('app.secret'));
 		$this->assertFalse($config->get('session.enabled'));
+		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
 		$this->assertTrue($config->get('session.options')['cookie_secure']);
+		$this->assertSame(3600, $config->get('session.options')['gc_maxlifetime']);
 		$this->assertNull($config->get('db.dsn'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());
@@ -121,11 +123,15 @@ final class ConfigTest extends TestCase
 		$this->assertSame('present', $_ENV['CMS_REQUIRED']);
 	}
 
-	public function testSecureCookieCanBeDisabledFromEnvironment(): void
+	public function testSessionOptionsCanBeChangedFromEnvironment(): void
 	{
-		$config = new Config($this->rootWithEnv("CMS_SECURE_COOKIE=false\n"));
+		$config = new Config($this->rootWithEnv(
+			"CMS_SECURE_COOKIE=false\nCMS_SESSION_COOKIE_LIFETIME=86400\nCMS_SESSION_IDLE_TIMEOUT=7200\n",
+		));
 
 		$this->assertFalse($config->get('session.options')['cookie_secure']);
+		$this->assertSame(86400, $config->get('session.options')['cookie_lifetime']);
+		$this->assertSame(7200, $config->get('session.options')['gc_maxlifetime']);
 	}
 
 	public function testDatabaseDsnUsesPreferredEnvironmentVariable(): void

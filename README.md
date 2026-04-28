@@ -170,7 +170,9 @@ $app->config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
 'path.views' => '/views',             // View directory relative to path.root
 'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated
 'session.enabled' => env('CMS_SESSION', false), // Add session middleware to frontend routes
+'session.options.cookie_lifetime' => (int) env('CMS_SESSION_COOKIE_LIFETIME', '0'), // Browser session cookie
 'session.options.cookie_secure' => env('CMS_SECURE_COOKIE', true), // Send session cookies only over HTTPS
+'session.options.gc_maxlifetime' => (int) env('CMS_SESSION_IDLE_TIMEOUT', '3600'), // Session idle timeout
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
 'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
 'error.views' => null,                // Error template directory; defaults to path.views

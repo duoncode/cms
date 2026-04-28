@@ -54,9 +54,9 @@ class Config
 			'session.enabled' => env('CMS_SESSION', false),
 			'session.options' => [
 				'cookie_httponly' => true,
-				'cookie_lifetime' => 0,
 				'cookie_secure' => env('CMS_SECURE_COOKIE', true),
-				'gc_maxlifetime' => 3600,
+				'cookie_lifetime' => (int) env('CMS_SESSION_COOKIE_LIFETIME', '0'),
+				'gc_maxlifetime' => (int) env('CMS_SESSION_IDLE_TIMEOUT', '3600'),
 			],
 			'media.fileserver' => null,
 			'upload.mimetypes.file' => [
