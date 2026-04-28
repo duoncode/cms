@@ -23,7 +23,7 @@
 		"duon/boiler": "^0.3.3",
 		"duon/core": "dev-main",
 		"duon/error": "^0.1",
-		"duon/quma": "^0.1",
+		"duon/quma": "dev-main",
 		"duon/session": "dev-main",
 		"duon/sire": "^0.3",
 		"gumlet/php-image-resize": "2.0.*",
