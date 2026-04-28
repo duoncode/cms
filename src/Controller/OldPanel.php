@@ -70,7 +70,7 @@ class OldPanel
 			'cache' => $config->get('path.cache'),
 			'prefix' => $config->get('path.prefix'),
 			'sessionExpires' => $config->get('session.options')['gc_maxlifetime'],
-			'transliterate' => $config->get('slug.transliterate'),
+			'transliterate' => [],
 			'allowedFiles' => [
 				'file' => array_merge(...array_values($config->get('upload.mimetypes.file'))),
 				'image' => array_merge(...array_values($config->get('upload.mimetypes.image'))),
