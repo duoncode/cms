@@ -8,8 +8,6 @@ use Dotenv\Dotenv;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
 
-use function Duon\Core\env;
-
 class Config
 {
 	/** @var array<string, mixed> */
@@ -22,9 +20,10 @@ class Config
 		$root = $this->normalizeRoot($root);
 		$this->dotenv = Dotenv::createImmutable($root);
 		$this->dotenv->safeLoad();
+		$this->validateEnvironment();
 		$this->settings = array_merge([
 			'app.name' => env('APP_NAME', 'duoncms'),
-			'app.debug' => env('APP_DEBUG', false),
+			'app.debug' => $this->boolEnv('APP_DEBUG', false),
 			'app.env' => env('APP_ENV', ''),
 			'app.secret' => env('APP_SECRET', null),
 			'path.root' => $root,
@@ -51,12 +50,12 @@ class Config
 			'db.migrations' => [],
 			'db.print' => false,
 			'db.options' => [],
-			'session.enabled' => env('SITE_SESSION_ENABLED', false),
+			'session.enabled' => $this->boolEnv('SITE_SESSION_ENABLED', false),
 			'session.options' => [
 				'cookie_httponly' => true,
-				'cookie_secure' => env('SESSION_COOKIE_SECURE', true),
-				'cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', '0'),
-				'gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', '3600'),
+				'cookie_secure' => $this->boolEnv('SESSION_COOKIE_SECURE', true),
+				'cookie_lifetime' => $this->intEnv('SESSION_COOKIE_LIFETIME', 0),
+				'gc_maxlifetime' => $this->intEnv('SESSION_IDLE_TIMEOUT', 3600),
 			],
 			'media.fileserver' => null,
 			'upload.mimetypes.file' => [
@@ -341,5 +340,29 @@ class Config
 	public function printAll(): void
 	{
 		error_log(print_r($this->settings, true));
+	}
+
+	protected function validateEnvironment(): void
+	{
+		$this->dotenv->ifPresent([
+			'APP_DEBUG',
+			'SITE_SESSION_ENABLED',
+			'SESSION_COOKIE_SECURE',
+		])->isBoolean();
+
+		$this->dotenv->ifPresent([
+			'SESSION_COOKIE_LIFETIME',
+			'SESSION_IDLE_TIMEOUT',
+		])->isInteger();
+	}
+
+	protected function boolEnv(string $key, bool $default): bool
+	{
+		return filter_var(env($key, $default), FILTER_VALIDATE_BOOL);
+	}
+
+	protected function intEnv(string $key, int $default): int
+	{
+		return (int) env($key, $default);
 	}
 }

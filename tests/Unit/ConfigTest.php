@@ -16,7 +16,7 @@ use Duon\Core\Exception\ValueError;
  */
 final class ConfigTest extends TestCase
 {
-	/** @var array<string, array{env: bool, envValue: mixed, server: bool, serverValue: mixed}> */
+	/** @var array<string, array{env: bool, envValue: mixed, server: bool, serverValue: mixed, process: bool, processValue: string|null}> */
 	private array $environment = [];
 
 	/** @var list<string> */
@@ -65,6 +65,12 @@ final class ConfigTest extends TestCase
 				$_SERVER[$key] = $value['serverValue'];
 			} else {
 				unset($_SERVER[$key]);
+			}
+
+			if ($value['process']) {
+				putenv($key . '=' . $value['processValue']);
+			} else {
+				putenv($key);
 			}
 		}
 
@@ -167,6 +173,28 @@ final class ConfigTest extends TestCase
 		$this->assertSame($config, $config->requireEnv('APP_REQUIRED'));
 	}
 
+	public function testRequireEnvAcceptsServerEnvironmentVariable(): void
+	{
+		$_SERVER['APP_REQUIRED'] = 'present';
+		$config = new Config($this->rootWithEnv());
+
+		$this->assertSame($config, $config->requireEnv('APP_REQUIRED'));
+	}
+
+	public function testInvalidBooleanEnvironmentVariableFails(): void
+	{
+		$this->throws(ValidationException::class);
+
+		new Config($this->rootWithEnv("SITE_SESSION_ENABLED=maybe\n"));
+	}
+
+	public function testInvalidIntegerEnvironmentVariableFails(): void
+	{
+		$this->throws(ValidationException::class);
+
+		new Config($this->rootWithEnv("SESSION_IDLE_TIMEOUT=forever\n"));
+	}
+
 	public function testRequireEnvFailsForMissingVariable(): void
 	{
 		$config = new Config($this->rootWithEnv());
@@ -179,14 +207,18 @@ final class ConfigTest extends TestCase
 	private function clearEnvironment(string ...$keys): void
 	{
 		foreach ($keys as $key) {
+			$processValue = getenv($key);
 			$this->environment[$key] = [
 				'env' => array_key_exists($key, $_ENV),
 				'envValue' => $_ENV[$key] ?? null,
 				'server' => array_key_exists($key, $_SERVER),
 				'serverValue' => $_SERVER[$key] ?? null,
+				'process' => $processValue !== false,
+				'processValue' => $processValue === false ? null : $processValue,
 			];
 
 			unset($_ENV[$key], $_SERVER[$key]);
+			putenv($key);
 		}
 	}
 

@@ -9,7 +9,7 @@ use Duon\Cms\Tests\TestCase;
 use function Duon\Cms\escape;
 use function Duon\Cms\nanoid;
 
-final class UtilFunctionsTest extends TestCase
+final class FunctionsTest extends TestCase
 {
 	public function testNanoidReturns13Characters(): void
 	{
