@@ -157,22 +157,22 @@ $app = App::create(dirname(__DIR__), [
     'app.name' => 'mycms',
 ]);
 
-$app->config->requireEnv(['CMS_DB_DSN', 'CMS_SECRET']);
+$app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
 ```text
-'app.name' => 'duoncms',              // App name used by sessions and helpers
-'app.debug' => env('CMS_DEBUG', false), // Debug mode from the loaded environment
-'app.env' => env('CMS_ENV', ''),      // App environment from the loaded environment
-'app.secret' => env('CMS_SECRET', null), // App secret from the loaded environment
+'app.name' => env('APP_NAME', 'duoncms'), // App name used by sessions and helpers
+'app.debug' => env('APP_DEBUG', false), // Debug mode from the loaded environment
+'app.env' => env('APP_ENV', ''),      // App environment from the loaded environment
+'app.secret' => env('APP_SECRET', null), // App secret from the loaded environment
 'path.root' => $root,                 // Required project root passed to Config
 'path.public' => $root . '/public',   // Public document root
 'path.views' => '/views',             // View directory relative to path.root
-'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)), // Database DSN; CMS_DSN is deprecated
-'session.enabled' => env('CMS_SESSION', false), // Add session middleware to frontend routes
-'session.options.cookie_lifetime' => (int) env('CMS_SESSION_COOKIE_LIFETIME', '0'), // Browser session cookie
-'session.options.cookie_secure' => env('CMS_SECURE_COOKIE', true), // Send session cookies only over HTTPS
-'session.options.gc_maxlifetime' => (int) env('CMS_SESSION_IDLE_TIMEOUT', '3600'), // Session idle timeout
+'db.dsn' => env('DATABASE_URL', null), // Database DSN
+'session.enabled' => env('SITE_SESSION_ENABLED', false), // Add session middleware to frontend routes
+'session.options.cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', '0'), // Browser session cookie
+'session.options.cookie_secure' => env('SESSION_COOKIE_SECURE', true), // Send session cookies only over HTTPS
+'session.options.gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', '3600'), // Session idle timeout
 'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
 'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
 'error.views' => null,                // Error template directory; defaults to path.views

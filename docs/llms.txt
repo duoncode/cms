@@ -121,7 +121,7 @@ Important:
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
 - `run()` calls `boot()` once, loads the internal CMS plugin, and adds the catchall route after routes and plugins registered through the facade.
 - Routes include panel endpoints and media endpoints automatically.
-- If `session.enabled` is true, selected frontend routes get session middleware. It defaults to `CMS_SESSION`.
+- If `session.enabled` is true, selected frontend routes get session middleware. It defaults to `SITE_SESSION_ENABLED`.
 - The manual `Duon\Core\App` + `Duon\Cms\Plugin` API remains available for advanced integrations.
 
 3) Defining node types
@@ -391,10 +391,10 @@ Image resizing query options:
 
 App and environment:
 
-- `app.name`: `'duoncms'` (not validated or normalized; keep it stable and safe for app-specific identifiers)
-- `app.debug`: `env('CMS_DEBUG', false)` after `.env` has loaded
-- `app.env`: `env('CMS_ENV', '')` after `.env` has loaded
-- `app.secret`: `env('CMS_SECRET', null)` after `.env` has loaded
+- `app.name`: `env('APP_NAME', 'duoncms')` after `.env` has loaded; not validated or normalized, so keep it stable and safe for app-specific identifiers
+- `app.debug`: `env('APP_DEBUG', false)` after `.env` has loaded
+- `app.env`: `env('APP_ENV', '')` after `.env` has loaded
+- `app.secret`: `env('APP_SECRET', null)` after `.env` has loaded
 
 Paths and panel:
 
@@ -419,7 +419,7 @@ Errors:
 
 Database:
 
-- `db.dsn`: `env('CMS_DB_DSN', env('CMS_DSN', null))` after `.env` has loaded; `CMS_DSN` is a deprecated fallback
+- `db.dsn`: `env('DATABASE_URL', null)` after `.env` has loaded
 - `db.sql`: `[]`
 - `db.migrations`: `[]`
 - `db.options`: `[]`
@@ -427,11 +427,11 @@ Database:
 
 Session:
 
-- `session.enabled`: `env('CMS_SESSION', false)` after `.env` has loaded; adds session middleware to selected frontend routes
+- `session.enabled`: `env('SITE_SESSION_ENABLED', false)` after `.env` has loaded; adds session middleware to selected frontend routes
 - `session.options.cookie_httponly`: `true`
-- `session.options.cookie_lifetime`: `(int) env('CMS_SESSION_COOKIE_LIFETIME', '0')`
-- `session.options.cookie_secure`: `env('CMS_SECURE_COOKIE', true)`
-- `session.options.gc_maxlifetime`: `(int) env('CMS_SESSION_IDLE_TIMEOUT', '3600')`
+- `session.options.cookie_lifetime`: `(int) env('SESSION_COOKIE_LIFETIME', '0')`
+- `session.options.cookie_secure`: `env('SESSION_COOKIE_SECURE', true)`
+- `session.options.gc_maxlifetime`: `(int) env('SESSION_IDLE_TIMEOUT', '3600')`
 - `session.handler`: optional
 
 Uploads and media:

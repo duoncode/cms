@@ -27,14 +27,18 @@ final class ConfigTest extends TestCase
 		parent::setUp();
 
 		$this->clearEnvironment(
-			'CMS_DB_DSN',
-			'CMS_DEBUG',
+			'APP_DEBUG',
+			'APP_ENV',
+			'APP_MISSING',
+			'APP_NAME',
+			'APP_REQUIRED',
+			'APP_SECRET',
 			'CMS_DSN',
-			'CMS_ENV',
-			'CMS_REQUIRED',
-			'CMS_MISSING',
-			'CMS_SECRET',
-			'CMS_SESSION',
+			'DATABASE_URL',
+			'SITE_SESSION_ENABLED',
+			'SESSION_COOKIE_LIFETIME',
+			'SESSION_COOKIE_SECURE',
+			'SESSION_IDLE_TIMEOUT',
 		);
 	}
 
@@ -112,21 +116,22 @@ final class ConfigTest extends TestCase
 	public function testDotenvIsLoadedFromRoot(): void
 	{
 		$root = $this->rootWithEnv(
-			"CMS_DEBUG=true\nCMS_ENV=testing\nCMS_REQUIRED=present\nCMS_SECRET=test-secret\nCMS_SESSION=true\n",
+			"APP_NAME=test-cms\nAPP_DEBUG=true\nAPP_ENV=testing\nAPP_REQUIRED=present\nAPP_SECRET=test-secret\nSITE_SESSION_ENABLED=true\n",
 		);
 		$config = new Config($root);
 
+		$this->assertSame('test-cms', $config->app());
 		$this->assertTrue($config->debug());
 		$this->assertSame('testing', $config->env());
 		$this->assertSame('test-secret', $config->get('app.secret'));
 		$this->assertTrue($config->get('session.enabled'));
-		$this->assertSame('present', $_ENV['CMS_REQUIRED']);
+		$this->assertSame('present', $_ENV['APP_REQUIRED']);
 	}
 
 	public function testSessionOptionsCanBeChangedFromEnvironment(): void
 	{
 		$config = new Config($this->rootWithEnv(
-			"CMS_SECURE_COOKIE=false\nCMS_SESSION_COOKIE_LIFETIME=86400\nCMS_SESSION_IDLE_TIMEOUT=7200\n",
+			"SESSION_COOKIE_SECURE=false\nSESSION_COOKIE_LIFETIME=86400\nSESSION_IDLE_TIMEOUT=7200\n",
 		));
 
 		$this->assertFalse($config->get('session.options')['cookie_secure']);
@@ -134,27 +139,18 @@ final class ConfigTest extends TestCase
 		$this->assertSame(7200, $config->get('session.options')['gc_maxlifetime']);
 	}
 
-	public function testDatabaseDsnUsesPreferredEnvironmentVariable(): void
+	public function testDatabaseDsnUsesEnvironmentVariable(): void
 	{
-		$config = new Config($this->rootWithEnv("CMS_DB_DSN=pgsql:dbname=cms\n"));
+		$config = new Config($this->rootWithEnv("DATABASE_URL=pgsql:dbname=cms\n"));
 
 		$this->assertSame('pgsql:dbname=cms', $config->get('db.dsn'));
 	}
 
-	public function testDatabaseDsnFallsBackToLegacyEnvironmentVariable(): void
+	public function testDatabaseDsnDoesNotFallBackToLegacyEnvironmentVariable(): void
 	{
 		$config = new Config($this->rootWithEnv("CMS_DSN=pgsql:dbname=legacy\n"));
 
-		$this->assertSame('pgsql:dbname=legacy', $config->get('db.dsn'));
-	}
-
-	public function testPreferredDatabaseDsnWinsOverLegacyEnvironmentVariable(): void
-	{
-		$config = new Config($this->rootWithEnv(
-			"CMS_DB_DSN=pgsql:dbname=cms\nCMS_DSN=pgsql:dbname=legacy\n",
-		));
-
-		$this->assertSame('pgsql:dbname=cms', $config->get('db.dsn'));
+		$this->assertNull($config->get('db.dsn'));
 	}
 
 	public function testMissingDotenvFileIsIgnored(): void
@@ -166,9 +162,9 @@ final class ConfigTest extends TestCase
 
 	public function testRequireEnvReturnsConfigWhenVariableExists(): void
 	{
-		$config = new Config($this->rootWithEnv("CMS_REQUIRED=present\n"));
+		$config = new Config($this->rootWithEnv("APP_REQUIRED=present\n"));
 
-		$this->assertSame($config, $config->requireEnv('CMS_REQUIRED'));
+		$this->assertSame($config, $config->requireEnv('APP_REQUIRED'));
 	}
 
 	public function testRequireEnvFailsForMissingVariable(): void
@@ -177,7 +173,7 @@ final class ConfigTest extends TestCase
 
 		$this->throws(ValidationException::class);
 
-		$config->requireEnv('CMS_MISSING');
+		$config->requireEnv('APP_MISSING');
 	}
 
 	private function clearEnvironment(string ...$keys): void

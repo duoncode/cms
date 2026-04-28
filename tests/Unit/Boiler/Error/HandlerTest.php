@@ -73,7 +73,7 @@ final class HandlerTest extends TestCase
 	#[RunInSeparateProcess]
 	public function testCreateUsesConfigDebugInsteadOfEnvironment(): void
 	{
-		$_ENV['CMS_DEBUG'] = 'false';
+		$_ENV['APP_DEBUG'] = 'false';
 		$errorHandler = $this->handler($this->errorConfig(debug: true))->create();
 		$reflection = new ReflectionClass($errorHandler);
 		$property = $reflection->getProperty('debug');

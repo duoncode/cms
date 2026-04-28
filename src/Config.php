@@ -23,10 +23,10 @@ class Config
 		$this->dotenv = Dotenv::createImmutable($root);
 		$this->dotenv->safeLoad();
 		$this->settings = array_merge([
-			'app.name' => 'duoncms',
-			'app.debug' => env('CMS_DEBUG', false),
-			'app.env' => env('CMS_ENV', ''),
-			'app.secret' => env('CMS_SECRET', null),
+			'app.name' => env('APP_NAME', 'duoncms'),
+			'app.debug' => env('APP_DEBUG', false),
+			'app.env' => env('APP_ENV', ''),
+			'app.secret' => env('APP_SECRET', null),
 			'path.root' => $root,
 			'path.public' => $root . '/public',
 			'path.prefix' => '',
@@ -46,17 +46,17 @@ class Config
 			'icons.iconify.base_url' => 'https://api.iconify.design',
 			'icons.iconify.timeout' => 5,
 			'icons.iconify.user_agent' => 'duon/cms',
-			'db.dsn' => env('CMS_DB_DSN', env('CMS_DSN', null)),
+			'db.dsn' => env('DATABASE_URL', null),
 			'db.sql' => [],
 			'db.migrations' => [],
 			'db.print' => false,
 			'db.options' => [],
-			'session.enabled' => env('CMS_SESSION', false),
+			'session.enabled' => env('SITE_SESSION_ENABLED', false),
 			'session.options' => [
 				'cookie_httponly' => true,
-				'cookie_secure' => env('CMS_SECURE_COOKIE', true),
-				'cookie_lifetime' => (int) env('CMS_SESSION_COOKIE_LIFETIME', '0'),
-				'gc_maxlifetime' => (int) env('CMS_SESSION_IDLE_TIMEOUT', '3600'),
+				'cookie_secure' => env('SESSION_COOKIE_SECURE', true),
+				'cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', '0'),
+				'gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', '3600'),
 			],
 			'media.fileserver' => null,
 			'upload.mimetypes.file' => [
