@@ -76,7 +76,7 @@ class Embed
 
 	protected function panelBasePath(): string
 	{
-		return rtrim($this->config->get('path.prefix'), '/') . $this->config->get('path.panel');
+		return rtrim($this->config->path->prefix, '/') . $this->config->panel->path;
 	}
 
 	protected function embedPath(string $type, string $node): string

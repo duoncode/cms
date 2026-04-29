@@ -83,20 +83,20 @@ final class ConfigTest extends TestCase
 		$config = new Config(self::root());
 
 		$this->assertSame('duoncms', $config->get('app.name'));
-		$this->assertSame('duoncms', $config->get('app.name'));
-		$this->assertSame(self::root(), $config->get('path.root'));
-		$this->assertSame(self::root() . '/public', $config->get('path.public'));
-		$this->assertNull($config->get('app.secret'));
-		$this->assertSame([], $config->get('panel.theme'));
-		$this->assertFalse($config->get('session.enabled'));
-		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
-		$this->assertTrue($config->get('session.options')['cookie_secure']);
-		$this->assertSame(3600, $config->get('session.options')['gc_maxlifetime']);
-		$this->assertSame(3600, $config->get('session.options')['cache_expire']);
-		$this->assertNull($config->get('session.handler'));
-		$this->assertNull($config->get('db.dsn'));
-		$this->assertSame(Password::DEFAULT_PASSWORD_ENTROPY, $config->get('password.entropy'));
-		$this->assertNull($config->get('password.algorithm'));
+		$this->assertSame('duoncms', $config->app->name);
+		$this->assertSame(self::root(), $config->path->root);
+		$this->assertSame(self::root() . '/public', $config->path->public);
+		$this->assertNull($config->app->secret);
+		$this->assertSame([], $config->panel->theme);
+		$this->assertFalse($config->session->enabled);
+		$this->assertSame(0, $config->session->options['cookie_lifetime']);
+		$this->assertTrue($config->session->options['cookie_secure']);
+		$this->assertSame(3600, $config->session->options['gc_maxlifetime']);
+		$this->assertSame(3600, $config->session->options['cache_expire']);
+		$this->assertNull($config->session->handler);
+		$this->assertNull($config->db->dsn);
+		$this->assertSame(Password::DEFAULT_PASSWORD_ENTROPY, $config->password->entropy);
+		$this->assertNull($config->password->algorithm);
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());
 	}
@@ -111,11 +111,11 @@ final class ConfigTest extends TestCase
 			'session.enabled' => true,
 		]);
 
-		$this->assertSame('site-cms', $config->get('app.name'));
+		$this->assertSame('site-cms', $config->app->name);
 		$this->assertFalse($config->debug());
 		$this->assertSame('production', $config->env());
-		$this->assertSame('configured-secret', $config->get('app.secret'));
-		$this->assertTrue($config->get('session.enabled'));
+		$this->assertSame('configured-secret', $config->app->secret);
+		$this->assertTrue($config->session->enabled);
 	}
 
 	public function testConstructorRequiresRoot(): void
@@ -132,7 +132,7 @@ final class ConfigTest extends TestCase
 			'path.panel' => '/admin',
 		]);
 
-		$this->assertSame('/admin', $config->get('path.panel'));
+		$this->assertSame('/admin', $config->panel->path);
 	}
 
 	public function testDotenvIsLoadedFromRoot(): void
@@ -142,11 +142,11 @@ final class ConfigTest extends TestCase
 		);
 		$config = new Config($root);
 
-		$this->assertSame('test-cms', $config->get('app.name'));
+		$this->assertSame('test-cms', $config->app->name);
 		$this->assertTrue($config->debug());
 		$this->assertSame('testing', $config->env());
-		$this->assertSame('test-secret', $config->get('app.secret'));
-		$this->assertTrue($config->get('session.enabled'));
+		$this->assertSame('test-secret', $config->app->secret);
+		$this->assertTrue($config->session->enabled);
 		$this->assertSame('present', $_ENV['APP_REQUIRED']);
 	}
 
@@ -156,9 +156,9 @@ final class ConfigTest extends TestCase
 			"SESSION_COOKIE_SECURE=false\nSESSION_COOKIE_LIFETIME=86400\nSESSION_IDLE_TIMEOUT=7200\n",
 		));
 
-		$this->assertFalse($config->get('session.options')['cookie_secure']);
-		$this->assertSame(86400, $config->get('session.options')['cookie_lifetime']);
-		$this->assertSame(7200, $config->get('session.options')['gc_maxlifetime']);
+		$this->assertFalse($config->session->options['cookie_secure']);
+		$this->assertSame(86400, $config->session->options['cookie_lifetime']);
+		$this->assertSame(7200, $config->session->options['gc_maxlifetime']);
 	}
 
 	public function testSessionOptionsAreDeepMerged(): void
@@ -169,11 +169,11 @@ final class ConfigTest extends TestCase
 			],
 		]);
 
-		$this->assertTrue($config->get('session.options')['cookie_httponly']);
-		$this->assertFalse($config->get('session.options')['cookie_secure']);
-		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
-		$this->assertSame(3600, $config->get('session.options')['gc_maxlifetime']);
-		$this->assertSame(3600, $config->get('session.options')['cache_expire']);
+		$this->assertTrue($config->session->options['cookie_httponly']);
+		$this->assertFalse($config->session->options['cookie_secure']);
+		$this->assertSame(0, $config->session->options['cookie_lifetime']);
+		$this->assertSame(3600, $config->session->options['gc_maxlifetime']);
+		$this->assertSame(3600, $config->session->options['cache_expire']);
 	}
 
 	public function testListSettingsAreNormalized(): void
@@ -185,10 +185,32 @@ final class ConfigTest extends TestCase
 			'icons.local.paths' => '/icons',
 		]);
 
-		$this->assertSame(['/theme.css'], $config->get('panel.theme'));
-		$this->assertSame(['/sql'], $config->get('db.sql'));
-		$this->assertSame(['/migrations'], $config->get('db.migrations'));
-		$this->assertSame(['/icons'], $config->get('icons.local.paths'));
+		$this->assertSame(['/theme.css'], $config->panel->theme);
+		$this->assertSame(['/sql'], $config->db->sql);
+		$this->assertSame(['/migrations'], $config->db->migrations);
+		$this->assertSame(['/icons'], $config->icons->localPaths);
+	}
+
+	public function testConfigObjectsAreLazy(): void
+	{
+		$config = new Config(self::root());
+
+		$this->assertSame($config->app, $config->app);
+		$this->assertSame($config->path, $config->path);
+		$this->assertSame($config->panel, $config->panel);
+		$this->assertSame($config->session, $config->session);
+	}
+
+	public function testWithReturnsChangedConfig(): void
+	{
+		$config = new Config(self::root(), [
+			'panel.theme' => '/theme.css',
+		]);
+		$changed = $config->with('panel.theme', '/changed.css');
+
+		$this->assertNotSame($config, $changed);
+		$this->assertSame(['/theme.css'], $config->panel->theme);
+		$this->assertSame(['/changed.css'], $changed->panel->theme);
 	}
 
 	public function testUnknownKeysStillWorkAtRuntime(): void
@@ -197,24 +219,25 @@ final class ConfigTest extends TestCase
 			'custom.value' => 3,
 		]);
 
-		$config->set('custom.other', ['enabled' => true]);
+		$changed = $config->with('custom.other', ['enabled' => true]);
 
 		$this->assertSame(3, $config->get('custom.value'));
-		$this->assertSame(['enabled' => true], $config->get('custom.other'));
+		$this->assertSame(3, $changed->get('custom.value'));
+		$this->assertSame(['enabled' => true], $changed->get('custom.other'));
 	}
 
 	public function testDatabaseDsnUsesEnvironmentVariable(): void
 	{
 		$config = new Config($this->rootWithEnv("DATABASE_URL=pgsql:dbname=cms\n"));
 
-		$this->assertSame('pgsql:dbname=cms', $config->get('db.dsn'));
+		$this->assertSame('pgsql:dbname=cms', $config->db->dsn);
 	}
 
 	public function testDatabaseDsnDoesNotFallBackToLegacyEnvironmentVariable(): void
 	{
 		$config = new Config($this->rootWithEnv("CMS_DSN=pgsql:dbname=legacy\n"));
 
-		$this->assertNull($config->get('db.dsn'));
+		$this->assertNull($config->db->dsn);
 	}
 
 	public function testMissingDotenvFileIsIgnored(): void

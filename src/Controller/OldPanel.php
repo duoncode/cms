@@ -39,7 +39,7 @@ class OldPanel
 		protected readonly Locales $locales,
 		protected readonly Types $types,
 	) {
-		$this->publicPath = $config->get('path.public');
+		$this->publicPath = $config->path->public;
 	}
 
 	public function boot(): array
@@ -63,18 +63,18 @@ class OldPanel
 			'debug' => $config->debug(),
 			'env' => $config->env(),
 			'csrfToken' => '', // TODO: real token
-			'logo' => $config->get('panel.logo'),
+			'logo' => $config->panel->logo,
 			'theme' => $this->themeStylesheets(),
-			'api' => $config->get('path.api'),
-			'assets' => $config->get('path.assets'),
-			'cache' => $config->get('path.cache'),
-			'prefix' => $config->get('path.prefix'),
-			'sessionExpires' => $config->get('session.options')['gc_maxlifetime'],
+			'api' => $config->path->api,
+			'assets' => $config->path->assets,
+			'cache' => $config->path->cache,
+			'prefix' => $config->path->prefix,
+			'sessionExpires' => $config->session->options['gc_maxlifetime'],
 			'transliterate' => [],
 			'allowedFiles' => [
-				'file' => array_merge(...array_values($config->get('upload.mimetypes.file'))),
-				'image' => array_merge(...array_values($config->get('upload.mimetypes.image'))),
-				'video' => array_merge(...array_values($config->get('upload.mimetypes.video'))),
+				'file' => array_merge(...array_values($config->upload->file)),
+				'image' => array_merge(...array_values($config->upload->image)),
+				'video' => array_merge(...array_values($config->upload->video)),
 			],
 		];
 	}
@@ -272,7 +272,7 @@ class OldPanel
 
 	private function themeStylesheets(): array
 	{
-		return $this->config->get('panel.theme');
+		return $this->config->panel->theme;
 	}
 
 	private function intParam(

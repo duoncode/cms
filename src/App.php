@@ -50,7 +50,7 @@ class App implements RouteAdder
 
 	protected function addErrorHandler(Container $container, Factory $factory): void
 	{
-		if ($this->config->get('error.enabled')) {
+		if ($this->config->error->enabled) {
 			$this->core->middleware(
 				new ErrorHandler($this->config, $factory, new ContainerLogger($container))->create(),
 			);
@@ -65,7 +65,7 @@ class App implements RouteAdder
 		return new self(
 			$config,
 			Discovery::create(),
-			new Router((string) $config->get('path.prefix')),
+			new Router($config->path->prefix),
 			new Container(),
 		);
 	}

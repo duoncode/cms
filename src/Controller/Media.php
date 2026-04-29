@@ -38,8 +38,8 @@ class Media
 			return $response->json($result, 400);
 		}
 
-		$public = $this->config->get('path.public');
-		$assets = $this->config->get('path.assets');
+		$public = $this->config->path->public;
+		$assets = $this->config->path->assets;
 		$dir = "{$public}{$assets}/{$doctype}/{$uid}";
 
 		if (!is_dir($dir)) {
@@ -85,7 +85,7 @@ class Media
 			$image->resize($size, $mode, $qs['enlarge'] ?? false, $quality);
 		}
 
-		$fileServer = $this->config->get('media.fileserver');
+		$fileServer = $this->config->media->fileServer;
 
 		if ($fileServer) {
 			return $this->sendFile($fileServer, $image->path());
@@ -97,7 +97,7 @@ class Media
 	public function file(string $slug): Response
 	{
 		$file = $this->getAssets()->file($slug);
-		$fileServer = $this->config->get('media.fileserver');
+		$fileServer = $this->config->media->fileServer;
 
 		if ($fileServer) {
 			return $this->sendFile($fileServer, $file->path());
@@ -115,13 +115,14 @@ class Media
 				'file' => _(' Dateiname unbekannt'),
 			];
 		}
+		$upload = $this->config->upload;
 		$mimeTypes = match ($mediatype) {
-			'file' => $this->config->get('upload.mimetypes.file'),
-			'image' => $this->config->get('upload.mimetypes.image'),
-			'video' => $this->config->get('upload.mimetypes.video'),
+			'file' => $upload->file,
+			'image' => $upload->image,
+			'video' => $upload->video,
 			default => throw new RuntimeException('Media type not supported: ' . $mediatype),
 		};
-		$maxSize = $this->config->get('upload.maxsize');
+		$maxSize = $upload->maxSize;
 
 		$tmpFile = $file['tmp_name'];
 		$fileSize = filesize($tmpFile);

@@ -31,14 +31,13 @@ final class AppTest extends TestCase
 	{
 		$app = App::create(self::root(), [
 			'app.name' => 'test-cms',
+			'custom.value' => 3,
 			'error.enabled' => false,
 		]);
 
-		$app->config->set('custom.value', 3);
-
 		$this->assertSame($app->config, $app->config());
-		$this->assertSame('test-cms', $app->config->get('app.name'));
-		$this->assertSame(self::root(), $app->config->get('path.root'));
+		$this->assertSame('test-cms', $app->config->app->name);
+		$this->assertSame(self::root(), $app->config->path->root);
 		$this->assertSame(3, $app->config->get('custom.value'));
 		$this->assertInstanceOf(CoreApp::class, $app->core());
 		$this->assertInstanceOf(Plugin::class, $app->plugin());
@@ -240,7 +239,7 @@ final class AppTest extends TestCase
 		return new App(
 			$config,
 			$this->factory(),
-			new Router((string) $config->get('path.prefix')),
+			new Router($config->path->prefix),
 			$this->container(),
 		);
 	}

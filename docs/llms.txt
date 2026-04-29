@@ -2,7 +2,7 @@ project: Duon Content Management Framework (duon/cms)
 repository: https://github.com/duoncode/cms
 canonical_branch: main
 license: MIT (https://github.com/duoncode/cms/blob/main/LICENSE.md)
-last_updated: 2026-04-25
+last_updated: 2026-04-29
 contact: https://github.com/duoncode/cms/issues
 
 summary:
@@ -33,7 +33,7 @@ usage_guidance:
 - If behavior is unclear, mark it as unspecified or in-progress.
 - Keep examples close to existing patterns in tests and fixtures.
 - Mention experimental/incomplete behavior when relevant.
-- For configuration, cite concrete keys and defaults from `src/Config.php`.
+- For configuration, cite concrete keys and defaults from `src/Config/Defaults.php` and `src/Config.php`.
 
 high_value_topics:
 - Defining content types (nodes) with PHP attributes
@@ -115,7 +115,8 @@ Important:
 - `App::create()` creates `Config` internally and exposes it as `$app->config`.
 - `Config` loads `.env` from the root path with `Dotenv::safeLoad()`.
 - `Config::requireEnv(...)` validates required environment variables and may be removed later.
-- Set extra environment-derived values with `$app->config->set(...)` after construction, because settings are evaluated before `Config` is created.
+- `Config` is immutable after construction. Pass settings to `App::create(...)`; use `Config::with(...)` only when you need a changed standalone config copy.
+- Built-in settings are available by key (`$config->get('path.panel')`) and through typed lazy objects (`$config->panel->path`, `$config->session->options`).
 - `Duon\Cms\App` installs default PSR-15 error middleware unless `error.enabled` is false.
 - Error pages use a dedicated Boiler renderer, independent from the CMS `view` renderer.
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
@@ -406,7 +407,7 @@ Paths and panel:
 - `path.views`: `'/views'` (view directory relative to `path.root`)
 - `path.panel`: `'/cms'`
 - `path.api`: `null`
-- `panel.theme`: `null` (string or string[])
+- `panel.theme`: `[]` (input may be a string or string[] and is stored as a list)
 - `panel.logo`: `'/images/logo.png'`
 
 Errors:

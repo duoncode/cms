@@ -22,7 +22,7 @@ final class PluginTest extends TestCase
 {
 	public function testConfigProvidesDefaultViewsPath(): void
 	{
-		$this->assertSame('/views', $this->config()->get('path.views'));
+		$this->assertSame('/views', $this->config()->path->views);
 	}
 
 	public function testLoadRegistersDefaultViewRenderer(): void

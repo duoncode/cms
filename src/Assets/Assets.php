@@ -18,10 +18,10 @@ class Assets
 		protected readonly Request $request,
 		protected readonly Config $config,
 	) {
-		$this->publicDir = rtrim(realpath($config->get('path.public')), '\\/');
+		$this->publicDir = rtrim(realpath($config->path->public), '\\/');
 
-		$this->assetsDir = Path::inside($this->publicDir, $config->get('path.assets'));
-		$this->cacheDir = Path::inside($this->publicDir, $config->get('path.cache'));
+		$this->assetsDir = Path::inside($this->publicDir, $config->path->assets);
+		$this->cacheDir = Path::inside($this->publicDir, $config->path->cache);
 	}
 
 	public function image(string $path): Image

@@ -162,17 +162,18 @@ class Plugin implements CorePlugin
 	/** @return list<string> */
 	protected function localIconPaths(): array
 	{
-		return $this->config->get('icons.local.paths');
+		return $this->config->icons->localPaths;
 	}
 
 	protected function database(): void
 	{
 		$root = dirname(__DIR__);
+		$config = $this->config->db;
 		$sql = array_merge(
 			[$root . '/db/sql'],
-			$this->config->get('db.sql'),
+			$config->sql,
 		);
-		$migrationPaths = $this->config->get('db.migrations');
+		$migrationPaths = $config->migrations;
 
 		$namespacedMigrations = [];
 		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
@@ -182,13 +183,13 @@ class Plugin implements CorePlugin
 		);
 
 		$this->connection = new Connection(
-			$this->config->get('db.dsn'),
+			$config->dsn,
 			$sql,
 		)
 			->migrations($namespacedMigrations)
 			->fetch(PDO::FETCH_ASSOC)
-			->options($this->config->get('db.options'))
-			->print($this->config->get('db.print'));
+			->options($config->options)
+			->print($config->print);
 		$this->db = new Database($this->connection);
 	}
 
@@ -274,10 +275,9 @@ class Plugin implements CorePlugin
 
 	protected function viewPath(): string
 	{
-		$root = $this->config->get('path.root');
-		$views = (string) $this->config->get('path.views');
+		$path = $this->config->path;
 
-		return rtrim($root, '/') . '/' . ltrim($views, '/');
+		return rtrim($path->root, '/') . '/' . ltrim($path->views, '/');
 	}
 
 	/** @return list<class-string> */

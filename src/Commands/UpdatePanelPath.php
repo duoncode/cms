@@ -23,14 +23,14 @@ class UpdatePanelPath extends Command
 	public function __construct(
 		private Config $config,
 	) {
-		$this->prefix = $this->config->get('path.prefix');
-		$this->panelPath = $this->config->get('path.panel');
-		$this->publicPath = $this->config->get('path.public') . $this->panelPath;
+		$this->prefix = $this->config->path->prefix;
+		$this->panelPath = $this->config->panel->path;
+		$this->publicPath = $this->config->path->public . $this->panelPath;
 	}
 
 	public function run(): int
 	{
-		$defaultPublicPath = $this->config->get('path.public') . self::DEFAULT_PATH;
+		$defaultPublicPath = $this->config->path->public . self::DEFAULT_PATH;
 		$panelPathExists = is_dir($this->publicPath);
 		$defaultPathExists = is_dir($defaultPublicPath);
 

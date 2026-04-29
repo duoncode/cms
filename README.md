@@ -150,7 +150,7 @@ For advanced integrations, the bundled error integration remains available as `D
 
 `App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()`, merges built-in defaults with the settings array, and normalizes built-in values before storing them. Use `requireEnv()` when an application wants to fail fast for required environment variables.
 
-Provide boot-sensitive settings to `App::create()`. Values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. Late `$app->config->set(...)` calls are still available for values that are read later, but they do not rebuild routes or middleware that already used the previous value.
+Provide settings to `App::create()`. `Config` is immutable after construction, and values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. For standalone config changes, use `$config->with(...)` to create a changed copy.
 
 ```php
 use Duon\Cms\App;
@@ -163,11 +163,15 @@ $app = App::create(dirname(__DIR__), [
 $app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
-Read built-in settings by key:
+Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`.
 
 ```php
-$name = $app->config->get('app.name');
-$panel = $app->config->get('path.panel');
+$name = $app->config->app->name;
+$panel = $app->config->panel->path;
+$theme = $app->config->panel->theme;
+$session = $app->config->session->options;
+
+$nameByKey = $app->config->get('app.name');
 $debug = $app->config->debug();
 $env = $app->config->env();
 ```
