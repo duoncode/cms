@@ -7,6 +7,7 @@ namespace Duon\Cms\Tests\Unit;
 use Dotenv\Exception\ValidationException;
 use Duon\Cms\Config;
 use Duon\Cms\Tests\TestCase;
+use Duon\Cms\Util\Password;
 use Duon\Core\Exception\ValueError;
 
 /**
@@ -90,7 +91,11 @@ final class ConfigTest extends TestCase
 		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
 		$this->assertTrue($config->get('session.options')['cookie_secure']);
 		$this->assertSame(3600, $config->get('session.options')['gc_maxlifetime']);
+		$this->assertSame(3600, $config->get('session.options')['cache_expire']);
+		$this->assertNull($config->get('session.handler'));
 		$this->assertNull($config->get('db.dsn'));
+		$this->assertSame(Password::DEFAULT_PASSWORD_ENTROPY, $config->get('password.entropy'));
+		$this->assertNull($config->get('password.algorithm'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('', $config->env());
 	}
@@ -117,6 +122,17 @@ final class ConfigTest extends TestCase
 		$this->throws(ValueError::class, 'The root path must be a non-empty string.');
 
 		new Config('');
+	}
+
+	public function testCmsDevelopmentEnvironmentUsesLegacyPanelPathOverride(): void
+	{
+		$config = new Config(self::root(), [
+			'app.env' => 'cms-development',
+			'path.panel' => '/admin',
+		]);
+
+		$this->assertSame('/cms', $config->panelPath());
+		$this->assertSame('/admin', $config->get('path.panel'));
 	}
 
 	public function testDotenvIsLoadedFromRoot(): void

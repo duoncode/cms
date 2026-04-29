@@ -56,7 +56,9 @@ class Config
 				'cookie_secure' => $this->boolEnv('SESSION_COOKIE_SECURE', true),
 				'cookie_lifetime' => $this->intEnv('SESSION_COOKIE_LIFETIME', 0),
 				'gc_maxlifetime' => $this->intEnv('SESSION_IDLE_TIMEOUT', 3600),
+				'cache_expire' => 3600,
 			],
+			'session.handler' => null,
 			'media.fileserver' => null,
 			'upload.mimetypes.file' => [
 				'application/pdf' => ['pdf'],
@@ -73,6 +75,8 @@ class Config
 				'video/ogg' => ['ogg'],
 			],
 			'upload.maxsize' => 10 * 1024 * 1024,
+			'password.entropy' => Util\Password::DEFAULT_PASSWORD_ENTROPY,
+			'password.algorithm' => null,
 		], $settings);
 	}
 
