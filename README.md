@@ -148,37 +148,72 @@ For advanced integrations, the bundled error integration remains available as `D
 
 ## Settings
 
-`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()`. Use `requireEnv()` when an application wants to fail fast for required environment variables. Because settings are evaluated before `Config` is created, set extra environment-derived values with `$app->config->set(...)` after construction. `app.name` is not validated or normalized, so keep it stable and safe for app-specific identifiers.
+`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()`, merges built-in defaults with the settings array, and normalizes built-in values before storing them. Use `requireEnv()` when an application wants to fail fast for required environment variables.
+
+Provide boot-sensitive settings to `App::create()`. Values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. Late `$app->config->set(...)` calls are still available for values that are read later, but they do not rebuild routes or middleware that already used the previous value.
 
 ```php
 use Duon\Cms\App;
 
 $app = App::create(dirname(__DIR__), [
     'app.name' => 'mycms',
+    'path.panel' => '/cms',
 ]);
 
 $app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
-```text
-'app.name' => env('APP_NAME', 'duoncms'), // App name used by sessions and helpers
-'app.debug' => env('APP_DEBUG', false), // Debug mode from the loaded environment
-'app.env' => env('APP_ENV', ''),      // App environment from the loaded environment
-'app.secret' => env('APP_SECRET', null), // App secret from the loaded environment
-'path.root' => $root,                 // Required project root passed to Config
-'path.public' => $root . '/public',   // Public document root
-'path.views' => '/views',             // View directory relative to path.root
-'db.dsn' => env('DATABASE_URL', null), // Database DSN
-'session.enabled' => env('SITE_SESSION_ENABLED', false), // Add session middleware to frontend routes
-'session.options.cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', '0'), // Browser session cookie
-'session.options.cookie_secure' => env('SESSION_COOKIE_SECURE', true), // Send session cookies only over HTTPS
-'session.options.gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', '3600'), // Session idle timeout
-'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
-'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
-'error.views' => null,                // Error template directory; defaults to path.views
-'error.whoops' => true,               // Use filp/whoops in debug mode when installed
-'session.authcookie' => '<app>_auth', // Name of the auth cookie
-'session.expires' => 60 * 60 * 24,    // One day by default
+Read built-in settings by key:
+
+```php
+$name = $app->config->get('app.name');
+$panel = $app->config->get('path.panel');
+$debug = $app->config->debug();
+$env = $app->config->env();
+```
+
+Common built-in settings:
+
+```php
+[
+    'app.name' => env('APP_NAME', 'duoncms'),
+    'app.debug' => env('APP_DEBUG', false),
+    'app.env' => env('APP_ENV', ''),
+    'app.secret' => env('APP_SECRET', null),
+
+    'path.root' => $root,
+    'path.public' => $root . '/public',
+    'path.prefix' => '',
+    'path.assets' => '/assets',
+    'path.cache' => '/cache',
+    'path.views' => '/views',
+    'path.panel' => '/cms',
+    'path.api' => null,
+
+    'panel.theme' => [],
+    'panel.logo' => '/images/logo.png',
+
+    'db.dsn' => env('DATABASE_URL', null),
+    'db.sql' => [],
+    'db.migrations' => [],
+    'db.print' => false,
+    'db.options' => [],
+
+    'session.enabled' => env('SITE_SESSION_ENABLED', false),
+    'session.options' => [
+        'cookie_httponly' => true,
+        'cookie_secure' => env('SESSION_COOKIE_SECURE', true),
+        'cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', 0),
+        'gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', 3600),
+        'cache_expire' => 3600,
+    ],
+    'session.handler' => null,
+
+    'error.enabled' => true,
+    'error.renderer' => null,
+    'error.views' => null,
+    'error.whoops' => true,
+]
 ```
 
 ### Admin panel theming
