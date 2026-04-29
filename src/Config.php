@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
+use Duon\Cms\Config\Defaults;
 use Duon\Cms\Config\Env as Environment;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
@@ -20,63 +21,7 @@ class Config
 		$root = $this->normalizeRoot($root);
 		$this->environment = Environment::load($root);
 		$this->environment->validate();
-		$this->settings = array_merge([
-			'app.name' => env('APP_NAME', 'duoncms'),
-			'app.debug' => $this->environment->bool('APP_DEBUG', false),
-			'app.env' => env('APP_ENV', ''),
-			'app.secret' => env('APP_SECRET', null),
-			'path.root' => $root,
-			'path.public' => $root . '/public',
-			'path.prefix' => '',
-			'path.assets' => '/assets',
-			'path.cache' => '/cache',
-			'path.views' => '/views',
-			'path.panel' => '/cms',
-			'path.api' => null,
-			'panel.theme' => null,
-			'panel.logo' => '/images/logo.png',
-			'error.enabled' => true,
-			'error.renderer' => null,
-			'error.trusted' => [],
-			'error.views' => null,
-			'error.whoops' => true,
-			'icons.local.paths' => [],
-			'icons.iconify.base_url' => 'https://api.iconify.design',
-			'icons.iconify.timeout' => 5,
-			'icons.iconify.user_agent' => 'duon/cms',
-			'db.dsn' => env('DATABASE_URL', null),
-			'db.sql' => [],
-			'db.migrations' => [],
-			'db.print' => false,
-			'db.options' => [],
-			'session.enabled' => $this->environment->bool('SITE_SESSION_ENABLED', false),
-			'session.options' => [
-				'cookie_httponly' => true,
-				'cookie_secure' => $this->environment->bool('SESSION_COOKIE_SECURE', true),
-				'cookie_lifetime' => $this->environment->int('SESSION_COOKIE_LIFETIME', 0),
-				'gc_maxlifetime' => $this->environment->int('SESSION_IDLE_TIMEOUT', 3600),
-				'cache_expire' => 3600,
-			],
-			'session.handler' => null,
-			'media.fileserver' => null,
-			'upload.mimetypes.file' => [
-				'application/pdf' => ['pdf'],
-			],
-			'upload.mimetypes.image' => [
-				'image/gif' => ['gif'],
-				'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
-				'image/png' => ['png'],
-				'image/webp' => ['webp'],
-				'image/svg+xml' => ['svg'],
-			],
-			'upload.mimetypes.video' => [
-				'video/mp4' => ['mp4'],
-				'video/ogg' => ['ogg'],
-			],
-			'upload.maxsize' => 10 * 1024 * 1024,
-			'password.entropy' => Util\Password::DEFAULT_PASSWORD_ENTROPY,
-			'password.algorithm' => null,
-		], $settings);
+		$this->settings = array_merge(Defaults::values($root, $this->environment), $settings);
 	}
 
 	/** @param non-empty-string|list<non-empty-string> $variables */
