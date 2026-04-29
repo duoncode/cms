@@ -366,8 +366,8 @@ final class PrimitiveValueTest extends TestCase
 		]));
 		$field->limit(1);
 
-		/** @var \Duon\Cms\Value\Image $value */
 		$value = $field->value();
+		$this->assertInstanceOf(\Duon\Cms\Value\Image::class, $value);
 
 		$this->assertStringContainsString(
 			'/cms/media/image/node/test-node/hero.jpg',
@@ -392,8 +392,8 @@ final class PrimitiveValueTest extends TestCase
 		]));
 		$field->limit(1);
 
-		/** @var \Duon\Cms\Value\Image $value */
 		$value = $field->value();
+		$this->assertInstanceOf(\Duon\Cms\Value\Image::class, $value);
 		$tag = $value->tag(true, 'hero-image');
 
 		$this->assertStringContainsString('class="hero-image"', $tag);
@@ -426,8 +426,8 @@ final class PrimitiveValueTest extends TestCase
 		$field->translateFile();
 		$context->request->set('locale', $context->locales()->get('de'));
 
-		/** @var \Duon\Cms\Value\TranslatedImage $value */
 		$value = $field->value();
+		$this->assertInstanceOf(\Duon\Cms\Value\TranslatedImage::class, $value);
 
 		$this->assertTrue($value->isset());
 		$this->assertSame('Hero', $value->alt());
@@ -625,8 +625,9 @@ final class PrimitiveValueTest extends TestCase
 		]));
 		$field->limit(1);
 
-		/** @var \Duon\Cms\Value\Image $value */
-		$value = $field->value()->width(320, true)->quality(80);
+		$value = $field->value();
+		$this->assertInstanceOf(\Duon\Cms\Value\Image::class, $value);
+		$value = $value->width(320, true)->quality(80);
 
 		$this->assertStringContainsString('resize=width', $value->publicPath());
 		$this->assertStringContainsString('w=320', $value->publicPath());
@@ -645,8 +646,8 @@ final class PrimitiveValueTest extends TestCase
 			],
 		]));
 
-		/** @var \Duon\Cms\Value\Images $value */
 		$value = $field->value();
+		$this->assertInstanceOf(\Duon\Cms\Value\Images::class, $value);
 
 		$this->assertSame(2, $value->count());
 		$this->assertInstanceOf(\Duon\Cms\Value\Image::class, $value->first());

@@ -153,7 +153,7 @@ class App implements RouteAdder
 		return $this;
 	}
 
-	/** @psalm-param Closure(Router $router):void $creator */
+	/** @param Closure(Router $router): void $creator */
 	public function routes(Closure $creator, string $cacheFile = '', bool $shouldCache = true): self
 	{
 		$this->core->routes($creator, $cacheFile, $shouldCache);
@@ -248,8 +248,8 @@ class App implements RouteAdder
 	}
 
 	/**
-	 * @psalm-param non-empty-string $key
-	 * @psalm-param class-string|object $value
+	 * @param non-empty-string $key
+	 * @param class-string|object $value
 	 */
 	public function register(string $key, object|string $value): Entry
 	{

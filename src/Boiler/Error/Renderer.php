@@ -39,11 +39,9 @@ final class Renderer implements RendererInterface
 		?Request $request,
 		bool $debug,
 	): Response {
-		/** @var array<string, mixed>|null $payload */
 		$payload = null;
 
 		if ($exception instanceof HttpError) {
-			/** @var array<string, mixed>|null */
 			$payload = $exception->payload();
 			$request = $exception->request() ?: $request;
 		}

@@ -13,9 +13,8 @@ use Duon\Cms\Node\Factory;
 use Duon\Cms\Node\Types;
 
 /**
- * @psalm-property-read Nodes $nodes
- * @psalm-property-read Node $node
- * @psalm-property-read Menu $menu
+ * @property-read Nodes $nodes
+ * @property-read Node $node
  */
 class Cms
 {

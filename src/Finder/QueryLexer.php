@@ -14,7 +14,7 @@ final class QueryLexer
 	private int $start = 0;
 	private int $current = 0;
 
-	/** @psalm-type list<Token> */
+	/** @var list<Token> */
 	private array $tokens = [];
 
 	private readonly string $query;

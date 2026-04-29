@@ -17,11 +17,11 @@ readonly class Token
 		private ?int $length = null,
 	) {}
 
+	/** @param array<Token> $list */
 	public static function fromList(
 		TokenGroup $group,
 		TokenType $type,
 		int $position,
-		/** @param array<Token> */
 		array $list,
 		int $length,
 		Database $db,
@@ -34,7 +34,7 @@ readonly class Token
 		return $this->length ?: strlen($this->lexeme);
 	}
 
-	/** @param $list array<Token> */
+	/** @param array<Token> $list */
 	private static function transformList(array $list, Database $db): string
 	{
 		$result = [];

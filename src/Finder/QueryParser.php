@@ -21,7 +21,7 @@ use Duon\Cms\Finder\Output\UrlPath;
 
 final class QueryParser
 {
-	/** @psalm-type list<Token> */
+	/** @var list<Token> */
 	private array $tokens;
 
 	private int $pos;
@@ -30,9 +30,7 @@ final class QueryParser
 	private bool $readyForCondition = true;
 	private string $query;
 
-	/**
-	 * @psalm-param list<string> $builtins
-	 */
+	/** @param list<string> $builtins */
 	public function __construct(
 		private readonly Context $context,
 		private readonly array $builtins = [],
