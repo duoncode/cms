@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-use Dotenv\Dotenv;
+use Duon\Cms\Config\Env as Environment;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
 
@@ -13,17 +13,16 @@ class Config
 	/** @var array<string, mixed> */
 	protected array $settings = [];
 
-	protected readonly Dotenv $dotenv;
+	protected readonly Environment $environment;
 
 	public function __construct(string $root, array $settings = [])
 	{
 		$root = $this->normalizeRoot($root);
-		$this->dotenv = Dotenv::createImmutable($root);
-		$this->dotenv->safeLoad();
-		$this->validateEnvironment();
+		$this->environment = Environment::load($root);
+		$this->environment->validate();
 		$this->settings = array_merge([
 			'app.name' => env('APP_NAME', 'duoncms'),
-			'app.debug' => $this->boolEnv('APP_DEBUG', false),
+			'app.debug' => $this->environment->bool('APP_DEBUG', false),
 			'app.env' => env('APP_ENV', ''),
 			'app.secret' => env('APP_SECRET', null),
 			'path.root' => $root,
@@ -50,12 +49,12 @@ class Config
 			'db.migrations' => [],
 			'db.print' => false,
 			'db.options' => [],
-			'session.enabled' => $this->boolEnv('SITE_SESSION_ENABLED', false),
+			'session.enabled' => $this->environment->bool('SITE_SESSION_ENABLED', false),
 			'session.options' => [
 				'cookie_httponly' => true,
-				'cookie_secure' => $this->boolEnv('SESSION_COOKIE_SECURE', true),
-				'cookie_lifetime' => $this->intEnv('SESSION_COOKIE_LIFETIME', 0),
-				'gc_maxlifetime' => $this->intEnv('SESSION_IDLE_TIMEOUT', 3600),
+				'cookie_secure' => $this->environment->bool('SESSION_COOKIE_SECURE', true),
+				'cookie_lifetime' => $this->environment->int('SESSION_COOKIE_LIFETIME', 0),
+				'gc_maxlifetime' => $this->environment->int('SESSION_IDLE_TIMEOUT', 3600),
 				'cache_expire' => 3600,
 			],
 			'session.handler' => null,
@@ -83,7 +82,7 @@ class Config
 	/** @param non-empty-string|list<non-empty-string> $variables */
 	public function requireEnv(string|array $variables): self
 	{
-		$this->dotenv->required($variables);
+		$this->environment->require($variables);
 
 		return $this;
 	}
@@ -154,29 +153,5 @@ class Config
 	public function printAll(): void
 	{
 		error_log(print_r($this->settings, true));
-	}
-
-	protected function validateEnvironment(): void
-	{
-		$this->dotenv->ifPresent([
-			'APP_DEBUG',
-			'SITE_SESSION_ENABLED',
-			'SESSION_COOKIE_SECURE',
-		])->isBoolean();
-
-		$this->dotenv->ifPresent([
-			'SESSION_COOKIE_LIFETIME',
-			'SESSION_IDLE_TIMEOUT',
-		])->isInteger();
-	}
-
-	protected function boolEnv(string $key, bool $default): bool
-	{
-		return filter_var(env($key, $default), FILTER_VALIDATE_BOOL);
-	}
-
-	protected function intEnv(string $key, int $default): int
-	{
-		return (int) env($key, $default);
 	}
 }
