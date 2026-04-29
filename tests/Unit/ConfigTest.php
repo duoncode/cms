@@ -82,7 +82,7 @@ final class ConfigTest extends TestCase
 	{
 		$config = new Config(self::root());
 
-		$this->assertSame('duoncms', $config->app());
+		$this->assertSame('duoncms', $config->get('app.name'));
 		$this->assertSame('duoncms', $config->get('app.name'));
 		$this->assertSame(self::root(), $config->get('path.root'));
 		$this->assertSame(self::root() . '/public', $config->get('path.public'));
@@ -111,7 +111,7 @@ final class ConfigTest extends TestCase
 			'session.enabled' => true,
 		]);
 
-		$this->assertSame('site-cms', $config->app());
+		$this->assertSame('site-cms', $config->get('app.name'));
 		$this->assertFalse($config->debug());
 		$this->assertSame('production', $config->env());
 		$this->assertSame('configured-secret', $config->get('app.secret'));
@@ -125,14 +125,13 @@ final class ConfigTest extends TestCase
 		new Config('');
 	}
 
-	public function testCmsDevelopmentEnvironmentUsesLegacyPanelPathOverride(): void
+	public function testPanelPathComesFromExplicitConfigInCmsDevelopmentEnvironment(): void
 	{
 		$config = new Config(self::root(), [
 			'app.env' => 'cms-development',
 			'path.panel' => '/admin',
 		]);
 
-		$this->assertSame('/cms', $config->panelPath());
 		$this->assertSame('/admin', $config->get('path.panel'));
 	}
 
@@ -143,7 +142,7 @@ final class ConfigTest extends TestCase
 		);
 		$config = new Config($root);
 
-		$this->assertSame('test-cms', $config->app());
+		$this->assertSame('test-cms', $config->get('app.name'));
 		$this->assertTrue($config->debug());
 		$this->assertSame('testing', $config->env());
 		$this->assertSame('test-secret', $config->get('app.secret'));

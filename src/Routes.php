@@ -35,9 +35,9 @@ class Routes
 		protected Database $db,
 		protected Factory $factory,
 	) {
-		$this->panelPath = $config->panelPath();
+		$this->panelPath = $config->get('path.panel');
 		$this->panelApiPath = $this->panelPath . '/api';
-		$this->apiPath = $config->apiPath();
+		$this->apiPath = $config->get('path.api');
 		$this->frontendSession = (bool) $config->get('session.enabled');
 		$this->initRequestMiddlware = new InitRequest($config);
 		$this->session = new Session($this->config, $this->db);

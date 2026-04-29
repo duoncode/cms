@@ -37,7 +37,7 @@ final class AppTest extends TestCase
 		$app->config->set('custom.value', 3);
 
 		$this->assertSame($app->config, $app->config());
-		$this->assertSame('test-cms', $app->config->app());
+		$this->assertSame('test-cms', $app->config->get('app.name'));
 		$this->assertSame(self::root(), $app->config->get('path.root'));
 		$this->assertSame(3, $app->config->get('custom.value'));
 		$this->assertInstanceOf(CoreApp::class, $app->core());

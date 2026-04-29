@@ -65,7 +65,7 @@ class OldPanel
 			'csrfToken' => '', // TODO: real token
 			'logo' => $config->get('panel.logo'),
 			'theme' => $this->themeStylesheets(),
-			'api' => $config->apiPath(),
+			'api' => $config->get('path.api'),
 			'assets' => $config->get('path.assets'),
 			'cache' => $config->get('path.cache'),
 			'prefix' => $config->get('path.prefix'),

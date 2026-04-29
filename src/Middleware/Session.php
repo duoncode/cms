@@ -23,7 +23,7 @@ class Session implements Middleware
 	{
 		$session = new \Duon\Cms\Session(
 			$this->config->get('session.options'),
-			$this->config->app(),
+			$this->config->get('app.name'),
 			$this->config->get('session.handler'),
 		);
 

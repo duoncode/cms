@@ -73,28 +73,9 @@ class Config
 		);
 	}
 
-	public function app(): string
-	{
-		return $this->get('app.name');
-	}
-
 	public function debug(): bool
 	{
 		return $this->get('app.debug');
-	}
-
-	public function panelPath(): string
-	{
-		if ($this->env() === 'cms-development') {
-			return '/cms';
-		}
-
-		return $this->get('path.panel');
-	}
-
-	public function apiPath(): ?string
-	{
-		return $this->get('path.api');
 	}
 
 	public function env(): string

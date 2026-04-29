@@ -53,7 +53,7 @@ class PanelAuth implements Middleware
 
 	private function loginUrl(Request $request): string
 	{
-		$panelPath = $this->config->panelPath();
+		$panelPath = $this->config->get('path.panel');
 		$path = $request->getUri()->getPath();
 
 		if ($path === '') {

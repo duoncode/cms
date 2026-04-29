@@ -41,7 +41,7 @@ final class SessionMiddlewareTest extends TestCase
 			],
 		]);
 
-		$session = new Session($config->get('session.options'), $config->app());
+		$session = new Session($config->get('session.options'), $config->get('app.name'));
 		$session->start();
 		$_SESSION['user_id'] = 42;
 		$_SESSION['last_activity'] = time() - 10;
