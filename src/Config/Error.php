@@ -6,29 +6,32 @@ namespace Duon\Cms\Config;
 
 use Duon\Error\Renderer;
 
-final readonly class Error
+final class Error
 {
-	/**
-	 * @param null|class-string<Renderer>|Renderer $renderer
-	 * @param list<class-string> $trusted
-	 * @param null|non-empty-string|list<non-empty-string> $views
-	 */
 	public function __construct(
-		public bool $enabled,
-		public string|Renderer|null $renderer,
-		public array $trusted,
-		public string|array|null $views,
-		public bool $whoops,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('error.enabled'),
-			$config->get('error.renderer'),
-			$config->get('error.trusted'),
-			$config->get('error.views'),
-			$config->get('error.whoops'),
-		);
+	public bool $enabled {
+		get => $this->config->get('error.enabled');
+	}
+
+	/** @var null|class-string<Renderer>|Renderer */
+	public string|Renderer|null $renderer {
+		get => $this->config->get('error.renderer');
+	}
+
+	/** @var list<class-string> */
+	public array $trusted {
+		get => $this->config->get('error.trusted');
+	}
+
+	/** @var null|non-empty-string|list<non-empty-string> */
+	public string|array|null $views {
+		get => $this->config->get('error.views');
+	}
+
+	public bool $whoops {
+		get => $this->config->get('error.whoops');
 	}
 }

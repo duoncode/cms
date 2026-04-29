@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Config;
 
-final readonly class Icons
+final class Icons
 {
-	/** @param list<non-empty-string> $localPaths */
+	/** @var list<non-empty-string>|null */
+	private ?array $localPathsCache = null;
+
+	private ?Iconify $iconifyCache = null;
+
 	public function __construct(
-		public array $localPaths,
-		public Iconify $iconify,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			self::strings($config->get('icons.local.paths')),
-			Iconify::from($config),
-		);
+	/** @var list<non-empty-string> */
+	public array $localPaths {
+		get => $this->localPathsCache ??= self::strings($this->config->get('icons.local.paths'));
+	}
+
+	public Iconify $iconify {
+		get => $this->iconifyCache ??= new Iconify($this->config);
 	}
 
 	/** @return list<non-empty-string> */

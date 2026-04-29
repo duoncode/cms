@@ -163,7 +163,7 @@ $app = App::create(dirname(__DIR__), [
 $app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
-Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`. Object access converts list-style settings such as `panel.theme`; invalid broad types fail when the object is first accessed.
+Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`. Their properties convert list-style settings such as `panel.theme`; invalid broad types fail when the relevant property is read.
 
 ```php
 $name = $app->config->app->name;

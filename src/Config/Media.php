@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Config;
 
-final readonly class Media
+final class Media
 {
-	/** @param null|'apache'|'nginx' $fileServer */
 	public function __construct(
-		public ?string $fileServer,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('media.fileserver'),
-		);
+	/** @var null|'apache'|'nginx' */
+	public ?string $fileServer {
+		get => $this->config->get('media.fileserver');
 	}
 }

@@ -4,26 +4,28 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Config;
 
-final readonly class Panel
+final class Panel
 {
-	/**
-	 * @param non-empty-string $path
-	 * @param list<non-empty-string> $theme
-	 * @param ?non-empty-string $logo
-	 */
+	/** @var list<non-empty-string>|null */
+	private ?array $themeCache = null;
+
 	public function __construct(
-		public string $path,
-		public array $theme,
-		public ?string $logo,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('path.panel'),
-			self::strings($config->get('panel.theme')),
-			$config->get('panel.logo'),
-		);
+	/** @var non-empty-string */
+	public string $path {
+		get => $this->config->get('path.panel');
+	}
+
+	/** @var list<non-empty-string> */
+	public array $theme {
+		get => $this->themeCache ??= self::strings($this->config->get('panel.theme'));
+	}
+
+	/** @var ?non-empty-string */
+	public ?string $logo {
+		get => $this->config->get('panel.logo');
 	}
 
 	/** @return list<non-empty-string> */

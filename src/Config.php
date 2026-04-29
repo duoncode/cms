@@ -31,43 +31,43 @@ class Config
 	private ?Config\Password $passwordConfig = null;
 
 	public Config\App $app {
-		get => $this->appConfig ??= Config\App::from($this);
+		get => $this->appConfig ??= new Config\App($this);
 	}
 
 	public Config\Path $path {
-		get => $this->pathConfig ??= Config\Path::from($this);
+		get => $this->pathConfig ??= new Config\Path($this);
 	}
 
 	public Config\Panel $panel {
-		get => $this->panelConfig ??= Config\Panel::from($this);
+		get => $this->panelConfig ??= new Config\Panel($this);
 	}
 
 	public Config\Error $error {
-		get => $this->errorConfig ??= Config\Error::from($this);
+		get => $this->errorConfig ??= new Config\Error($this);
 	}
 
 	public Config\Icons $icons {
-		get => $this->iconsConfig ??= Config\Icons::from($this);
+		get => $this->iconsConfig ??= new Config\Icons($this);
 	}
 
 	public Config\Database $db {
-		get => $this->dbConfig ??= Config\Database::from($this);
+		get => $this->dbConfig ??= new Config\Database($this);
 	}
 
 	public Config\Session $session {
-		get => $this->sessionConfig ??= Config\Session::from($this);
+		get => $this->sessionConfig ??= new Config\Session($this);
 	}
 
 	public Config\Media $media {
-		get => $this->mediaConfig ??= Config\Media::from($this);
+		get => $this->mediaConfig ??= new Config\Media($this);
 	}
 
 	public Config\Upload $upload {
-		get => $this->uploadConfig ??= Config\Upload::from($this);
+		get => $this->uploadConfig ??= new Config\Upload($this);
 	}
 
 	public Config\Password $password {
-		get => $this->passwordConfig ??= Config\Password::from($this);
+		get => $this->passwordConfig ??= new Config\Password($this);
 	}
 
 	/** @param BuiltinConfigInput&array<string, mixed> $settings */

@@ -4,39 +4,48 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Config;
 
-final readonly class Path
+final class Path
 {
-	/**
-	 * @param non-empty-string $root
-	 * @param non-empty-string $public
-	 * @param non-empty-string $assets
-	 * @param non-empty-string $cache
-	 * @param non-empty-string $views
-	 * @param non-empty-string $panel
-	 * @param ?non-empty-string $api
-	 */
 	public function __construct(
-		public string $root,
-		public string $public,
-		public string $prefix,
-		public string $assets,
-		public string $cache,
-		public string $views,
-		public string $panel,
-		public ?string $api,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('path.root'),
-			$config->get('path.public'),
-			$config->get('path.prefix'),
-			$config->get('path.assets'),
-			$config->get('path.cache'),
-			$config->get('path.views'),
-			$config->get('path.panel'),
-			$config->get('path.api'),
-		);
+	/** @var non-empty-string */
+	public string $root {
+		get => $this->config->get('path.root');
+	}
+
+	/** @var non-empty-string */
+	public string $public {
+		get => $this->config->get('path.public');
+	}
+
+	public string $prefix {
+		get => $this->config->get('path.prefix');
+	}
+
+	/** @var non-empty-string */
+	public string $assets {
+		get => $this->config->get('path.assets');
+	}
+
+	/** @var non-empty-string */
+	public string $cache {
+		get => $this->config->get('path.cache');
+	}
+
+	/** @var non-empty-string */
+	public string $views {
+		get => $this->config->get('path.views');
+	}
+
+	/** @var non-empty-string */
+	public string $panel {
+		get => $this->config->get('path.panel');
+	}
+
+	/** @var ?non-empty-string */
+	public ?string $api {
+		get => $this->config->get('path.api');
 	}
 }

@@ -191,15 +191,16 @@ final class ConfigTest extends TestCase
 		$this->assertSame(['/icons'], $config->icons->localPaths);
 	}
 
-	public function testTypedConfigObjectsFailOnMisconfiguration(): void
+	public function testTypedConfigPropertiesFailOnMisconfiguration(): void
 	{
 		$config = new Config(self::root(), [
 			'session.enabled' => 'true',
 		]);
+		$session = $config->session;
 
 		$this->throws(\TypeError::class);
 
-		$config->session;
+		$session->enabled;
 	}
 
 	public function testConfigObjectsAreLazy(): void

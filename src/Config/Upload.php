@@ -5,28 +5,38 @@ declare(strict_types=1);
 namespace Duon\Cms\Config;
 
 /** @psalm-import-type MimeMap from Types */
-final readonly class Upload
+final class Upload
 {
-	/**
-	 * @param MimeMap $file
-	 * @param MimeMap $image
-	 * @param MimeMap $video
-	 * @param positive-int $maxSize
-	 */
+	/** @var MimeMap|null */
+	private ?array $fileCache = null;
+
+	/** @var MimeMap|null */
+	private ?array $imageCache = null;
+
+	/** @var MimeMap|null */
+	private ?array $videoCache = null;
+
 	public function __construct(
-		public array $file,
-		public array $image,
-		public array $video,
-		public int $maxSize,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('upload.mimetypes.file'),
-			$config->get('upload.mimetypes.image'),
-			$config->get('upload.mimetypes.video'),
-			$config->get('upload.maxsize'),
-		);
+	/** @var MimeMap */
+	public array $file {
+		get => $this->fileCache ??= $this->config->get('upload.mimetypes.file');
+	}
+
+	/** @var MimeMap */
+	public array $image {
+		get => $this->imageCache ??= $this->config->get('upload.mimetypes.image');
+	}
+
+	/** @var MimeMap */
+	public array $video {
+		get => $this->videoCache ??= $this->config->get('upload.mimetypes.video');
+	}
+
+	/** @var positive-int */
+	public int $maxSize {
+		get => $this->config->get('upload.maxsize');
 	}
 }

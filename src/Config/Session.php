@@ -7,21 +7,25 @@ namespace Duon\Cms\Config;
 use SessionHandlerInterface;
 
 /** @psalm-import-type SessionOptions from Types */
-final readonly class Session
+final class Session
 {
-	/** @param SessionOptions $options */
+	/** @var SessionOptions|null */
+	private ?array $optionsCache = null;
+
 	public function __construct(
-		public bool $enabled,
-		public array $options,
-		public ?SessionHandlerInterface $handler,
+		private readonly \Duon\Cms\Config $config,
 	) {}
 
-	public static function from(\Duon\Cms\Config $config): self
-	{
-		return new self(
-			$config->get('session.enabled'),
-			$config->get('session.options'),
-			$config->get('session.handler'),
-		);
+	public bool $enabled {
+		get => $this->config->get('session.enabled');
+	}
+
+	/** @var SessionOptions */
+	public array $options {
+		get => $this->optionsCache ??= $this->config->get('session.options');
+	}
+
+	public ?SessionHandlerInterface $handler {
+		get => $this->config->get('session.handler');
 	}
 }
