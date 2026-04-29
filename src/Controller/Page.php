@@ -156,7 +156,7 @@ class Page
 	protected function redirectIfExists(Context $context, string $path): void
 	{
 		$db = $context->db;
-		$path = $db->paths->byPath(['path' => $path])->one();
+		$path = $db->paths->byPath(['path' => $path])->first();
 
 		if ($path && !($path['inactive'] === null)) {
 			$paths = $db->paths->activeByNode(['node' => $path['node']])->all();

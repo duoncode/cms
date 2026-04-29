@@ -66,7 +66,7 @@ class User
 		}
 
 		if (strtolower($email) !== strtolower($user['email'])) {
-			$existing = $this->db->users->get(['login' => $email])->one();
+			$existing = $this->db->users->get(['login' => $email])->first();
 
 			if ($existing) {
 				throw new HttpBadRequest($request, ['error' => 'Die E-Mail-Adresse ist bereits vergeben']);

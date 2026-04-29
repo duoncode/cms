@@ -191,8 +191,8 @@ final class NodeCrudTest extends End2EndTestCase
 
 		$node = $this->db()->execute('SELECT node FROM cms.nodes WHERE uid = :uid', [
 			'uid' => $uid,
-		])->one();
-		$this->assertFalse((bool) $node);
+		])->first();
+		$this->assertNull($node);
 	}
 
 	public function testUpdateNode(): void

@@ -52,7 +52,7 @@ class Node
 			->db
 			->nodes
 			->find($params)
-			->one();
+			->first();
 
 		if (!$data) {
 			return null;
