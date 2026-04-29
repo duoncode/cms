@@ -148,37 +148,84 @@ For advanced integrations, the bundled error integration remains available as `D
 
 ## Settings
 
-`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()`. Use `requireEnv()` when an application wants to fail fast for required environment variables. Because settings are evaluated before `Config` is created, set extra environment-derived values with `$app->config->set(...)` after construction. `app.name` is not validated or normalized, so keep it stable and safe for app-specific identifiers.
+`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()` and merges built-in defaults with the settings array. Use `requireEnv()` when an application wants to fail fast for required environment variables.
+
+Prefer building the settings array upfront and passing it once to `App::create()` or `new Config(...)`. `Config` is immutable after construction, and values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. The immutable shape also lets typed config objects lazily normalize, validate, and cache values safely across long-running worker processes. Use native booleans and integers in PHP settings; environment values are cast by the built-in defaults.
 
 ```php
 use Duon\Cms\App;
 
-$app = App::create(dirname(__DIR__), [
+$root = dirname(__DIR__);
+$settings = [
     'app.name' => 'mycms',
-]);
+    'path.public' => "{$root}/public",
+    'path.panel' => '/cms',
+    'db.dsn' => env('DATABASE_URL'),
+    'db.sql' => ["{$root}/db/sql"],
+    'panel.theme' => "{$root}/theme",
+];
 
+$app = App::create($root, $settings);
 $app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
-```text
-'app.name' => env('APP_NAME', 'duoncms'), // App name used by sessions and helpers
-'app.debug' => env('APP_DEBUG', false), // Debug mode from the loaded environment
-'app.env' => env('APP_ENV', ''),      // App environment from the loaded environment
-'app.secret' => env('APP_SECRET', null), // App secret from the loaded environment
-'path.root' => $root,                 // Required project root passed to Config
-'path.public' => $root . '/public',   // Public document root
-'path.views' => '/views',             // View directory relative to path.root
-'db.dsn' => env('DATABASE_URL', null), // Database DSN
-'session.enabled' => env('SITE_SESSION_ENABLED', false), // Add session middleware to frontend routes
-'session.options.cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', '0'), // Browser session cookie
-'session.options.cookie_secure' => env('SESSION_COOKIE_SECURE', true), // Send session cookies only over HTTPS
-'session.options.gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', '3600'), // Session idle timeout
-'error.enabled' => true,              // Install default error middleware in Duon\Cms\App
-'error.renderer' => null,             // Optional Duon\Error\Renderer replacement
-'error.views' => null,                // Error template directory; defaults to path.views
-'error.whoops' => true,               // Use filp/whoops in debug mode when installed
-'session.authcookie' => '<app>_auth', // Name of the auth cookie
-'session.expires' => 60 * 60 * 24,    // One day by default
+Use `$config->with(...)` sparingly when you need a changed standalone config copy, for example in tests or small derived configurations. Avoid long `with()` chains for full application config files; keep the complete settings array easy to scan instead.
+
+Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`. Their properties convert list-style settings such as `panel.theme`; invalid broad types fail when the relevant property is read.
+
+```php
+$name = $app->config->app->name;
+$panel = $app->config->panel->path;
+$theme = $app->config->panel->theme;
+$session = $app->config->session->options;
+
+$nameByKey = $app->config->get('app.name');
+$debug = $app->config->debug();
+$env = $app->config->env();
+```
+
+Common built-in settings:
+
+```php
+[
+    'app.name' => env('APP_NAME', 'duoncms'),
+    'app.debug' => env('APP_DEBUG', false),
+    'app.env' => env('APP_ENV', ''),
+    'app.secret' => env('APP_SECRET', null),
+
+    'path.root' => $root,
+    'path.public' => $root . '/public',
+    'path.prefix' => '',
+    'path.assets' => '/assets',
+    'path.cache' => '/cache',
+    'path.views' => '/views',
+    'path.panel' => '/cms',
+    'path.api' => null,
+
+    'panel.theme' => [],
+    'panel.logo' => '/images/logo.png',
+
+    'db.dsn' => env('DATABASE_URL', null),
+    'db.sql' => [],
+    'db.migrations' => [],
+    'db.print' => false,
+    'db.options' => [],
+
+    'session.enabled' => env('SITE_SESSION_ENABLED', false),
+    'session.options' => [
+        'cookie_httponly' => true,
+        'cookie_secure' => env('SESSION_COOKIE_SECURE', true),
+        'cookie_lifetime' => (int) env('SESSION_COOKIE_LIFETIME', 0),
+        'gc_maxlifetime' => (int) env('SESSION_IDLE_TIMEOUT', 3600),
+        'cache_expire' => 3600,
+    ],
+    'session.handler' => null,
+
+    'error.enabled' => true,
+    'error.renderer' => null,
+    'error.views' => null,
+    'error.whoops' => true,
+]
 ```
 
 ### Admin panel theming

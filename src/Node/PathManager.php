@@ -110,7 +110,7 @@ class PathManager
 				continue;
 			}
 
-			if ($db->nodes->pathExists(['path' => $path])->one()) {
+			if ($db->nodes->pathExists(['path' => $path])->first()) {
 				$path = $path . '-' . substr(nanoid(), 0, 5);
 			}
 
@@ -158,7 +158,7 @@ class PathManager
 					continue;
 				}
 
-				if ($db->nodes->pathExists(['path' => $newPath])->one()) {
+				if ($db->nodes->pathExists(['path' => $newPath])->first()) {
 					$newPath = $newPath . '-' . substr(nanoid(), 0, 5);
 				}
 

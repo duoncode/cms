@@ -44,8 +44,6 @@ final class PasswordTest extends TestCase
 			$this->assertSame(true, str_starts_with($pw->hash('evil-chuck-666'), '$argon2id$v'));
 		}
 
-		$config->set('password.algorithm', PASSWORD_BCRYPT);
-
 		$pw = Password::fromConfig($this->config([
 			'password.algorithm' => PASSWORD_BCRYPT,
 		]));

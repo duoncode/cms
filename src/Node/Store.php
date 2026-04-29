@@ -66,7 +66,7 @@ class Store
 
 	public function create(object $node, array $data, Request $request, Locales $locales): array
 	{
-		$existing = $this->db->nodes->find(['uid' => $data['uid']])->one();
+		$existing = $this->db->nodes->find(['uid' => $data['uid']])->first();
 
 		if ($existing) {
 			throw new HttpBadRequest($request, payload: [
@@ -178,10 +178,12 @@ class Store
 			return null;
 		}
 
-		$parent = $this->db->execute(
-			'SELECT node FROM cms.nodes WHERE uid = :uid AND deleted IS NULL LIMIT 1',
-			['uid' => $parentUid],
-		)->one();
+		$parent = $this->db
+			->execute(
+				'SELECT node FROM cms.nodes WHERE uid = :uid AND deleted IS NULL LIMIT 1',
+				['uid' => $parentUid],
+			)
+			->first();
 
 		if (!$parent) {
 			throw new HttpBadRequest($request, payload: [
@@ -194,7 +196,7 @@ class Store
 
 	private function ensureTypeExists(string $handle): void
 	{
-		$type = $this->db->nodes->type(['handle' => $handle])->one();
+		$type = $this->db->nodes->type(['handle' => $handle])->first();
 
 		if (!$type) {
 			$this->db->nodes->addType([

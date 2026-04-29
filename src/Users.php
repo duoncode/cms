@@ -17,7 +17,7 @@ class Users
 		return $this->getUserOrNull(
 			$this->db->users->get([
 				'login' => $login,
-			])->one(),
+			])->first(),
 		);
 	}
 
@@ -26,7 +26,7 @@ class Users
 		return $this->getUserOrNull(
 			$this->db->users->get([
 				'token' => hash('sha256', $token),
-			])->one(),
+			])->first(),
 		);
 	}
 
@@ -37,7 +37,7 @@ class Users
 		$user = $this->getUserOrNull(
 			$this->db->users->get([
 				'onetimetoken' => $hashedToken,
-			])->one(),
+			])->first(),
 		);
 
 		if ($user) {
@@ -54,7 +54,7 @@ class Users
 		return $this->getUserOrNull(
 			$this->db->users->get([
 				'sessionhash' => $hash,
-			])->one(),
+			])->first(),
 		);
 	}
 
@@ -63,7 +63,7 @@ class Users
 		return $this->getUserOrNull(
 			$this->db->users->get([
 				'uid' => $uid,
-			])->one(),
+			])->first(),
 		);
 	}
 
@@ -72,7 +72,7 @@ class Users
 		return $this->getUserOrNull(
 			$this->db->users->get([
 				'usr' => $id,
-			])->one(),
+			])->first(),
 		);
 	}
 

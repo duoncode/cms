@@ -21,14 +21,15 @@ class Session implements Middleware
 
 	public function process(Request $request, Handler $handler): Response
 	{
+		$config = $this->config->session;
 		$session = new \Duon\Cms\Session(
-			$this->config->get('session.options'),
-			$this->config->app(),
-			$this->config->get('session.handler', null),
+			$config->options,
+			$this->config->app->name,
+			$config->handler,
 		);
 
 		$session->start();
-		$expires = $this->config->get('session.options')['gc_maxlifetime'];
+		$expires = $config->options['gc_maxlifetime'];
 		$lastActivity = $session->lastActivity();
 
 		if ($lastActivity && (time() - $lastActivity) > $expires) {

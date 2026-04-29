@@ -159,34 +159,21 @@ class Plugin implements CorePlugin
 		$this->nodes[$handle] = $class;
 	}
 
-	/** @return array<array-key, mixed> */
+	/** @return list<string> */
 	protected function localIconPaths(): array
 	{
-		$paths = $this->config->get('icons.local.paths', []);
-
-		return is_array($paths) ? $paths : [];
+		return $this->config->icons->localPaths;
 	}
 
 	protected function database(): void
 	{
 		$root = dirname(__DIR__);
-		$sqlConfig = $this->config->get('db.sql', []);
-		$sqlPaths = [];
-
-		if ($sqlConfig) {
-			$sqlPaths = is_array($sqlConfig) ? $sqlConfig : [$sqlConfig];
-		}
-
+		$config = $this->config->db;
 		$sql = array_merge(
 			[$root . '/db/sql'],
-			$sqlPaths,
+			$config->sql,
 		);
-		$migrations = $this->config->get('db.migrations', []);
-		$migrationPaths = [];
-
-		if ($migrations) {
-			$migrationPaths = is_array($migrations) ? $migrations : [$migrations];
-		}
+		$migrationPaths = $config->migrations;
 
 		$namespacedMigrations = [];
 		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
@@ -196,13 +183,13 @@ class Plugin implements CorePlugin
 		);
 
 		$this->connection = new Connection(
-			$this->config->get('db.dsn'),
+			$config->dsn,
 			$sql,
 		)
 			->migrations($namespacedMigrations)
 			->fetch(PDO::FETCH_ASSOC)
-			->options($this->config->get('db.options'))
-			->print($this->config->get('db.print'));
+			->options($config->options)
+			->print($config->print);
 		$this->db = new Database($this->connection);
 	}
 
@@ -288,10 +275,9 @@ class Plugin implements CorePlugin
 
 	protected function viewPath(): string
 	{
-		$root = (string) $this->config->get('path.root', getcwd() ?: '.');
-		$views = (string) $this->config->get('path.views');
+		$path = $this->config->path;
 
-		return rtrim($root, '/') . '/' . ltrim($views, '/');
+		return rtrim($path->root, '/') . '/' . ltrim($path->views, '/');
 	}
 
 	/** @return list<class-string> */

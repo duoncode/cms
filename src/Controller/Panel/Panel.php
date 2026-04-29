@@ -24,14 +24,14 @@ abstract class Panel
 
 	protected function context(array $data = []): array
 	{
-		$panelPath = $this->config->get('path.panel');
+		$panelPath = $this->config->panel->path;
 
 		return array_merge([
 			'debug' => $this->config->debug(),
 			'env' => $this->config->env(),
 			'boosted' => $this->request->hasHeader('HX-Boosted'),
 			'htmx' => $this->request->hasHeader('HX-Request'),
-			'panelPath' => $this->config->get('path.panel'),
+			'panelPath' => $panelPath,
 			'currentPath' => $this->request->uri()->getPath(),
 			'logo' => $this->logo(),
 			'config' => $this->config,
@@ -44,9 +44,8 @@ abstract class Panel
 
 	private function stylesheets(string $panelPath): array
 	{
-		$theme = $this->config->get('panel.theme', null);
 		return array_merge(
-			$theme ? [$theme] : [],
+			$this->config->panel->theme,
 			[
 				"{$panelPath}/assets/styles/tokens.css",
 				"{$panelPath}/assets/styles/reset.css",
@@ -66,7 +65,7 @@ abstract class Panel
 
 	private function logo(): ?string
 	{
-		$logo = $this->config->get('panel.logo', null);
+		$logo = $this->config->panel->logo;
 
 		if ($logo === null) {
 			return null;

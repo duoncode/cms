@@ -4,89 +4,102 @@ declare(strict_types=1);
 
 namespace Duon\Cms;
 
-use Dotenv\Dotenv;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
 
+/**
+ * @psalm-import-type BuiltinConfig from \Duon\Cms\Config\Types
+ * @psalm-import-type BuiltinConfigInput from \Duon\Cms\Config\Types
+ */
 class Config
 {
-	/** @var array<string, mixed> */
-	protected array $settings = [];
+	/** @var BuiltinConfig&array<string, mixed> */
+	private readonly array $settings;
 
-	protected readonly Dotenv $dotenv;
+	private readonly string $root;
+	private readonly Config\Env $environment;
 
+	private ?Config\App $appConfig = null;
+	private ?Config\Path $pathConfig = null;
+	private ?Config\Panel $panelConfig = null;
+	private ?Config\Error $errorConfig = null;
+	private ?Config\Icons $iconsConfig = null;
+	private ?Config\Database $dbConfig = null;
+	private ?Config\Session $sessionConfig = null;
+	private ?Config\Media $mediaConfig = null;
+	private ?Config\Upload $uploadConfig = null;
+	private ?Config\Password $passwordConfig = null;
+
+	public Config\App $app {
+		get => $this->appConfig ??= new Config\App($this);
+	}
+
+	public Config\Path $path {
+		get => $this->pathConfig ??= new Config\Path($this);
+	}
+
+	public Config\Panel $panel {
+		get => $this->panelConfig ??= new Config\Panel($this);
+	}
+
+	public Config\Error $error {
+		get => $this->errorConfig ??= new Config\Error($this);
+	}
+
+	public Config\Icons $icons {
+		get => $this->iconsConfig ??= new Config\Icons($this);
+	}
+
+	public Config\Database $db {
+		get => $this->dbConfig ??= new Config\Database($this);
+	}
+
+	public Config\Session $session {
+		get => $this->sessionConfig ??= new Config\Session($this);
+	}
+
+	public Config\Media $media {
+		get => $this->mediaConfig ??= new Config\Media($this);
+	}
+
+	public Config\Upload $upload {
+		get => $this->uploadConfig ??= new Config\Upload($this);
+	}
+
+	public Config\Password $password {
+		get => $this->passwordConfig ??= new Config\Password($this);
+	}
+
+	/** @param BuiltinConfigInput&array<string, mixed> $settings */
 	public function __construct(string $root, array $settings = [])
 	{
-		$root = $this->normalizeRoot($root);
-		$this->dotenv = Dotenv::createImmutable($root);
-		$this->dotenv->safeLoad();
-		$this->validateEnvironment();
-		$this->settings = array_merge([
-			'app.name' => env('APP_NAME', 'duoncms'),
-			'app.debug' => $this->boolEnv('APP_DEBUG', false),
-			'app.env' => env('APP_ENV', ''),
-			'app.secret' => env('APP_SECRET', null),
-			'path.root' => $root,
-			'path.public' => $root . '/public',
-			'path.prefix' => '',
-			'path.assets' => '/assets',
-			'path.cache' => '/cache',
-			'path.views' => '/views',
-			'path.panel' => '/cms',
-			'path.api' => null,
-			'panel.theme' => null,
-			'panel.logo' => '/images/logo.png',
-			'error.enabled' => true,
-			'error.renderer' => null,
-			'error.trusted' => [],
-			'error.views' => null,
-			'error.whoops' => true,
-			'icons.local.paths' => [],
-			'icons.iconify.base_url' => 'https://api.iconify.design',
-			'icons.iconify.timeout' => 5,
-			'icons.iconify.user_agent' => 'duon/cms',
-			'db.dsn' => env('DATABASE_URL', null),
-			'db.sql' => [],
-			'db.migrations' => [],
-			'db.print' => false,
-			'db.options' => [],
-			'session.enabled' => $this->boolEnv('SITE_SESSION_ENABLED', false),
-			'session.options' => [
-				'cookie_httponly' => true,
-				'cookie_secure' => $this->boolEnv('SESSION_COOKIE_SECURE', true),
-				'cookie_lifetime' => $this->intEnv('SESSION_COOKIE_LIFETIME', 0),
-				'gc_maxlifetime' => $this->intEnv('SESSION_IDLE_TIMEOUT', 3600),
-			],
-			'media.fileserver' => null,
-			'upload.mimetypes.file' => [
-				'application/pdf' => ['pdf'],
-			],
-			'upload.mimetypes.image' => [
-				'image/gif' => ['gif'],
-				'image/jpeg' => ['jpeg', 'jpg', 'jfif'],
-				'image/png' => ['png'],
-				'image/webp' => ['webp'],
-				'image/svg+xml' => ['svg'],
-			],
-			'upload.mimetypes.video' => [
-				'video/mp4' => ['mp4'],
-				'video/ogg' => ['ogg'],
-			],
-			'upload.maxsize' => 10 * 1024 * 1024,
-		], $settings);
+		$this->root = $this->normalizeRoot($root);
+		$this->environment = Config\Env::load($this->root);
+		$this->environment->validate();
+		$this->settings = Config\Settings::merge(
+			Config\Defaults::values($this->root, $this->environment),
+			$settings,
+		);
 	}
 
 	/** @param non-empty-string|list<non-empty-string> $variables */
 	public function requireEnv(string|array $variables): self
 	{
-		$this->dotenv->required($variables);
+		$this->environment->require($variables);
 
 		return $this;
 	}
 
-	public function set(string $key, mixed $value): void
+	/**
+	 * @template TKey of string
+	 * @param TKey $key
+	 * @param (TKey is key-of<BuiltinConfig> ? BuiltinConfig[TKey] : mixed) $value
+	 */
+	public function with(string $key, mixed $value): self
 	{
-		$this->settings[$key] = $value;
+		$settings = Config\Settings::merge($this->settings, [$key => $value]);
+
+		return new self($this->root, $settings);
 	}
 
 	public function has(string $key): bool
@@ -94,6 +107,11 @@ class Config
 		return array_key_exists($key, $this->settings);
 	}
 
+	/**
+	 * @template TKey of string
+	 * @param TKey $key
+	 * @return (TKey is key-of<BuiltinConfig> ? BuiltinConfig[TKey] : mixed)
+	 */
 	public function get(string $key, mixed $default = null): mixed
 	{
 		if (array_key_exists($key, $this->settings)) {
@@ -109,33 +127,14 @@ class Config
 		);
 	}
 
-	public function app(): string
-	{
-		return (string) $this->get('app.name');
-	}
-
 	public function debug(): bool
 	{
-		return filter_var($this->get('app.debug'), FILTER_VALIDATE_BOOL);
-	}
-
-	public function panelPath(): string
-	{
-		if ($this->env() === 'cms-development') {
-			return '/cms';
-		}
-
-		return $this->settings['path.panel'];
-	}
-
-	public function apiPath(): ?string
-	{
-		return $this->get('path.api', null);
+		return $this->app->debug;
 	}
 
 	public function env(): string
 	{
-		return (string) $this->get('app.env');
+		return $this->app->env;
 	}
 
 	protected function normalizeRoot(string $root): string
@@ -150,29 +149,5 @@ class Config
 	public function printAll(): void
 	{
 		error_log(print_r($this->settings, true));
-	}
-
-	protected function validateEnvironment(): void
-	{
-		$this->dotenv->ifPresent([
-			'APP_DEBUG',
-			'SITE_SESSION_ENABLED',
-			'SESSION_COOKIE_SECURE',
-		])->isBoolean();
-
-		$this->dotenv->ifPresent([
-			'SESSION_COOKIE_LIFETIME',
-			'SESSION_IDLE_TIMEOUT',
-		])->isInteger();
-	}
-
-	protected function boolEnv(string $key, bool $default): bool
-	{
-		return filter_var(env($key, $default), FILTER_VALIDATE_BOOL);
-	}
-
-	protected function intEnv(string $key, int $default): int
-	{
-		return (int) env($key, $default);
 	}
 }

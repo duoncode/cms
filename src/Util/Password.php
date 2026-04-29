@@ -21,9 +21,9 @@ class Password
 
 	public static function fromConfig(Config $config): self
 	{
-		$entropy = $config->get('password.entropy', self::DEFAULT_PASSWORD_ENTROPY);
+		$entropy = $config->password->entropy;
 		$defaultAlgo = self::hasArgon2() ? PASSWORD_ARGON2ID : PASSWORD_BCRYPT;
-		$algo = $config->get('password.algorithm', $defaultAlgo);
+		$algo = $config->password->algorithm ?? $defaultAlgo;
 
 		return new self($algo, $entropy);
 	}

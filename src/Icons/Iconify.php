@@ -75,10 +75,8 @@ final class Iconify implements Contract\Icons
 		}
 
 		$url = $this->iconUrl($prefix, $name, $args);
-		$timeout = max((int) $this->config->get('icons.iconify.timeout', 5), 1);
-		$userAgent = trim((string) $this->config->get('icons.iconify.user_agent', 'duon/cms'));
-		$userAgent = $userAgent === '' ? 'duon/cms' : $userAgent;
-		$svg = ($this->fetch)($url, $timeout, $userAgent);
+		$iconify = $this->config->icons->iconify;
+		$svg = ($this->fetch)($url, $iconify->timeout, $iconify->userAgent);
 
 		if (!is_string($svg) || !$this->isSvg($svg)) {
 			return null;
@@ -94,8 +92,7 @@ final class Iconify implements Contract\Icons
 	/** @param array<array-key, mixed> $args */
 	private function iconUrl(string $prefix, string $name, array $args): string
 	{
-		$base = trim((string) $this->config->get('icons.iconify.base_url', 'https://api.iconify.design'));
-		$base = $base === '' ? 'https://api.iconify.design' : rtrim($base, '/');
+		$base = rtrim($this->config->icons->iconify->baseUrl, '/');
 		$url = sprintf('%s/%s/%s.svg', $base, rawurlencode($prefix), rawurlencode($name));
 		$query = $this->query($args);
 
@@ -195,13 +192,13 @@ final class Iconify implements Contract\Icons
 
 	private function cacheDir(): ?string
 	{
-		$publicDir = realpath((string) $this->config->get('path.public'));
+		$publicDir = realpath($this->config->path->public);
 
 		if ($publicDir === false) {
 			return null;
 		}
 
-		$cacheDir = trim((string) $this->config->get('path.cache', '/cache'));
+		$cacheDir = $this->config->path->cache;
 
 		if ($cacheDir === '' || str_contains(str_replace('\\', '/', $cacheDir), '..')) {
 			return null;
