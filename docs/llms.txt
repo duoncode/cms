@@ -115,8 +115,8 @@ Important:
 - `App::create()` creates `Config` internally and exposes it as `$app->config`.
 - `Config` loads `.env` from the root path with `Dotenv::safeLoad()`.
 - `Config::requireEnv(...)` validates required environment variables and may be removed later.
-- `Config` is immutable after construction. Pass settings to `App::create(...)`; use `Config::with(...)` only when you need a changed standalone config copy.
-- Built-in settings are available by key (`$config->get('path.panel')`) and through typed lazy objects (`$config->panel->path`, `$config->session->options`).
+- `Config` is immutable after construction. Pass settings to `App::create(...)`; use native booleans and integers in PHP settings; use `Config::with(...)` only when you need a changed standalone config copy.
+- Built-in settings are available by key (`$config->get('path.panel')`) and through typed lazy objects (`$config->panel->path`, `$config->session->options`). The lazy objects own domain-specific conversion and broad type checks.
 - `Duon\Cms\App` installs default PSR-15 error middleware unless `error.enabled` is false.
 - Error pages use a dedicated Boiler renderer, independent from the CMS `view` renderer.
 - Project `http-error.php` and `http-server-error.php` templates in `{path.root}{path.views}` override built-in fallback templates.
@@ -407,7 +407,7 @@ Paths and panel:
 - `path.views`: `'/views'` (view directory relative to `path.root`)
 - `path.panel`: `'/cms'`
 - `path.api`: `null`
-- `panel.theme`: `[]` (input may be a string or string[] and is stored as a list)
+- `panel.theme`: `[]` (input may be a string or string[] and is exposed as a list through `$config->panel->theme`)
 - `panel.logo`: `'/images/logo.png'`
 
 Errors:

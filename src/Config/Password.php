@@ -11,4 +11,12 @@ final readonly class Password
 		public float $entropy,
 		public int|string|null $algorithm,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('password.entropy'),
+			$config->get('password.algorithm'),
+		);
+	}
 }

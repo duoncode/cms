@@ -15,4 +15,13 @@ final readonly class Session
 		public array $options,
 		public ?SessionHandlerInterface $handler,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('session.enabled'),
+			$config->get('session.options'),
+			$config->get('session.handler'),
+		);
+	}
 }

@@ -20,4 +20,15 @@ final readonly class Error
 		public string|array|null $views,
 		public bool $whoops,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('error.enabled'),
+			$config->get('error.renderer'),
+			$config->get('error.trusted'),
+			$config->get('error.views'),
+			$config->get('error.whoops'),
+		);
+	}
 }

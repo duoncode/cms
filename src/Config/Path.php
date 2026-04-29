@@ -25,4 +25,18 @@ final readonly class Path
 		public string $panel,
 		public ?string $api,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('path.root'),
+			$config->get('path.public'),
+			$config->get('path.prefix'),
+			$config->get('path.assets'),
+			$config->get('path.cache'),
+			$config->get('path.views'),
+			$config->get('path.panel'),
+			$config->get('path.api'),
+		);
+	}
 }

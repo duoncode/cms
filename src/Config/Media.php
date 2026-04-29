@@ -10,4 +10,11 @@ final readonly class Media
 	public function __construct(
 		public ?string $fileServer,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('media.fileserver'),
+		);
+	}
 }

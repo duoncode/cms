@@ -16,4 +16,13 @@ final readonly class Iconify
 		public int $timeout,
 		public string $userAgent,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('icons.iconify.base_url'),
+			$config->get('icons.iconify.timeout'),
+			$config->get('icons.iconify.user_agent'),
+		);
+	}
 }

@@ -17,4 +17,14 @@ final readonly class App
 		#[\SensitiveParameter]
 		public ?string $secret,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('app.name'),
+			$config->get('app.debug'),
+			$config->get('app.env'),
+			$config->get('app.secret'),
+		);
+	}
 }

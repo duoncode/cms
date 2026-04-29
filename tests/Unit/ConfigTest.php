@@ -105,7 +105,7 @@ final class ConfigTest extends TestCase
 	{
 		$config = new Config(self::root(), [
 			'app.name' => 'site-cms',
-			'app.debug' => 'false',
+			'app.debug' => false,
 			'app.env' => 'production',
 			'app.secret' => 'configured-secret',
 			'session.enabled' => true,
@@ -176,7 +176,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame(3600, $config->session->options['cache_expire']);
 	}
 
-	public function testListSettingsAreNormalized(): void
+	public function testListSettingsAreConvertedByConfigObjects(): void
 	{
 		$config = new Config(self::root(), [
 			'panel.theme' => '/theme.css',
@@ -189,6 +189,17 @@ final class ConfigTest extends TestCase
 		$this->assertSame(['/sql'], $config->db->sql);
 		$this->assertSame(['/migrations'], $config->db->migrations);
 		$this->assertSame(['/icons'], $config->icons->localPaths);
+	}
+
+	public function testTypedConfigObjectsFailOnMisconfiguration(): void
+	{
+		$config = new Config(self::root(), [
+			'session.enabled' => 'true',
+		]);
+
+		$this->throws(\TypeError::class);
+
+		$config->session;
 	}
 
 	public function testConfigObjectsAreLazy(): void

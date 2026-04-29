@@ -16,4 +16,29 @@ final readonly class Panel
 		public array $theme,
 		public ?string $logo,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('path.panel'),
+			self::strings($config->get('panel.theme')),
+			$config->get('panel.logo'),
+		);
+	}
+
+	/** @return list<non-empty-string> */
+	private static function strings(mixed $value): array
+	{
+		if ($value === null) {
+			return [];
+		}
+
+		if (is_string($value)) {
+			$value = trim($value);
+
+			return $value === '' ? [] : [$value];
+		}
+
+		return array_values($value);
+	}
 }

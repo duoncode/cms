@@ -148,9 +148,9 @@ For advanced integrations, the bundled error integration remains available as `D
 
 ## Settings
 
-`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()`, merges built-in defaults with the settings array, and normalizes built-in values before storing them. Use `requireEnv()` when an application wants to fail fast for required environment variables.
+`App::create()` creates `Config` from the root path and settings array and exposes it as `$app->config`. `Config` loads `.env` from the root path with `Dotenv::safeLoad()` and merges built-in defaults with the settings array. Use `requireEnv()` when an application wants to fail fast for required environment variables.
 
-Provide settings to `App::create()`. `Config` is immutable after construction, and values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. For standalone config changes, use `$config->with(...)` to create a changed copy.
+Provide settings to `App::create()`. `Config` is immutable after construction, and values such as `path.prefix`, `path.panel`, and `error.enabled` are consumed while the app boots. Use native booleans and integers in PHP settings; environment values are cast by the built-in defaults. For standalone config changes, use `$config->with(...)` to create a changed copy.
 
 ```php
 use Duon\Cms\App;
@@ -163,7 +163,7 @@ $app = App::create(dirname(__DIR__), [
 $app->config->requireEnv(['DATABASE_URL', 'APP_SECRET']);
 ```
 
-Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`.
+Read built-in settings through typed config objects or by key. The built-in objects are `app`, `path`, `panel`, `error`, `icons`, `db`, `session`, `media`, `upload`, and `password`. Object access converts list-style settings such as `panel.theme`; invalid broad types fail when the object is first accessed.
 
 ```php
 $name = $app->config->app->name;

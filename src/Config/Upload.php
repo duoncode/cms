@@ -19,4 +19,14 @@ final readonly class Upload
 		public array $video,
 		public int $maxSize,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('upload.mimetypes.file'),
+			$config->get('upload.mimetypes.image'),
+			$config->get('upload.mimetypes.video'),
+			$config->get('upload.maxsize'),
+		);
+	}
 }

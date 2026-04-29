@@ -19,4 +19,31 @@ final readonly class Database
 		public bool $print,
 		public array $options,
 	) {}
+
+	public static function from(\Duon\Cms\Config $config): self
+	{
+		return new self(
+			$config->get('db.dsn'),
+			self::strings($config->get('db.sql')),
+			self::strings($config->get('db.migrations')),
+			$config->get('db.print'),
+			$config->get('db.options'),
+		);
+	}
+
+	/** @return list<non-empty-string> */
+	private static function strings(mixed $value): array
+	{
+		if ($value === null) {
+			return [];
+		}
+
+		if (is_string($value)) {
+			$value = trim($value);
+
+			return $value === '' ? [] : [$value];
+		}
+
+		return array_values($value);
+	}
 }
