@@ -8,8 +8,6 @@ use Closure;
 use Duon\Cms\Field\FieldHydrator;
 use Duon\Cms\Node\Node;
 
-use function Duon\Cms\escape;
-
 final class Column
 {
 	private bool|Closure $bold = false;

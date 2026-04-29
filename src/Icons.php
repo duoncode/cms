@@ -6,8 +6,6 @@ namespace Duon\Cms;
 
 use Duon\Container\Container;
 
-use function Duon\Cms\escape;
-
 final class Icons implements Contract\Icons
 {
 	/** @var array<string, string> */
