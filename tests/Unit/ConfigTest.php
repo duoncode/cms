@@ -87,6 +87,7 @@ final class ConfigTest extends TestCase
 		$this->assertSame(self::root(), $config->get('path.root'));
 		$this->assertSame(self::root() . '/public', $config->get('path.public'));
 		$this->assertNull($config->get('app.secret'));
+		$this->assertSame([], $config->get('panel.theme'));
 		$this->assertFalse($config->get('session.enabled'));
 		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
 		$this->assertTrue($config->get('session.options')['cookie_secure']);
@@ -159,6 +160,48 @@ final class ConfigTest extends TestCase
 		$this->assertFalse($config->get('session.options')['cookie_secure']);
 		$this->assertSame(86400, $config->get('session.options')['cookie_lifetime']);
 		$this->assertSame(7200, $config->get('session.options')['gc_maxlifetime']);
+	}
+
+	public function testSessionOptionsAreDeepMerged(): void
+	{
+		$config = new Config(self::root(), [
+			'session.options' => [
+				'cookie_secure' => false,
+			],
+		]);
+
+		$this->assertTrue($config->get('session.options')['cookie_httponly']);
+		$this->assertFalse($config->get('session.options')['cookie_secure']);
+		$this->assertSame(0, $config->get('session.options')['cookie_lifetime']);
+		$this->assertSame(3600, $config->get('session.options')['gc_maxlifetime']);
+		$this->assertSame(3600, $config->get('session.options')['cache_expire']);
+	}
+
+	public function testListSettingsAreNormalized(): void
+	{
+		$config = new Config(self::root(), [
+			'panel.theme' => '/theme.css',
+			'db.sql' => '/sql',
+			'db.migrations' => ['/migrations'],
+			'icons.local.paths' => '/icons',
+		]);
+
+		$this->assertSame(['/theme.css'], $config->get('panel.theme'));
+		$this->assertSame(['/sql'], $config->get('db.sql'));
+		$this->assertSame(['/migrations'], $config->get('db.migrations'));
+		$this->assertSame(['/icons'], $config->get('icons.local.paths'));
+	}
+
+	public function testUnknownKeysStillWorkAtRuntime(): void
+	{
+		$config = new Config(self::root(), [
+			'custom.value' => 3,
+		]);
+
+		$config->set('custom.other', ['enabled' => true]);
+
+		$this->assertSame(3, $config->get('custom.value'));
+		$this->assertSame(['enabled' => true], $config->get('custom.other'));
 	}
 
 	public function testDatabaseDsnUsesEnvironmentVariable(): void

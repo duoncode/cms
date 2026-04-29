@@ -6,6 +6,7 @@ namespace Duon\Cms;
 
 use Duon\Cms\Config\Defaults;
 use Duon\Cms\Config\Env as Environment;
+use Duon\Cms\Config\Normalize;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
 
@@ -21,7 +22,7 @@ class Config
 		$root = $this->normalizeRoot($root);
 		$this->environment = Environment::load($root);
 		$this->environment->validate();
-		$this->settings = array_merge(Defaults::values($root, $this->environment), $settings);
+		$this->settings = Normalize::settings(Defaults::values($root, $this->environment), $settings);
 	}
 
 	/** @param non-empty-string|list<non-empty-string> $variables */
@@ -34,7 +35,7 @@ class Config
 
 	public function set(string $key, mixed $value): void
 	{
-		$this->settings[$key] = $value;
+		$this->settings[$key] = Normalize::setValue($this->settings, $key, $value);
 	}
 
 	public function has(string $key): bool

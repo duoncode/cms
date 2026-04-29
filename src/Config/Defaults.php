@@ -57,7 +57,7 @@ final class Defaults
 	private static function panel(): array
 	{
 		return [
-			'panel.theme' => null,
+			'panel.theme' => [],
 			'panel.logo' => '/images/logo.png',
 		];
 	}

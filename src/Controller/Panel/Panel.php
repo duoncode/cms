@@ -44,9 +44,8 @@ abstract class Panel
 
 	private function stylesheets(string $panelPath): array
 	{
-		$theme = $this->config->get('panel.theme', null);
 		return array_merge(
-			$theme ? [$theme] : [],
+			$this->config->get('panel.theme'),
 			[
 				"{$panelPath}/assets/styles/tokens.css",
 				"{$panelPath}/assets/styles/reset.css",
