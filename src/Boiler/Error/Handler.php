@@ -93,7 +93,7 @@ final class Handler
 
 	private function customRenderer(): ?ErrorRenderer
 	{
-		$renderer = $this->config->get('error.renderer', null);
+		$renderer = $this->config->get('error.renderer');
 
 		if ($renderer === null) {
 			return null;
@@ -117,7 +117,7 @@ final class Handler
 	/** @return non-empty-list<string> */
 	private function errorViews(): array
 	{
-		$views = $this->views ?? $this->config->get('error.views', null) ?? $this->projectViewPath();
+		$views = $this->views ?? $this->config->get('error.views') ?? $this->projectViewPath();
 		$dirs = [];
 
 		foreach ((array) $views as $view) {
@@ -150,7 +150,7 @@ final class Handler
 			return $path;
 		}
 
-		$root = (string) $this->config->get('path.root', getcwd() ?: '.');
+		$root = $this->config->get('path.root');
 
 		return rtrim($root, '/') . '/' . ltrim($path, '/');
 	}
@@ -163,7 +163,7 @@ final class Handler
 	/** @return list<class-string> */
 	private function trustedClasses(): array
 	{
-		$trusted = $this->config->get('error.trusted', []);
+		$trusted = $this->config->get('error.trusted');
 
 		if (is_array($trusted)) {
 			return array_values(array_unique(array_merge($this->trusted, $trusted)));

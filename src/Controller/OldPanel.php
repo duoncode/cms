@@ -63,7 +63,7 @@ class OldPanel
 			'debug' => $config->debug(),
 			'env' => $config->env(),
 			'csrfToken' => '', // TODO: real token
-			'logo' => $config->get('panel.logo', null),
+			'logo' => $config->get('panel.logo'),
 			'theme' => $this->themeStylesheets(),
 			'api' => $config->apiPath(),
 			'assets' => $config->get('path.assets'),
@@ -272,35 +272,7 @@ class OldPanel
 
 	private function themeStylesheets(): array
 	{
-		$theme = $this->config->get('panel.theme', null);
-
-		if (is_string($theme)) {
-			$theme = trim($theme);
-
-			return $theme === '' ? [] : [$theme];
-		}
-
-		if (!is_array($theme)) {
-			return [];
-		}
-
-		$stylesheets = [];
-
-		foreach ($theme as $item) {
-			if (!is_string($item)) {
-				continue;
-			}
-
-			$item = trim($item);
-
-			if ($item === '') {
-				continue;
-			}
-
-			$stylesheets[] = $item;
-		}
-
-		return $stylesheets;
+		return $this->config->get('panel.theme');
 	}
 
 	private function intParam(

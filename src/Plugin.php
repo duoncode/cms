@@ -159,34 +159,20 @@ class Plugin implements CorePlugin
 		$this->nodes[$handle] = $class;
 	}
 
-	/** @return array<array-key, mixed> */
+	/** @return list<string> */
 	protected function localIconPaths(): array
 	{
-		$paths = $this->config->get('icons.local.paths', []);
-
-		return is_array($paths) ? $paths : [];
+		return $this->config->get('icons.local.paths');
 	}
 
 	protected function database(): void
 	{
 		$root = dirname(__DIR__);
-		$sqlConfig = $this->config->get('db.sql', []);
-		$sqlPaths = [];
-
-		if ($sqlConfig) {
-			$sqlPaths = is_array($sqlConfig) ? $sqlConfig : [$sqlConfig];
-		}
-
 		$sql = array_merge(
 			[$root . '/db/sql'],
-			$sqlPaths,
+			$this->config->get('db.sql'),
 		);
-		$migrations = $this->config->get('db.migrations', []);
-		$migrationPaths = [];
-
-		if ($migrations) {
-			$migrationPaths = is_array($migrations) ? $migrations : [$migrations];
-		}
+		$migrationPaths = $this->config->get('db.migrations');
 
 		$namespacedMigrations = [];
 		$namespacedMigrations['install'] = [$root . '/db/migrations/install'];
@@ -288,7 +274,7 @@ class Plugin implements CorePlugin
 
 	protected function viewPath(): string
 	{
-		$root = (string) $this->config->get('path.root', getcwd() ?: '.');
+		$root = $this->config->get('path.root');
 		$views = (string) $this->config->get('path.views');
 
 		return rtrim($root, '/') . '/' . ltrim($views, '/');

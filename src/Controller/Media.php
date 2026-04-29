@@ -85,7 +85,7 @@ class Media
 			$image->resize($size, $mode, $qs['enlarge'] ?? false, $quality);
 		}
 
-		$fileServer = $this->config->get('media.fileserver', null);
+		$fileServer = $this->config->get('media.fileserver');
 
 		if ($fileServer) {
 			return $this->sendFile($fileServer, $image->path());
@@ -97,7 +97,7 @@ class Media
 	public function file(string $slug): Response
 	{
 		$file = $this->getAssets()->file($slug);
-		$fileServer = $this->config->get('media.fileserver', null);
+		$fileServer = $this->config->get('media.fileserver');
 
 		if ($fileServer) {
 			return $this->sendFile($fileServer, $file->path());
@@ -115,7 +115,12 @@ class Media
 				'file' => _(' Dateiname unbekannt'),
 			];
 		}
-		$mimeTypes = $this->config->get('upload.mimetypes.' . $mediatype);
+		$mimeTypes = match ($mediatype) {
+			'file' => $this->config->get('upload.mimetypes.file'),
+			'image' => $this->config->get('upload.mimetypes.image'),
+			'video' => $this->config->get('upload.mimetypes.video'),
+			default => throw new RuntimeException('Media type not supported: ' . $mediatype),
+		};
 		$maxSize = $this->config->get('upload.maxsize');
 
 		$tmpFile = $file['tmp_name'];

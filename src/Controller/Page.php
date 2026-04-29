@@ -35,7 +35,7 @@ class Page
 		$request = $context->request;
 		$config = $context->config;
 		$path = $request->uri()->getPath();
-		$prefix = $config->get('path.prefix', '');
+		$prefix = $config->get('path.prefix');
 
 		if ($prefix) {
 			$path = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $path);

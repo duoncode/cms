@@ -65,7 +65,7 @@ abstract class Panel
 
 	private function logo(): ?string
 	{
-		$logo = $this->config->get('panel.logo', null);
+		$logo = $this->config->get('panel.logo');
 
 		if ($logo === null) {
 			return null;

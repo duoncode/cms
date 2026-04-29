@@ -10,13 +10,18 @@ use Duon\Cms\Config\Normalize;
 use Duon\Core\Exception\OutOfBoundsException;
 use Duon\Core\Exception\ValueError;
 
+/**
+ * @psalm-import-type BuiltinConfig from \Duon\Cms\Config\Types
+ * @psalm-import-type BuiltinConfigInput from \Duon\Cms\Config\Types
+ */
 class Config
 {
-	/** @var array<string, mixed> */
+	/** @var BuiltinConfig&array<string, mixed> */
 	protected array $settings = [];
 
 	protected readonly Environment $environment;
 
+	/** @param BuiltinConfigInput&array<string, mixed> $settings */
 	public function __construct(string $root, array $settings = [])
 	{
 		$root = $this->normalizeRoot($root);
@@ -33,6 +38,11 @@ class Config
 		return $this;
 	}
 
+	/**
+	 * @template TKey of string
+	 * @param TKey $key
+	 * @param (TKey is key-of<BuiltinConfig> ? BuiltinConfig[TKey] : mixed) $value
+	 */
 	public function set(string $key, mixed $value): void
 	{
 		$this->settings[$key] = Normalize::setValue($this->settings, $key, $value);
@@ -43,6 +53,11 @@ class Config
 		return array_key_exists($key, $this->settings);
 	}
 
+	/**
+	 * @template TKey of string
+	 * @param TKey $key
+	 * @return (TKey is key-of<BuiltinConfig> ? BuiltinConfig[TKey] : mixed)
+	 */
 	public function get(string $key, mixed $default = null): mixed
 	{
 		if (array_key_exists($key, $this->settings)) {
@@ -60,12 +75,12 @@ class Config
 
 	public function app(): string
 	{
-		return (string) $this->get('app.name');
+		return $this->get('app.name');
 	}
 
 	public function debug(): bool
 	{
-		return filter_var($this->get('app.debug'), FILTER_VALIDATE_BOOL);
+		return $this->get('app.debug');
 	}
 
 	public function panelPath(): string
@@ -74,17 +89,17 @@ class Config
 			return '/cms';
 		}
 
-		return $this->settings['path.panel'];
+		return $this->get('path.panel');
 	}
 
 	public function apiPath(): ?string
 	{
-		return $this->get('path.api', null);
+		return $this->get('path.api');
 	}
 
 	public function env(): string
 	{
-		return (string) $this->get('app.env');
+		return $this->get('app.env');
 	}
 
 	protected function normalizeRoot(string $root): string
