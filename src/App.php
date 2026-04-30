@@ -168,15 +168,15 @@ class App implements RouteAdder
 
 	public function addGroup(Group $group): void
 	{
-		$this->core->addGroup($group);
+		$group->register($this->core);
 	}
 
 	public function group(
 		string $patternPrefix,
 		Closure $createClosure,
 		string $namePrefix = '',
-	): Group {
-		return $this->core->group($patternPrefix, $createClosure, $namePrefix);
+	): void {
+		$this->core->group($patternPrefix, $createClosure, $namePrefix);
 	}
 
 	public function staticRoute(string $prefix, string $path, string $name = ''): self

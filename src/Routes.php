@@ -106,11 +106,12 @@ class Routes
 
 	public function catchallRoute(): Route
 	{
-		$catchallRoute = Route::any(
+		$catchallRoute = Route::map(
+			['GET', 'POST'],
 			'/...slug',
 			[Page::class, 'catchall'],
 			'cms.catchall',
-		)->method('GET', 'POST')->middleware($this->initRequestMiddlware);
+		)->middleware($this->initRequestMiddlware);
 
 		if ($this->frontendSession) {
 			$catchallRoute->middleware($this->session);
