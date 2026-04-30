@@ -32,12 +32,12 @@ final class PanelCollectionTest extends End2EndTestCase
 	{
 		$this->createArticle('panel-grid-a', 'Panel Grid A');
 		$this->createArticle('panel-grid-b', 'Panel Grid B');
-		$response = $this->makeRequest('GET', '/panel/collection/test-articles');
+		$response = $this->makeRequest('GET', '/cp/collection/test-articles');
 
 		$this->assertResponseOk($response);
 		$html = $this->getHtmlResponse($response);
 		$this->assertStringContainsString('class="collection-title">Test articles', $html);
-		$this->assertStringContainsString('href="/panel/assets/styles/collection.css"', $html);
+		$this->assertStringContainsString('href="/cp/assets/styles/collection.css"', $html);
 		$this->assertStringContainsString('Panel Grid A', $html);
 		$this->assertStringContainsString('Panel Grid B', $html);
 		$this->assertStringContainsString('class="collection-list"', $html);
@@ -48,7 +48,7 @@ final class PanelCollectionTest extends End2EndTestCase
 	public function testBoostedCollectionRequestRendersPartialWithoutLayoutShell(): void
 	{
 		$this->createArticle('panel-grid-boosted', 'Panel Grid Boosted');
-		$response = $this->makeRequest('GET', '/panel/collection/test-articles', [
+		$response = $this->makeRequest('GET', '/cp/collection/test-articles', [
 			'headers' => [
 				'HX-Request' => 'true',
 				'HX-Boosted' => 'true',
@@ -64,7 +64,7 @@ final class PanelCollectionTest extends End2EndTestCase
 
 	public function testPanelCollectionRouteReturnsNotFoundForUnknownCollection(): void
 	{
-		$response = $this->makeRequest('GET', '/panel/collection/does-not-exist');
+		$response = $this->makeRequest('GET', '/cp/collection/does-not-exist');
 
 		$this->assertResponseStatus(404, $response);
 	}

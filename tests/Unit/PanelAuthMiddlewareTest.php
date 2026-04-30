@@ -45,14 +45,14 @@ final class PanelAuthMiddlewareTest extends TestCase
 			->serverRequestFactory()
 			->createServerRequest(
 				'GET',
-				'/panel/collection/articles?parent=root',
+				'/cp/collection/articles?parent=root',
 			);
 
 		$response = $middleware->process($request, $this->handler());
 
 		$this->assertSame(303, $response->getStatusCode());
 		$this->assertSame(
-			'/panel/login?next=%2Fpanel%2Fcollection%2Farticles%3Fparent%3Droot',
+			'/cp/login?next=%2Fcp%2Fcollection%2Farticles%3Fparent%3Droot',
 			$response->getHeaderLine('Location'),
 		);
 	}
@@ -64,13 +64,13 @@ final class PanelAuthMiddlewareTest extends TestCase
 			$this->users(),
 			$this->factory(),
 		);
-		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/panel');
+		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/cp');
 		$request = $request->withHeader('HX-Request', 'true');
 
 		$response = $middleware->process($request, $this->handler());
 
 		$this->assertSame(401, $response->getStatusCode());
-		$this->assertSame('/panel/login?next=%2Fpanel', $response->getHeaderLine('HX-Redirect'));
+		$this->assertSame('/cp/login?next=%2Fcp', $response->getHeaderLine('HX-Redirect'));
 	}
 
 	public function testHtmxRequestWithoutPanelPermissionReturnsForbidden(): void
@@ -98,7 +98,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 			$this->users([$user]),
 			$this->factory(),
 		);
-		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/panel');
+		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/cp');
 		$request = $request
 			->withHeader('HX-Request', 'true')
 			->withAttribute('session', $session);
@@ -106,7 +106,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 		$response = $middleware->process($request, $this->handler());
 
 		$this->assertSame(403, $response->getStatusCode());
-		$this->assertSame('/panel/login?next=%2Fpanel', $response->getHeaderLine('HX-Redirect'));
+		$this->assertSame('/cp/login?next=%2Fcp', $response->getHeaderLine('HX-Redirect'));
 	}
 
 	public function testPanelUserCanAccessProtectedRoute(): void
@@ -134,7 +134,7 @@ final class PanelAuthMiddlewareTest extends TestCase
 			$this->users([$admin]),
 			$this->factory(),
 		);
-		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/panel');
+		$request = $this->factory()->serverRequestFactory()->createServerRequest('GET', '/cp');
 		$request = $request->withAttribute('session', $session);
 
 		$response = $middleware->process($request, $this->handler(204));

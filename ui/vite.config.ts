@@ -3,7 +3,7 @@ import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-const panelPath = process.env.CMS_PANEL_PATH ? process.env.CMS_PANEL_PATH : 'cms';
+const oldPanelPath = process.env.CMS_PANEL_PATH ? process.env.CMS_PANEL_PATH : 'cms';
 const devport = process.env.CMS_DEV_PORT ? parseInt(process.env.CMS_DEV_PORT, 10) : 2009;
 const devhost = process.env.CMS_DEV_HOST ? process.env.CMS_DEV_HOST : 'localhost';
 const appport = process.env.CMS_APP_PORT ? parseInt(process.env.CMS_APP_PORT, 10) : 1983;
@@ -21,8 +21,8 @@ export default defineConfig({
 		strictPort: true,
 		allowedHosts: true, // TODO: Check if this is necessary. Currently active to allow working with OrbStack domains
 		proxy: {
-			[`/${panelPath}/api`]: target,
-			[`/${panelPath}/boot`]: target,
+			[`/${oldPanelPath}/api`]: target,
+			[`/${oldPanelPath}/boot`]: target,
 			'/assets': target,
 			'/cache': target,
 			'/media': target,

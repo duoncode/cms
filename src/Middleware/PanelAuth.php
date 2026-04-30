@@ -15,6 +15,8 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 class PanelAuth implements Middleware
 {
+	private const string PANEL_PATH = '/cp';
+
 	public function __construct(
 		private readonly Config $config,
 		private readonly Users $users,
@@ -53,7 +55,7 @@ class PanelAuth implements Middleware
 
 	private function loginUrl(Request $request): string
 	{
-		$panelPath = $this->config->panel->path;
+		$panelPath = self::PANEL_PATH;
 		$path = $request->getUri()->getPath();
 
 		if ($path === '') {

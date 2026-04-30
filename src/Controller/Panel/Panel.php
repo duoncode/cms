@@ -12,6 +12,8 @@ use Duon\Core\Request;
 
 abstract class Panel
 {
+	protected const string PANEL_PATH = '/cp';
+
 	protected string $panelDir;
 
 	public function __construct(
@@ -24,7 +26,7 @@ abstract class Panel
 
 	protected function context(array $data = []): array
 	{
-		$panelPath = $this->config->panel->path;
+		$panelPath = self::PANEL_PATH;
 
 		return array_merge([
 			'debug' => $this->config->debug(),

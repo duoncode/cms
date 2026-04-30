@@ -161,7 +161,7 @@ final class Login extends Panel
 
 	private function panelPath(): string
 	{
-		return $this->config->panel->path;
+		return self::PANEL_PATH;
 	}
 
 	private function message(string $message): ?string

@@ -25,7 +25,7 @@ final class OldPanelCollectionsTest extends End2EndTestCase
 	public function testCollectionsEndpointReturnsLegacyFlatNavigationPayload(): void
 	{
 		$this->authenticateAs('superuser');
-		$response = $this->makeRequest('GET', '/cms/api/collections');
+		$response = $this->makeRequest('GET', '/panel/api/collections');
 		$payload = $this->assertJsonResponse($response, 200);
 
 		$summary = array_map(

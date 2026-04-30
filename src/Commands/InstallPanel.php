@@ -33,8 +33,7 @@ class InstallPanel extends Command
 		private Config $config,
 	) {
 		$this->prefix = $this->config->path->prefix;
-		// Explicitly set to default path during the transition to the new panel
-		$this->panelPath = self::DEFAULT_PATH; // $this->config->panel->path;
+		$this->panelPath = $this->config->panel->path;
 		$this->publicPath = $this->config->path->public . $this->panelPath;
 		$this->indexPath = $this->publicPath . '/index.html';
 	}

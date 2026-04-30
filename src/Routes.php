@@ -23,6 +23,8 @@ use Duon\Router\Route;
 
 class Routes
 {
+	private const string NEW_PANEL_PATH = '/cp';
+
 	protected string $panelPath;
 	protected string $panelApiPath;
 	protected ?string $apiPath;
@@ -68,28 +70,33 @@ class Routes
 		// TODO: remove when new panel is finished
 		// OLD PANEL ROUTES
 		$app->get(
-			'/cms/boot',
+			$this->panelPath . '/boot',
 			[OldPanel::class, 'boot'],
 			'cms.oldpanel.boot',
 		)->after(new JsonRenderer($this->factory));
 		$app->get(
-			'/cms/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/create',
+			$this->panelPath . '/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/create',
 			[Embed::class, 'create'],
 			'cms.panel.embed.create',
 		)->middleware($this->session);
 		$app->get(
-			'/cms/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/{node:[A-Za-z0-9-_.]{1,64}}',
+			$this->panelPath
+			. '/embed/{token:[A-Za-z0-9]{1,128}}/node/{type:[A-Za-z0-9-_.]{1,64}}/{node:[A-Za-z0-9-_.]{1,64}}',
 			[Embed::class, 'node'],
 			'cms.panel.embed.node',
 		)->middleware($this->session);
 		$app->get(
-			'/cms/...slug',
+			$this->panelPath . '/...slug',
 			[OldPanel::class, 'catchall'],
 			'cms.oldpanel.catchall',
 		)->middleware($this->session);
-		$app->get('/cms', [OldPanel::class, 'index'], 'cms.oldpanel')->middleware($this->session);
 		$app->get(
-			'/cms/',
+			$this->panelPath,
+			[OldPanel::class, 'index'],
+			'cms.oldpanel',
+		)->middleware($this->session);
+		$app->get(
+			$this->panelPath . '/',
 			[OldPanel::class, 'index'],
 			'cms.oldpanel.slash',
 		)->middleware($this->session);
@@ -156,7 +163,7 @@ class Routes
 	protected function addPanel(App $app): void
 	{
 		$app->group(
-			$this->panelPath,
+			self::NEW_PANEL_PATH,
 			function (Group $panel) use ($app) {
 				$renderers = new PanelRenderers($app);
 				$panelAuth = new PanelAuth(
@@ -205,7 +212,7 @@ class Routes
 	protected function addOldPanelApi(App $app, Session $session): void
 	{
 		$app->group(
-			'/cms/api',
+			$this->panelApiPath,
 			function (Group $api) use ($session) {
 				$api->after(new JsonRenderer($this->factory));
 				$api->middleware($session);

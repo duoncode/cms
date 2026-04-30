@@ -86,7 +86,7 @@ class OldPanel
 
 	public function catchall(Factory $factory, string $slug): Response
 	{
-		$file = $this->publicPath . '/panel/' . $slug;
+		$file = $this->publicPath . $this->config->panel->path . '/' . $slug;
 
 		if (is_file($file)) {
 			return Response::create($factory)->file($file);
@@ -315,7 +315,7 @@ class OldPanel
 
 	protected function getPanelIndex(): string
 	{
-		return $this->publicPath . '/cms/index.html';
+		return $this->publicPath . $this->config->panel->path . '/index.html';
 	}
 
 	/**

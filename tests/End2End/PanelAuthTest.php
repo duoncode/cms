@@ -17,20 +17,20 @@ final class PanelAuthTest extends End2EndTestCase
 {
 	public function testProtectedPanelRouteRedirectsGuestToLogin(): void
 	{
-		$response = $this->makeRequest('GET', '/panel');
+		$response = $this->makeRequest('GET', '/cp');
 
 		$this->assertResponseStatus(303, $response);
-		$this->assertSame('/panel/login?next=%2Fpanel', $response->getHeaderLine('Location'));
+		$this->assertSame('/cp/login?next=%2Fcp', $response->getHeaderLine('Location'));
 	}
 
 	public function testLoginPageRendersForGuest(): void
 	{
-		$response = $this->makeRequest('GET', '/panel/login');
+		$response = $this->makeRequest('GET', '/cp/login');
 
 		$this->assertResponseOk($response);
 		$html = $this->getHtmlResponse($response);
 		$this->assertStringContainsString('<h1>Login</h1>', $html);
-		$this->assertStringContainsString('action="/panel/login"', $html);
+		$this->assertStringContainsString('action="/cp/login"', $html);
 	}
 
 	public function testLoginWithValidCredentialsRedirectsToPanel(): void
@@ -44,22 +44,22 @@ final class PanelAuthTest extends End2EndTestCase
 		]);
 		$this->createdUserIds[] = $userId;
 
-		$response = $this->makeRequest('POST', '/panel/login', [
+		$response = $this->makeRequest('POST', '/cp/login', [
 			'body' => [
 				'login' => $login,
 				'password' => 'password',
 				'rememberme' => false,
-				'next' => '/panel',
+				'next' => '/cp',
 			],
 		]);
 
 		$this->assertResponseStatus(303, $response);
-		$this->assertSame('/panel', $response->getHeaderLine('Location'));
+		$this->assertSame('/cp', $response->getHeaderLine('Location'));
 	}
 
 	public function testLoginWithInvalidCredentialsShowsMessage(): void
 	{
-		$response = $this->makeRequest('POST', '/panel/login', [
+		$response = $this->makeRequest('POST', '/cp/login', [
 			'body' => [
 				'login' => 'nobody@example.com',
 				'password' => 'wrong-password',
@@ -76,19 +76,19 @@ final class PanelAuthTest extends End2EndTestCase
 	{
 		$this->authenticateAs('editor');
 
-		$response = $this->makeRequest('GET', '/panel/login', [
+		$response = $this->makeRequest('GET', '/cp/login', [
 			'authToken' => $this->defaultAuthToken,
 		]);
 
 		$this->assertResponseStatus(303, $response);
-		$this->assertSame('/panel', $response->getHeaderLine('Location'));
+		$this->assertSame('/cp', $response->getHeaderLine('Location'));
 	}
 
 	public function testAuthenticatedPanelRendersSidebarLayout(): void
 	{
 		$this->authenticateAs('editor');
 
-		$response = $this->makeRequest('GET', '/panel', [
+		$response = $this->makeRequest('GET', '/cp', [
 			'authToken' => $this->defaultAuthToken,
 		]);
 
@@ -98,29 +98,29 @@ final class PanelAuthTest extends End2EndTestCase
 		$this->assertStringContainsString('class="sidebar"', $html);
 		$this->assertStringContainsString('class="main"', $html);
 		$this->assertStringContainsString('class="sidebar-logo"', $html);
-		$this->assertStringContainsString('action="/panel/logout"', $html);
+		$this->assertStringContainsString('action="/cp/logout"', $html);
 		$this->assertStringContainsString('Dashboard', $html);
 	}
 
 	public function testHtmxGuestRequestReturnsHxRedirectHeader(): void
 	{
-		$response = $this->makeRequest('GET', '/panel', [
+		$response = $this->makeRequest('GET', '/cp', [
 			'headers' => ['HX-Request' => 'true'],
 		]);
 
 		$this->assertResponseStatus(401, $response);
-		$this->assertSame('/panel/login?next=%2Fpanel', $response->getHeaderLine('HX-Redirect'));
+		$this->assertSame('/cp/login?next=%2Fcp', $response->getHeaderLine('HX-Redirect'));
 	}
 
 	public function testUserWithoutPanelPermissionGetsRedirectedToLogin(): void
 	{
 		$token = $this->createAuthenticatedUser('system');
 
-		$response = $this->makeRequest('GET', '/panel', [
+		$response = $this->makeRequest('GET', '/cp', [
 			'authToken' => $token,
 		]);
 
 		$this->assertResponseStatus(303, $response);
-		$this->assertSame('/panel/login?next=%2Fpanel', $response->getHeaderLine('Location'));
+		$this->assertSame('/cp/login?next=%2Fcp', $response->getHeaderLine('Location'));
 	}
 }
