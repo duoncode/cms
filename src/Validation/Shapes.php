@@ -17,9 +17,4 @@ final class Shapes
 	{
 		return Shape::list()->validators(Validators::registry());
 	}
-
-	public static function nullAsEmpty(mixed $value): mixed
-	{
-		return $value ?? [];
-	}
 }

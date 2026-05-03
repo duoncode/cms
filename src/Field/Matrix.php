@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
+use Duon\Cms\Validation\Prepare;
 use Duon\Cms\Validation\Shapes;
 use Duon\Cms\Value\MatrixValue;
 use Duon\Cms\Value\ValueContext;
@@ -81,16 +82,16 @@ class Matrix extends Field implements Capability\Limitable
 		foreach ($this->subfields as $name => $subfield) {
 			$itemShape
 				->add($name, $subfield->shape())
-				->prepare(Shapes::nullAsEmpty(...));
+				->prepare(Prepare::nullAsEmpty(...));
 		}
 
 		if ($this->allowsMultipleItems()) {
 			$shape->add('value', 'list', ...$this->validators);
-			$shape->add('value.*', $itemShape)->prepare(Shapes::nullAsEmpty(...));
+			$shape->add('value.*', $itemShape)->prepare(Prepare::nullAsEmpty(...));
 		} else {
 			$shape
 				->add('value', $itemShape, ...$this->validators)
-				->prepare(Shapes::nullAsEmpty(...));
+				->prepare(Prepare::nullAsEmpty(...));
 		}
 
 		return $shape;

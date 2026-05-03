@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
+use Duon\Cms\Validation\Prepare;
 use Duon\Cms\Validation\Shapes;
 use Duon\Cms\Value;
 use Duon\Sire\Shape;
@@ -61,12 +62,12 @@ class File extends Field implements
 			foreach ($locales as $locale) {
 				$i18nShape
 					->add($locale->id, $subShape, ...$limitValidators)
-					->prepare(Shapes::nullAsEmpty(...));
+					->prepare(Prepare::nullAsEmpty(...));
 			}
 
 			$shape
 				->add('files', $i18nShape, ...$this->validators)
-				->prepare(Shapes::nullAsEmpty(...));
+				->prepare(Prepare::nullAsEmpty(...));
 		} elseif ($this->translate) {
 			// Text-translatable: shared files but translatable titles
 			$fileShape = Shapes::list()->keepUnknown();
@@ -79,10 +80,10 @@ class File extends Field implements
 				$titleShape->add($locale->id, 'text');
 			}
 
-			$fileShape->add('title', $titleShape)->prepare(Shapes::nullAsEmpty(...));
+			$fileShape->add('title', $titleShape)->prepare(Prepare::nullAsEmpty(...));
 			$shape
 				->add('files', $fileShape, ...$limitValidators, ...$this->validators)
-				->prepare(Shapes::nullAsEmpty(...));
+				->prepare(Prepare::nullAsEmpty(...));
 		} else {
 			// Non-translatable
 			$fileShape = Shapes::list()->keepUnknown();
@@ -90,7 +91,7 @@ class File extends Field implements
 			$fileShape->add('title', 'text');
 			$shape
 				->add('files', $fileShape, ...$limitValidators, ...$this->validators)
-				->prepare(Shapes::nullAsEmpty(...));
+				->prepare(Prepare::nullAsEmpty(...));
 		}
 
 		return $shape;
