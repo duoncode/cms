@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Duon\Cms\Field;
 
 use Duon\Cms\Validation\GridItemValidator;
-use Duon\Cms\Validation\Shape as ValidationShape;
+use Duon\Cms\Validation\Shapes;
 use Duon\Cms\Value\Grid as GridValue;
 use Duon\Sire\Shape;
 
@@ -55,7 +55,7 @@ class Grid extends Field implements Capability\Translatable, Capability\Grid\Res
 
 	public function shape(): Shape
 	{
-		$shape = ValidationShape::create(title: $this->label, keepUnknown: true);
+		$shape = Shapes::create()->title($this->label)->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:grid');
 		$shape->add('columns', 'int', 'required');
 
@@ -64,7 +64,7 @@ class Grid extends Field implements Capability\Translatable, Capability\Grid\Res
 		if ($this->translate) {
 			$locales = $this->owner->locales();
 			$defaultLocale = $locales->getDefault()->id;
-			$i18nShape = ValidationShape::create(title: $this->label, keepUnknown: true);
+			$i18nShape = Shapes::create()->title($this->label)->keepUnknown();
 
 			foreach ($locales as $locale) {
 				$innerValidators = [];
@@ -75,16 +75,16 @@ class Grid extends Field implements Capability\Translatable, Capability\Grid\Res
 
 				$i18nShape
 					->add($locale->id, $itemShape, ...$innerValidators)
-					->prepare(ValidationShape::nullAsEmpty(...));
+					->prepare(Shapes::nullAsEmpty(...));
 			}
 
 			$shape
 				->add('value', $i18nShape, ...$this->validators)
-				->prepare(ValidationShape::nullAsEmpty(...));
+				->prepare(Shapes::nullAsEmpty(...));
 		} else {
 			$shape
 				->add('value', $itemShape, ...$this->validators)
-				->prepare(ValidationShape::nullAsEmpty(...));
+				->prepare(Shapes::nullAsEmpty(...));
 		}
 
 		return $shape;
