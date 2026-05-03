@@ -21,7 +21,9 @@ class Time extends Field
 
 	public function shape(): Shape
 	{
-		$shape = new Shape(title: $this->label, keepUnknown: true);
+		$shape = new Shape()
+			->title($this->label)
+			->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:time');
 		$shape->add('value', 'text', ...$this->validators);
 

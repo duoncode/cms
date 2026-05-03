@@ -49,48 +49,56 @@ class Picture extends Field implements
 	public function shape(): Shape
 	{
 		$limitValidators = $this->limitValidators();
-		$shape = new ValidationShape(title: $this->label, keepUnknown: true);
+		$shape = ValidationShape::create(title: $this->label, keepUnknown: true);
 		$shape->add('type', 'text', 'required', 'in:picture');
 
 		if ($this->translateFile) {
 			// File-translatable: separate file arrays per locale
-			$subShape = new ValidationShape(list: true, title: $this->label, keepUnknown: true);
+			$subShape = ValidationShape::create(list: true, title: $this->label, keepUnknown: true);
 			$subShape->add('file', 'text');
 			$subShape->add('title', 'text');
 			$subShape->add('alt', 'text');
 
-			$i18nShape = new ValidationShape(title: $this->label, keepUnknown: true);
+			$i18nShape = ValidationShape::create(title: $this->label, keepUnknown: true);
 			$locales = $this->owner->locales();
 
 			foreach ($locales as $locale) {
-				$i18nShape->add($locale->id, $subShape, ...$limitValidators);
+				$i18nShape
+					->add($locale->id, $subShape, ...$limitValidators)
+					->prepare(ValidationShape::nullAsEmpty(...));
 			}
 
-			$shape->add('files', $i18nShape, ...$this->validators);
+			$shape
+				->add('files', $i18nShape, ...$this->validators)
+				->prepare(ValidationShape::nullAsEmpty(...));
 		} elseif ($this->translate) {
 			// Text-translatable: shared files but translatable titles and alt text
-			$fileShape = new ValidationShape(list: true, keepUnknown: true);
+			$fileShape = ValidationShape::create(list: true, keepUnknown: true);
 			$fileShape->add('file', 'text', 'required');
 
 			$locales = $this->owner->locales();
-			$titleShape = new ValidationShape(title: $this->label, keepUnknown: true);
-			$altShape = new ValidationShape(title: $this->label, keepUnknown: true);
+			$titleShape = ValidationShape::create(title: $this->label, keepUnknown: true);
+			$altShape = ValidationShape::create(title: $this->label, keepUnknown: true);
 
 			foreach ($locales as $locale) {
 				$titleShape->add($locale->id, 'text');
 				$altShape->add($locale->id, 'text');
 			}
 
-			$fileShape->add('title', $titleShape);
-			$fileShape->add('alt', $altShape);
-			$shape->add('files', $fileShape, ...$limitValidators, ...$this->validators);
+			$fileShape->add('title', $titleShape)->prepare(ValidationShape::nullAsEmpty(...));
+			$fileShape->add('alt', $altShape)->prepare(ValidationShape::nullAsEmpty(...));
+			$shape
+				->add('files', $fileShape, ...$limitValidators, ...$this->validators)
+				->prepare(ValidationShape::nullAsEmpty(...));
 		} else {
 			// Non-translatable
-			$fileShape = new ValidationShape(list: true, keepUnknown: true);
+			$fileShape = ValidationShape::create(list: true, keepUnknown: true);
 			$fileShape->add('file', 'text', 'required');
 			$fileShape->add('title', 'text');
 			$fileShape->add('alt', 'text');
-			$shape->add('files', $fileShape, ...$limitValidators, ...$this->validators);
+			$shape
+				->add('files', $fileShape, ...$limitValidators, ...$this->validators)
+				->prepare(ValidationShape::nullAsEmpty(...));
 		}
 
 		return $shape;

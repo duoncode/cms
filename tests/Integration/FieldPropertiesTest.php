@@ -105,8 +105,12 @@ final class FieldPropertiesTest extends IntegrationTestCase
 		$context = $this->createContext();
 		$finder = $this->createCms();
 
-		$node = $this->nodeFactory->create(TestMediaDocument::class, $context, $finder, ['content' =>
-			[]]);
+		$node = $this->nodeFactory->create(
+			TestMediaDocument::class,
+			$context,
+			$finder,
+			['content' => []],
+		);
 
 		$properties = $this->hydrator->getField($node, 'contentGrid')->properties();
 
@@ -125,8 +129,12 @@ final class FieldPropertiesTest extends IntegrationTestCase
 		$context = $this->createContext();
 		$finder = $this->createCms();
 
-		$node = $this->nodeFactory->create(TestMediaDocument::class, $context, $finder, ['content' =>
-			[]]);
+		$node = $this->nodeFactory->create(
+			TestMediaDocument::class,
+			$context,
+			$finder,
+			['content' => []],
+		);
 
 		$properties = $this->hydrator->getField($node, 'gallery')->properties();
 
@@ -141,8 +149,12 @@ final class FieldPropertiesTest extends IntegrationTestCase
 		$context = $this->createContext();
 		$finder = $this->createCms();
 
-		$node = $this->nodeFactory->create(TestMediaDocument::class, $context, $finder, ['content' =>
-			[]]);
+		$node = $this->nodeFactory->create(
+			TestMediaDocument::class,
+			$context,
+			$finder,
+			['content' => []],
+		);
 
 		$properties = $this->hydrator->getField($node, 'category')->properties();
 

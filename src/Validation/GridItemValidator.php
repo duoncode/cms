@@ -4,98 +4,114 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Validation;
 
+use Duon\Sire\Contract\Shape as ShapeContract;
+use Duon\Sire\Result;
+use Duon\Sire\Review;
 use Duon\Sire\Shape;
-use Duon\Sire\ValidationResult;
 use Override;
 
-class GridItemValidator extends Shape
+final class GridItemValidator implements ShapeContract
 {
-	protected function rules(): void
+	private Shape $shape;
+
+	public function __construct(bool $list = false, bool $keepUnknown = false, ?string $title = null)
 	{
-		$this->add('type', 'text', 'required', 'in:text,richtext,image,youtube,images,video,iframe');
-		$this->add('rowspan', 'int', 'required');
-		$this->add('colspan', 'int', 'required');
-		$this->add('colstart', 'int');
+		$this->shape = $list ? Shape::list() : new Shape();
+		$this->shape->keepUnknown($keepUnknown)->title($title);
+		$this->shape->add(
+			'type',
+			'text',
+			'required',
+			'in:text,richtext,image,youtube,images,video,iframe',
+		);
+		$this->shape->add('rowspan', 'int', 'required');
+		$this->shape->add('colspan', 'int', 'required');
+		$this->shape->add('colstart', 'int');
+		$this->shape->review($this->reviewItems(...));
 	}
 
 	#[Override]
-	public function validate(array $data, int $level = 1): ValidationResult
+	public function validate(array $data, int $level = 1): Result
 	{
-		$result = parent::validate($data, $level);
-
-		if (!$result->isValid()) {
-			return $result;
-		}
-
-		$this->reviewItems($result->values());
-
-		if (count($this->errorList) > 0) {
-			return new ValidationResult(
-				$this->list,
-				null,
-				$this->errorMap,
-				$this->errorList,
-				$result->values(),
-				$result->pristineValues(),
-			);
-		}
-
-		return $result;
+		return $this->shape->validate($data, $level);
 	}
 
-	private function reviewItems(array $values): void
+	private function reviewItems(Review $review): void
 	{
-		foreach ($values as $value) {
-			$type = $value['type'] ?? null;
+		foreach ($review->values() as $index => $value) {
+			$listIndex = $review->isList() && is_int($index) ? $index : null;
+			$type = is_array($value) ? $value['type'] ?? null : null;
 
 			if ($type === 'image' || $type === 'images' || $type === 'video') {
 				$files = $value['files'] ?? [];
 
-				if (count($files) > 0) {
-					$fileShape = new Shape(list: true, title: _('Grid Bild'), keepUnknown: true);
+				if (is_array($files) && count($files) > 0) {
+					$fileShape = Shape::list()->title(_('Grid Bild'))->keepUnknown();
 					$fileShape->add('file', 'text', 'required');
 					$fileShape->add('title', 'text');
 					$fileShape->add('alt', 'text');
 
 					if (!$fileShape->validate($files)->isValid()) {
-						$this->addError('image', _('Grid Bild'), _('Attribute `file` nicht gefüllt.'));
+						$review->addError('image', _('Grid Bild'), _('Attribute `file` nicht gefüllt.'), $listIndex);
 					}
 
 					continue;
 				}
 
-				$this->addError('image', _('Grid Bild'), _('Bild eingefügt aber nicht hochgeladen.'));
+				$review->addError(
+					'image',
+					_('Grid Bild'),
+					_('Bild eingefügt aber nicht hochgeladen.'),
+					$listIndex,
+				);
 			} elseif ($type === 'youtube') {
 				if (!($value['value'] ?? null)) {
-					$this->addError('value', _('Youtube-ID'), _('Bitte gültige Youtube-ID eingeben.'));
+					$review->addError(
+						'value',
+						_('Youtube-ID'),
+						_('Bitte gültige Youtube-ID eingeben.'),
+						$listIndex,
+					);
 				}
 
 				$aspectRatioX = $value['aspectRatioX'] ?? null;
 
 				if (!$aspectRatioX || !is_numeric($aspectRatioX)) {
-					$this->addError(
+					$review->addError(
 						'aspectRatioX',
 						_('Youtube Seitenverhältnis Breite'),
 						_('Bitte gültige Zahl eingeben.'),
+						$listIndex,
 					);
 				}
 
 				$aspectRatioY = $value['aspectRatioY'] ?? null;
 
 				if (!$aspectRatioY || !is_numeric($aspectRatioY)) {
-					$this->addError(
+					$review->addError(
 						'aspectRatioY',
 						_('Youtube Seitenverhältnis Höhe'),
 						_('Bitte gültige Zahl eingeben.'),
+						$listIndex,
 					);
 				}
 			} elseif ($type === 'richtext' || $type === 'text') {
 				if (!($value['value'] ?? null)) {
-					$this->addError('value', _('Grid Text'), _('Bitte Textfeld ausfüllen oder Block löschen.'));
+					$review->addError(
+						'value',
+						_('Grid Text'),
+						_('Bitte Textfeld ausfüllen oder Block löschen.'),
+						$listIndex,
+					);
 				}
 			} elseif ($type === 'iframe') {
 				if (!($value['value'] ?? null)) {
-					$this->addError('value', _('Grid Text'), _('Bitte Iframe-Feld ausfüllen oder Block löschen.'));
+					$review->addError(
+						'value',
+						_('Grid Text'),
+						_('Bitte Iframe-Feld ausfüllen oder Block löschen.'),
+						$listIndex,
+					);
 				}
 			}
 		}

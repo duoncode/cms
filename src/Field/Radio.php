@@ -21,7 +21,9 @@ class Radio extends Field
 
 	public function shape(): Shape
 	{
-		$shape = new Shape(title: $this->label, keepUnknown: true);
+		$shape = new Shape()
+			->title($this->label)
+			->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:radio');
 		$shape->add('value', 'text', ...$this->validators);
 

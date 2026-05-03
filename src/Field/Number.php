@@ -21,7 +21,9 @@ class Number extends Field
 
 	public function shape(): Shape
 	{
-		$shape = new Shape(title: $this->label, keepUnknown: true);
+		$shape = new Shape()
+			->title($this->label)
+			->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:number');
 		$shape->add('value', 'float', ...$this->validators);
 

@@ -26,13 +26,17 @@ class Iframe extends Field implements Capability\Translatable
 
 	public function shape(): Shape
 	{
-		$shape = new Shape(title: $this->label, keepUnknown: true);
+		$shape = new Shape()
+			->title($this->label)
+			->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:iframe');
 
 		if ($this->translate) {
 			$locales = $this->owner->locales();
 			$defaultLocale = $locales->getDefault()->id;
-			$i18nShape = new Shape(title: $this->label, keepUnknown: true);
+			$i18nShape = new Shape()
+				->title($this->label)
+				->keepUnknown();
 
 			foreach ($locales as $locale) {
 				$localeValidators = [];

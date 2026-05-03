@@ -4,28 +4,49 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Validation;
 
-use Duon\Sire\Contract\Shape as ShapeContract;
 use Duon\Sire\Contract\TypeCasterRegistry as TypeCasterRegistryContract;
-use Duon\Sire\Contract\ValidatorDefinitionParser as ValidatorDefinitionParserContract;
+use Duon\Sire\Contract\ValidatorParser as ValidatorParserContract;
 use Duon\Sire\Contract\ValidatorRegistry as ValidatorRegistryContract;
 use Duon\Sire\Shape as SireShape;
 use Duon\Sire\Validator;
 use Duon\Sire\ValidatorRegistry;
 use Duon\Sire\Value;
-use Override;
 
-class Shape extends SireShape
+final class Shape
 {
-	public function __construct(
+	public static function create(
 		bool $list = false,
 		bool $keepUnknown = false,
-		array $langs = [],
 		?string $title = null,
 		?ValidatorRegistryContract $validatorRegistry = null,
-		?ValidatorDefinitionParserContract $validatorDefinitionParser = null,
+		?ValidatorParserContract $validatorParser = null,
 		?TypeCasterRegistryContract $typeCasterRegistry = null,
-	) {
-		$validatorRegistry ??= ValidatorRegistry::withDefaults()->withMany([
+	): SireShape {
+		$shape = $list ? SireShape::list() : new SireShape();
+		$shape
+			->keepUnknown($keepUnknown)
+			->title($title)
+			->validators($validatorRegistry ?? self::validatorRegistry());
+
+		if ($validatorParser !== null) {
+			$shape->validatorParser($validatorParser);
+		}
+
+		if ($typeCasterRegistry !== null) {
+			$shape->types($typeCasterRegistry);
+		}
+
+		return $shape;
+	}
+
+	public static function nullAsEmpty(mixed $value): mixed
+	{
+		return $value ?? [];
+	}
+
+	private static function validatorRegistry(): ValidatorRegistry
+	{
+		return ValidatorRegistry::withDefaults()->withMany([
 			'minitems' => new Validator(
 				'minitems',
 				'Has fewer than the minimum number of %4$s items',
@@ -51,25 +72,5 @@ class Shape extends SireShape
 				true,
 			),
 		]);
-
-		parent::__construct(
-			$list,
-			$keepUnknown,
-			$langs,
-			$title,
-			$validatorRegistry,
-			$validatorDefinitionParser,
-			$typeCasterRegistry,
-		);
-	}
-
-	#[Override]
-	protected function toSubValues(mixed $pristine, ShapeContract $shape): Value
-	{
-		if ($pristine === null) {
-			$pristine = [];
-		}
-
-		return parent::toSubValues($pristine, $shape);
 	}
 }
