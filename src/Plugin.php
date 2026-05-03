@@ -188,8 +188,7 @@ class Plugin implements CorePlugin
 		)
 			->migrations($namespacedMigrations)
 			->fetch(PDO::FETCH_ASSOC)
-			->options($config->options)
-			->print($config->print);
+			->options($config->options);
 		$this->db = new Database($this->connection);
 	}
 
