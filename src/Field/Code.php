@@ -34,14 +34,18 @@ class Code extends Field implements Capability\Translatable, Capability\SyntaxAw
 
 	public function shape(): Shape
 	{
-		$shape = new Shape(title: $this->label, keepUnknown: true);
+		$shape = new Shape()
+			->title($this->label)
+			->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:code');
 		$shape->add('syntax', 'text', 'required', 'in:' . implode(',', $this->getSyntaxes()));
 
 		if ($this->translate) {
 			$locales = $this->owner->locales();
 			$defaultLocale = $locales->getDefault()->id;
-			$i18nShape = new Shape(title: $this->label, keepUnknown: true);
+			$i18nShape = new Shape()
+				->title($this->label)
+				->keepUnknown();
 
 			foreach ($locales as $locale) {
 				$localeValidators = [];

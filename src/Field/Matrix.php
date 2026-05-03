@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Duon\Cms\Field;
 
-use Duon\Cms\Validation\Shape as ValidationShape;
+use Duon\Cms\Validation\Prepare;
+use Duon\Cms\Validation\Shapes;
 use Duon\Cms\Value\MatrixValue;
 use Duon\Cms\Value\ValueContext;
 use Duon\Sire\Shape;
@@ -73,20 +74,24 @@ class Matrix extends Field implements Capability\Limitable
 
 	public function shape(): Shape
 	{
-		$shape = new ValidationShape(title: $this->label, keepUnknown: true);
+		$shape = Shapes::create()->title($this->label)->keepUnknown();
 		$shape->add('type', 'text', 'required', 'in:matrix');
 
-		$itemShape = new ValidationShape(title: $this->label, keepUnknown: true);
+		$itemShape = Shapes::create()->title($this->label)->keepUnknown();
 
 		foreach ($this->subfields as $name => $subfield) {
-			$itemShape->add($name, $subfield->shape());
+			$itemShape
+				->add($name, $subfield->shape())
+				->prepare(Prepare::nullAsEmpty(...));
 		}
 
 		if ($this->allowsMultipleItems()) {
 			$shape->add('value', 'list', ...$this->validators);
-			$shape->add('value.*', $itemShape);
+			$shape->add('value.*', $itemShape)->prepare(Prepare::nullAsEmpty(...));
 		} else {
-			$shape->add('value', $itemShape, ...$this->validators);
+			$shape
+				->add('value', $itemShape, ...$this->validators)
+				->prepare(Prepare::nullAsEmpty(...));
 		}
 
 		return $shape;
